@@ -1,0 +1,521 @@
+Goal
+
+Build a modular monolith backend for a tourism company platform with:
+
+Houses/Properties (listings + search + many photos)
+
+Tours (tours + schedules + bookings + many photos)
+
+Currency exchange (currencies + rate snapshots + exchange orders)
+
+Identity (Register/Login/Refresh/Logout) + strong authorization:
+
+Roles: SuperUser, Admin, User
+
+SuperUser creates Admins
+
+SuperUser defines permissions dynamically (DB-driven permission catalog)
+
+Authorization uses DB-driven permissions (not hard-coded) + policies
+
+SQL Server + EF Core with normalized data (avoid duplicates)
+
+Photo workflow:
+
+user provides photo label/name
+
+stored filename is UUID
+
+stage upload -> Temp folder
+
+commit on successful DB save -> move to permanent folder + insert DB rows
+
+cleanup temp files by background service
+
+API uses Scalar (no Swagger UI) + OpenAPI JSON
+
+API has strict middleware pipeline: correlation id, global errors, logging, security headers, auth
+
+Current state
+
+All module projects already have folders:
+
+Application
+
+Contracts
+
+Domain
+
+Infrastructure
+And you have default Class1.cs in some projects.
+
+Projects (must use these exact names)
+
+Server.Api
+
+Server.Modules.Identity
+
+Server.Modules.Properties
+
+Server.ModulesTours
+
+Server.Modules.Exchange
+
+Server.Modules.Media
+
+Server.SharedKernel
+
+Server.Tests
+
+Required global rules
+Roles
+
+SuperUser, Admin, User
+
+Permissions (dynamic)
+
+Permission claim type is perm
+
+Permission codes are stored in DB (not hard-coded)
+
+SuperUser can define permissions and assign them to roles/users
+
+Authorization checks permissions dynamically from DB (with short cache TTL)
+
+Normalization (avoid duplicate data)
+
+Reference tables: Currencies (Code unique), HouseTypes, TourCategories, Addresses/Locations
+
+Many-to-many join tables: HousePhotos, TourPhotos (include Label + SortOrder)
+
+Photos (Temp → Permanent)
+
+Folder rules:
+
+Houses Temp: images/houses/Temp
+
+Houses Permanent: images/houses/photos
+
+Tours Temp: images/tours/Temp
+
+Tours Permanent: images/tours/photos
+
+Photo rules:
+
+File stored with UUID name <uuid>.<ext>
+
+User label stored in join tables (HousePhotos/TourPhotos)
+
+Stage upload creates StagedUpload record + temp file
+
+Commit moves file to permanent + creates Photo record + creates join row
+
+Strict enforcement: staged TargetType must match commit entity type
+
+Background cleanup deletes old temp files + stale staged records
+
+API middleware order (mandatory)
+
+Correlation ID middleware (X-Correlation-ID in/out + log scope)
+
+Global exception middleware => ProblemDetails + correlation id
+
+Request logging middleware
+
+Security headers middleware
+
+HTTPS redirect
+
+CORS
+
+Authentication (JWT)
+
+Authorization (policies)
+
+Map controllers
+
+OpenAPI JSON + Scalar (dev only)
+
+TODO LIST (Copilot executes in order)
+#1 Clean template artifacts (since folders already exist)
+
+1.1 Delete Class1.cs in every module project and in SharedKernel if present.
+1.2 Ensure each module project references Server.SharedKernel.
+
+Acceptance: No template placeholder files remain.
+
+#2 Add _ModuleAnchor.cs (required for assembly scanning)
+
+For each module project create Domain/_ModuleAnchor.cs:
+
+Server.Modules.Identity/Domain/_ModuleAnchor.cs
+
+Server.Modules.Properties/Domain/_ModuleAnchor.cs
+
+Server.ModulesTours/Domain/_ModuleAnchor.cs
+
+Server.Modules.Exchange/Domain/_ModuleAnchor.cs
+
+Server.Modules.Media/Domain/_ModuleAnchor.cs
+
+Acceptance: Each module has _ModuleAnchor type.
+
+#3 Build Server.SharedKernel foundation
+
+Create folders:
+
+Auth
+
+Primitives
+
+Paging
+
+Errors
+
+Time
+
+Create minimal types:
+3.1 Auth:
+
+Roles constants
+
+ClaimTypes constants (perm)
+
+Policy names constants
+3.2 Primitives:
+
+Entity base (Guid Id)
+
+AuditableEntity (CreatedAtUtc, UpdatedAtUtc, CreatedByUserId, UpdatedByUserId)
+
+SoftDeletableEntity (IsDeleted, DeletedAtUtc)
+3.3 Paging:
+
+PageRequest
+
+PageResult<T>
+3.4 Errors:
+
+NotFoundException, ValidationException, ForbiddenException, DomainException
+3.5 Time:
+
+IDateTimeProvider
+
+Acceptance: SharedKernel compiles; all modules can use constants/base types.
+
+#4 Configure Server.Api for OpenAPI JSON + Scalar (no Swagger UI)
+
+4.1 Install Scalar.AspNetCore into Server.Api.
+4.2 Enable OpenAPI JSON endpoint generation.
+4.3 Map Scalar UI in Development only.
+4.4 Ensure no Swagger UI/Swashbuckle UI is used.
+
+Acceptance: Running in Development shows Scalar UI and OpenAPI JSON.
+
+#5 Implement middleware pipeline in Server.Api
+
+Create in Server.Api/Infrastructure/Middleware:
+5.1 CorrelationIdMiddleware (X-Correlation-ID in/out + log scope)
+5.2 GlobalExceptionMiddleware returning ProblemDetails with correlation id extension
+5.3 RequestLoggingMiddleware (method/path/status/duration/user id/correlation)
+5.4 SecurityHeadersMiddleware (nosniff, frame options, referrer policy, HSTS prod)
+Wire them in Program.cs in the mandatory order.
+
+Acceptance: Exceptions always return ProblemDetails + correlation id.
+
+#6 Create SQL Server DbContext in Server.Api (single database)
+
+6.1 Create DbContext inheriting IdentityDbContext<ApplicationUser, ApplicationRole, Guid>.
+6.2 Add connection string in config.
+6.3 Register DbContext with SQL Server provider.
+6.4 In OnModelCreating, apply EF configs from all module assemblies using anchors:
+
+Identity anchor
+
+Properties anchor
+
+Tours anchor
+
+Exchange anchor
+
+Media anchor
+6.5 Migrations must be created in Server.Api only.
+
+Acceptance: App starts with DbContext registered and model builds.
+
+#7 Identity module: ApplicationUser/ApplicationRole
+
+7.1 Create ApplicationUser : IdentityUser<Guid>.
+7.2 Create ApplicationRole : IdentityRole<Guid>.
+
+Acceptance: Identity types compile and are used by DbContext.
+
+#8 Identity: Refresh token table (Register/Login/Refresh/Logout)
+
+8.1 Create RefreshToken entity:
+
+RefreshTokenId, UserId, TokenHash (unique), CreatedAtUtc, ExpiresAtUtc
+
+RevokedAtUtc, ReplacedByRefreshTokenId
+
+optional: CreatedByIp, RevokedByIp, UserAgent
+8.2 Add EF config and indexes.
+
+Acceptance: RefreshTokens table is modelled.
+
+#9 Dynamic permissions tables (SuperUser defines claims dynamically)
+
+9.1 Create PermissionDefinition entity:
+
+PermissionId, Code unique, Description, IsEnabled
+
+audit fields
+9.2 Create RolePermission entity (RoleId + PermissionId) composite PK + audit
+9.3 Create UserPermission entity (UserId + PermissionId) composite PK + audit
+9.4 Add EF configs.
+
+Acceptance: Permission catalog + assignments are modelled.
+
+#10 Configure JWT authentication in Server.Api
+
+10.1 Add Jwt settings in config (Issuer, Audience, Key, AccessTokenMinutes).
+10.2 Configure JWT Bearer authentication.
+10.3 Add UseAuthentication in pipeline.
+
+Acceptance: API can authenticate JWT.
+
+#11 Configure authorization policies + DB-driven permission handler
+
+11.1 Add policy SuperUserOnly => RequireRole(SuperUser).
+11.2 Add permission policies (names in SharedKernel), e.g. HousesManage, ToursManage, ExchangeManage, UsersManage, MediaManage.
+11.3 Implement PermissionRequirement(permissionCode).
+11.4 Implement PermissionAuthorizationHandler:
+
+SuperUser bypass
+
+else query RolePermissions + UserPermissions
+
+permission must exist + enabled
+
+use short TTL cache to avoid too many DB hits
+11.5 Register handler in DI.
+
+Acceptance: Permission enforcement works and is dynamic.
+
+#12 Seed roles + SuperUser at startup
+
+12.1 Ensure roles exist (SuperUser/Admin/User).
+12.2 Create SuperUser from config SuperUser:Email, SuperUser:Password if missing.
+12.3 Assign SuperUser role.
+
+Acceptance: First run creates SuperUser automatically.
+
+#13 Auth endpoints: Register/Login/Refresh/Logout
+
+Create controllers in Server.Api:
+13.1 POST /api/auth/register (public):
+
+create user
+
+assign role User only
+13.2 POST /api/auth/login (public):
+
+return access token + refresh token
+13.3 POST /api/auth/refresh (public):
+
+validate refresh token (hash, not revoked, not expired)
+
+rotate token and revoke old
+13.4 POST /api/auth/logout (authenticated):
+
+revoke the refresh token
+13.5 POST /api/auth/logout-all (authenticated):
+
+revoke all active refresh tokens for that user
+
+Acceptance: Full user auth lifecycle exists.
+
+#14 SuperUser endpoints: Admin management
+
+Create controller protected by SuperUserOnly:
+14.1 POST /api/superuser/create-admin
+14.2 POST /api/superuser/promote-admin
+
+Acceptance: Only SuperUser can create/promote Admins.
+
+#15 SuperUser endpoints: Dynamic permission management
+
+Create controller protected by SuperUserOnly:
+15.1 CRUD PermissionDefinitions
+15.2 Assign/remove permissions to roles
+15.3 Assign/remove permissions to users
+
+Acceptance: SuperUser can manage permissions at runtime.
+
+#16 Media module: Staged uploads + Photo metadata
+
+16.1 Create StagedUpload entity + EF config:
+
+StagedUploadId
+
+TargetType (House/Tour)
+
+TempRelativePath
+
+UuidFileName
+
+Extension, ContentType, FileSize
+
+CreatedAtUtc, ExpiresAtUtc
+
+UploadedByUserId
+16.2 Create Photo entity + EF config:
+
+PhotoId
+
+FileNameUuid
+
+PermanentRelativePath
+
+ContentType, FileSize
+
+OriginalFileName optional
+
+CreatedAtUtc, UploadedByUserId
+Unique index on FileNameUuid.
+
+Acceptance: DB supports staging and permanent photo metadata.
+
+#17 Implement /api/photos/stage endpoint (Temp upload)
+
+17.1 Accept multipart file + TargetType (House/Tour).
+17.2 Generate UUID filename.
+17.3 Save file in correct Temp folder:
+
+houses -> images/houses/Temp
+
+tours -> images/tours/Temp
+17.4 Insert StagedUpload DB row.
+17.5 Return StageUploadResponse (StagedUploadId, TempRelativePath, UuidFileName, etc.).
+
+Acceptance: Upload saves to temp with UUID name and creates staged DB record.
+
+#18 Implement commit service (Temp → Permanent) used by house/tour create/update
+
+18.1 Define CommitPhotoItem DTO:
+
+StagedUploadId, Label, SortOrder
+18.2 Commit method must:
+
+validate staged exists and not expired
+
+validate TargetType matches entity type
+
+move file Temp → Permanent folder (houses or tours)
+
+create Photo DB row
+
+return PhotoId(s)
+18.3 Must run inside house/tour DB transaction.
+
+Acceptance: Successful commit moves files + creates Photo rows.
+
+#19 Properties module: Houses + photo linking with label/order
+
+19.1 Create entities: House, HouseType, Address/Location.
+19.2 Create join entity/table HousePhotos with:
+
+HouseId, PhotoId, Label, SortOrder, CreatedAtUtc
+19.3 House create/update accepts CommitPhotoItem list and:
+
+commits staged uploads
+
+creates HousePhotos rows
+19.4 Endpoints:
+
+Public GET houses list/detail
+
+Admin POST/PUT/DELETE protected by HousesManage policy
+
+Acceptance: Houses support photos with label and order.
+
+#20 Tours module: Tours + schedules + bookings + photo linking
+
+20.1 Create entities: Tour, TourSchedule, Booking.
+20.2 Create join entity/table TourPhotos with:
+
+TourId, PhotoId, Label, SortOrder, CreatedAtUtc
+20.3 Tour create/update accepts CommitPhotoItem list (commit staged + link).
+20.4 Endpoints:
+
+Public GET tours list/detail
+
+Admin CRUD and schedule management protected by ToursManage
+
+User booking endpoint (authenticated)
+
+Acceptance: Tours support schedules, bookings, photos with label/order.
+
+#21 Exchange module: Currency, rates snapshots, orders
+
+21.1 Currency entity with Code unique.
+21.2 ExchangeRate snapshot entity.
+21.3 ExchangeOrder entity with status workflow.
+21.4 Endpoints:
+
+Public currencies + rates
+
+User create order
+
+Admin update status protected by ExchangeManage
+
+Acceptance: Exchange module works with normalized data.
+
+#22 Temp cleanup hosted service
+
+22.1 Hosted service deletes temp files older than threshold.
+22.2 Deletes stale StagedUpload DB records.
+22.3 Logs cleanup actions.
+
+Acceptance: Temp folder does not grow forever.
+
+#23 Photo unlink/delete rules
+
+23.1 Unlink photo from house/tour deletes join row.
+23.2 If photo is not linked anywhere else:
+
+delete file
+
+delete Photo row
+23.3 If still linked, keep it.
+
+Acceptance: Deleting/unlinking is consistent.
+
+#24 Migrations and DB verification
+
+24.1 Create migrations in Server.Api only.
+24.2 Update database.
+24.3 Verify constraints, keys, FKs, unique codes.
+
+Acceptance: DB schema is correct and normalized.
+
+#25 Tests
+
+Write tests for:
+
+SuperUser seed
+
+Admin creation requires SuperUser
+
+Dynamic permission assignments take effect
+
+Stage upload creates temp file + staged record
+
+Commit moves temp → permanent + creates Photo + join rows
+
+Commit failure leaves temp and no DB rows
+
+Logout revokes refresh tokens and refresh fails
+
+Acceptance: tests pass.
+
