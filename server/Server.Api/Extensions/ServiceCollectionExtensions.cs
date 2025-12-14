@@ -1,13 +1,16 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
+using Server.Modules.Identity.Domain;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Extensions;
@@ -30,6 +33,23 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
         services.AddOpenApi();
+        return services;
+    }
+
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<SuperUserOptions>(configuration.GetSection("SuperUser"));
+
+        services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+        services.AddScoped<IdentitySeeder>();
+
         return services;
     }
 

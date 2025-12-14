@@ -55,7 +55,7 @@ public sealed class PermissionAuthorizationHandler : AuthorizationHandler<Permis
             _cache.Set(cacheKey, permissionSet, CacheDuration);
         }
 
-        if (permissionSet.Contains(requirement.PermissionCode))
+        if (permissionSet != null && permissionSet.Contains(requirement.PermissionCode))
         {
             context.Succeed(requirement);
         }

@@ -7,8 +7,11 @@ builder.Services.AddApiCors();
 builder.Services.AddOpenApiDocumentation();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
+
+await app.SeedIdentityAsync();
 
 app.UseApiDocumentation();
 app.UseApiPipeline();

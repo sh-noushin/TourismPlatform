@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Scalar.AspNetCore;
+using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Middleware;
 
 namespace Server.Api.Extensions;
@@ -30,5 +31,12 @@ public static class WebApplicationExtensions
         app.UseAuthorization();
 
         return app;
+    }
+
+    public static async Task SeedIdentityAsync(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<IdentitySeeder>();
+        await seeder.SeedAsync();
     }
 }
