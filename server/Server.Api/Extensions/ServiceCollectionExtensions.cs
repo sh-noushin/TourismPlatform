@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
+using Server.SharedKernel.Auth;
 
 namespace Server.Api.Extensions;
 
@@ -66,6 +68,20 @@ public static class ServiceCollectionExtensions
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(PolicyNames.SuperUserOnly, policy => policy.RequireRole(Roles.SuperUser));
+
+            options.AddPolicy(PolicyNames.HousesManage, policy => policy.AddRequirements(new PermissionRequirement(PolicyNames.HousesManage)));
+            options.AddPolicy(PolicyNames.ToursManage, policy => policy.AddRequirements(new PermissionRequirement(PolicyNames.ToursManage)));
+            options.AddPolicy(PolicyNames.ExchangeManage, policy => policy.AddRequirements(new PermissionRequirement(PolicyNames.ExchangeManage)));
+            options.AddPolicy(PolicyNames.UsersManage, policy => policy.AddRequirements(new PermissionRequirement(PolicyNames.UsersManage)));
+            options.AddPolicy(PolicyNames.MediaManage, policy => policy.AddRequirements(new PermissionRequirement(PolicyNames.MediaManage)));
+        });
+
+        services.AddMemoryCache();
+        services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
         return services;
     }

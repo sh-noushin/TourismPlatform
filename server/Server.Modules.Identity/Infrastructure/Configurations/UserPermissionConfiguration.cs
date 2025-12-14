@@ -10,8 +10,11 @@ public sealed class UserPermissionConfiguration : IEntityTypeConfiguration<UserP
     {
         builder.ToTable("UserPermissions");
 
-        builder.Ignore(up => up.Id); 
+        builder.Ignore(up => up.Id);
         builder.HasKey(up => new { up.UserId, up.PermissionId });
+
+        builder.Property(up => up.UserId).HasColumnName("UserId");
+        builder.Property(up => up.PermissionId).HasColumnName("PermissionId");
 
         builder.HasOne(up => up.User)
             .WithMany()
