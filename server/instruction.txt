@@ -340,6 +340,7 @@ Acceptance: Full user auth lifecycle exists.
 Create controller protected by SuperUserOnly:
 14.1 POST /api/superuser/create-admin
 14.2 POST /api/superuser/promote-admin
+14.4 delete  /api/superuser/remove-admin
 
 Acceptance: Only SuperUser can create/promote Admins.
 
