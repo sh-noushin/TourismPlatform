@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Server.Modules.Identity.Domain;
+using Server.Modules.Identity.Domain.Permissions;
 
 namespace Server.Modules.Identity.Infrastructure.Configurations;
 

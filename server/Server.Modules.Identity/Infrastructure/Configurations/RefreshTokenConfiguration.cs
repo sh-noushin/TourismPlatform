@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Server.Modules.Identity.Domain;
+using Server.Modules.Identity.Domain.RefreshTokens;
+using Server.Modules.Identity.Domain.Users;
 
 namespace Server.Modules.Identity.Infrastructure.Configurations;
 

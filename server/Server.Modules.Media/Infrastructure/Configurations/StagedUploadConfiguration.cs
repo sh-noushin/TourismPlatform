@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Server.Modules.Media.Domain;
+using Server.Modules.Media.Domain.Uploads;
 
 namespace Server.Modules.Media.Infrastructure.Configurations;
 
