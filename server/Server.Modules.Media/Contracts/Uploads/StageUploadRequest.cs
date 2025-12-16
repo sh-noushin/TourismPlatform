@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
-using Server.Modules.Media.Domain;
+using Server.Modules.Media.Domain.Uploads;
 
 namespace Server.Modules.Media.Contracts.Uploads;
 

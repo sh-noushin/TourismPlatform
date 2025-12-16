@@ -1,18 +1,17 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Api.Infrastructure.Persistence;
+using Server.Modules.Media.Domain.Photos;
 using Server.Modules.Properties.Contracts.Houses;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
+using Server.SharedKernel.Repositories;
 
-namespace Server.Api.Infrastructure.Properties.Repositories;
+namespace Server.Modules.Properties.Infrastructure.Repositories;
 
-public sealed class HousePhotoRepository : IHousePhotoRepository
+public sealed class HousePhotoRepository : BaseRepository<HousePhoto>, IHousePhotoRepository
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public HousePhotoRepository(ApplicationDbContext dbContext)
+    public HousePhotoRepository(DbContext dbContext)
+        : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
     public async Task<IReadOnlyDictionary<Guid, IReadOnlyCollection<HousePhotoDto>>> GetPhotosByHouseIdsAsync(
@@ -25,9 +24,8 @@ public sealed class HousePhotoRepository : IHousePhotoRepository
         }
 
         var rows = await (
-                from hp in _dbContext.Set<HousePhoto>().AsNoTracking()
-                join p in _dbContext.Set<Server.Modules.Media.Domain.Photo>().AsNoTracking()
-                    on hp.PhotoId equals p.Id
+                from hp in DbContext.Set<HousePhoto>().AsNoTracking()
+                join p in DbContext.Set<Photo>().AsNoTracking() on hp.PhotoId equals p.Id
                 where houseIds.Contains(hp.HouseId)
                 orderby hp.HouseId, hp.SortOrder
                 select new
@@ -47,9 +45,8 @@ public sealed class HousePhotoRepository : IHousePhotoRepository
     public async Task<IReadOnlyCollection<HousePhotoDto>> GetPhotosByHouseIdAsync(Guid houseId, CancellationToken cancellationToken = default)
     {
         return await (
-                from hp in _dbContext.Set<HousePhoto>().AsNoTracking()
-                join p in _dbContext.Set<Server.Modules.Media.Domain.Photo>().AsNoTracking()
-                    on hp.PhotoId equals p.Id
+                from hp in DbContext.Set<HousePhoto>().AsNoTracking()
+                join p in DbContext.Set<Photo>().AsNoTracking() on hp.PhotoId equals p.Id
                 where hp.HouseId == houseId
                 orderby hp.SortOrder
                 select new HousePhotoDto(hp.PhotoId, hp.Label, hp.SortOrder, p.PermanentRelativePath))
@@ -58,12 +55,9 @@ public sealed class HousePhotoRepository : IHousePhotoRepository
 
     public Task<bool> LinkExistsAsync(Guid houseId, Guid photoId, CancellationToken cancellationToken = default)
     {
-        return _dbContext.Set<HousePhoto>()
+        return DbContext.Set<HousePhoto>()
             .AnyAsync(x => x.HouseId == houseId && x.PhotoId == photoId, cancellationToken);
     }
 
-    public void AddLink(HousePhoto link) => _dbContext.Add(link);
-
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        => _dbContext.SaveChangesAsync(cancellationToken);
+    public void AddLink(HousePhoto link) => DbContext.Add(link);
 }

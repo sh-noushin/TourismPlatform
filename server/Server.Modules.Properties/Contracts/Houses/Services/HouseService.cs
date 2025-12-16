@@ -1,25 +1,25 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Api.Infrastructure.Media;
-using Server.Api.Infrastructure.Persistence;
-using Server.Modules.Media.Domain;
+using Server.Modules.Media.Application.Services;
+using Server.Modules.Media.Contracts.Uploads;
+using Server.Modules.Media.Domain.Uploads;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses;
-using Server.Modules.Media.Contracts.Uploads;
+using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 
-namespace Server.Api.Infrastructure.Properties;
+namespace Server.Modules.Properties.Contracts.Houses.Services;
 
 public sealed class HouseService : IHouseService
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly DbContext _dbContext;
     private readonly IPhotoCommitService _photoCommitService;
     private readonly IHouseRepository _houseRepository;
     private readonly IHouseReferenceDataRepository _referenceDataRepository;
     private readonly IHousePhotoRepository _housePhotoRepository;
 
     public HouseService(
-        ApplicationDbContext dbContext,
+        DbContext dbContext,
         IPhotoCommitService photoCommitService,
         IHouseRepository houseRepository,
         IHouseReferenceDataRepository referenceDataRepository,
@@ -91,7 +91,7 @@ public sealed class HouseService : IHouseService
             CreatedByUserId = currentUserId
         };
 
-        _houseRepository.Add(house);
+        await _houseRepository.CreateAsync(house, cancellationToken);
         await _houseRepository.SaveChangesAsync(cancellationToken);
 
         await CommitAndLinkPhotosAsync(house.Id, request.Photos, now, cancellationToken);
@@ -133,7 +133,7 @@ public sealed class HouseService : IHouseService
         var house = await _houseRepository.GetForUpdateAsync(id, cancellationToken);
         if (house == null) return false;
 
-        _houseRepository.Remove(house);
+        await _houseRepository.DeleteAsync(house, cancellationToken);
         await _houseRepository.SaveChangesAsync(cancellationToken);
         return true;
     }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Server.Api.Infrastructure.Persistence;
-using Server.Modules.Identity.Domain;
+using Server.Modules.Identity.Domain.Permissions;
 using System.Security.Claims;
 
 namespace Server.Api.Infrastructure.Security;

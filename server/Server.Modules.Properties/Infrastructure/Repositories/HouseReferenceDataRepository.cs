@@ -1,16 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Api.Infrastructure.Persistence;
 using Server.Modules.Properties.Contracts.Houses;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 
-namespace Server.Api.Infrastructure.Properties.Repositories;
+namespace Server.Modules.Properties.Infrastructure.Repositories;
 
 public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly DbContext _dbContext;
 
-    public HouseReferenceDataRepository(ApplicationDbContext dbContext)
+    public HouseReferenceDataRepository(DbContext dbContext)
     {
         _dbContext = dbContext;
     }

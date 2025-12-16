@@ -10,12 +10,14 @@ using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
-using Server.Api.Infrastructure.Media;
-using Server.Api.Infrastructure.Properties;
-using Server.Api.Infrastructure.Properties.Repositories;
-using Server.Modules.Identity.Domain;
+using Server.Modules.Identity.Domain.Roles;
+using Server.Modules.Identity.Domain.Users;
+using Server.Modules.Media.Application.Services;
+using Server.Modules.Media.Contracts.Uploads.Services;
 using Server.Modules.Properties.Application.Services;
+using Server.Modules.Properties.Contracts.Houses.Services;
 using Server.Modules.Properties.Domain.Houses.Repositories;
+using Server.Modules.Properties.Infrastructure.Repositories;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Extensions;
@@ -67,6 +69,8 @@ public static class ServiceCollectionExtensions
         {
             options.UseSqlServer(connectionString);
         });
+
+        services.AddScoped<DbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         return services;
     }

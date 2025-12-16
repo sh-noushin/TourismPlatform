@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Server.Modules.Identity.Domain.Roles;
+using Server.Modules.Identity.Domain.Users;
 
 namespace Server.Api.Infrastructure.Persistence;
 
-public sealed class ApplicationDbContext : IdentityDbContext<Server.Modules.Identity.Domain.ApplicationUser, Server.Modules.Identity.Domain.ApplicationRole, Guid>
+public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

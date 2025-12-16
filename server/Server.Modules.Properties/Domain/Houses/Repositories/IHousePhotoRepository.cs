@@ -1,8 +1,9 @@
 using Server.Modules.Properties.Contracts.Houses;
+using Server.SharedKernel.Repositories;
 
 namespace Server.Modules.Properties.Domain.Houses.Repositories;
 
-public interface IHousePhotoRepository
+public interface IHousePhotoRepository : IBaseRepository<HousePhoto>
 {
     Task<IReadOnlyDictionary<Guid, IReadOnlyCollection<HousePhotoDto>>> GetPhotosByHouseIdsAsync(
         IReadOnlyCollection<Guid> houseIds,
@@ -12,5 +13,4 @@ public interface IHousePhotoRepository
 
     Task<bool> LinkExistsAsync(Guid houseId, Guid photoId, CancellationToken cancellationToken = default);
     void AddLink(HousePhoto link);
-    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

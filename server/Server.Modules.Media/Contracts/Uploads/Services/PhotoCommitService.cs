@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Server.Api.Infrastructure.Persistence;
-using Server.Modules.Media.Contracts.Uploads;
-using Server.Modules.Media.Domain;
+using Microsoft.Extensions.Hosting;
+using Server.Modules.Media.Application.Services;
+using Server.Modules.Media.Domain.Photos;
+using Server.Modules.Media.Domain.Uploads;
 
-namespace Server.Api.Infrastructure.Media;
+namespace Server.Modules.Media.Contracts.Uploads.Services;
 
 public sealed class PhotoCommitService : IPhotoCommitService
 {
@@ -16,16 +14,18 @@ public sealed class PhotoCommitService : IPhotoCommitService
         [StagedUploadTargetType.Tour] = Path.Combine("images", "tours", "photos")
     };
 
-    private readonly ApplicationDbContext _dbContext;
-    private readonly IWebHostEnvironment _environment;
+    private readonly DbContext _dbContext;
+    private readonly IHostEnvironment _environment;
 
-    public PhotoCommitService(ApplicationDbContext dbContext, IWebHostEnvironment environment)
+    public PhotoCommitService(DbContext dbContext, IHostEnvironment environment)
     {
         _dbContext = dbContext;
         _environment = environment;
     }
 
-    public async Task<IReadOnlyCollection<PhotoCommitResult>> CommitAsync(IReadOnlyCollection<CommitPhotoItem> items, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<PhotoCommitResult>> CommitAsync(
+        IReadOnlyCollection<CommitPhotoItem> items,
+        CancellationToken cancellationToken = default)
     {
         if (items == null || items.Count == 0)
         {
@@ -33,6 +33,7 @@ public sealed class PhotoCommitService : IPhotoCommitService
         }
 
         var itemMap = items.ToDictionary(i => i.StagedUploadId);
+
         var stagedUploads = await _dbContext.Set<StagedUpload>()
             .Where(s => itemMap.ContainsKey(s.Id))
             .ToListAsync(cancellationToken);
@@ -75,11 +76,13 @@ public sealed class PhotoCommitService : IPhotoCommitService
             {
                 Id = Guid.NewGuid(),
                 UuidFileName = staged.UuidFileName,
-                PermanentRelativePath = Path.Join(GetPermanentRelativePath(staged.TargetType), staged.UuidFileName).Replace(Path.DirectorySeparatorChar, '/'),
+                PermanentRelativePath = Path.Join(GetPermanentRelativePath(staged.TargetType), staged.UuidFileName)
+                    .Replace(Path.DirectorySeparatorChar, '/'),
                 ContentType = staged.ContentType,
                 FileSize = staged.FileSize,
                 CreatedAtUtc = now,
-                UploadedByUserId = staged.UploadedByUserId
+                UploadedByUserId = staged.UploadedByUserId,
+                OriginalFileName = staged.OriginalFileName
             };
 
             _dbContext.Add(photo);

@@ -1,6 +1,6 @@
 using Server.Modules.Media.Contracts.Uploads;
 
-namespace Server.Api.Infrastructure.Media;
+namespace Server.Modules.Media.Application.Services;
 
 public interface IPhotoCommitService
 {
