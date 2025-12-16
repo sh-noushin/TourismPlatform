@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Api.Infrastructure.Persistence;
-using Server.Modules.Identity.Contracts.Permissions;
+using Server.Modules.Identity.Contracts.Permissions.Dtos;
 using Server.Modules.Identity.Domain.Permissions;
 using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.Users;

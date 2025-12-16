@@ -1,4 +1,4 @@
-using Server.Modules.Properties.Contracts.Houses;
+using Server.Modules.Properties.Contracts.Houses.Dtos;
 
 namespace Server.Modules.Properties.Application.Services;
 

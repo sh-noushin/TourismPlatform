@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Modules.Properties.Contracts.Houses;
+using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 

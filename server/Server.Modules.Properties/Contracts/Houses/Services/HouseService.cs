@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Media.Application.Services;
-using Server.Modules.Media.Contracts.Uploads;
+using Server.Modules.Media.Contracts.Uploads.Dtos;
 using Server.Modules.Media.Domain.Uploads;
 using Server.Modules.Properties.Application.Services;
-using Server.Modules.Properties.Contracts.Houses;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;

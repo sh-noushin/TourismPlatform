@@ -1,4 +1,4 @@
-using Server.Modules.Media.Contracts.Uploads;
+using Server.Modules.Media.Contracts.Uploads.Dtos;
 
 namespace Server.Modules.Media.Application.Services;
 

@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
-using Server.Modules.Identity.Contracts.Auth;
+using Server.Modules.Identity.Contracts.Auth.Dtos;
 using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.RefreshTokens;
 using Server.Modules.Identity.Domain.Users;

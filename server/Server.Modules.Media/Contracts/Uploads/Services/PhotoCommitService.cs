@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Server.Modules.Media.Application.Services;
+using Server.Modules.Media.Contracts.Uploads.Dtos;
 using Server.Modules.Media.Domain.Photos;
 using Server.Modules.Media.Domain.Uploads;
 

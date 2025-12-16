@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Api.Infrastructure.Persistence;
-using Server.Modules.Media.Contracts.Uploads;
+using Server.Modules.Media.Contracts.Uploads.Dtos;
 using Server.Modules.Media.Domain.Uploads;
 
 namespace Server.Api.Controllers;
