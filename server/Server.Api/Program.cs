@@ -9,6 +9,7 @@ builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddMediaServices();
+builder.Services.AddPropertiesServices();
 
 var app = builder.Build();
 

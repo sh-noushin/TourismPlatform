@@ -11,7 +11,11 @@ using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
 using Server.Api.Infrastructure.Media;
+using Server.Api.Infrastructure.Properties;
+using Server.Api.Infrastructure.Properties.Repositories;
 using Server.Modules.Identity.Domain;
+using Server.Modules.Properties.Application.Services;
+using Server.Modules.Properties.Domain.Repositories;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Extensions;
@@ -110,6 +114,15 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddMediaServices(this IServiceCollection services)
     {
         services.AddScoped<IPhotoCommitService, PhotoCommitService>();
+        return services;
+    }
+
+    public static IServiceCollection AddPropertiesServices(this IServiceCollection services)
+    {
+        services.AddScoped<IHouseRepository, HouseRepository>();
+        services.AddScoped<IHouseReferenceDataRepository, HouseReferenceDataRepository>();
+        services.AddScoped<IHousePhotoRepository, HousePhotoRepository>();
+        services.AddScoped<IHouseService, HouseService>();
         return services;
     }
 }
