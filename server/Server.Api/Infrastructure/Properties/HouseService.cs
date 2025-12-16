@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Api.Infrastructure.Media;
 using Server.Api.Infrastructure.Persistence;
-using Server.Modules.Media.Contracts.Uploads;
 using Server.Modules.Media.Domain;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses;
-using Server.Modules.Properties.Domain;
-using Server.Modules.Properties.Domain.Repositories;
+using Server.Modules.Media.Contracts.Uploads;
+using Server.Modules.Properties.Domain.Houses;
+using Server.Modules.Properties.Domain.Houses.Repositories;
 
 namespace Server.Api.Infrastructure.Properties;
 

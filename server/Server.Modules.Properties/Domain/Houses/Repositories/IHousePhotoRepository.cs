@@ -1,6 +1,6 @@
 using Server.Modules.Properties.Contracts.Houses;
 
-namespace Server.Modules.Properties.Domain.Repositories;
+namespace Server.Modules.Properties.Domain.Houses.Repositories;
 
 public interface IHousePhotoRepository
 {

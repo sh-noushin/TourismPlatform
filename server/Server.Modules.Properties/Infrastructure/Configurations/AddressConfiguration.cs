@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Server.Modules.Properties.Domain;
+using Server.Modules.Properties.Domain.Houses;
 
 namespace Server.Modules.Properties.Infrastructure.Configurations;
 

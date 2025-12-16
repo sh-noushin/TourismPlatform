@@ -1,4 +1,4 @@
-namespace Server.Modules.Properties.Domain;
+namespace Server.Modules.Properties.Domain.Houses;
 
 public sealed class HouseType
 {

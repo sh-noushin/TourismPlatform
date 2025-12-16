@@ -15,7 +15,7 @@ using Server.Api.Infrastructure.Properties;
 using Server.Api.Infrastructure.Properties.Repositories;
 using Server.Modules.Identity.Domain;
 using Server.Modules.Properties.Application.Services;
-using Server.Modules.Properties.Domain.Repositories;
+using Server.Modules.Properties.Domain.Houses.Repositories;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Extensions;

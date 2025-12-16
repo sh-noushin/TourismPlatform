@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Api.Infrastructure.Persistence;
-using Server.Modules.Properties.Domain;
-using Server.Modules.Properties.Domain.Repositories;
+using Server.Modules.Properties.Domain.Houses;
+using Server.Modules.Properties.Domain.Houses.Repositories;
 
 namespace Server.Api.Infrastructure.Properties.Repositories;
 
