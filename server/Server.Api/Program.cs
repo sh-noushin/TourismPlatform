@@ -8,6 +8,7 @@ builder.Services.AddOpenApiDocumentation();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddMediaServices();
 
 var app = builder.Build();
 

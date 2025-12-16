@@ -10,6 +10,7 @@ using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
+using Server.Api.Infrastructure.Media;
 using Server.Modules.Identity.Domain;
 using Server.SharedKernel.Auth;
 
@@ -103,6 +104,12 @@ public static class ServiceCollectionExtensions
         services.AddMemoryCache();
         services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
+        return services;
+    }
+
+    public static IServiceCollection AddMediaServices(this IServiceCollection services)
+    {
+        services.AddScoped<IPhotoCommitService, PhotoCommitService>();
         return services;
     }
 }
