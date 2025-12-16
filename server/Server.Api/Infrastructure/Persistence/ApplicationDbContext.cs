@@ -15,6 +15,8 @@ public sealed class ApplicationDbContext : IdentityDbContext<Server.Modules.Iden
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Server.Modules.Identity.Domain._ModuleAnchor).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Server.Modules.Properties.Domain._ModuleAnchor).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Server.Modules.Tours.Domain._ModuleAnchor).Assembly);
