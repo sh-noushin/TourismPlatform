@@ -8,11 +8,7 @@ namespace Server.Modules.Media.Contracts.Uploads.Services;
 
 public sealed class StagedUploadService : IStagedUploadService
 {
-    private static readonly IReadOnlyDictionary<StagedUploadTargetType, string> TempFolders = new Dictionary<StagedUploadTargetType, string>
-    {
-        [StagedUploadTargetType.House] = Path.Combine("images", "houses", "Temp"),
-        [StagedUploadTargetType.Tour] = Path.Combine("images", "tours", "Temp")
-    };
+    private static IReadOnlyDictionary<StagedUploadTargetType, string> TempFolders => StagedUploadFolders.TempFolders;
 
     private readonly DbContext _dbContext;
     private readonly IHostEnvironment _environment;
