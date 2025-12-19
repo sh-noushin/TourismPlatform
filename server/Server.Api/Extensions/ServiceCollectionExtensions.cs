@@ -21,6 +21,10 @@ using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Services;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 using Server.Modules.Properties.Infrastructure.Repositories;
+using Server.Modules.Tours.Application.Services;
+using Server.Modules.Tours.Contracts.Tours.Services;
+using Server.Modules.Tours.Domain.Tours.Repositories;
+using Server.Modules.Tours.Infrastructure.Repositories;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Extensions;
@@ -134,6 +138,17 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHouseReferenceDataRepository, HouseReferenceDataRepository>();
         services.AddScoped<IHousePhotoRepository, HousePhotoRepository>();
         services.AddScoped<IHouseService, HouseService>();
+        return services;
+    }
+
+    public static IServiceCollection AddToursServices(this IServiceCollection services)
+    {
+        services.AddScoped<ITourRepository, TourRepository>();
+        services.AddScoped<ITourReferenceDataRepository, TourReferenceDataRepository>();
+        services.AddScoped<ITourPhotoRepository, TourPhotoRepository>();
+        services.AddScoped<ITourScheduleRepository, TourScheduleRepository>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
+        services.AddScoped<ITourService, TourService>();
         return services;
     }
 }

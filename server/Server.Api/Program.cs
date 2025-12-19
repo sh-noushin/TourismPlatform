@@ -10,6 +10,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddMediaServices();
 builder.Services.AddPropertiesServices();
+builder.Services.AddToursServices();
 
 var app = builder.Build();
 
