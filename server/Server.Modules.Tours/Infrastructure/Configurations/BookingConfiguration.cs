@@ -24,6 +24,11 @@ public sealed class BookingConfiguration : IEntityTypeConfiguration<Booking>
             .HasForeignKey(x => x.TourScheduleId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(x => x.Tour)
+            .WithMany()
+            .HasForeignKey(x => x.TourId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasIndex(x => new { x.TourScheduleId, x.UserId });
     }
 }

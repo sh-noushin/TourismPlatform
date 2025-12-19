@@ -45,7 +45,7 @@ public sealed class TourConfiguration : IEntityTypeConfiguration<Tour>
         builder.HasMany(x => x.Bookings)
             .WithOne(x => x.Tour)
             .HasForeignKey(x => x.TourId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => x.Name);
     }
