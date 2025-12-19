@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
@@ -18,6 +20,7 @@ public sealed class HousesController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<HouseSummaryDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetList(CancellationToken cancellationToken)
     {
         var dto = await _houseService.GetListAsync(cancellationToken);
@@ -25,6 +28,8 @@ public sealed class HousesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(HouseDetailDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetDetail(Guid id, CancellationToken cancellationToken)
     {
         var dto = await _houseService.GetDetailAsync(id, cancellationToken);
@@ -33,6 +38,10 @@ public sealed class HousesController : ControllerBase
 
     [HttpPost]
     [Authorize(PolicyNames.HousesManage)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] CreateHouseRequest request, CancellationToken cancellationToken)
     {
         var userId = GetCurrentUserId();
@@ -42,6 +51,10 @@ public sealed class HousesController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(PolicyNames.HousesManage)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateHouseRequest request, CancellationToken cancellationToken)
     {
         var userId = GetCurrentUserId();
@@ -51,6 +64,10 @@ public sealed class HousesController : ControllerBase
 
     [HttpDelete("{id:guid}")]
     [Authorize(PolicyNames.HousesManage)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var deleted = await _houseService.DeleteAsync(id, cancellationToken);

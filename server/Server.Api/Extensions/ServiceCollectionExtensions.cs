@@ -10,8 +10,11 @@ using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
+using Server.Api.Services;
 using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.Users;
+using Server.Modules.Identity.Application.Services;
+using Server.Modules.Identity.Contracts.Permissions.Services;
 using Server.Modules.Media.Application.Services;
 using Server.Modules.Media.Contracts.Uploads.Services;
 using Server.Modules.Properties.Application.Services;
@@ -56,6 +59,9 @@ public static class ServiceCollectionExtensions
             .AddDefaultTokenProviders();
 
         services.AddScoped<IdentitySeeder>();
+
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ISuperUserPermissionService, SuperUserPermissionService>();
 
         return services;
     }
@@ -118,6 +124,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddMediaServices(this IServiceCollection services)
     {
         services.AddScoped<IPhotoCommitService, PhotoCommitService>();
+        services.AddScoped<IStagedUploadService, StagedUploadService>();
         return services;
     }
 
