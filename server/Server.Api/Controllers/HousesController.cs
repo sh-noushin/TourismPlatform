@@ -74,6 +74,18 @@ public sealed class HousesController : ControllerBase
         return deleted ? NoContent() : NotFound();
     }
 
+    [HttpDelete("{id:guid}/photos/{photoId:guid}")]
+    [Authorize(PolicyNames.HousesManage)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeletePhoto(Guid id, Guid photoId, CancellationToken cancellationToken)
+    {
+        var deleted = await _houseService.UnlinkPhotoAsync(id, photoId, cancellationToken);
+        return deleted ? NoContent() : NotFound();
+    }
+
     private Guid? GetCurrentUserId()
     {
         var claim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

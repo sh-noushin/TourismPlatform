@@ -11,6 +11,7 @@ using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
 using Server.Api.Services;
+using Server.SharedKernel.Media;
 using Server.Modules.Exchange.Application.Services;
 using Server.Modules.Exchange.Contracts.Exchange.Services;
 using Server.Modules.Exchange.Domain.Currencies.Repositories;
@@ -135,6 +136,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IPhotoCommitService, PhotoCommitService>();
         services.AddScoped<IStagedUploadService, StagedUploadService>();
+        services.AddScoped<IPhotoCleanupService, PhotoCleanupService>();
         return services;
     }
 

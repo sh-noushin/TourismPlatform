@@ -6,6 +6,7 @@ using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
+using Server.SharedKernel.Media;
 
 namespace Server.Modules.Properties.Contracts.Houses.Services;
 
@@ -13,6 +14,7 @@ public sealed class HouseService : IHouseService
 {
     private readonly DbContext _dbContext;
     private readonly IPhotoCommitService _photoCommitService;
+    private readonly IPhotoCleanupService _photoCleanupService;
     private readonly IHouseRepository _houseRepository;
     private readonly IHouseReferenceDataRepository _referenceDataRepository;
     private readonly IHousePhotoRepository _housePhotoRepository;
@@ -20,12 +22,14 @@ public sealed class HouseService : IHouseService
     public HouseService(
         DbContext dbContext,
         IPhotoCommitService photoCommitService,
+        IPhotoCleanupService photoCleanupService,
         IHouseRepository houseRepository,
         IHouseReferenceDataRepository referenceDataRepository,
         IHousePhotoRepository housePhotoRepository)
     {
         _dbContext = dbContext;
         _photoCommitService = photoCommitService;
+        _photoCleanupService = photoCleanupService;
         _houseRepository = houseRepository;
         _referenceDataRepository = referenceDataRepository;
         _housePhotoRepository = housePhotoRepository;
@@ -132,8 +136,28 @@ public sealed class HouseService : IHouseService
         var house = await _houseRepository.GetForUpdateAsync(id, cancellationToken);
         if (house == null) return false;
 
+        var photoIds = await _housePhotoRepository.GetPhotoIdsByHouseIdAsync(id, cancellationToken);
+
         await _houseRepository.DeleteAsync(house, cancellationToken);
         await _houseRepository.SaveChangesAsync(cancellationToken);
+
+        await _photoCleanupService.CleanupOrphanedPhotosAsync(photoIds, cancellationToken);
+        return true;
+    }
+
+    public async Task<bool> UnlinkPhotoAsync(Guid houseId, Guid photoId, CancellationToken cancellationToken = default)
+    {
+        var house = await _houseRepository.GetForUpdateAsync(houseId, cancellationToken);
+        if (house == null) return false;
+
+        var removed = await _housePhotoRepository.RemoveLinkAsync(houseId, photoId, cancellationToken);
+        if (!removed)
+        {
+            return false;
+        }
+
+        await _housePhotoRepository.SaveChangesAsync(cancellationToken);
+        await _photoCleanupService.CleanupOrphanedPhotosAsync(new[] { photoId }, cancellationToken);
         return true;
     }
 

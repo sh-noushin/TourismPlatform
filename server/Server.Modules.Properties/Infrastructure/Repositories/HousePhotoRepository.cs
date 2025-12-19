@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Media.Domain.Photos;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
@@ -60,4 +64,24 @@ public sealed class HousePhotoRepository : BaseRepository<HousePhoto>, IHousePho
     }
 
     public void AddLink(HousePhoto link) => DbContext.Add(link);
+
+    public async Task<bool> RemoveLinkAsync(Guid houseId, Guid photoId, CancellationToken cancellationToken = default)
+    {
+        var link = await DbContext.Set<HousePhoto>().FindAsync(new object[] { houseId, photoId }, cancellationToken);
+        if (link == null)
+        {
+            return false;
+        }
+
+        DbContext.Remove(link);
+        return true;
+    }
+
+    public async Task<IReadOnlyCollection<Guid>> GetPhotoIdsByHouseIdAsync(Guid houseId, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<HousePhoto>()
+            .Where(x => x.HouseId == houseId)
+            .Select(x => x.PhotoId)
+            .ToListAsync(cancellationToken);
+    }
 }

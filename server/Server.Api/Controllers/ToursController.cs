@@ -74,6 +74,18 @@ public sealed class ToursController : ControllerBase
         return deleted ? NoContent() : NotFound();
     }
 
+    [HttpDelete("{id:guid}/photos/{photoId:guid}")]
+    [Authorize(PolicyNames.ToursManage)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeletePhoto(Guid id, Guid photoId, CancellationToken cancellationToken)
+    {
+        var deleted = await _tourService.UnlinkPhotoAsync(id, photoId, cancellationToken);
+        return deleted ? NoContent() : NotFound();
+    }
+
     [HttpPost("{tourId:guid}/schedules")]
     [Authorize(PolicyNames.ToursManage)]
     [ProducesResponseType(StatusCodes.Status201Created)]

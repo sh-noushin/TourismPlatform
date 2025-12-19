@@ -10,4 +10,5 @@ public interface IHouseService
     Task<Guid> CreateAsync(CreateHouseRequest request, Guid? currentUserId, CancellationToken cancellationToken = default);
     Task<bool> UpdateAsync(Guid id, UpdateHouseRequest request, Guid? currentUserId, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> UnlinkPhotoAsync(Guid houseId, Guid photoId, CancellationToken cancellationToken = default);
 }

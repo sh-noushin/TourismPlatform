@@ -6,6 +6,7 @@ using Server.Modules.Tours.Application.Services;
 using Server.Modules.Tours.Contracts.Tours.Dtos;
 using Server.Modules.Tours.Domain.Tours;
 using Server.Modules.Tours.Domain.Tours.Repositories;
+using Server.SharedKernel.Media;
 
 namespace Server.Modules.Tours.Contracts.Tours.Services;
 
@@ -13,6 +14,7 @@ public sealed class TourService : ITourService
 {
     private readonly DbContext _dbContext;
     private readonly IPhotoCommitService _photoCommitService;
+    private readonly IPhotoCleanupService _photoCleanupService;
     private readonly ITourRepository _tourRepository;
     private readonly ITourReferenceDataRepository _referenceDataRepository;
     private readonly ITourPhotoRepository _tourPhotoRepository;
@@ -22,6 +24,7 @@ public sealed class TourService : ITourService
     public TourService(
         DbContext dbContext,
         IPhotoCommitService photoCommitService,
+        IPhotoCleanupService photoCleanupService,
         ITourRepository tourRepository,
         ITourReferenceDataRepository referenceDataRepository,
         ITourPhotoRepository tourPhotoRepository,
@@ -30,6 +33,7 @@ public sealed class TourService : ITourService
     {
         _dbContext = dbContext;
         _photoCommitService = photoCommitService;
+        _photoCleanupService = photoCleanupService;
         _tourRepository = tourRepository;
         _referenceDataRepository = referenceDataRepository;
         _tourPhotoRepository = tourPhotoRepository;
@@ -131,8 +135,31 @@ public sealed class TourService : ITourService
         var tour = await _tourRepository.GetForUpdateAsync(id, cancellationToken);
         if (tour == null) return false;
 
+        var photoIds = await _tourPhotoRepository.GetPhotoIdsByTourIdAsync(id, cancellationToken);
+
         await _tourRepository.DeleteAsync(tour, cancellationToken);
         await _tourRepository.SaveChangesAsync(cancellationToken);
+
+        await _photoCleanupService.CleanupOrphanedPhotosAsync(photoIds, cancellationToken);
+        return true;
+    }
+
+    public async Task<bool> UnlinkPhotoAsync(Guid tourId, Guid photoId, CancellationToken cancellationToken = default)
+    {
+        var tour = await _tourRepository.GetForUpdateAsync(tourId, cancellationToken);
+        if (tour == null)
+        {
+            return false;
+        }
+
+        var removed = await _tourPhotoRepository.RemoveLinkAsync(tourId, photoId, cancellationToken);
+        if (!removed)
+        {
+            return false;
+        }
+
+        await _tourPhotoRepository.SaveChangesAsync(cancellationToken);
+        await _photoCleanupService.CleanupOrphanedPhotosAsync(new[] { photoId }, cancellationToken);
         return true;
     }
 

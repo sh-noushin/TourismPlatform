@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Media.Domain.Photos;
 using Server.Modules.Tours.Contracts.Tours.Dtos;
@@ -60,4 +64,24 @@ public sealed class TourPhotoRepository : BaseRepository<TourPhoto>, ITourPhotoR
     }
 
     public void AddLink(TourPhoto link) => DbContext.Add(link);
+
+    public async Task<bool> RemoveLinkAsync(Guid tourId, Guid photoId, CancellationToken cancellationToken = default)
+    {
+        var link = await DbContext.Set<TourPhoto>().FindAsync(new object[] { tourId, photoId }, cancellationToken);
+        if (link == null)
+        {
+            return false;
+        }
+
+        DbContext.Remove(link);
+        return true;
+    }
+
+    public async Task<IReadOnlyCollection<Guid>> GetPhotoIdsByTourIdAsync(Guid tourId, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<TourPhoto>()
+            .Where(x => x.TourId == tourId)
+            .Select(x => x.PhotoId)
+            .ToListAsync(cancellationToken);
+    }
 }

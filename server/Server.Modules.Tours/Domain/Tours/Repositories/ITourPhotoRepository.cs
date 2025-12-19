@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Server.Modules.Tours.Contracts.Tours.Dtos;
 using Server.SharedKernel.Repositories;
 
@@ -12,6 +15,8 @@ public interface ITourPhotoRepository : IBaseRepository<TourPhoto>
     Task<IReadOnlyCollection<TourPhotoDto>> GetPhotosByTourIdAsync(Guid tourId, CancellationToken cancellationToken = default);
 
     Task<bool> LinkExistsAsync(Guid tourId, Guid photoId, CancellationToken cancellationToken = default);
+    Task<bool> RemoveLinkAsync(Guid tourId, Guid photoId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Guid>> GetPhotoIdsByTourIdAsync(Guid tourId, CancellationToken cancellationToken = default);
 
     void AddLink(TourPhoto link);
 }

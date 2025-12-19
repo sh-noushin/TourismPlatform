@@ -10,6 +10,7 @@ public interface ITourService
     Task<Guid> CreateAsync(CreateTourRequest request, Guid? currentUserId, CancellationToken cancellationToken = default);
     Task<bool> UpdateAsync(Guid id, UpdateTourRequest request, Guid? currentUserId, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> UnlinkPhotoAsync(Guid tourId, Guid photoId, CancellationToken cancellationToken = default);
 
     Task<Guid?> CreateScheduleAsync(Guid tourId, CreateTourScheduleRequest request, CancellationToken cancellationToken = default);
     Task<bool> UpdateScheduleAsync(Guid scheduleId, UpdateTourScheduleRequest request, CancellationToken cancellationToken = default);
