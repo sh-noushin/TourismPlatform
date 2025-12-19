@@ -11,6 +11,12 @@ using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
 using Server.Api.Services;
+using Server.Modules.Exchange.Application.Services;
+using Server.Modules.Exchange.Contracts.Exchange.Services;
+using Server.Modules.Exchange.Domain.Currencies.Repositories;
+using Server.Modules.Exchange.Domain.Orders.Repositories;
+using Server.Modules.Exchange.Domain.Rates.Repositories;
+using Server.Modules.Exchange.Infrastructure.Repositories;
 using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.Users;
 using Server.Modules.Identity.Application.Services;
@@ -149,6 +155,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITourScheduleRepository, TourScheduleRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<ITourService, TourService>();
+        return services;
+    }
+
+    public static IServiceCollection AddExchangeServices(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+        services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
+        services.AddScoped<IExchangeOrderRepository, ExchangeOrderRepository>();
+        services.AddScoped<IExchangeService, ExchangeService>();
         return services;
     }
 }

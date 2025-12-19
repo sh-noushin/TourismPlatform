@@ -11,6 +11,7 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddMediaServices();
 builder.Services.AddPropertiesServices();
 builder.Services.AddToursServices();
+builder.Services.AddExchangeServices();
 
 var app = builder.Build();
 

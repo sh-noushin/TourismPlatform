@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
+using Server.SharedKernel.ReferenceData;
 
 namespace Server.Modules.Properties.Infrastructure.Repositories;
 
@@ -31,7 +32,7 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
 
     public async Task<Location> GetOrCreateLocationAsync(AddressRequest request, CancellationToken cancellationToken = default)
     {
-        var country = request.Country.Trim();
+        var country = CountryCodes.Normalize(request.Country);
         var city = request.City.Trim();
         var region = string.IsNullOrWhiteSpace(request.Region) ? null : request.Region.Trim();
 
