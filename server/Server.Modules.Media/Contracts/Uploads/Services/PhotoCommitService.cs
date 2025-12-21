@@ -34,9 +34,10 @@ public sealed class PhotoCommitService : IPhotoCommitService
         }
 
         var itemMap = items.ToDictionary(i => i.StagedUploadId);
+        var stagedIds = itemMap.Keys.ToArray();
 
         var stagedUploads = await _dbContext.Set<StagedUpload>()
-            .Where(s => itemMap.ContainsKey(s.Id))
+            .Where(s => stagedIds.Contains(s.Id))
             .ToListAsync(cancellationToken);
 
         if (stagedUploads.Count != items.Count)
