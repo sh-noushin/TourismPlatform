@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Server.Modules.Media.Domain;
+using Server.Modules.Media.Domain.Photos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Tours.Domain.Tours;
 using Server.SharedKernel.Media;

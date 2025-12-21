@@ -26,7 +26,7 @@ public sealed class CurrencyRepository : BaseRepository<Currency>, ICurrencyRepo
         var normalized = CurrencyCodes.Normalize(code);
         if (!CurrencyCodes.Contains(normalized))
         {
-            return null;
+            return Task.FromResult<Currency?>(null);
         }
         return Set.AsNoTracking().FirstOrDefaultAsync(x => x.Code == normalized, cancellationToken);
     }
