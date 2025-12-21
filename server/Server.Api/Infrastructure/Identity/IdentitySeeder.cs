@@ -55,6 +55,7 @@ public sealed class IdentitySeeder
     {
         var email = _options.Value.Email;
         var password = _options.Value.Password;
+        var configuredUsername = _options.Value.Username;
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
@@ -67,7 +68,7 @@ public sealed class IdentitySeeder
         {
             user = new ApplicationUser
             {
-                UserName = email,
+                UserName = string.IsNullOrWhiteSpace(configuredUsername) ? email : configuredUsername,
                 Email = email,
                 EmailConfirmed = true
             };
