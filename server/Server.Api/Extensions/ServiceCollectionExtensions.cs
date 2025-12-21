@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
@@ -53,7 +55,34 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
-        services.AddOpenApi();
+        services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer((OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken) =>
+            {
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+                // Add JWT bearer security scheme so Scalar shows the Authorize button.
+                const string schemeName = "BearerAuth";
+                document.Components.SecuritySchemes[schemeName] = new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Description = "Paste the access token. No need to prefix with 'Bearer'."
+                };
+
+                document.Security ??= new List<OpenApiSecurityRequirement>();
+                document.Security.Add(new OpenApiSecurityRequirement
+                {
+                    { new OpenApiSecuritySchemeReference(schemeName, document, null), new List<string>() }
+                });
+
+                return Task.CompletedTask;
+            });
+        });
         return services;
     }
 

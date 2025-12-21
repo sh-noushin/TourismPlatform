@@ -22,13 +22,17 @@ public static class WebApplicationExtensions
     {
         app.UseMiddleware<CorrelationIdMiddleware>();
         app.UseMiddleware<GlobalExceptionMiddleware>();
-        app.UseMiddleware<RequestLoggingMiddleware>();
-        app.UseMiddleware<SecurityHeadersMiddleware>();
 
         app.UseHttpsRedirection();
+
         app.UseCors();
+
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseMiddleware<RequestLoggingMiddleware>();
+
+        app.UseMiddleware<SecurityHeadersMiddleware>();
 
         return app;
     }
