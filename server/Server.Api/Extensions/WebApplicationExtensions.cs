@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Builder;
 using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Middleware;

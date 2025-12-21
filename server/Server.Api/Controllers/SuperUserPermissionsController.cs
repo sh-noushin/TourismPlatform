@@ -1,6 +1,4 @@
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Identity.Application.Services;
 using Server.Modules.Identity.Contracts.Permissions.Dtos;

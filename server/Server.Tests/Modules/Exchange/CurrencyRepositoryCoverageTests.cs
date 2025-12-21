@@ -1,10 +1,6 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Server.Modules.Exchange.Domain.Currencies;
 using Server.Modules.Exchange.Infrastructure.Repositories;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Exchange;
 

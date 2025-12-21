@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.SharedKernel.Repositories;
 

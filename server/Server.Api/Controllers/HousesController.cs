@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Dtos;

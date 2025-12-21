@@ -1,11 +1,8 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Infrastructure.Repositories;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Properties;
 

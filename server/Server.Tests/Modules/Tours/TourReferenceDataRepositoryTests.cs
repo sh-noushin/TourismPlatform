@@ -1,10 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Tours.Domain.Tours;
 using Server.Modules.Tours.Infrastructure.Repositories;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Tours;
 

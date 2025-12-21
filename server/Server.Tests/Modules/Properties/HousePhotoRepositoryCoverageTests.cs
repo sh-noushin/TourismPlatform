@@ -1,12 +1,8 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Media.Domain.Photos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Infrastructure.Repositories;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Properties;
 

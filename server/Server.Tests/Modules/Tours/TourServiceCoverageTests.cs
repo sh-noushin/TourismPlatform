@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Moq;
 using Server.Modules.Media.Application.Services;
 using Server.Modules.Media.Contracts.Uploads.Dtos;
@@ -15,7 +10,6 @@ using Server.Modules.Tours.Domain.Tours;
 using Server.Modules.Tours.Infrastructure.Repositories;
 using Server.SharedKernel.Media;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Tours;
 

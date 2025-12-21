@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Server.Modules.Media.Application.Services;
 using Server.Modules.Tours.Application.Services;
@@ -10,7 +7,6 @@ using Server.Modules.Tours.Domain.Tours;
 using Server.Modules.Tours.Domain.Tours.Repositories;
 using Server.SharedKernel.Media;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Tours;
 

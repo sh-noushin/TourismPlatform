@@ -1,16 +1,10 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Server.Api.Services;
-using PhotoEntity = Server.Modules.Media.Domain.Photos.Photo;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Tours.Domain.Tours;
 using Server.Tests.Common;
-using Xunit;
+using PhotoEntity = Server.Modules.Media.Domain.Photos.Photo;
 
 namespace Server.Tests.Modules.Api;
 

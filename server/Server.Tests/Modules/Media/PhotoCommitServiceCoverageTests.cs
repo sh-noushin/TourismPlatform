@@ -1,15 +1,9 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Server.Modules.Media.Contracts.Uploads.Dtos;
 using Server.Modules.Media.Contracts.Uploads.Services;
 using Server.Modules.Media.Domain.Photos;
 using Server.Modules.Media.Domain.Uploads;
 using Server.Tests.Common;
-using Xunit;
+using System.Reflection;
 
 namespace Server.Tests.Modules.Media;
 

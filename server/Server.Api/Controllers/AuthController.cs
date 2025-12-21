@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Api.Services;
 using Server.Modules.Identity.Contracts.Auth.Dtos;
-using Server.SharedKernel.Auth;
 
 namespace Server.Api.Controllers;
 

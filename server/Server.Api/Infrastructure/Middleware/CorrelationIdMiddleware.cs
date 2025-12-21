@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace Server.Api.Infrastructure.Middleware;
 
 public sealed class CorrelationIdMiddleware

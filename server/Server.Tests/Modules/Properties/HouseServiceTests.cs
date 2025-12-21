@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Moq;
 using Server.Modules.Media.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Services;
@@ -8,7 +5,6 @@ using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 using Server.SharedKernel.Media;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Properties;
 

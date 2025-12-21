@@ -1,20 +1,16 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using Server.Api.Infrastructure.Security;
 using Server.Api.Services;
+using Server.Modules.Identity.Contracts.Auth.Dtos;
 using Server.Modules.Identity.Domain.RefreshTokens;
 using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.Users;
-using Server.Modules.Identity.Contracts.Auth.Dtos;
 using Server.SharedKernel.Auth;
 using Server.Tests.Common;
-using Xunit;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Server.Tests.Modules.Api;
 

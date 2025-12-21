@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Server.Modules.Identity.Application.Services;
@@ -10,7 +7,6 @@ using Server.Modules.Identity.Domain.Permissions;
 using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.Users;
 using Server.Tests.Common;
-using Xunit;
 
 namespace Server.Tests.Modules.Identity;
 
