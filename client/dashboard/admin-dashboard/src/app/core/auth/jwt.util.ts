@@ -39,12 +39,26 @@ const ensureArray = (value: string | string[] | undefined): string[] => {
   return Array.isArray(value) ? value.filter(Boolean) : [value];
 };
 
+const normalizeClaimValue = (value: unknown): string[] => {
+  if (!value) return [];
+  if (Array.isArray(value)) {
+    return value
+      .filter((item) => item != null)
+      .map((item) => String(item).trim())
+      .filter(Boolean);
+  }
+  return [String(value).trim()].filter(Boolean);
+};
+
 export const extractRoles = (payload: JwtPayload | null): string[] => {
-  const roles = payload?.roles ?? (payload ? payload['role'] : undefined);
-  if (!roles) return [];
-  return Array.isArray(roles)
-    ? (roles as string[])
-    : [String(roles)];
+  if (!payload) return [];
+  const claimKeys = [
+    'roles',
+    'role',
+    'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+  ];
+  const rawRoles = claimKeys.flatMap((key) => normalizeClaimValue(payload[key]));
+  return [...new Set(rawRoles)];
 };
 
 export const extractPermissions = (payload: JwtPayload | null): string[] => {
