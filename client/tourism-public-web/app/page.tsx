@@ -2,8 +2,7 @@ import Link from "next/link";
 
 import { Badge, Card } from "@/components/ui";
 import { CategoryChips } from "@/components/shared/CategoryChips";
-import { getJson } from "@/lib/api/client";
-import { apiEndpoints } from "@/lib/api/endpoints";
+import { CategoryDto, fetchHouseTypes, fetchTourCategories } from "@/lib/api/categories";
 
 const highlights = [
   {
@@ -23,39 +22,20 @@ const highlights = [
 const pillLinkClasses =
   "rounded-full border border-border px-5 py-2 text-sm font-semibold text-text transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
-interface HouseTypeDto {
-  id: string;
-  name: string;
-}
-
-interface TourCategoryDto {
-  id: string;
-  name: string;
-}
-
 const buildHouseHref = (name: string) => `/houses?type=${encodeURIComponent(name)}`;
 const buildTourHref = (name: string) => `/tours?category=${encodeURIComponent(name)}`;
 
-const fetchHouseTypes = async () => {
-  try {
-    return await getJson<HouseTypeDto[]>(apiEndpoints.categories.houseTypes);
-  } catch (error) {
-    console.error("Failed to load house types", error);
-    return [] as HouseTypeDto[];
-  }
-};
-
-const fetchTourCategories = async () => {
-  try {
-    return await getJson<TourCategoryDto[]>(apiEndpoints.categories.tourCategories);
-  } catch (error) {
-    console.error("Failed to load tour categories", error);
-    return [] as TourCategoryDto[];
-  }
-};
-
 export default async function Home() {
-  const [houseTypes, tourCategories] = await Promise.all([fetchHouseTypes(), fetchTourCategories()]);
+  const [houseTypes, tourCategories] = await Promise.all([
+    fetchHouseTypes().catch((error) => {
+      console.error("Failed to load house types", error);
+      return [] as CategoryDto[];
+    }),
+    fetchTourCategories().catch((error) => {
+      console.error("Failed to load tour categories", error);
+      return [] as CategoryDto[];
+    }),
+  ]);
 
   const houseTypeChips = houseTypes.map((type) => ({
     label: type.name,
