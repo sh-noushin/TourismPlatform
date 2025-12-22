@@ -1,0 +1,14 @@
+@use './variables' as vars;
+
+$font-base: vars.$font-base;
+$font-heading: vars.$font-heading;
+$line-height-body: 1.6;
+$letter-spacing-tight: -0.01em;
+
+@mixin heading-style($size, $weight: 600) {
+  font-family: $font-heading;
+  font-weight: $weight;
+  letter-spacing: $letter-spacing-tight;
+  line-height: 1.2;
+  font-size: $size;
+}

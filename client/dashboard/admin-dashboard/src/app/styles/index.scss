@@ -1,0 +1,52 @@
+@use './variables' as vars;
+@use './mixins' as mixins;
+@use './typography' as typography;
+@use './material-theme' as material-theme;
+
+@include material-theme.dashboard-material-theme;
+
+:root {
+  --color-bg: vars.$color-bg;
+  --color-surface: vars.$color-surface;
+  --color-text: vars.$color-text;
+  --color-muted: vars.$color-muted;
+  --color-border: vars.$color-border;
+  --color-primary: vars.$color-primary;
+  --color-primary-contrast: vars.$color-primary-contrast;
+  --space-1: #{vars.$space-1};
+  --space-2: #{vars.$space-2};
+  --space-3: #{vars.$space-3};
+  --space-4: #{vars.$space-4};
+  --space-5: #{vars.$space-5};
+  --space-6: #{vars.$space-6};
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: typography.$font-base;
+  line-height: typography.$line-height-body;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: typography.$font-heading;
+  letter-spacing: typography.$letter-spacing-tight;
+}
+
+.loading-shell {
+  @include mixins.page-container();
+}
+
+.panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: vars.$radius-md;
+  padding: vars.$space-5;
+  box-shadow: vars.$shadow-card;
+}
