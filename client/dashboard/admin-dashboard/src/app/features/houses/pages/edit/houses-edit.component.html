@@ -1,0 +1,83 @@
+<div class="houses-edit">
+  <h2>
+    @if (isEdit()) {
+      Edit House
+    } @else {
+      Create House
+    }
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <sf-form-field label="Name" [forId]="'name'" [error]="form.controls.name.touched && form.controls.name.invalid ? 'Required' : null">
+      <input id="name" type="text" formControlName="name" />
+    </sf-form-field>
+
+    <sf-form-field label="Type" [forId]="'houseTypeName'" [error]="form.controls.houseTypeName.touched && form.controls.houseTypeName.invalid ? 'Required' : null">
+      <input id="houseTypeName" type="text" formControlName="houseTypeName" />
+    </sf-form-field>
+
+    <sf-form-field label="Description" [forId]="'description'">
+      <input id="description" type="text" formControlName="description" />
+    </sf-form-field>
+
+    <fieldset class="address" formGroupName="address">
+      <legend>Address</legend>
+      <sf-form-field label="Line 1" [forId]="'line1'" [error]="form.controls.address.controls.line1.touched && form.controls.address.controls.line1.invalid ? 'Required' : null">
+        <input id="line1" type="text" formControlName="line1" />
+      </sf-form-field>
+      <sf-form-field label="Line 2" [forId]="'line2'">
+        <input id="line2" type="text" formControlName="line2" />
+      </sf-form-field>
+      <sf-form-field label="City" [forId]="'city'" [error]="form.controls.address.controls.city.touched && form.controls.address.controls.city.invalid ? 'Required' : null">
+        <input id="city" type="text" formControlName="city" />
+      </sf-form-field>
+      <sf-form-field label="Region" [forId]="'region'">
+        <input id="region" type="text" formControlName="region" />
+      </sf-form-field>
+      <sf-form-field label="Country" [forId]="'country'" [error]="form.controls.address.controls.country.touched && form.controls.address.controls.country.invalid ? 'Required' : null">
+        <input id="country" type="text" formControlName="country" />
+      </sf-form-field>
+      <sf-form-field label="Postal Code" [forId]="'postalCode'">
+        <input id="postalCode" type="text" formControlName="postalCode" />
+      </sf-form-field>
+    </fieldset>
+
+    <section class="photos">
+      <h3>Photos</h3>
+
+      @if (existingPhotos().length > 0) {
+        <div class="photos__existing">
+          @for (p of existingPhotos(); track p.photoId) {
+            <div class="photo">
+              <span>{{ p.label }} ({{ p.sortOrder }})</span>
+              <sf-button variant="outline" size="sm" (click)="removeExisting(p.photoId)">Remove</sf-button>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="photos__staged">
+        <input type="file" multiple (change)="onFileInputChange($event)" />
+
+        @if (staged().length > 0) {
+          @for (s of staged(); track s.stagedUploadId; let i = $index) {
+            <div class="staged">
+              <img [src]="s.previewUrl" alt="preview" width="80" height="60" />
+              <sf-form-field label="Label">
+                <input type="text" [value]="s.label" (input)="updateStagedLabel(i, $any($event.target).value)" />
+              </sf-form-field>
+              <sf-form-field label="Sort">
+                <input type="number" [value]="s.sortOrder" (input)="updateStagedSort(i, $any($event.target).value)" />
+              </sf-form-field>
+              <sf-button variant="outline" size="sm" (click)="removeStaged(i)">Remove</sf-button>
+            </div>
+          }
+        }
+      </div>
+    </section>
+
+    <div class="actions">
+      <sf-button type="submit" [disabled]="loading()">Save</sf-button>
+    </div>
+  </form>
+</div>

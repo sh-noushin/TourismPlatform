@@ -1,2 +1,19 @@
-<h2>Houses</h2>
-<p>Houses list placeholder.</p>
+<div class="houses-list">
+	<div class="header">
+		<h2>Houses</h2>
+		<sf-button (click)="createNew()">Create</sf-button>
+	</div>
+
+	<sf-table
+		[columns]="columns"
+		[data]="facade.paged()"
+		[loading]="facade.loading()"
+		[page]="facade.page()"
+		[pageSize]="facade.pageSize()"
+		[totalCount]="facade.totalCount()"
+		[sortKey]="facade.sortKey()"
+		[actions]="actions"
+		(pageChange)="onPageChange($event)"
+		(sortChange)="onSortChange($event)"
+	></sf-table>
+</div>

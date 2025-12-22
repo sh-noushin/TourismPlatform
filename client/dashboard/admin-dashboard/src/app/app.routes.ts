@@ -11,15 +11,11 @@ const startGuard: CanActivateFn = () => {
 };
 
 export const routes: Routes = [
-  // Auth feature routes (e.g., /login)
+  { path: '', pathMatch: 'full', canActivate: [startGuard], children: [] },
   {
     path: '',
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.routes)
   },
-  // Admin shell and children
   ...layoutRoutes,
-  // Conditional start redirect
-  { path: '', pathMatch: 'full', canActivate: [startGuard], children: [] },
-  // Fallback
   { path: '**', redirectTo: '' }
 ];
