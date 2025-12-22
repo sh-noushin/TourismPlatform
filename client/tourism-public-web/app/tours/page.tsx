@@ -77,7 +77,9 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
   return (
     <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[320px_1fr]">
       <div className="w-full">
-        <TourFilters initialFilters={filters} tourCategories={tourCategories} />
+        <div className="lg:sticky lg:top-8">
+          <TourFilters initialFilters={filters} tourCategories={tourCategories} />
+        </div>
       </div>
 
       <div className="space-y-6">

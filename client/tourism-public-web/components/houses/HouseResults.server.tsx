@@ -2,6 +2,9 @@ import type { components } from "@/lib/openapi/types";
 
 import { EmptyState, Pagination } from "@/components/ui";
 import { HouseCard } from "./HouseCard";
+import { houseSortOptions } from "@/lib/filters/houses";
+import { SortDropdown } from "@/components/shared/SortDropdown.client";
+import { resolveSortValue } from "@/components/shared/SortDropdown.utils";
 
 type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
 
@@ -19,13 +22,21 @@ export function HouseResults({ houses, page, pageSize, totalCount, currentQuery 
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+        <div className="space-y-1">
+          <p className="text-sm font-semibold uppercase tracking-wide text-muted">{totalCount} results</p>
           <h1 className="text-2xl font-semibold text-text">Houses</h1>
           <p className="text-sm text-muted">
             Showing {startIndex}-{endIndex} of {totalCount} homes
           </p>
         </div>
+        <SortDropdown
+          label="Sort"
+          value={resolveSortValue(currentQuery, houseSortOptions[0].value)}
+          options={houseSortOptions}
+          basePath="/houses"
+          currentQuery={currentQuery}
+        />
         <Pagination
           page={page}
           pageSize={pageSize}
