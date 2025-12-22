@@ -1,0 +1,39 @@
+@use '../../styles/variables' as vars;
+
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.admin-shell {
+  height: 100vh;
+  background: vars.$color-bg;
+}
+
+.admin-shell__sidebar {
+  width: vars.$sidebar-width;
+  background: vars.$color-surface;
+  border-right: 1px solid vars.$color-border;
+}
+
+.admin-shell__content {
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, color-mix(in srgb, vars.$color-primary 10%, transparent) 0%, transparent 45%), vars.$color-bg;
+  color: vars.$color-text;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-shell__page {
+  flex: 1;
+  padding: vars.$space-5;
+  max-width: 1200px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+@media (max-width: 768px) {
+  .admin-shell__page {
+    padding: vars.$space-4 vars.$space-3;
+  }
+}

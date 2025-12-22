@@ -1,0 +1,17 @@
+<mat-sidenav-container class="admin-shell">
+  <mat-sidenav
+    class="admin-shell__sidebar"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="sidebarOpen()"
+    (backdropClick)="toggleSidebar()"
+  >
+    <app-sidebar (navigate)="handleNavigation()"></app-sidebar>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="admin-shell__content">
+    <app-topbar (menuToggle)="toggleSidebar()" />
+    <div class="admin-shell__page">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
