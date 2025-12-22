@@ -5,7 +5,8 @@ import { Button, Card, Drawer, Input, Select } from "@/components/ui";
 import { usePathname, useRouter } from "next/navigation";
 
 import { CategoryDto } from "@/lib/api/categories";
-import { HouseFilters, houseSortOptions } from "@/lib/filters/houses";
+import type { HouseFilters } from "@/lib/filters/houses";
+import { houseSortOptions } from "@/lib/filters/houses";
 
 interface HouseFiltersProps {
   initialFilters: HouseFilters;
