@@ -1,0 +1,11 @@
+<div class="sf-form-field">
+  <label class="sf-form-field__label" [attr.for]="forId">{{ label }}</label>
+  <div class="sf-form-field__control">
+    <ng-content />
+  </div>
+  @if (error) {
+    <div class="sf-form-field__error">{{ error }}</div>
+  } @else if (hint) {
+    <div class="sf-form-field__hint">{{ hint }}</div>
+  }
+</div>
