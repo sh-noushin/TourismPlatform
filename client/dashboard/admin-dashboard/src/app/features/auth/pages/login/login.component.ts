@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SfButtonComponent } from '../../../../shared/ui/sf-button/sf-button.component';
 import { SfFormFieldComponent } from '../../../../shared/ui/sf-form-field/sf-form-field.component';
@@ -12,7 +12,7 @@ import { AuthFacade } from '../../../../core/auth/auth.facade';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, SfButtonComponent, SfFormFieldComponent],
+  imports: [CommonModule, ReactiveFormsModule, SfButtonComponent, SfFormFieldComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
