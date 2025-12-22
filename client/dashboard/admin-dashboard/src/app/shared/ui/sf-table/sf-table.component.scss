@@ -1,0 +1,53 @@
+.sf-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.sf-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.sf-table th,
+.sf-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid currentColor;
+  border-bottom-color: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.sort-button {
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.actions-column {
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.empty {
+  text-align: center;
+  opacity: 0.7;
+}
+
+.sf-table__pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.75rem 0;
+  gap: 0.75rem;
+}
+
+.sf-table__pagination .page {
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+}

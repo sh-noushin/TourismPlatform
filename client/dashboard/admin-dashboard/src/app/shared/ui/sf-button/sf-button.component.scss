@@ -1,0 +1,33 @@
+.sf-button {
+  appearance: none;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sf-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:host(.sf-button-host--sm) .sf-button {
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+}
+
+:host(.sf-button-host--md) .sf-button {
+  padding: 0.5rem 0.75rem;
+}
+
+:host(.sf-button-host--solid) .sf-button {
+  background: currentColor;
+  color: Canvas;
+}
+
+:host(.sf-button-host--ghost) .sf-button {
+  border-color: transparent;
+}
