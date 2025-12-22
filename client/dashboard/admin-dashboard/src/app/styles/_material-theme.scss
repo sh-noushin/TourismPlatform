@@ -1,22 +1,5 @@
 @use '@angular/material' as mat;
-@use './variables' as vars;
-
-$primary-palette: mat.define-palette(mat.$indigo-palette, 600, 300, 800);
-$accent-palette: mat.define-palette(mat.$cyan-palette, 500);
-$warn-palette: mat.define-palette(mat.$red-palette, 600);
-
-$dashboard-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $primary-palette,
-      accent: $accent-palette,
-      warn: $warn-palette,
-    ),
-    typography: mat.define-typography-config((font-family: vars.$font-base))
-  )
-);
 
 @mixin dashboard-material-theme {
   @include mat.core();
-  @include mat.all-component-themes($dashboard-theme);
 }
