@@ -24,6 +24,10 @@ export class AuthFacade {
   readonly isAuthenticated = computed(() => Boolean(this.accessToken()));
   readonly isSuperUser = computed(() => hasSuperUserRole(this.rolesSignal()));
 
+  getAccessToken(): string | null {
+    return this.accessToken();
+  }
+
   constructor(private readonly authService: AuthService) {
     this.hydrateFromAccessToken(this.accessToken());
   }
