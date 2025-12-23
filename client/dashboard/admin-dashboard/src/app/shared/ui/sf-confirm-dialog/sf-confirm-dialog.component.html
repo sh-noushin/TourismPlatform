@@ -1,0 +1,13 @@
+<sf-dialog
+  [title]="data.title ?? 'Confirm action'"
+  [subtitle]="data.description"
+>
+  <ng-container dialog-actions>
+    <sf-button variant="ghost" size="sm" (click)="onCancel()">
+      {{ data.cancelLabel ?? 'Cancel' }}
+    </sf-button>
+    <sf-button variant="primary" size="sm" (click)="onConfirm()">
+      {{ data.confirmLabel ?? 'Confirm' }}
+    </sf-button>
+  </ng-container>
+</sf-dialog>

@@ -1,0 +1,40 @@
+@use '../../../styles/variables' as vars;
+
+.sf-dialog {
+  width: 100%;
+  max-width: 480px;
+  padding: vars.$space-4;
+  background: vars.$color-surface;
+  border-radius: vars.$radius-lg;
+  box-shadow: 0 25px 55px rgba(2, 6, 23, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-4;
+}
+
+.sf-dialog__header {
+  margin: 0;
+}
+
+.sf-dialog__title {
+  margin: 0;
+  font-family: vars.$font-heading;
+  font-size: 1.5rem;
+}
+
+.sf-dialog__subtitle {
+  margin: vars.$space-1 0 0;
+  color: color-mix(in srgb, vars.$color-text 70%, transparent 30%);
+}
+
+.sf-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: vars.$space-2;
+}
+
+.sf-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-3;
+}

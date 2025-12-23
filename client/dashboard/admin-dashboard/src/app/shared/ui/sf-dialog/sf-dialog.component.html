@@ -1,0 +1,16 @@
+<section class="sf-dialog">
+  <header class="sf-dialog__header">
+    @if (title) {
+      <h2 class="sf-dialog__title">{{ title }}</h2>
+    }
+    @if (subtitle) {
+      <p class="sf-dialog__subtitle">{{ subtitle }}</p>
+    }
+  </header>
+  <div class="sf-dialog__body">
+    <ng-content select="[dialog-body]" />
+  </div>
+  <footer class="sf-dialog__actions">
+    <ng-content select="[dialog-actions]" />
+  </footer>
+</section>

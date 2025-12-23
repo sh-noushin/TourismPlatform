@@ -1,0 +1,12 @@
+<section class="sf-empty-state">
+  @if (icon) {
+    <span class="sf-empty-state__icon">{{ icon }}</span>
+  }
+  <h2 class="sf-empty-state__title">{{ title }}</h2>
+  @if (description) {
+    <p class="sf-empty-state__description">{{ description }}</p>
+  }
+  <div class="sf-empty-state__actions">
+    <ng-content select="[empty-state-actions]" />
+  </div>
+</section>

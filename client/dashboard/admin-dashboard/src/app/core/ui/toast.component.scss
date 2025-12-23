@@ -1,0 +1,42 @@
+@use '../../styles/variables' as vars;
+
+.sf-toast-viewport {
+  position: fixed;
+  inset: auto vars.$space-4 vars.$space-4 auto;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-3;
+  z-index: 2000;
+}
+
+.sf-toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: vars.$space-3;
+  padding: vars.$space-3 vars.$space-3;
+  border-radius: vars.$radius-lg;
+  min-width: 280px;
+  background: rgba(15, 23, 42, 0.85);
+  color: vars.$color-text;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6);
+}
+
+.sf-toast--success {
+  border-left: 4px solid vars.$color-success;
+}
+
+.sf-toast--error {
+  border-left: 4px solid vars.$color-danger;
+}
+
+.sf-toast--info {
+  border-left: 4px solid vars.$color-primary;
+}
+
+.sf-toast__message {
+  margin: 0;
+  flex: 1;
+  word-break: break-word;
+}
