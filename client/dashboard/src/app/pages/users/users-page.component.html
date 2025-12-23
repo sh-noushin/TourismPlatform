@@ -1,0 +1,14 @@
+<section class="users-page">
+  <div class="users-page__header">
+    <sf-page-header title="Users" subtitle="Platform users">
+      <sf-button sfPageHeaderActions variant="ghost" type="button">New user</sf-button>
+    </sf-page-header>
+    <div class="users-page__filters">
+      <sf-searchbar placeholder="Search users" (valueChange)="setFilter($event)"></sf-searchbar>
+    </div>
+  </div>
+
+  <sf-card>
+    <sf-table [columns]="columns" [data]="displayedUsers()" [loading]="loadingSignal()" [actions]="actions" (rowAction)="onRowAction($event)"></sf-table>
+  </sf-card>
+</section>

@@ -8,6 +8,8 @@ import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
+import { TabService } from '../../core/tab/tab.service';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -51,8 +53,21 @@ export class HousesPageComponent {
     });
   });
 
-  constructor(private readonly houses: HousesFacade) {
+  readonly actions = [
+    { label: 'Edit', type: 'edit', icon: 'edit' }
+  ];
+
+  constructor(private readonly houses: HousesFacade, private readonly tabs: TabService, private readonly router: Router) {
     this.houses.load();
+  }
+
+  onRowAction(event: { action: any; row: any }) {
+    const { action, row } = event;
+    if (action?.type === 'edit') {
+      const path = `/admin/houses/${row.id}/edit`;
+      this.tabs.openOrActivate(path, `House ${row.id}`);
+      this.router.navigateByUrl(path);
+    }
   }
 
   setFilter(value: string) {

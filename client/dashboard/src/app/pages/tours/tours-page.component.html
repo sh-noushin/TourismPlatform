@@ -16,7 +16,9 @@
       [columns]="columns"
       [data]="displayedTours()"
       [loading]="loadingSignal()"
+      [actions]="actions"
       (sortChange)="onSortChange($event)"
+      (rowAction)="onRowAction($event)"
     ></sf-table>
   </sf-card>
 </section>
