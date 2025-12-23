@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SfButtonComponent } from '../shared/ui/sf-button/sf-button.component';
 import { SfDrawerComponent } from '../shared/ui/sf-drawer/sf-drawer.component';
+import { HasPermissionDirective } from '../shared/directives/has-permission.directive';
 
 @Component({
   standalone: true,

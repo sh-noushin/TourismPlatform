@@ -5,8 +5,8 @@
       <small>Command center</small>
     </div>
     <nav class="app-shell__nav">
-      <a routerLink="houses" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Houses</a>
-      <a routerLink="tours" routerLinkActive="active">Tours</a>
+      <a routerLink="houses" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" has-permission="'Houses.View'">Houses</a>
+      <a routerLink="tours" routerLinkActive="active" has-permission="'Tours.View'">Tours</a>
     </nav>
     <div class="app-shell__actions">
       <sf-button variant="ghost" type="button" (click)="toggleDrawer()">Filters</sf-button>
@@ -16,8 +16,8 @@
   <div class="app-shell__body">
     <aside class="app-shell__sidebar">
       <p class="sidebar-heading">Shortcuts</p>
-      <a routerLink="houses" routerLinkActive="active">View houses</a>
-      <a routerLink="tours" routerLinkActive="active">View tours</a>
+      <a routerLink="houses" routerLinkActive="active" has-permission="'Houses.View'">View houses</a>
+      <a routerLink="tours" routerLinkActive="active" has-permission="'Tours.View'">View tours</a>
       <span class="sidebar-note">Tenant: admin</span>
     </aside>
 

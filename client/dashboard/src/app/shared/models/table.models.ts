@@ -14,6 +14,7 @@ export interface SfTableRowAction {
   type: string;
   icon?: string;
   color?: 'primary' | 'warn' | 'muted';
+  permission?: string;
 }
 
 export interface SfTablePaging {
