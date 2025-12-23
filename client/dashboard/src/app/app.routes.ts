@@ -1,12 +1,15 @@
 import { Routes } from '@angular/router';
 import { DashboardShellComponent } from './shell/dashboard-shell.component';
 import { LoginPageComponent } from './pages/login/login-page.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
   {
-    path: '',
+    path: 'admin',
     component: DashboardShellComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'houses', pathMatch: 'full' },
       { path: 'houses', loadComponent: () => import('./pages/houses/houses-page.component').then(m => m.HousesPageComponent) },
@@ -21,5 +24,6 @@ export const routes: Routes = [
       { path: 'permissions', loadComponent: () => import('./pages/permissions/permissions-page.component').then(m => m.PermissionsPageComponent) },
       { path: 'permissions/:id/edit', loadComponent: () => import('./pages/permissions/permission-edit.component').then(m => m.PermissionEditComponent) }
     ]
-  }
+  },
+  { path: '**', redirectTo: 'login' }
 ];

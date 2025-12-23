@@ -52,12 +52,12 @@ export class LoginPageComponent {
     this.error = null;
     try {
       await this.auth.login(this.email(), this.password());
-      // after login go to returnUrl or root
-      const navTo = this.returnUrl ?? '/';
+      // after login go to returnUrl or default admin landing
+      const navTo = this.returnUrl ?? '/admin/houses';
       await this.router.navigateByUrl(navTo);
-      // open pinned tab for the dashboard root
+      // open pinned tab for the houses landing
       try {
-        this.tabs.openOrActivate(navTo, 'Dashboard', true);
+        this.tabs.openOrActivate(navTo, 'Houses', true);
       } catch {}
     } catch (err: any) {
       this.error = err?.message ?? 'Login failed';
