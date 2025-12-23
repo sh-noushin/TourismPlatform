@@ -1,0 +1,22 @@
+<section class="tours-page">
+  <div class="tours-page__header">
+    <sf-page-header title="Tours" subtitle="Experiences managed through the platform">
+      <sf-button sfPageHeaderActions variant="ghost" type="button">New tour</sf-button>
+    </sf-page-header>
+    <div class="tours-page__filters">
+      <sf-searchbar
+        placeholder="Search by name or category"
+        (valueChange)="setFilter($event)"
+      ></sf-searchbar>
+    </div>
+  </div>
+
+  <sf-card>
+    <sf-table
+      [columns]="columns"
+      [data]="displayedTours()"
+      [loading]="loadingSignal()"
+      (sortChange)="onSortChange($event)"
+    ></sf-table>
+  </sf-card>
+</section>

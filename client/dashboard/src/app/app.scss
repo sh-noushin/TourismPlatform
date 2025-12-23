@@ -1,0 +1,23 @@
+@use './styles/index' as *;
+
+:root {
+	font-family: $font-body;
+	background: $bg;
+	color: $text;
+}
+
+body {
+	margin: 0;
+	background: $bg;
+	color: $text;
+}
+
+app-root {
+	display: block;
+	min-height: 100vh;
+	background: $bg;
+}
+
+a {
+	color: inherit;
+}

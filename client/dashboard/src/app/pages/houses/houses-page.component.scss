@@ -1,0 +1,27 @@
+@use '../../styles/index' as *;
+
+.houses-page {
+  display: flex;
+  flex-direction: column;
+  gap: spacing(lg);
+}
+
+.houses-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: spacing(md);
+}
+
+.houses-page__filters {
+  width: 100%;
+  max-width: 480px;
+}
+
+@media (max-width: 640px) {
+  .houses-page__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

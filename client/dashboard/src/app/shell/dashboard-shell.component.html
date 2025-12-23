@@ -1,0 +1,41 @@
+<div class="app-shell">
+  <header class="app-shell__header">
+    <div class="app-shell__brand">
+      <span>Tourism platform</span>
+      <small>Command center</small>
+    </div>
+    <nav class="app-shell__nav">
+      <a routerLink="houses" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Houses</a>
+      <a routerLink="tours" routerLinkActive="active">Tours</a>
+    </nav>
+    <div class="app-shell__actions">
+      <sf-button variant="ghost" type="button" (click)="toggleDrawer()">Filters</sf-button>
+    </div>
+  </header>
+
+  <div class="app-shell__body">
+    <aside class="app-shell__sidebar">
+      <p class="sidebar-heading">Shortcuts</p>
+      <a routerLink="houses" routerLinkActive="active">View houses</a>
+      <a routerLink="tours" routerLinkActive="active">View tours</a>
+      <span class="sidebar-note">Tenant: admin</span>
+    </aside>
+
+    <main class="app-shell__content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <sf-drawer [open]="drawerOpen()" (openChange)="drawerOpen.set($event)">
+    <div class="drawer-panel">
+      <div class="drawer-panel__header">
+        <div>
+          <h2>Filters</h2>
+          <p>Adjust reporting scope</p>
+        </div>
+        <sf-button variant="ghost" type="button" (click)="closeDrawer()">Close</sf-button>
+      </div>
+      <p class="drawer-panel__copy">Filters will go here once the API supports scoped views.</p>
+    </div>
+  </sf-drawer>
+</div>

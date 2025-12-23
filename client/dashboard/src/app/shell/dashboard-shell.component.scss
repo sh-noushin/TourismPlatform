@@ -1,0 +1,131 @@
+@use '../styles/index' as *;
+
+.app-shell {
+  min-height: 100vh;
+  background: $bg;
+  color: $text;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: spacing(lg) spacing(xl);
+  border-bottom: 1px solid $border;
+  background: $surface;
+  box-shadow: 0 10px 30px rgba($text, 0.05);
+}
+
+.app-shell__brand {
+  font-weight: $font-weight-semibold;
+  display: flex;
+  flex-direction: column;
+  gap: spacing(xs);
+}
+
+.app-shell__brand small {
+  color: $muted;
+}
+
+.app-shell__nav {
+  display: flex;
+  gap: spacing(lg);
+}
+
+.app-shell__nav a {
+  color: $text;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  padding-bottom: spacing(xs);
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.app-shell__nav a.active,
+.app-shell__nav a:hover {
+  color: $primary;
+  border-color: $primary;
+}
+
+.app-shell__actions {
+  display: flex;
+}
+
+.app-shell__body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  flex: 1;
+  gap: spacing(lg);
+  padding: spacing(lg) spacing(xl);
+}
+
+.app-shell__sidebar {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 1rem;
+  padding: spacing(md);
+  display: flex;
+  flex-direction: column;
+  gap: spacing(sm);
+}
+
+.app-shell__sidebar a {
+  color: $text;
+  text-decoration: none;
+  padding: spacing(xs) 0;
+  font-weight: $font-weight-medium;
+}
+
+.app-shell__sidebar a.active {
+  color: $primary;
+}
+
+.sidebar-heading {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $muted;
+}
+
+.sidebar-note {
+  color: $muted;
+  font-size: 0.85rem;
+}
+
+.app-shell__content {
+  min-height: 0;
+}
+
+.drawer-panel {
+  padding: spacing(md);
+  display: flex;
+  flex-direction: column;
+  gap: spacing(md);
+}
+
+.drawer-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer-panel__copy {
+  color: $muted;
+}
+
+@media (max-width: 960px) {
+  .app-shell__body {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell__sidebar {
+    order: 2;
+  }
+
+  .app-shell__content {
+    order: 1;
+  }
+}
