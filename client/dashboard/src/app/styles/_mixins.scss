@@ -1,0 +1,44 @@
+@use 'sass:color';
+@use 'spacing' as *;
+
+@mixin card() {
+  background-color: $surface;
+  border-radius: 1.25rem;
+  border: 1px solid $border;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  color: $text;
+  padding: spacing(md);
+  position: relative;
+  @content;
+}
+
+@mixin sidebarItem($active: false) {
+  border-radius: 0.75rem;
+  padding: spacing(sm) spacing(md);
+  display: flex;
+  align-items: center;
+  gap: spacing(sm);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  @if $active {
+    background-color: $sidebarActiveBg;
+    color: $sidebarActiveText;
+
+    & svg {
+      color: $sidebarActiveText;
+    }
+  } @else {
+    background-color: transparent;
+    color: $muted;
+
+    &:hover {
+      background-color: rgba(15, 23, 42, 0.08);
+      color: $text;
+
+      & svg {
+        color: $text;
+      }
+    }
+  }
+}

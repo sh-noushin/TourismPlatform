@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'app/styles/index' as *;
+
+:root {
+	background-color: $bg;
+	color: $text;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: $font-body;
+	background-color: $bg;
+}
