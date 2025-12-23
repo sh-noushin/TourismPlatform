@@ -9,6 +9,8 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { RefreshInterceptor } from './core/interceptors/refresh.interceptor';
 import { CorrelationIdInterceptor } from './core/interceptors/correlation-id.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { RouteReuseStrategy } from '@angular/router';
+import { TabRouteReuseStrategy } from './core/tab/route-reuse.strategy';
 
 const dashboardApiBase = (globalThis as any).__DASHBOARD_API_BASE_URL ?? 'https://localhost:7110/';
 
@@ -24,6 +26,7 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RefreshInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: RouteReuseStrategy, useClass: TabRouteReuseStrategy },
     {
       provide: API_BASE_URL,
       useValue: dashboardApiBase

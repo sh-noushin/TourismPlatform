@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthFacade } from '../../core/auth/auth.facade';
+import { TabService } from '../../core/tab/tab.service';
 
 @Component({
   standalone: true,
@@ -32,7 +33,7 @@ export class LoginPageComponent {
   error: string | null = null;
   private returnUrl: string | null = null;
 
-  constructor(private readonly auth: AuthFacade, private readonly router: Router, private readonly route: ActivatedRoute) {
+  constructor(private readonly auth: AuthFacade, private readonly router: Router, private readonly route: ActivatedRoute, private readonly tabs: TabService) {
     const q = this.route.snapshot.queryParamMap.get('returnUrl');
     if (q) this.returnUrl = q;
   }
@@ -54,7 +55,10 @@ export class LoginPageComponent {
       // after login go to returnUrl or root
       const navTo = this.returnUrl ?? '/';
       await this.router.navigateByUrl(navTo);
-      // TODO: open pinned tab via TabService when available
+      // open pinned tab for the dashboard root
+      try {
+        this.tabs.openTab(navTo, 'Dashboard', true);
+      } catch {}
     } catch (err: any) {
       this.error = err?.message ?? 'Login failed';
     } finally {
