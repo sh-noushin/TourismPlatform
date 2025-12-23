@@ -2,35 +2,79 @@ import { Component, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthFacade } from '../../core/auth/auth.facade';
 import { TabService } from '../../core/tab/tab.service';
+import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
+import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 
 @Component({
   standalone: true,
   selector: 'app-login-page',
   template: `
-  <div class="login-shell">
-    <h2>Sign in</h2>
-    <form (submit)="onSubmit($event)">
-      <label>
-        Email
-        <input type="email" [value]="email()" (input)="email.set($any($event.target).value)" required />
-      </label>
-      <label>
-        Password
-        <input type="password" [value]="password()" (input)="password.set($any($event.target).value)" required />
-      </label>
-      <button type="submit" [disabled]="loading()">Sign in</button>
-      @if (error) {
-        <div class="error">{{ error }}</div>
-      }
-    </form>
-  </div>
-  `
+  <section class="login-page">
+    <div class="login-page__glow"></div>
+    <div class="login-page__grid">
+      <sf-card class="login-page__form-card">
+        <div class="login-page__brand">
+          <span class="login-page__brand-mark"></span>
+          <div>
+            <p class="login-page__brand-label">ThriveStudios</p>
+            <p class="login-page__brand-note">Admin console</p>
+          </div>
+        </div>
+        <h1>Welcome back</h1>
+        <p class="login-page__lead">It’s not about what you make. It’s about what you make possible.</p>
+        <form class="login-form" (submit)="onSubmit($event)">
+          <label class="login-form__field">
+            <span>Email</span>
+            <input
+              type="email"
+              [value]="email()"
+              (input)="email.set($any($event.target).value)"
+              autocomplete="username"
+              required
+            />
+          </label>
+          <label class="login-form__field">
+            <span>Password</span>
+            <input
+              type="password"
+              [value]="password()"
+              (input)="password.set($any($event.target).value)"
+              autocomplete="current-password"
+              required
+            />
+          </label>
+          <div class="login-form__actions">
+            <sf-button variant="primary" [loading]="loading()" type="submit">Login</sf-button>
+            <button type="button" class="login-form__forgot" (click)="onForgot()">Forgot password?</button>
+          </div>
+        </form>
+        @if (error()) {
+          <p class="login-form__error">{{ error() }}</p>
+        }
+      </sf-card>
+
+      <div class="login-page__hero">
+        <p class="login-page__hero-title">Dream big, build bold</p>
+        <p class="login-page__hero-body">
+          Manage houses, tours, permissions, and superuser tasks from a single command center.
+        </p>
+        <div class="login-page__hero-badges">
+          <span>Secure login</span>
+          <span>Real-time sync</span>
+          <span>Permissions driven</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  `,
+  styleUrls: ['./login-page.component.scss'],
+  imports: [SfCardComponent, SfButtonComponent]
 })
 export class LoginPageComponent {
   readonly email = signal('');
   readonly password = signal('');
   readonly loading = signal(false);
-  error: string | null = null;
+  readonly error = signal<string | null>(null);
   private returnUrl: string | null = null;
 
   constructor(private readonly auth: AuthFacade, private readonly router: Router, private readonly route: ActivatedRoute, private readonly tabs: TabService) {
@@ -45,11 +89,11 @@ export class LoginPageComponent {
   async onSubmit(e: Event) {
     e.preventDefault();
     if (!this.formValid) {
-      this.error = 'Please provide a valid email and password (min 6 chars).';
+      this.error.set('Please provide a valid email and password (min 6 chars).');
       return;
     }
     this.loading.set(true);
-    this.error = null;
+    this.error.set(null);
     try {
       await this.auth.login(this.email(), this.password());
       // after login go to returnUrl or default admin landing
@@ -60,9 +104,13 @@ export class LoginPageComponent {
         this.tabs.openOrActivate(navTo, 'Houses', true);
       } catch {}
     } catch (err: any) {
-      this.error = err?.message ?? 'Login failed';
+      this.error.set(err?.message ?? 'Login failed');
     } finally {
       this.loading.set(false);
     }
+  }
+
+  onForgot() {
+    this.error.set('Please contact support to reset your password.');
   }
 }
