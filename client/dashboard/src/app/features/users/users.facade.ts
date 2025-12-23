@@ -1,16 +1,14 @@
 import { Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import { Client } from '../../api/client';
 
-export interface HousesQuery {
+export interface UsersQuery {
   page?: number;
   pageSize?: number;
   search?: string;
-  sort?: string;
 }
 
 @Injectable({ providedIn: 'root' })
-export class HousesFacade {
+export class UsersFacade {
   readonly items = signal<any[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -18,16 +16,15 @@ export class HousesFacade {
 
   constructor(private client: Client) {}
 
-  async load(query: HousesQuery = {}) {
+  async load(query: UsersQuery = {}) {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const res = await firstValueFrom(this.client.housesAll());
-      // res is an array of HouseSummaryDto
-      this.items.set(res ?? []);
-      this.total.set(Array.isArray(res) ? res.length : 0);
+      // No top-level users list method in Client; leave facade extensible.
+      this.items.set([]);
+      this.total.set(0);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Failed loading houses');
+      this.error.set(err?.message ?? 'Failed loading users');
     } finally {
       this.loading.set(false);
     }

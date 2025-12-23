@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { Client } from '../../api/client';
 
 export interface ToursQuery {
@@ -21,14 +22,9 @@ export class ToursFacade {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const res = await this.client.toursAll({
-        page: query.page ?? 1,
-        pageSize: query.pageSize ?? 20,
-        search: query.search ?? undefined,
-        sort: query.sort ?? undefined,
-      });
-      this.items.set(res.items ?? res);
-      if ((res as any).total != null) this.total.set((res as any).total);
+      const res = await firstValueFrom(this.client.toursAll());
+      this.items.set(res ?? []);
+      this.total.set(Array.isArray(res) ? res.length : 0);
     } catch (err: any) {
       this.error.set(err?.message ?? 'Failed loading tours');
     } finally {
