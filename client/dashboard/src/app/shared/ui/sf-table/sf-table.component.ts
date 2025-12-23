@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal
 import { CommonModule } from '@angular/common';
 import { SfEmptyStateComponent } from '../sf-empty-state/sf-empty-state.component';
 import { SfSpinnerComponent } from '../sf-spinner/sf-spinner.component';
+import { SfActionComponent } from '../sf-action/sf-action.component';
 import {
   SfTableColumn,
   SfTablePaging,
@@ -14,7 +15,7 @@ import {
   selector: 'sf-table',
   templateUrl: './sf-table.component.html',
   styleUrls: ['./sf-table.component.scss'],
-  imports: [CommonModule, SfEmptyStateComponent, SfSpinnerComponent],
+  imports: [CommonModule, SfEmptyStateComponent, SfSpinnerComponent, SfActionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SfTableComponent {

@@ -27,7 +27,7 @@
             @if (actionsSignal().length) {
               <td>
                 @for (action of actionsSignal(); track action.label) {
-                  <button type="button" class="action" (click)="emitRowAction(action, row)">{{ action.label }}</button>
+                  <sf-action [label]="action.label" [permission]="action.permission" (actionClick)="emitRowAction(action, row)"></sf-action>
                 }
               </td>
             }
