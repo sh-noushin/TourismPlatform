@@ -12,7 +12,8 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { RouteReuseStrategy } from '@angular/router';
 import { TabRouteReuseStrategy } from './core/tab/route-reuse.strategy';
 
-const dashboardApiBase = (globalThis as any).__DASHBOARD_API_BASE_URL ?? 'https://localhost:7110/';
+const rawDashboardApiBase = (globalThis as any).__DASHBOARD_API_BASE_URL ?? 'https://localhost:7110/';
+const dashboardApiBase = rawDashboardApiBase.replace(/\/+$/, ''); // avoid double slashes when building API URLs
 
 export const appConfig: ApplicationConfig = {
   providers: [
