@@ -1,0 +1,43 @@
+@use '../../../styles/index' as *;
+
+.sf-toast-container {
+  position: fixed;
+  inset: auto spacing(xxl) spacing(xl) auto;
+  display: flex;
+  flex-direction: column;
+  gap: spacing(xs);
+  z-index: 1000;
+}
+
+.sf-toast {
+  background: $surface;
+  border: 1px solid $border;
+  padding: spacing(sm) spacing(md);
+  border-radius: 0.75rem;
+  min-width: 18rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: spacing(sm);
+}
+
+.sf-toast .level {
+  text-transform: uppercase;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  color: $muted;
+}
+
+.sf-toast p {
+  margin: 0;
+  color: $text;
+}
+
+.sf-toast button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: $muted;
+  cursor: pointer;
+}

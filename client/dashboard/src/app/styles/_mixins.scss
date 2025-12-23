@@ -1,5 +1,6 @@
 @use 'sass:color';
 @use 'spacing' as *;
+@use 'colors' as *;
 
 @mixin card() {
   background-color: $surface;

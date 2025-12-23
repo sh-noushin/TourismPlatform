@@ -1,0 +1,15 @@
+@if (toastService.messages().length) {
+  <div class="sf-toast-container" role="status" aria-live="polite">
+    @for (toast of toastService.messages(); track toast.id) {
+      <div class="sf-toast">
+        <div class="content">
+          <span class="level">{{ toast.level }}</span>
+          <p>{{ toast.message }}</p>
+        </div>
+        <button type="button" aria-label="Close" (click)="dismiss(toast.id)">
+          ×
+        </button>
+      </div>
+    }
+  </div>
+}

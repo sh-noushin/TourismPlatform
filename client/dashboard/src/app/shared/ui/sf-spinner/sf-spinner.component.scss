@@ -1,0 +1,10 @@
+@use '../../../styles/index' as *;
+
+:host {
+  display: inline-block;
+}
+
+.sf-spinner {
+  display: inline-grid;
+  place-items: center;
+}

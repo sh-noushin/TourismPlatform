@@ -1,0 +1,22 @@
+<div class="sf-searchbar">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ placeholder }}</mat-label>
+    <input
+      matInput
+      [value]="valueSignal()"
+      autocomplete="off"
+      (input)="onInput($event.target.value)"
+    />
+    @if (valueSignal().length) {
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        aria-label="Clear"
+        (click)="clear()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</div>

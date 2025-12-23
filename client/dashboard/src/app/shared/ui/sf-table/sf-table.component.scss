@@ -1,0 +1,88 @@
+@use 'sass:color';
+@use '../../../styles/index' as *;
+
+.sf-table-wrapper {
+  position: relative;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.sf-table-scroll {
+  max-height: 50vh;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+ td {
+  padding: spacing(sm);
+  border-bottom: 1px solid $border;
+}
+
+th {
+  background: color.adjust($bg, $lightness: 4%);
+}
+
+.header-button {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  font-weight: $font-weight-medium;
+  color: $text;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing(xs);
+  cursor: pointer;
+}
+
+.header-button.sortable:hover {
+  color: $primary;
+}
+
+.indicator {
+  font-size: 0.75rem;
+}
+
+.action {
+  background: transparent;
+  border: 1px solid $border;
+  border-radius: 0.5rem;
+  padding: spacing(xs) spacing(sm);
+  cursor: pointer;
+  color: $text;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: spacing(xs) spacing(md);
+}
+
+.footer button {
+  border: 1px solid $border;
+  background: $surface;
+  border-radius: 0.5rem;
+  padding: spacing(xs) spacing(sm);
+  cursor: pointer;
+}
+
+.empty-state {
+  padding: spacing(md);
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.85);
+}

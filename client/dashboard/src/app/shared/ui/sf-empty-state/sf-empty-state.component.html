@@ -1,0 +1,12 @@
+<section class="sf-empty-state">
+  @if (icon) {
+    <div class="icon">
+      <mat-icon>{{ icon }}</mat-icon>
+    </div>
+  }
+  <h3>{{ title }}</h3>
+  @if (description) {
+    <p>{{ description }}</p>
+  }
+  <ng-content></ng-content>
+</section>

@@ -1,0 +1,12 @@
+<h2>{{ data.title ?? 'Confirm' }}</h2>
+@if (data.message) {
+  <p>{{ data.message }}</p>
+}
+<div class="actions">
+  <button mat-stroked-button type="button" (click)="cancel()">
+    {{ data.cancelLabel ?? 'Cancel' }}
+  </button>
+  <button mat-flat-button color="primary" type="button" (click)="confirm()">
+    {{ data.confirmLabel ?? 'Confirm' }}
+  </button>
+</div>

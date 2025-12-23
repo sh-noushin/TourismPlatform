@@ -1,0 +1,10 @@
+@use '../../../styles/index' as *;
+
+:host {
+  display: block;
+}
+
+.sf-card {
+  @include card();
+  width: 100%;
+}

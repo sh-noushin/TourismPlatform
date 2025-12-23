@@ -1,0 +1,11 @@
+@use '../../../styles/index' as *;
+
+.sf-drawer {
+  width: 100%;
+}
+
+mat-drawer {
+  width: 280px;
+  background: $surface;
+  padding: spacing(md);
+}

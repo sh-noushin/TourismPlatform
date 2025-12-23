@@ -1,0 +1,25 @@
+@use '../../../styles/index' as *;
+
+.sf-empty-state {
+  @include card();
+  text-align: center;
+  padding: spacing(lg);
+}
+
+.sf-empty-state .icon {
+  margin-bottom: spacing(sm);
+  color: $muted;
+  svg {
+    font-size: 2.5rem;
+  }
+}
+
+.sf-empty-state h3 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.sf-empty-state p {
+  margin: spacing(xs) 0 0 0;
+  color: $muted;
+}

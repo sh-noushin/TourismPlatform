@@ -1,0 +1,11 @@
+<header class="sf-page-header">
+  <div class="title-block">
+    <h1>{{ title }}</h1>
+    @if (subtitle) {
+      <p>{{ subtitle }}</p>
+    }
+  </div>
+  <div class="actions">
+    <ng-content select="[sfPageHeaderActions]"></ng-content>
+  </div>
+</header>

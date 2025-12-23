@@ -1,0 +1,12 @@
+<mat-drawer-container class="sf-drawer">
+  <mat-drawer
+    mode="over"
+    position="end"
+    [opened]="openSignal()"
+    (openedChange)="onOpenedChange($event)"
+  >
+    <div class="drawer-content">
+      <ng-content></ng-content>
+    </div>
+  </mat-drawer>
+</mat-drawer-container>

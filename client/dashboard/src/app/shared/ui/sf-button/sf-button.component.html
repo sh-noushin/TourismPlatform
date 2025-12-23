@@ -1,0 +1,17 @@
+<button
+  mat-flat-button
+  type="button"
+  [disabled]="isDisabled"
+  [class.sf-button--ghost]="variant === 'ghost'"
+  [class.sf-button--outline]="variant === 'outline'"
+  [class.sf-button--primary]="variant === 'primary'"
+>
+  @if (isLoading) {
+    <div class="spinner">
+      <mat-progress-spinner diameter="18" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+  }
+  <span class="content">
+    <ng-content></ng-content>
+  </span>
+</button>

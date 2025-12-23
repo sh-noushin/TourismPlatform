@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $spacing-scale: (
   none: 0,
   xs: 0.25rem,
@@ -9,5 +11,5 @@ $spacing-scale: (
 );
 
 @function spacing($size) {
-  @return map-get($spacing-scale, $size) or 0;
+  @return map.get($spacing-scale, $size) or 0;
 }
