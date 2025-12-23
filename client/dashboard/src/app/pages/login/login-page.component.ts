@@ -57,7 +57,7 @@ export class LoginPageComponent {
       await this.router.navigateByUrl(navTo);
       // open pinned tab for the dashboard root
       try {
-        this.tabs.openTab(navTo, 'Dashboard', true);
+        this.tabs.openOrActivate(navTo, 'Dashboard', true);
       } catch {}
     } catch (err: any) {
       this.error = err?.message ?? 'Login failed';
