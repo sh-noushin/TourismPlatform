@@ -15,6 +15,7 @@ import { HasPermissionDirective } from '../../directives/has-permission.directiv
 export class SfButtonComponent {
   @Input() variant: 'primary' | 'ghost' | 'outline' = 'primary';
   @Input() permission?: string;
+  @Input() buttonType: 'button' | 'submit' | 'reset' = 'button';
 
   readonly loadingSignal = signal(false);
   readonly disabledSignal = signal(false);

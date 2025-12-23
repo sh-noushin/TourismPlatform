@@ -1,9 +1,9 @@
 @if (permission) {
-  <ng-container [has-permission]="permission">
-    <button
-      mat-flat-button
-      type="button"
-      [disabled]="isDisabled"
+    <ng-container [has-permission]="permission">
+      <button
+        mat-flat-button
+        [attr.type]="buttonType"
+        [disabled]="isDisabled"
       [class.sf-button--ghost]="variant === 'ghost'"
       [class.sf-button--outline]="variant === 'outline'"
       [class.sf-button--primary]="variant === 'primary'"
@@ -21,7 +21,7 @@
 } @else {
   <button
     mat-flat-button
-    type="button"
+    [attr.type]="buttonType"
     [disabled]="isDisabled"
     [class.sf-button--ghost]="variant === 'ghost'"
     [class.sf-button--outline]="variant === 'outline'"
