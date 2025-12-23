@@ -3,15 +3,28 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { SfCardComponent } from '../../../../shared/ui/sf-card/sf-card.component';
+import { SfEmptyStateComponent } from '../../../../shared/ui/sf-empty-state/sf-empty-state.component';
 import { SfFormFieldComponent } from '../../../../shared/ui/sf-form-field/sf-form-field.component';
+import { SfPageHeaderComponent } from '../../../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfButtonComponent } from '../../../../shared/ui/sf-button/sf-button.component';
+import { ConfirmService } from '../../../../shared/ui/confirm.service';
+import { ToastService } from '../../../../core/ui/toast.service';
 import { HousesFacade } from '../../services/houses.facade';
 import { HouseCommitPhotoItem, HouseDetailDto } from '../../models';
 
 @Component({
   selector: 'app-houses-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SfFormFieldComponent, SfButtonComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    SfCardComponent,
+    SfPageHeaderComponent,
+    SfFormFieldComponent,
+    SfButtonComponent,
+    SfEmptyStateComponent
+  ],
   templateUrl: './houses-edit.component.html',
   styleUrl: './houses-edit.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,7 +33,9 @@ export class HousesEditComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly facade = inject(HousesFacade);
+  protected readonly facade = inject(HousesFacade);
+  private readonly confirm = inject(ConfirmService);
+  private readonly toast = inject(ToastService);
 
   readonly id = signal<string | null>(null);
   readonly loading = signal(false);
@@ -115,12 +130,30 @@ export class HousesEditComponent implements OnInit {
     this.staged.update((rows) => rows.filter((_, i) => i !== idx));
   }
 
-  removeExisting(photoId: string) {
-    const id = this.id();
-    if (!id) return;
-    this.facade.deletePhoto(id, photoId).subscribe(() => {
-      this.existingPhotos.update((rows) => rows.filter((p) => p.photoId !== photoId));
-    });
+  protected removeExisting(photoId: string) {
+    const houseId = this.id();
+    if (!houseId) {
+      return;
+    }
+    this.confirm
+      .confirm({
+        title: 'Remove photo',
+        description: 'The photo will be removed from the house and cannot be restored.'
+      })
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
+        }
+        this.facade.deletePhoto(houseId, photoId).subscribe({
+          next: () => {
+            this.toast.show('Photo removed', 'success');
+            this.existingPhotos.update((rows) => rows.filter((p) => p.photoId !== photoId));
+          },
+          error: () => {
+            this.toast.show('Unable to remove photo', 'error');
+          }
+        });
+      });
   }
 
   save() {
@@ -137,18 +170,30 @@ export class HousesEditComponent implements OnInit {
       this.facade.update(id, payload).subscribe({
         next: () => {
           this.loading.set(false);
+          this.toast.show('House updated', 'success');
           this.router.navigateByUrl('/admin/houses');
         },
-        error: () => this.loading.set(false)
+        error: () => {
+          this.loading.set(false);
+          this.toast.show('Unable to save house', 'error');
+        }
       });
     } else {
       this.facade.create(payload).subscribe({
         next: () => {
           this.loading.set(false);
+          this.toast.show('House created', 'success');
           this.router.navigateByUrl('/admin/houses');
         },
-        error: () => this.loading.set(false)
+        error: () => {
+          this.loading.set(false);
+          this.toast.show('Unable to save house', 'error');
+        }
       });
     }
+  }
+
+  protected goBack() {
+    this.router.navigateByUrl('/admin/houses');
   }
 }

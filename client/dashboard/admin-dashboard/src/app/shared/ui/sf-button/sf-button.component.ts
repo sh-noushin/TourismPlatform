@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type SfButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type SfButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'solid';
 type SfButtonSize = 'sm' | 'md' | 'lg';
 
 @Component({

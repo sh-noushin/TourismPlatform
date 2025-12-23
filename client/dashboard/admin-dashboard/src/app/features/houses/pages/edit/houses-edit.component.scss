@@ -1,22 +1,113 @@
+@use '../../../../styles/variables' as vars;
+@use '../../../../styles/mixins' as mixins;
+
+.houses-edit-card {
+  width: 100%;
+}
+
 .houses-edit {
-  display: grid;
-  gap: 1rem;
-}
-
-.address {
-  border: 1px solid var(--color-border);
-  padding: 1rem;
-  border-radius: 0.5rem;
-}
-
-.photos__existing .photo,
-.photos__staged .staged {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-block: 0.25rem;
+  flex-direction: column;
+  gap: vars.$space-5;
 }
 
-.actions {
-  margin-top: 1rem;
+.houses-edit__section {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-4;
+  padding-bottom: vars.$space-4;
+  border-bottom: 1px solid color-mix(in srgb, vars.$color-text 20%, transparent 80%);
+}
+
+.houses-edit__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: vars.$space-3;
+}
+
+.houses-edit__grid--address {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.houses-edit__photos {
+  border-bottom: none;
+}
+
+.photos__header {
+  display: flex;
+  justify-content: space-between;
+  gap: vars.$space-3;
+  align-items: center;
+}
+
+.file-uploader {
+  display: inline-flex;
+  align-items: center;
+  gap: vars.$space-2;
+  cursor: pointer;
+}
+
+.file-uploader input {
+  display: none;
+}
+
+.photos__container {
+  display: grid;
+  gap: vars.$space-4;
+}
+
+.photos__existing,
+.photos__staged {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-3;
+}
+
+.photo,
+.staged {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: vars.$space-2;
+  align-items: center;
+  padding: vars.$space-3;
+  border: 1px solid color-mix(in srgb, vars.$color-text 15%, transparent 85%);
+  border-radius: vars.$radius-md;
+  background: color-mix(in srgb, vars.$color-surface 80%, transparent 20%);
+}
+
+.photo img,
+.staged img {
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: vars.$radius-sm;
+}
+
+.photos__existing p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.photos__existing span {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.houses-edit__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: vars.$space-3;
+}
+
+@include mixins.responsive(vars.$breakpoint-md) {
+  .houses-edit__grid,
+  .photo,
+  .staged {
+    grid-template-columns: 1fr;
+  }
+  .photo img,
+  .staged img {
+    width: 100%;
+    height: 140px;
+  }
 }

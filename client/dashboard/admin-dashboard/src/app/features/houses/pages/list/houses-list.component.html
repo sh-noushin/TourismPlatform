@@ -1,19 +1,54 @@
-<div class="houses-list">
-	<div class="header">
-		<h2>Houses</h2>
-		<sf-button (click)="createNew()">Create</sf-button>
-	</div>
+<sf-card class="houses-list-card">
+	<div class="houses-list">
+		<sf-page-header title="Houses" subtitle="Manage your inventory">
+			<div header-actions>
+				<sf-button variant="primary" (click)="createNew()">Create house</sf-button>
+			</div>
+		</sf-page-header>
 
-	<sf-table
-		[columns]="columns"
-		[data]="facade.paged()"
-		[loading]="facade.loading()"
-		[page]="facade.page()"
-		[pageSize]="facade.pageSize()"
-		[totalCount]="facade.totalCount()"
-		[sortKey]="facade.sortKey()"
-		[actions]="actions"
-		(pageChange)="onPageChange($event)"
-		(sortChange)="onSortChange($event)"
-	></sf-table>
-</div>
+		<section class="houses-list__filters" aria-label="House filters">
+			<sf-form-field label="Search" [forId]="'houses-search'">
+				<input
+					id="houses-search"
+					type="search"
+					placeholder="Search by name, city, or country"
+					[disabled]="facade.loading()"
+					[value]="searchTerm()"
+					(input)="searchTerm.set($any($event.target).value)"
+				/>
+			</sf-form-field>
+			<div class="houses-list__filter-actions">
+				<sf-button size="sm" variant="primary" (click)="applyFilters()">Search</sf-button>
+				<sf-button size="sm" variant="ghost" (click)="clearFilters()">Reset</sf-button>
+			</div>
+		</section>
+
+		<div class="houses-list__table">
+			<sf-table
+				[columns]="columns"
+				[data]="facade.list()"
+				[loading]="facade.loading()"
+				[page]="facade.page()"
+				[pageSize]="facade.pageSize()"
+				[totalCount]="facade.totalCount()"
+				[sortKey]="facade.sortKey()"
+				[actions]="actions"
+				(pageChange)="onPageChange($event)"
+				(sortChange)="onSortChange($event)"
+			></sf-table>
+
+			@if (!facade.loading() && !facade.list().length) {
+				<sf-empty-state
+					title="No houses yet"
+					description="Add a house to start managing your catalog"
+				>
+					<div empty-state-actions>
+						<sf-button size="sm" variant="outline" (click)="facade.refresh().subscribe()">
+							Reload
+						</sf-button>
+					</div>
+				</sf-empty-state>
+			}
+		</div>
+	</div>
+</sf-card>

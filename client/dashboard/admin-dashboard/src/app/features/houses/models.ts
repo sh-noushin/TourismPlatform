@@ -7,6 +7,13 @@ export interface HouseSummaryDto {
   photos: HousePhotoDto[];
 }
 
+export interface HouseListQuery {
+  page: number;
+  pageSize: number;
+  sortBy?: string | null;
+  search?: string | null;
+}
+
 export interface HousePhotoDto {
   photoId: string;
   label: string;
