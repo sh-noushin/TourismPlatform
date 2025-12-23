@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { finalize } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Client, HouseSummaryDto } from '../../api/client';
-import { ToastService } from '../../shared/ui/toast/toast.service';
+import { HouseSummaryDto } from '../../api/client';
+import { HousesFacade } from '../../features/houses/houses.facade';
 import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.component';
@@ -20,11 +18,10 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HousesPageComponent {
-  readonly housesSignal = signal<HouseSummaryDto[]>([]);
-  readonly loadingSignal = signal(true);
   readonly filterSignal = signal('');
   readonly sortSignal = signal<SfTableSort | null>(null);
 
+  readonly loadingSignal = computed(() => this.houses.loading());
   readonly columns: SfTableColumn[] = [
     { key: 'name', header: 'Name', field: 'name', sortable: true },
     { key: 'type', header: 'Type', field: 'houseTypeName', sortable: true },
@@ -35,18 +32,15 @@ export class HousesPageComponent {
   readonly displayedHouses = computed(() => {
     const filter = this.filterSignal().toLowerCase();
     const list = filter
-      ? this.housesSignal().filter((house) =>
+      ? this.houses.items().filter((house) =>
           [house.name, house.city, house.country, house.houseTypeName]
             .filter(Boolean)
             .some((value) => value?.toLowerCase().includes(filter))
         )
-      : this.housesSignal();
+      : this.houses.items();
 
     const sort = this.sortSignal();
-    if (!sort) {
-      return list;
-    }
-
+    if (!sort) return list;
     const key = sort.field as keyof HouseSummaryDto;
     return [...list].sort((a, b) => {
       const aValue = (a[key] ?? '').toString().toLowerCase();
@@ -57,12 +51,8 @@ export class HousesPageComponent {
     });
   });
 
-  constructor(
-    private readonly client: Client,
-    private readonly toast: ToastService,
-    private readonly destroyRef: DestroyRef
-  ) {
-    this.loadHouses();
+  constructor(private readonly houses: HousesFacade) {
+    this.houses.load();
   }
 
   setFilter(value: string) {
@@ -73,16 +63,5 @@ export class HousesPageComponent {
     this.sortSignal.set(sort);
   }
 
-  private loadHouses() {
-    this.loadingSignal.set(true);
-    this.client.housesAll()
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.loadingSignal.set(false))
-      )
-      .subscribe({
-        next: (data) => this.housesSignal.set(data ?? []),
-        error: () => this.toast.show('Unable to load houses', 'danger')
-      });
-  }
+  // data is loaded via `HousesFacade.load()` called in constructor
 }
