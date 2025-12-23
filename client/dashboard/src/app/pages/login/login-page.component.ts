@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthFacade } from '../../core/auth/auth.facade';
 
 @Component({
@@ -30,17 +30,31 @@ export class LoginPageComponent {
   readonly password = signal('');
   readonly loading = signal(false);
   error: string | null = null;
+  private returnUrl: string | null = null;
 
-  constructor(private readonly auth: AuthFacade, private readonly router: Router) {}
+  constructor(private readonly auth: AuthFacade, private readonly router: Router, private readonly route: ActivatedRoute) {
+    const q = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (q) this.returnUrl = q;
+  }
+
+  get formValid() {
+    return this.email().length > 3 && this.password().length >= 6;
+  }
 
   async onSubmit(e: Event) {
     e.preventDefault();
+    if (!this.formValid) {
+      this.error = 'Please provide a valid email and password (min 6 chars).';
+      return;
+    }
     this.loading.set(true);
     this.error = null;
     try {
       await this.auth.login(this.email(), this.password());
-      // after login go to root/dashboard
-      await this.router.navigate(['/']);
+      // after login go to returnUrl or root
+      const navTo = this.returnUrl ?? '/';
+      await this.router.navigateByUrl(navTo);
+      // TODO: open pinned tab via TabService when available
     } catch (err: any) {
       this.error = err?.message ?? 'Login failed';
     } finally {
