@@ -34,8 +34,7 @@
   background: rgba(220, 38, 38, 0.08);
 }
 
-.icon {
-  display: inline-flex;
-  width: 18px;
-  height: 18px;
+.sf-action-button mat-icon {
+  font-size: 18px;
+  line-height: 1;
 }

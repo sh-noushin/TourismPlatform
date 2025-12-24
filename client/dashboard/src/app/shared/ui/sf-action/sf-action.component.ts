@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
 
 @Component({
@@ -11,28 +13,34 @@ import { HasPermissionDirective } from '../../directives/has-permission.directiv
         <button
           type="button"
           class="sf-action-button"
+          mat-icon-button
           [ngClass]="variantClass"
           [attr.title]="label || variant"
+          [attr.aria-label]="label || variant"
           (click)="onClick()"
+          [color]="buttonColor"
           [disabled]="disabled"
         >
-          <span class="icon" [innerHTML]="iconSvg" aria-hidden="true"></span>
+          <mat-icon>{{ icon || iconName }}</mat-icon>
         </button>
       </ng-container>
     } @else {
       <button
         type="button"
         class="sf-action-button"
+        mat-icon-button
         [ngClass]="variantClass"
         [attr.title]="label || variant"
+        [attr.aria-label]="label || variant"
         (click)="onClick()"
+        [color]="buttonColor"
         [disabled]="disabled"
       >
-        <span class="icon" [innerHTML]="iconSvg" aria-hidden="true"></span>
+        <mat-icon>{{ icon || iconName }}</mat-icon>
       </button>
     }
   `,
-  imports: [CommonModule, HasPermissionDirective],
+  imports: [CommonModule, MatButtonModule, MatIconModule, HasPermissionDirective],
   styleUrls: ['./sf-action.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -51,26 +59,24 @@ export class SfActionComponent {
     };
   }
 
-  get iconSvg() {
+  get iconName() {
     if (this.variant === 'edit') {
-      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 20h9"/>
-        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-      </svg>`;
+      return 'edit';
     }
     if (this.variant === 'delete') {
-      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 6h18"/>
-        <path d="M8 6V4h8v2"/>
-        <path d="M9 10v7"/><path d="M15 10v7"/><path d="M5 6l1 14h12l1-14"/>
-      </svg>`;
+      return 'delete';
     }
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>
-    </svg>`;
+    return 'more_horiz';
+  }
+
+  get buttonColor(): 'primary' | 'warn' | undefined {
+    if (this.variant === 'edit') {
+      return 'primary';
+    }
+    if (this.variant === 'delete') {
+      return 'warn';
+    }
+    return undefined;
   }
 
   onClick() {
