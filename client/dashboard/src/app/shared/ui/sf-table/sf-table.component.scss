@@ -38,6 +38,14 @@ thead {
   box-shadow: inset 0 -1px 0 0 $tableHeaderBorder;
 }
 
+.actions-header {
+  font-weight: $font-weight-regular;
+  text-align: center;
+  padding: spacing(sm);
+  width: 140px;
+  letter-spacing: 0.01em;
+}
+
 .header-button {
   width: 100%;
   background: none;
@@ -67,6 +75,12 @@ thead {
   padding: spacing(xs) spacing(sm);
   cursor: pointer;
   color: $text;
+}
+
+.actions-cell {
+  text-align: center;
+  width: 140px;
+  vertical-align: middle;
 }
 
 .footer {
