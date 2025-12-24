@@ -26,7 +26,16 @@ th,
 }
 
 th {
-  background: color.adjust($bg, $lightness: 4%);
+  background: linear-gradient(180deg, $tableHeaderBg 0%, color.adjust($tableHeaderBg, $lightness: -2%) 100%);
+  color: color.adjust($text, $lightness: -30%);
+  border-bottom: 1px solid $tableHeaderBorder;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+thead {
+  box-shadow: inset 0 -1px 0 0 $tableHeaderBorder;
 }
 
 .header-button {
