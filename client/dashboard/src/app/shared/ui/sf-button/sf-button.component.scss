@@ -1,39 +1,28 @@
 @use '../../../styles/index' as *;
 
+
 :host {
   display: inline-flex;
+  width: 100%;
 }
 
-button {
+.sf-button {
   width: 100%;
   position: relative;
   border-radius: 0.65rem;
   font-weight: $font-weight-medium;
   border: 1px solid transparent;
-  color: $primaryContrast;
-  background-color: $primary;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   justify-content: center;
   align-items: center;
   gap: spacing(sm);
   min-height: 2.75rem;
+  text-transform: none;
+  box-shadow: 0 6px 18px rgba($primary, 0.25);
 }
 
-button.sf-button--ghost {
-  background: transparent;
-  border-color: transparent;
-  color: $muted;
-  box-shadow: none;
-}
-
-button.sf-button--outline {
-  background: transparent;
-  border-color: $border;
-  color: $text;
-}
-
-button:disabled {
-  opacity: 0.6;
+.sf-button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 

@@ -13,46 +13,59 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
     <div class="login-page__glow"></div>
     <div class="login-page__grid">
       <sf-card class="login-page__form-card">
+        <div class="card-icon">
+          <div class="card-icon__inner">🔒</div>
+        </div>
         <div class="login-page__brand">
-          <span class="login-page__brand-mark"></span>
           <div>
-            <p class="login-page__brand-label">ThriveStudios</p>
-            <p class="login-page__brand-note">Admin console</p>
+            <p class="login-page__brand-label">Login</p>
           </div>
         </div>
-        <h1>Login</h1>
+
         <form class="login-form" (submit)="onSubmit($event)">
           <label class="login-form__field">
-            <span>Email</span>
+              <span>Email *</span>
             <input
               type="email"
+              placeholder="Enter your Email"
               [value]="email()"
               (input)="email.set($any($event.target).value)"
-              autocomplete="username"
+              autocomplete="email"
               required
             />
           </label>
+
           <label class="login-form__field">
-            <span>Password</span>
+              <span>Password *</span>
             <input
               type="password"
+              placeholder="Enter your Password"
               [value]="password()"
               (input)="password.set($any($event.target).value)"
               autocomplete="current-password"
               required
             />
           </label>
-          <div class="login-form__actions">
-            <sf-button variant="primary" [loading]="loading()" buttonType="submit">Login</sf-button>
-            <button type="button" class="login-form__forgot" (click)="onForgot()">Forgot password?</button>
-          </div>
-        </form>
-        @if (error()) {
-          <p class="login-form__error">{{ error() }}</p>
-        }
-      </sf-card>
 
-      
+          <label class="login-form__field checkbox">
+            <input type="checkbox" />
+            <span>Remember me</span>
+          </label>
+
+          <div class="login-form__actions">
+            <sf-button class="login-btn" variant="primary" [loading]="loading()" buttonType="button">LOGIN</sf-button>
+          </div>
+
+          <div class="login-form__links">
+            <a class="left-link">Don't have an account?</a>
+            <a class="right-link" (click)="onForgot()">Forgot password?</a>
+          </div>
+
+          <p *ngIf="error()" class="login-form__error">{{ error() }}</p>
+
+
+        </form>
+      </sf-card>
     </div>
   </section>
   `,

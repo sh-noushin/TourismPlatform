@@ -13,7 +13,11 @@ import { HasPermissionDirective } from '../../directives/has-permission.directiv
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SfButtonComponent {
-  @Input() variant: 'primary' | 'ghost' | 'outline' = 'primary';
+  @Input() text?: string;
+  @Input() color = '#2f80ed';
+  @Input() textColor = '#ffffff';
+  @Input() width?: string;
+  @Input() height?: string;
   @Input() permission?: string;
   @Input() buttonType: 'button' | 'submit' | 'reset' = 'button';
 
