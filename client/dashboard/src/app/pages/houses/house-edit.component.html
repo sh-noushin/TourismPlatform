@@ -31,19 +31,13 @@
 
           <label class="combobox">
             <span class="label-text">Type</span>
-            <div class="combobox-field">
-              <select
-                name="houseTypeName"
-                [value]="form()?.houseTypeName ?? ''"
-                (change)="updateField('houseTypeName', $any($event.target).value)"
-              >
-                <option value="">Select type</option>
-                @for (type of houseTypes.houseTypes(); track type.id) {
-                  <option [value]="type.name">{{ type.name }}</option>
-                }
-              </select>
-              <span class="combobox-icon" aria-hidden="true"></span>
-            </div>
+            <sf-dropdown
+              [items]="houseTypeOptions()"
+              [value]="form()?.houseTypeName ?? ''"
+              (selectionChange)="updateField('houseTypeName', $event)"
+              placeholder="Select type"
+              name="houseTypeName"
+            ></sf-dropdown>
 
             @if (houseTypes.loading()) {
               <p class="mini-note">Loading types…</p>

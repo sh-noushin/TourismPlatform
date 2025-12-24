@@ -1,4 +1,4 @@
-import { Component, Inject, Optional, signal } from '@angular/core';
+import { Component, Inject, Optional, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL, HouseCommitPhotoItem } from '../../api/client';
 import { HousesFacade } from '../../features/houses/houses.facade';
 import { HouseTypesService } from '../../features/houses/house-types.service';
+import { SfDropdownComponent } from '../../shared/ui/sf-dropdown/sf-dropdown.component';
 
 type ExistingPhotoVm = {
   kind: 'existing';
@@ -42,7 +43,7 @@ type HouseForm = {
 @Component({
   standalone: true,
   selector: 'house-edit',
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, SfDropdownComponent],
   templateUrl: './house-edit.component.html',
   styleUrls: ['./house-edit.component.scss']
 })
@@ -57,6 +58,10 @@ export class HouseEditComponent {
   readonly deletedPhotoIds = signal<string[]>([]);
 
   readonly id: string | null;
+
+  readonly houseTypeOptions = computed(() =>
+    this.houseTypes.houseTypes().map((type) => ({ label: type.name, value: type.name }))
+  );
 
   constructor(
     private readonly facade: HousesFacade,
