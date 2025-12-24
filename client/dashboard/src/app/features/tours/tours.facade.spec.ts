@@ -4,7 +4,7 @@ import { Client } from '../../api/client';
 
 describe('ToursFacade', () => {
   let facade: ToursFacade;
-  const clientMock = { toursAll: jest.fn().mockResolvedValue({ items: [], total: 0 }) } as any as Client;
+  const clientMock = { toursAll: jasmine.createSpy('toursAll').and.returnValue(Promise.resolve({ items: [], total: 0 })) } as any as Client;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [{ provide: Client, useValue: clientMock }, ToursFacade] });

@@ -2,9 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { PermissionsFacade } from './permissions.facade';
 import { Client } from '../../api/client';
 
+
 describe('PermissionsFacade', () => {
   let facade: PermissionsFacade;
-  const clientMock = { permissionsAll: jest.fn().mockResolvedValue({ items: [], total: 0 }) } as any as Client;
+  const clientMock = { permissionsAll: jasmine.createSpy('permissionsAll').and.returnValue(Promise.resolve({ items: [], total: 0 })) } as any as Client;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [{ provide: Client, useValue: clientMock }, PermissionsFacade] });
