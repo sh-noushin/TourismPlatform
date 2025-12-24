@@ -8,19 +8,19 @@
       </div>
     </div>
     <nav class="sidebar__nav">
-      <a routerLink="houses" routerLinkActive="active" has-permission="'Houses.View'">
+      <a *has-permission="'Houses.View'" routerLink="houses" routerLinkActive="active">
         <span class="sidebar__nav-icon">🏠</span>
         <span>Houses</span>
       </a>
-      <a routerLink="tours" routerLinkActive="active" has-permission="'Tours.View'">
+      <a *has-permission="'Tours.View'" routerLink="tours" routerLinkActive="active">
         <span class="sidebar__nav-icon">🧭</span>
         <span>Tours</span>
       </a>
-      <a routerLink="users" routerLinkActive="active" has-permission="'Users.Manage'">
+      <a *has-permission="'Users.Manage'" routerLink="users" routerLinkActive="active">
         <span class="sidebar__nav-icon">👤</span>
         <span>Users</span>
       </a>
-      <a routerLink="permissions" routerLinkActive="active" has-permission="'Users.Manage'">
+      <a *has-permission="'Users.Manage'" routerLink="permissions" routerLinkActive="active">
         <span class="sidebar__nav-icon">🔐</span>
         <span>Permissions</span>
       </a>

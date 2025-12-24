@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, effect } from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef, effect, signal } from '@angular/core';
 import { AuthFacade } from '../../core/auth/auth.facade';
 
 @Directive({
@@ -6,13 +6,21 @@ import { AuthFacade } from '../../core/auth/auth.facade';
   standalone: true
 })
 export class HasPermissionDirective {
-  private code = '';
+  private readonly code = signal<string>('');
   private hasView = false;
 
   constructor(private tpl: TemplateRef<any>, private vcr: ViewContainerRef, private auth: AuthFacade) {
     effect(() => {
-      if (!this.code) return;
-      const allowed = this.auth.isSuperUser() || this.auth.permissions().has(this.code);
+      const code = this.code();
+      if (!code) {
+        if (this.hasView) {
+          this.vcr.clear();
+          this.hasView = false;
+        }
+        return;
+      }
+
+      const allowed = this.auth.isSuperUser() || this.auth.permissions().has(code);
       if (allowed && !this.hasView) {
         this.vcr.createEmbeddedView(this.tpl);
         this.hasView = true;
@@ -24,6 +32,6 @@ export class HasPermissionDirective {
   }
 
   @Input('has-permission') set hasPermission(code: string) {
-    this.code = code;
+    this.code.set(code);
   }
 }
