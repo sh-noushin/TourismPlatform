@@ -9,8 +9,8 @@
 .login-page {
   min-height: 100vh;
   position: relative;
-  background: radial-gradient(circle at 20% -10%, rgba(56, 153, 255, 0.25), transparent 40%),
-    linear-gradient(135deg, #5c5cc7, #8f5fed 55%, #a14efd);
+  background: radial-gradient(circle at 20% -10%, rgba(255, 255, 255, 0.25), transparent 40%),
+    linear-gradient(135deg, colors.$loginHeroGradientStart, colors.$loginHeroGradientMid 55%, colors.$loginHeroGradientEnd);
   padding: spacing.spacing('xl');
   clip-path: inset(0 round 2rem);
   overflow: hidden;
@@ -21,7 +21,7 @@
   inset: 0;
   filter: blur(120px);
   opacity: 0.35;
-  background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.35), transparent 45%);
+  background: radial-gradient(circle at 80% 20%, colors.$loginGlow, transparent 45%);
 }
 
 .login-page__grid {
@@ -143,7 +143,7 @@
 
 .login-page__hero {
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.08);
+  background: colors.$loginHeroOverlay;
   border-radius: 1.5rem;
   padding: spacing.spacing('xl');
   color: colors.$primaryContrast;
@@ -169,7 +169,7 @@
 }
 
 .login-page__hero-badges span {
-  background: rgba(255, 255, 255, 0.18);
+  background: colors.$loginBadgeBg;
   padding: spacing.spacing('xs') spacing.spacing('md');
   border-radius: 999px;
   font-size: 0.8rem;

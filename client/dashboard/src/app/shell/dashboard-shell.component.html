@@ -1,42 +1,83 @@
-<div class="app-shell">
-  <header class="app-shell__header">
-    <div class="app-shell__brand">
-      <span>Tourism platform</span>
-      <small>Command center</small>
+<div class="dashboard-shell">
+  <aside class="dashboard-shell__sidebar">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo">TP</div>
+      <div>
+        <strong>Tourism Platform</strong>
+        <span>Command center</span>
+      </div>
     </div>
-    <nav class="app-shell__nav">
-      <a routerLink="houses" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" has-permission="'Houses.View'">Houses</a>
-      <a routerLink="tours" routerLinkActive="active" has-permission="'Tours.View'">Tours</a>
+    <nav class="sidebar__nav">
+      <a routerLink="houses" routerLinkActive="active" has-permission="'Houses.View'">
+        <span class="sidebar__nav-icon">🏠</span>
+        <span>Houses</span>
+      </a>
+      <a routerLink="tours" routerLinkActive="active" has-permission="'Tours.View'">
+        <span class="sidebar__nav-icon">🧭</span>
+        <span>Tours</span>
+      </a>
+      <a routerLink="users" routerLinkActive="active" has-permission="'Users.Manage'">
+        <span class="sidebar__nav-icon">👤</span>
+        <span>Users</span>
+      </a>
+      <a routerLink="permissions" routerLinkActive="active" has-permission="'Users.Manage'">
+        <span class="sidebar__nav-icon">🔐</span>
+        <span>Permissions</span>
+      </a>
     </nav>
-    <div class="app-shell__actions">
-      <sf-button variant="ghost" type="button" (click)="toggleDrawer()">Filters</sf-button>
+    <div class="sidebar__logout">
+      <sf-button variant="ghost" buttonType="button" (click)="logout()">Logout</sf-button>
     </div>
-  </header>
+  </aside>
 
-  <div class="app-shell__body">
+  <div class="dashboard-shell__main">
+    <header class="dashboard-shell__topbar">
+      <div>
+        <p class="topbar__eyebrow">Command Overview</p>
+        <h1>
+          Welcome back,
+          <span *ngIf="auth.userEmail(); else superuserLabel">{{ auth.userEmail() }}</span>
+        </h1>
+        <ng-template #superuserLabel>
+          <span>Superuser</span>
+        </ng-template>
+      </div>
+      <div class="topbar__actions">
+        <sf-searchbar placeholder="Search analytics" (valueChange)="searchTerm.set($event)"></sf-searchbar>
+        <sf-button variant="ghost" buttonType="button" (click)="logout()">Logout</sf-button>
+      </div>
+    </header>
+
+    <section class="dashboard-shell__overview">
+      <div class="overview-grid">
+        <ng-container *ngFor="let stat of overviewStats">
+          <sf-card class="overview-card">
+            <div class="overview-card__label">{{ stat.label }}</div>
+            <div class="overview-card__value">{{ stat.value }}</div>
+            <div class="overview-card__meta">{{ stat.meta }}</div>
+            <span class="overview-card__trend">{{ stat.trend }}</span>
+          </sf-card>
+        </ng-container>
+      </div>
+    </section>
+
     <sf-tabs></sf-tabs>
-    <aside class="app-shell__sidebar">
-      <p class="sidebar-heading">Shortcuts</p>
-      <a routerLink="houses" routerLinkActive="active" has-permission="'Houses.View'">View houses</a>
-      <a routerLink="tours" routerLinkActive="active" has-permission="'Tours.View'">View tours</a>
-      <span class="sidebar-note">Tenant: admin</span>
-    </aside>
 
-    <main class="app-shell__content">
+    <main class="dashboard-shell__content">
       <router-outlet></router-outlet>
     </main>
   </div>
-
-  <sf-drawer [open]="drawerOpen()" (openChange)="drawerOpen.set($event)">
-    <div class="drawer-panel">
-      <div class="drawer-panel__header">
-        <div>
-          <h2>Filters</h2>
-          <p>Adjust reporting scope</p>
-        </div>
-        <sf-button variant="ghost" type="button" (click)="closeDrawer()">Close</sf-button>
-      </div>
-      <p class="drawer-panel__copy">Filters will go here once the API supports scoped views.</p>
-    </div>
-  </sf-drawer>
 </div>
+
+<sf-drawer [open]="drawerOpen()" (openChange)="drawerOpen.set($event)">
+  <div class="drawer-panel">
+    <div class="drawer-panel__header">
+      <div>
+        <h2>Filters</h2>
+        <p>Adjust reporting scope</p>
+      </div>
+      <sf-button variant="ghost" buttonType="button" (click)="closeDrawer()">Close</sf-button>
+    </div>
+    <p class="drawer-panel__copy">Filters will go here once the API supports scoped views.</p>
+  </div>
+</sf-drawer>
