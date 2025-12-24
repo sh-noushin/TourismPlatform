@@ -1,15 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { signal } from '@angular/core';
 
 @Component({
   standalone: true,
   selector: 'sf-searchbar',
   templateUrl: './sf-searchbar.component.html',
   styleUrls: ['./sf-searchbar.component.scss'],
-  imports: [MatFormFieldModule, MatInputModule, MatIconModule],
+  imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SfSearchbarComponent implements OnDestroy {
@@ -21,7 +18,9 @@ export class SfSearchbarComponent implements OnDestroy {
   readonly valueSignal = signal('');
   private timer?: ReturnType<typeof setTimeout>;
 
-  onInput(value: string) {
+  onInput(event: Event) {
+    const target = event.target as HTMLInputElement | null;
+    const value = target?.value ?? '';
     this.valueSignal.set(value);
     this.scheduleEmit(value);
   }

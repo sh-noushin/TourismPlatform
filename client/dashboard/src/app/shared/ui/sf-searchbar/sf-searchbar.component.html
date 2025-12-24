@@ -1,22 +1,27 @@
 <div class="sf-searchbar">
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>{{ placeholder }}</mat-label>
+  <div class="sf-searchbar__control" role="search">
+    <mat-icon class="sf-searchbar__icon" aria-hidden="true">search</mat-icon>
+
     <input
-      matInput
-      [value]="valueSignal()"
+      class="sf-searchbar__input"
+      type="text"
       autocomplete="off"
-      (input)="onInput($event.target.value)"
+      [attr.placeholder]="placeholder"
+      [value]="valueSignal()"
+      (input)="onInput($event)"
+      (keydown.escape)="clear()"
+      aria-label="Search"
     />
+
     @if (valueSignal().length) {
       <button
-        mat-icon-button
-        matSuffix
         type="button"
+        class="sf-searchbar__clear"
         aria-label="Clear"
         (click)="clear()"
       >
-        <mat-icon>close</mat-icon>
+        <mat-icon aria-hidden="true">close</mat-icon>
       </button>
     }
-  </mat-form-field>
+  </div>
 </div>
