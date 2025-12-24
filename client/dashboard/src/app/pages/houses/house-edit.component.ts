@@ -2,6 +2,8 @@ import { Component, Inject, Optional, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../api/client';
 import { HousesFacade } from '../../features/houses/houses.facade';
 import { HouseCommitPhotoItem } from '../../api/client';
 
@@ -115,6 +117,29 @@ type HouseForm = {
           </label>
         </div>
 
+        <label>
+          Photos
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            [disabled]="uploading()"
+          />
+          @if (uploading()) {
+            <p>Uploading...</p>
+          }
+        </label>
+
+        <div class="photos">
+          @for (photo of form()?.photos; track photo.stagedUploadId; let i = $index) {
+            <div class="photo-item">
+              <span>{{ photo.label }}</span>
+              <button type="button" (click)="removePhoto(i)">Remove</button>
+            </div>
+          }
+        </div>
+
         <div class="actions">
           <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
           <button type="submit" class="btn primary" [disabled]="saving()">
@@ -142,6 +167,8 @@ type HouseForm = {
     .btn { border-radius: 10px; padding: 10px 14px; border: 1px solid transparent; cursor: pointer; }
     .btn.ghost { background: #f1f5f9; border-color: #e2e8f0; }
     .btn.primary { background: #3b82f6; color: #fff; }
+    .photos { display: flex; flex-direction: column; gap: 8px; }
+    .photo-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border: 1px solid #d8dbe0; border-radius: 6px; }
     .error { color: #dc2626; }
     .success { color: #16a34a; }
   `]
@@ -151,10 +178,13 @@ export class HouseEditComponent {
   readonly saving = signal(false);
   readonly saved = signal(false);
   readonly error = signal<string | null>(null);
+  readonly uploading = signal(false);
   readonly id: string | null;
 
   constructor(
     private readonly facade: HousesFacade,
+    private readonly http: HttpClient,
+    @Inject(API_BASE_URL) private readonly apiBaseUrl: string,
     @Optional() private readonly route?: ActivatedRoute,
     @Optional() private readonly dialogRef?: MatDialogRef<HouseEditComponent, boolean>,
     @Optional() @Inject(MAT_DIALOG_DATA) private readonly data?: { id?: string | null }
@@ -238,5 +268,51 @@ export class HouseEditComponent {
 
   updateField<K extends keyof HouseForm>(key: K, value: HouseForm[K]) {
     this.form.update((current) => (current ? { ...current, [key]: value } : current));
+  }
+
+  async onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+    if (!files || files.length === 0) return;
+
+    this.uploading.set(true);
+    this.error.set(null);
+
+    try {
+      const uploads = Array.from(files).map(async (file, index) => {
+        const formData = new FormData();
+        formData.append('File', file);
+        formData.append('TargetType', '0'); // House = 0, assuming enum starts at 0
+
+        const response = await this.http.post<{ stagedUploadId: string }>(`${this.apiBaseUrl}/api/photos/stage`, formData).toPromise();
+        if (!response) throw new Error('Upload failed');
+
+        return {
+          stagedUploadId: response.stagedUploadId,
+          label: file.name,
+          sortOrder: this.form()?.photos.length ?? 0 + index
+        } as HouseCommitPhotoItem;
+      });
+
+      const newPhotos = await Promise.all(uploads);
+      this.form.update((current) => {
+        if (!current) return current;
+        return { ...current, photos: [...current.photos, ...newPhotos] };
+      });
+    } catch (err: any) {
+      this.error.set(err?.message ?? 'Upload failed');
+    } finally {
+      this.uploading.set(false);
+      input.value = ''; // reset input
+    }
+  }
+
+  removePhoto(index: number) {
+    this.form.update((current) => {
+      if (!current) return current;
+      const photos = [...current.photos];
+      photos.splice(index, 1);
+      return { ...current, photos };
+    });
   }
 }
