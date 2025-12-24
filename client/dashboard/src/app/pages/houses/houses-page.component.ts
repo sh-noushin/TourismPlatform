@@ -70,7 +70,8 @@ export class HousesPageComponent {
   onRowAction(event: { action: any; row: any }) {
     const { action, row } = event;
     if (action?.type === 'edit') {
-      this.openDialog(row.id);
+      const houseId = row?.houseId ?? row?.id ?? null;
+      this.openDialog(houseId);
     }
   }
 
