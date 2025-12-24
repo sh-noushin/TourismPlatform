@@ -33,16 +33,13 @@ export class HouseTypesPageComponent {
   readonly loadingSignal = computed(() => this.houseTypes.loading());
   readonly errorSignal = computed(() => this.houseTypes.error());
 
-  readonly columns: SfTableColumn[] = [
-    { key: 'name', header: 'Name', field: 'name', sortable: true },
-    { key: 'id', header: 'Id', field: 'id', sortable: true }
-  ];
+  readonly columns: SfTableColumn[] = [{ key: 'name', header: 'Name', field: 'name', sortable: true }];
 
   readonly displayedTypes = computed(() => {
     const filter = this.filterSignal().toLowerCase();
     const items = filter
       ? this.houseTypes.houseTypes().filter((type) =>
-          [type.name, type.id]
+          [type.name]
             .filter(Boolean)
             .some((value) => value.toLowerCase().includes(filter))
         )
