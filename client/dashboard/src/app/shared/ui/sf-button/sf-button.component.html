@@ -13,6 +13,9 @@
 >
 
   <span class="content">
+    @if (loading()) {
+      <mat-progress-spinner diameter="20"></mat-progress-spinner>
+    }
     @if (text()) {
       {{ text() }}
     } @else {

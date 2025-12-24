@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 
-import { TabService, TabItem } from '../core/tab/tab.service';
 import { AuthFacade } from '../core/auth/auth.facade';
+import { TabService, TabItem } from '../core/tab/tab.service';
 
 type MenuItem = {
   label: string;
@@ -30,40 +30,31 @@ export class DashboardShellComponent {
     { label: 'Permissions', basePath: '/admin/permissions', short: 'P' },
   ];
 
+  // SOURCE OF TRUTH: AuthFacade.userName()
   readonly displayName = computed(() => {
-    const a: any = this.auth as any;
-    const name =
-      a.userName?.() ??
-      a.currentUser?.()?.userName ??
-      a.currentUser?.()?.name ??
-      null;
+    const name = (this.auth.userName?.() ?? '').trim();
+    if (name) return name;
 
-    if (name && String(name).trim().length) return String(name).trim();
-
-    const email = this.auth.userEmail?.() ?? null;
-    if (!email) return 'User';
-    return this.prettyNameFromEmail(String(email));
+    const email = (this.auth.userEmail?.() ?? '').trim();
+    return email ? this.prettyNameFromEmail(email) : 'User';
   });
 
   readonly initials = computed(() => {
-    const name = (this.displayName() ?? 'User').trim();
+    const name = this.displayName().trim();
     const parts = name.split(/\s+/).filter(Boolean);
     const a = parts[0]?.[0] ?? 'U';
     const b = parts.length > 1 ? (parts[1]?.[0] ?? '') : '';
     return (a + b).toUpperCase();
   });
 
-  readonly activeTab = computed<TabItem | null>(() => this.tabs.getActiveTab());
-
   constructor(
+    public readonly auth: AuthFacade,
     public readonly tabs: TabService,
-    private readonly router: Router,
-    private readonly auth: AuthFacade
+    private readonly router: Router
   ) {
     if (this.tabs.tabs().length === 0) {
-      const first = this.menuItems[0];
-      const tab = this.tabs.openNewTab(first.basePath, first.label, true);
-      void this.router.navigateByUrl(tab.path);
+      const t = this.tabs.openNewTab('/admin/houses', 'Houses', true);
+      void this.router.navigateByUrl(t.path);
     }
   }
 
@@ -86,8 +77,15 @@ export class DashboardShellComponent {
     ev?.stopPropagation();
     ev?.preventDefault();
 
-    const next = this.tabs.closeTab(tab.id);
-    if (next) void this.router.navigateByUrl(next.path);
+    this.tabs.closeTab(tab.id);
+
+    const activeId = this.tabs.activeTabId();
+    if (!activeId) return;
+
+    const activeTab = this.tabs.tabs().find((t: TabItem) => t.id === activeId) ?? null;
+    if (!activeTab) return;
+
+    void this.router.navigateByUrl(activeTab.path);
   }
 
   toggleUserMenu() {
@@ -114,7 +112,11 @@ export class DashboardShellComponent {
   }
 
   private nextTitle(base: string) {
-    const count = this.tabs.tabs().filter(t => (t.title ?? '').startsWith(base)).length;
+    const count = this.tabs
+      .tabs()
+      .filter((t: TabItem) => (t.title ?? '').startsWith(base))
+      .length;
+
     return count ? `${base} (${count + 1})` : base;
   }
 

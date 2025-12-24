@@ -3,7 +3,7 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: linear-gradient(180deg, $dashboardBgStart 0%, $dashboardBgEnd 18%, $bg 18%);
+  background: linear-gradient(180deg, #6d4cff 0%, #7a56ff 24%, #f4f6fb 24%);
   color: $text;
   font-family: $font-body;
 }
@@ -49,10 +49,6 @@
   place-items: center;
 }
 
-.icon-btn:hover {
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.10);
-}
-
 .burger {
   width: 18px;
   height: 2px;
@@ -88,8 +84,8 @@
   display: grid;
   place-items: center;
   font-weight: 800;
-  color: $primaryContrast;
-  background: linear-gradient(135deg, $loginHeroGradientStart, $loginHeroGradientEnd);
+  color: #ffffff;
+  background: linear-gradient(135deg, #6d4cff, #2f80ed);
   flex: 0 0 auto;
 }
 
@@ -122,7 +118,6 @@
   color: $text;
   cursor: pointer;
   text-align: left;
-  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .nav__item:hover {
@@ -154,15 +149,15 @@
 }
 
 .topbar {
-  background: linear-gradient(90deg, rgba(73, 64, 236, 0.95), rgba(135, 90, 255, 0.9));
-  color: $primaryContrast;
+  background: #6d4cff;
+  color: #ffffff;
   border-radius: 18px;
   padding: spacing(lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: spacing(md);
-  box-shadow: 0 10px 35px rgba(73, 64, 236, 0.35);
+  box-shadow: 0 10px 35px rgba(109, 76, 255, 0.35);
   position: relative;
 }
 
@@ -181,7 +176,7 @@
   gap: spacing(sm);
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.12);
-  color: $primaryContrast;
+  color: #ffffff;
   padding: 8px 10px;
   border-radius: 14px;
   cursor: pointer;
@@ -193,7 +188,7 @@
   height: 40px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
-  color: rgba(73, 64, 236, 1);
+  color: #6d4cff;
   display: grid;
   place-items: center;
   font-weight: 900;
@@ -274,9 +269,8 @@
 }
 
 .tab--active {
-  background: $sidebarActiveBg;
-  color: $sidebarActiveText;
-  box-shadow: 0 12px 28px rgba(24, 120, 242, 0.25);
+  background: rgba(109, 76, 255, 0.14);
+  border-color: rgba(109, 76, 255, 0.18);
 }
 
 .tab__title {
@@ -292,10 +286,6 @@
   background: rgba(0, 0, 0, 0.10);
   font-size: 16px;
   line-height: 1;
-}
-
-.tab--active .tab__close {
-  background: rgba(255, 255, 255, 0.18);
 }
 
 .content {
