@@ -49,8 +49,8 @@ const USER_FORM_DEFAULT = { email: '', displayName: '' };
               />
             </label>
             <div class="user-edit__actions">
-              <sf-button variant="ghost" buttonType="button" (click)="resetToDefaults()" [disabled]="saving()">Reset</sf-button>
-              <sf-button variant="primary" [loading]="saving()" buttonType="submit">{{ isEditMode() ? 'Update' : 'Create' }}</sf-button>
+              <sf-button variant="ghost" (click)="resetToDefaults()" [disabled]="saving()">Reset</sf-button>
+              <sf-button (click)="onSave($event)" [loading]="saving()">{{ isEditMode() ? 'Update' : 'Create' }}</sf-button>
             </div>
           </form>
           @if (error()) {

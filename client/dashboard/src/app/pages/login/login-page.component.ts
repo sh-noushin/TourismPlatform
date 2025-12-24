@@ -47,18 +47,15 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
             />
           </label>
 
-          <label class="login-form__field checkbox">
-            <input type="checkbox" />
-            <span>Remember me</span>
-          </label>
-
           <div class="login-form__actions">
-            <sf-button class="login-btn" variant="primary" [loading]="loading()" buttonType="button">LOGIN</sf-button>
-          </div>
-
-          <div class="login-form__links">
-            <a class="left-link">Don't have an account?</a>
-            <a class="right-link" (click)="onForgot()">Forgot password?</a>
+            <sf-button
+              class="login-btn"
+              text="LOGIN"
+              color="linear-gradient(90deg, #56CCF2 10%, #2F80ED 100%)"
+              height="48px"
+              width="100%"
+              [loading]="loading()"
+            ></sf-button>
           </div>
 
           <p *ngIf="error()" class="login-form__error">{{ error() }}</p>

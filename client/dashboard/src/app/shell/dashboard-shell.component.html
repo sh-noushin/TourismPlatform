@@ -119,7 +119,7 @@
             <li *ngFor="let item of module.subItems">{{ item }}</li>
           </ul>
           <div class="module-card__actions">
-            <sf-button buttonType="button" variant="outline" (click)="openQuickForm(module.formType)">
+            <sf-button variant="outline" (click)="openQuickForm(module.formType)">
               Add new {{ module.label | lowercase }}
             </sf-button>
           </div>
@@ -218,8 +218,8 @@
       </ng-container>
       <p *ngIf="quickFormError()" class="quick-form-panel__error">{{ quickFormError() }}</p>
       <div class="quick-form-panel__actions">
-        <sf-button variant="ghost" buttonType="button" (click)="closeQuickForm()">Cancel</sf-button>
-        <sf-button buttonType="submit" [loading]="quickFormLoading()">Save</sf-button>
+        <sf-button variant="ghost" (click)="closeQuickForm()">Cancel</sf-button>
+        <sf-button (click)="submitQuickForm()" [loading]="quickFormLoading()">Save</sf-button>
       </div>
     </form>
   </div>

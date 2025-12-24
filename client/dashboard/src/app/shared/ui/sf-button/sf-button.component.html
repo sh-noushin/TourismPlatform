@@ -1,34 +1,31 @@
-<ng-template #buttonTemplate>
-  <button
-    mat-flat-button
-    [attr.type]="buttonType"
-    [disabled]="isDisabled"
-    class="sf-button"
-    [style.background]="color"
-    [style.borderColor]="color"
-    [style.color]="textColor"
-    [style.width]="width"
-    [style.height]="height"
-  >
-    @if (isLoading) {
-      <div class="spinner">
-        <mat-progress-spinner diameter="18" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
-      </div>
-    }
-    <span class="content">
-      @if (text) {
-        {{ text }}
-      } @else {
-        <ng-content></ng-content>
-      }
+<button
+  mat-flat-button
+  type="button"
+  class="sf-button"
+  [style.background]="color()"
+  [style.borderColor]="color()"
+  [style.color]="textColor()"
+  [style.width]="width()"
+  [style.height]="height()"
+  [disabled]="disabled() || loading()"
+  [attr.aria-busy]="loading()"
+  (click)="handleClick($event)"
+>
+  @if (loading()) {
+    <span class="spinner">
+      <mat-progress-spinner
+        diameter="18"
+        mode="indeterminate"
+        strokeWidth="3"
+      ></mat-progress-spinner>
     </span>
-  </button>
-</ng-template>
+  }
 
-@if (permission) {
-  <ng-container *has-permission="permission">
-    <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
-  </ng-container>
-} @else {
-  <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
-}
+  <span class="content">
+    @if (text()) {
+      {{ text() }}
+    } @else {
+      <ng-content></ng-content>
+    }
+  </span>
+</button>
