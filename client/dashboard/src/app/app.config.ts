@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideAnimations(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
     // HTTP interceptors: correlation id -> auth header -> refresh/retry -> error normalization
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationIdInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
