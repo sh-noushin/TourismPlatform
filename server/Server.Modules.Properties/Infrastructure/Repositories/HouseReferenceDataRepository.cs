@@ -80,6 +80,19 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
         return houseType;
     }
 
+    public async Task<bool> DeleteHouseTypeAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var houseType = await GetHouseTypeByIdAsync(id, cancellationToken);
+        if (houseType == null)
+        {
+            return false;
+        }
+
+        _dbContext.Remove(houseType);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
     public async Task<Location> GetOrCreateLocationAsync(AddressRequest request, CancellationToken cancellationToken = default)
     {
         var country = CountryCodes.Normalize(request.Country);

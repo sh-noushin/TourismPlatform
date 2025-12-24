@@ -12,4 +12,5 @@ public interface IHouseTypeService
     Task<HouseTypeDto?> GetHouseTypeAsync(Guid id, CancellationToken cancellationToken = default);
     Task<HouseTypeDto> CreateHouseTypeAsync(CreateHouseTypeRequest request, CancellationToken cancellationToken = default);
     Task UpdateHouseTypeAsync(Guid id, UpdateHouseTypeRequest request, CancellationToken cancellationToken = default);
+    Task DeleteHouseTypeAsync(Guid id, CancellationToken cancellationToken = default);
 }

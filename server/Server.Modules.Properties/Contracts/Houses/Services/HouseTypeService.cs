@@ -48,4 +48,13 @@ public sealed class HouseTypeService : IHouseTypeService
             throw new KeyNotFoundException($"House type '{id}' not found.");
         }
     }
+
+    public async Task DeleteHouseTypeAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var deleted = await _referenceDataRepository.DeleteHouseTypeAsync(id, cancellationToken);
+        if (!deleted)
+        {
+            throw new KeyNotFoundException($"House type '{id}' not found.");
+        }
+    }
 }

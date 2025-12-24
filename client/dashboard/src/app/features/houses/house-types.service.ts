@@ -47,4 +47,8 @@ export class HouseTypesService {
   async update(id: string, name: string) {
     return firstValueFrom(this.http.put<void>(`${this.apiBaseUrl}/api/house-types/${id}`, { name }));
   }
+
+  async delete(id: string) {
+    return firstValueFrom(this.http.delete<void>(`${this.apiBaseUrl}/api/house-types/${id}`));
+  }
 }
