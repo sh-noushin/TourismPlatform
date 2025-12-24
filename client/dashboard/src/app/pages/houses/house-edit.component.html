@@ -1,0 +1,170 @@
+<div class="edit-shell" (click)="$event.stopPropagation()">
+  <div class="glass-panel">
+    <header class="header">
+      <h3>{{ id ? 'Edit house' : 'Create house' }}</h3>
+    </header>
+
+    @if (form()) {
+      <form class="form" (submit)="save($event)">
+        <section class="form-grid">
+          <label>
+            <span class="label-text">Name</span>
+            <input
+              type="text"
+              name="name"
+              autocomplete="off"
+              [value]="form()?.name"
+              (input)="updateField('name', $any($event.target).value)"
+              required
+            />
+          </label>
+          <label>
+            <span class="label-text">Description</span>
+            <textarea
+              name="description"
+              rows="3"
+              [value]="form()?.description"
+              (input)="updateField('description', $any($event.target).value)"
+            ></textarea>
+          </label>
+          <label class="combobox">
+            <span class="label-text">Type</span>
+            <div class="combobox-field">
+              <select
+                name="houseTypeName"
+                (change)="updateField('houseTypeName', $any($event.target).value)"
+              >
+                <option value="" [selected]="!form()?.houseTypeName">Select type</option>
+                @for (type of houseTypes.houseTypes(); track type.id) {
+                  <option
+                    value="{{ type.name }}"
+                    [selected]="form()?.houseTypeName === type.name"
+                  >
+                    {{ type.name }}
+                  </option>
+                }
+              </select>
+              <span class="combobox-icon" aria-hidden="true"></span>
+            </div>
+            @if (houseTypes.loading()) {
+              <p class="mini-note">Loading types…</p>
+            }
+            @if (houseTypes.error()) {
+              <p class="status error">{{ houseTypes.error() }}</p>
+            }
+          </label>
+        </section>
+
+        <section class="form-grid">
+          <label>
+            <span class="label-text">Address line 1</span>
+            <input
+              type="text"
+              name="line1"
+              autocomplete="off"
+              [value]="form()?.line1"
+              (input)="updateField('line1', $any($event.target).value)"
+              required
+            />
+          </label>
+          <label>
+            <span class="label-text">Address line 2</span>
+            <input
+              type="text"
+              name="line2"
+              autocomplete="off"
+              [value]="form()?.line2"
+              (input)="updateField('line2', $any($event.target).value)"
+            />
+          </label>
+          <label>
+            <span class="label-text">City</span>
+            <input
+              type="text"
+              name="city"
+              autocomplete="off"
+              [value]="form()?.city"
+              (input)="updateField('city', $any($event.target).value)"
+              required
+            />
+          </label>
+          <label>
+            <span class="label-text">Region</span>
+            <input
+              type="text"
+              name="region"
+              autocomplete="off"
+              [value]="form()?.region"
+              (input)="updateField('region', $any($event.target).value)"
+            />
+          </label>
+          <label>
+            <span class="label-text">Country</span>
+            <input
+              type="text"
+              name="country"
+              autocomplete="off"
+              [value]="form()?.country"
+              (input)="updateField('country', $any($event.target).value)"
+              required
+            />
+          </label>
+          <label>
+            <span class="label-text">Postal code</span>
+            <input
+              type="text"
+              name="postalCode"
+              autocomplete="off"
+              [value]="form()?.postalCode"
+              (input)="updateField('postalCode', $any($event.target).value)"
+            />
+          </label>
+        </section>
+
+        <section class="file-control">
+          <label class="file-label">
+            <span class="label-text">Photos</span>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              [disabled]="uploading()"
+            />
+          </label>
+          @if (uploading()) {
+            <p class="mini-note">Uploading photos…</p>
+          }
+        </section>
+
+        <section class="photos">
+          @for (photo of form()?.photos; track photo.stagedUploadId; let i = $index) {
+            <div class="photo-item">
+              <div class="photo-text">
+                <strong>{{ photo.label }}</strong>
+                <p class="mini-note">Sort {{ photo.sortOrder }}</p>
+              </div>
+              <button class="text-button" type="button" (click)="removePhoto(i)">Remove</button>
+            </div>
+          }
+        </section>
+
+        <section class="actions">
+          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
+          <button type="submit" class="btn primary" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : (id ? 'Update' : 'Create') }}
+          </button>
+        </section>
+      </form>
+    }
+
+    <div class="status-bar">
+      @if (error()) {
+        <span class="status error">{{ error() }}</span>
+      }
+      @if (saved()) {
+        <span class="status success">Saved.</span>
+      }
+    </div>
+  </div>
+</div>
