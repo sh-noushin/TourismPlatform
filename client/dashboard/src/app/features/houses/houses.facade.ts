@@ -69,4 +69,18 @@ export class HousesFacade {
       this.saving.set(false);
     }
   }
+
+  async delete(id: string) {
+    this.saving.set(true);
+    this.error.set(null);
+    try {
+      await firstValueFrom(this.client.housesDELETE(id));
+      await this.load();
+    } catch (err: any) {
+      this.error.set(err?.message ?? 'Failed deleting house');
+      throw err;
+    } finally {
+      this.saving.set(false);
+    }
+  }
 }

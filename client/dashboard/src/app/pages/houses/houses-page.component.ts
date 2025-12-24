@@ -10,6 +10,7 @@ import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { HouseEditComponent } from './house-edit.component';
+import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
 
 @Component({
   standalone: true,
@@ -61,17 +62,42 @@ export class HousesPageComponent {
     });
   });
 
-  readonly actions = [{ label: 'Edit', type: 'edit', icon: 'edit' }];
+  readonly actions = [
+    { label: 'Edit', type: 'edit', icon: 'edit' },
+    { label: 'Delete', type: 'delete', icon: 'delete' }
+  ];
 
-  constructor(private readonly houses: HousesFacade, private readonly dialog: MatDialog) {
+  constructor(
+    private readonly houses: HousesFacade,
+    private readonly dialog: MatDialog,
+    private readonly confirm: ConfirmService
+  ) {
     this.houses.load();
   }
 
-  onRowAction(event: { action: any; row: any }) {
+  async onRowAction(event: { action: any; row: any }) {
     const { action, row } = event;
     if (action?.type === 'edit') {
       const houseId = row?.houseId ?? row?.id ?? null;
       this.openDialog(houseId);
+      return;
+    }
+
+    if (action?.type === 'delete') {
+      const houseId = row?.houseId ?? row?.id ?? null;
+      if (!houseId) return;
+      const confirmed = await this.confirm.confirm({
+        title: 'Delete house',
+        message: `Delete ${row?.name ?? 'this house'}?`,
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel'
+      });
+      if (!confirmed) return;
+      try {
+        await this.houses.delete(houseId);
+      } catch {
+        // deletion failure already surfaced via HousesFacade
+      }
     }
   }
 
