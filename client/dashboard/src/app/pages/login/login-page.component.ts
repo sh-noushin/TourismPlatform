@@ -20,8 +20,7 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
             <p class="login-page__brand-note">Admin console</p>
           </div>
         </div>
-        <h1>Welcome back</h1>
-        <p class="login-page__lead">It’s not about what you make. It’s about what you make possible.</p>
+        <h1>Login</h1>
         <form class="login-form" (submit)="onSubmit($event)">
           <label class="login-form__field">
             <span>Email</span>
@@ -44,7 +43,7 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
             />
           </label>
           <div class="login-form__actions">
-            <sf-button variant="primary" [loading]="loading()" type="submit">Login</sf-button>
+            <sf-button variant="primary" [loading]="loading()" buttonType="submit">Login</sf-button>
             <button type="button" class="login-form__forgot" (click)="onForgot()">Forgot password?</button>
           </div>
         </form>
@@ -53,17 +52,7 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
         }
       </sf-card>
 
-      <div class="login-page__hero">
-        <p class="login-page__hero-title">Dream big, build bold</p>
-        <p class="login-page__hero-body">
-          Manage houses, tours, permissions, and superuser tasks from a single command center.
-        </p>
-        <div class="login-page__hero-badges">
-          <span>Secure login</span>
-          <span>Real-time sync</span>
-          <span>Permissions driven</span>
-        </div>
-      </div>
+      
     </div>
   </section>
   `,
