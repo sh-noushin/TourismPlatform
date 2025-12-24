@@ -23,7 +23,7 @@
 .sidebar {
   background: $surface;
   border: 1px solid $border;
-  border-radius: 16px 16px 0 0;
+  border-radius: 0;
   padding: spacing(md) spacing(md) spacing(md) spacing(sm);
   display: flex;
   flex-direction: column;
@@ -34,7 +34,7 @@
 .sidebar--collapsed {
   padding: spacing(sm);
   width: 84px;
-  border-radius: 14px;
+  border-radius: 0;
 }
 
 .sidebar__top {
