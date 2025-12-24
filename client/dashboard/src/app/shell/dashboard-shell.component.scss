@@ -11,15 +11,19 @@
 .shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: spacing(md);
-  padding: spacing(md) spacing(md) spacing(md) 0;
+  padding: 0 spacing(md) 0 0;
+}
+
+.shell.shell--collapsed {
+  grid-template-columns: 84px 1fr;
 }
 
 .sidebar {
   background: $surface;
   border: 1px solid $border;
-  border-radius: 0;
+  border-radius: 16px 16px 0 0;
   padding: spacing(md) spacing(md) spacing(md) spacing(sm);
   display: flex;
   flex-direction: column;
@@ -30,6 +34,7 @@
 .sidebar--collapsed {
   padding: spacing(sm);
   width: 84px;
+  border-radius: 14px;
 }
 
 .sidebar__top {
