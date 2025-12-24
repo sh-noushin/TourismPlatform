@@ -11,15 +11,6 @@
   [attr.aria-busy]="loading()"
   (click)="handleClick($event)"
 >
-  @if (loading()) {
-    <span class="spinner">
-      <mat-progress-spinner
-        diameter="18"
-        mode="indeterminate"
-        strokeWidth="3"
-      ></mat-progress-spinner>
-    </span>
-  }
 
   <span class="content">
     @if (text()) {

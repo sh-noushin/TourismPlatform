@@ -18,13 +18,8 @@ host { display: inline-flex; width: 100%; }
     { opacity: 0.5; 
       cursor: not-allowed; 
     } 
-    .spinner {
-       position: absolute;
-       inset: 0;
-       display: grid; 
-       place-items: center;
-       background: rgba(255, 255, 255, 0.6);
-      } 
+   
+      
       .content 
       { 
         display: inline-flex; 
