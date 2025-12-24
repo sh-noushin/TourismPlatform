@@ -5,10 +5,16 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AuthFacade } from '../core/auth/auth.facade';
 import { TabService, TabItem } from '../core/tab/tab.service';
 
+type SubMenuItem = {
+  label: string;
+  path: string;
+};
+
 type MenuItem = {
   label: string;
-  basePath: string;
+  basePath: string; // used as group id for expand/collapse
   icon: string;
+  subItems?: SubMenuItem[];
 };
 
 @Component({
@@ -22,9 +28,18 @@ type MenuItem = {
 export class DashboardShellComponent {
   readonly sidebarCollapsed = signal(false);
   readonly userMenuOpen = signal(false);
+  readonly expandedMenu = signal<string | null>(null);
 
   readonly menuItems: MenuItem[] = [
-    { label: 'Houses', basePath: '/admin/houses', icon: '🏠' },
+    {
+      label: 'House management',
+      basePath: '/admin/house-management',
+      icon: '🏠',
+      subItems: [
+        { label: 'Houses', path: '/admin/houses' },
+        { label: 'House types', path: '/admin/house-types' }
+      ]
+    },
     { label: 'Tours', basePath: '/admin/tours', icon: '🧭' },
     { label: 'Exchanges', basePath: '/admin/exchange', icon: '💱' },
     { label: 'Permissions', basePath: '/admin/permissions', icon: '🔐' },
@@ -55,9 +70,17 @@ export class DashboardShellComponent {
     public readonly tabs: TabService,
     private readonly router: Router
   ) {
+    // default tab: houses
     if (this.tabs.tabs().length === 0) {
       const t = this.tabs.openNewTab('/admin/houses', 'Houses', true);
       void this.router.navigateByUrl(t.path);
+    }
+
+    // auto-expand House management if active tab is one of its sub routes
+    const active = this.activeTabPath();
+    const houseGroup = this.menuItems.find(m => m.basePath === '/admin/house-management');
+    if (houseGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
+      this.expandedMenu.set(houseGroup.basePath);
     }
   }
 
@@ -66,9 +89,17 @@ export class DashboardShellComponent {
   }
 
   openMenu(item: MenuItem) {
-    const title = this.nextTitle(item.label);
-    const tab = this.tabs.openNewTab(item.basePath, title, false);
-    void this.router.navigateByUrl(tab.path);
+    if (item.subItems?.length) {
+      this.expandedMenu.update((current) => (current === item.basePath ? null : item.basePath));
+      return;
+    }
+
+    this.openTab(item.basePath, item.label);
+  }
+
+  openSubMenuItem(item: MenuItem, sub: SubMenuItem) {
+    this.expandedMenu.set(item.basePath);
+    this.openTab(sub.path, sub.label);
   }
 
   activate(tab: TabItem) {
@@ -121,6 +152,33 @@ export class DashboardShellComponent {
       .length;
 
     return count ? `${base} (${count + 1})` : base;
+  }
+
+  private openTab(path: string, label: string) {
+    const title = this.nextTitle(label);
+    const tab = this.tabs.openNewTab(path, title, false);
+    void this.router.navigateByUrl(tab.path);
+  }
+
+  isMenuActive(item: MenuItem) {
+    const active = this.activeTabPath();
+    if (item.subItems?.length) {
+      return item.subItems.some((sub) => this.normalize(sub.path) === active);
+    }
+    return this.normalize(item.basePath) === active;
+  }
+
+  isSubMenuItemActive(sub: SubMenuItem) {
+    return this.normalize(sub.path) === this.activeTabPath();
+  }
+
+  private activeTabPath() {
+    const active = this.tabs.getActiveTab();
+    return this.normalize(active?.path ?? '');
+  }
+
+  private normalize(path: string) {
+    return (path.split('?')[0] ?? '').replace(/\/$/, '');
   }
 
   private prettyNameFromEmail(email: string) {

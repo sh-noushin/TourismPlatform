@@ -17,13 +17,40 @@
 
     <nav class="nav">
       @for (item of menuItems; track item.basePath) {
-        <button type="button" class="nav__item" (click)="openMenu(item)">
-          <span class="nav__icon" aria-hidden="true">{{ item.icon }}</span>
+        <div class="nav__group">
+          <button
+            type="button"
+            class="nav__item"
+            [class.nav__item--active]="isMenuActive(item)"
+            (click)="openMenu(item)"
+            [attr.aria-expanded]="item.subItems?.length ? expandedMenu() === item.basePath : null"
+          >
+            <span class="nav__icon" aria-hidden="true">{{ item.icon }}</span>
 
-          @if (!sidebarCollapsed()) {
-            <span class="nav__label">{{ item.label }}</span>
+            @if (!sidebarCollapsed()) {
+              <span class="nav__label">{{ item.label }}</span>
+            }
+
+            @if (!sidebarCollapsed() && item.subItems?.length) {
+              <span class="nav__chev" [class.nav__chev--open]="expandedMenu() === item.basePath"></span>
+            }
+          </button>
+
+          @if (!sidebarCollapsed() && item.subItems?.length && expandedMenu() === item.basePath) {
+            <div class="nav__submenu">
+              @for (sub of item.subItems; track sub.path) {
+                <button
+                  type="button"
+                  class="nav__submenu-item"
+                  [class.nav__submenu-item--active]="isSubMenuItemActive(sub)"
+                  (click)="openSubMenuItem(item, sub)"
+                >
+                  {{ sub.label }}
+                </button>
+              }
+            </div>
           }
-        </button>
+        </div>
       }
     </nav>
   </aside>

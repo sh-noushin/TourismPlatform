@@ -1,0 +1,23 @@
+<div class="house-types-page">
+  <header class="house-types-page__header">
+    <div>
+      <p class="overline">Settings</p>
+      <h1>House types</h1>
+    </div>
+  </header>
+
+  <section class="house-types-page__content">
+    <p class="status" *ngIf="loading()">Loading house types…</p>
+    <p class="status status--error" *ngIf="error()">{{ error() }}</p>
+    <p class="status" *ngIf="!loading() && !error() && types().length === 0">No house types yet.</p>
+
+    <ul class="house-types-page__list" *ngIf="types().length">
+      @for (type of types(); track type.id) {
+        <li class="house-types-page__item">
+          <span class="house-types-page__label">{{ type.name }}</span>
+          <span class="house-types-page__meta">{{ type.id }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+</div>
