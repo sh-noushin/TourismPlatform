@@ -3,10 +3,28 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { API_BASE_URL } from '../../api/client';
+import { firstValueFrom } from 'rxjs';
+import { API_BASE_URL, HouseCommitPhotoItem } from '../../api/client';
 import { HousesFacade } from '../../features/houses/houses.facade';
-import { HouseCommitPhotoItem } from '../../api/client';
 import { HouseTypesService } from '../../features/houses/house-types.service';
+
+type ExistingPhotoVm = {
+  kind: 'existing';
+  id: string;
+  url: string;
+  label: string;
+  sortOrder: number;
+};
+
+type StagedPhotoVm = {
+  kind: 'staged';
+  stagedUploadId: string;
+  label: string;
+  sortOrder: number;
+  previewUrl?: string;
+};
+
+type HousePhotoVm = ExistingPhotoVm | StagedPhotoVm;
 
 type HouseForm = {
   name: string;
@@ -18,7 +36,7 @@ type HouseForm = {
   region?: string;
   country: string;
   postalCode?: string;
-  photos: HouseCommitPhotoItem[];
+  photos: HousePhotoVm[];
 };
 
 @Component({
@@ -34,6 +52,10 @@ export class HouseEditComponent {
   readonly saved = signal(false);
   readonly error = signal<string | null>(null);
   readonly uploading = signal(false);
+
+  // Keep removed existing photo IDs here (send on save)
+  readonly deletedPhotoIds = signal<string[]>([]);
+
   readonly id: string | null;
 
   constructor(
@@ -50,23 +72,23 @@ export class HouseEditComponent {
     void this.houseTypes.load();
   }
 
+  private normalizeUrl(url: string | undefined | null): string {
+    const value = (url ?? '').trim();
+    if (!value) return '';
+    if (value.startsWith('http://') || value.startsWith('https://')) return value;
+
+    const base = this.apiBaseUrl.endsWith('/') ? this.apiBaseUrl.slice(0, -1) : this.apiBaseUrl;
+    const path = value.startsWith('/') ? value : `/${value}`;
+    return `${base}${path}`;
+  }
+
   private async load() {
     try {
-      if (this.id) {
-        const res = await this.facade.get(this.id);
-        this.form.set({
-          name: res?.name ?? '',
-          description: res?.description ?? '',
-          houseTypeName: res?.houseTypeName ?? '',
-          line1: res?.line1 ?? '',
-          line2: res?.line2 ?? '',
-          city: res?.city ?? '',
-          region: res?.region ?? '',
-          country: res?.country ?? '',
-          postalCode: res?.postalCode ?? '',
-          photos: []
-        });
-      } else {
+      this.error.set(null);
+      this.saved.set(false);
+      this.deletedPhotoIds.set([]);
+
+      if (!this.id) {
         this.form.set({
           name: '',
           description: '',
@@ -79,7 +101,44 @@ export class HouseEditComponent {
           postalCode: '',
           photos: []
         });
+        return;
       }
+
+      const res: any = await this.facade.get(this.id);
+      const address = res?.address ?? null;
+
+      const rawPhotos = res?.photos ?? [];
+
+      const existingPhotos: ExistingPhotoVm[] = Array.isArray(rawPhotos)
+        ? rawPhotos.flatMap((p: any) => {
+            const id = (p?.id ?? p?.photoId ?? p?.housePhotoId ?? '').toString();
+            const url = this.normalizeUrl(p?.url ?? p?.publicUrl ?? p?.downloadUrl ?? p?.path);
+            if (!id || !url) return [];
+
+            return [
+              {
+                kind: 'existing',
+                id,
+                url,
+                label: (p?.label ?? p?.fileName ?? 'Photo').toString(),
+                sortOrder: Number(p?.sortOrder ?? 0)
+              }
+            ];
+          })
+        : [];
+
+      this.form.set({
+        name: res?.name ?? '',
+        description: res?.description ?? '',
+        houseTypeName: res?.houseTypeName ?? '',
+        line1: address?.line1 ?? res?.line1 ?? '',
+        line2: address?.line2 ?? res?.line2 ?? '',
+        city: address?.city ?? res?.city ?? '',
+        region: address?.region ?? res?.region ?? '',
+        country: address?.country ?? res?.country ?? '',
+        postalCode: address?.postalCode ?? res?.postalCode ?? '',
+        photos: existingPhotos
+      });
     } catch (err: any) {
       this.error.set(err?.message ?? 'Failed loading');
     }
@@ -89,11 +148,24 @@ export class HouseEditComponent {
     event?.preventDefault();
     const form = this.form();
     if (!form) return;
+
     this.saving.set(true);
     this.saved.set(false);
     this.error.set(null);
+
     try {
-      const payload = {
+      const stagedPhotosToCommit: HouseCommitPhotoItem[] = form.photos
+        .filter((p): p is StagedPhotoVm => p.kind === 'staged')
+        .map((p) => {
+          const item = new HouseCommitPhotoItem();
+          // These property names must match your generated client
+          (item as any).stagedUploadId = p.stagedUploadId;
+          (item as any).label = p.label;
+          (item as any).sortOrder = p.sortOrder;
+          return item;
+        });
+
+      const payload: any = {
         name: form.name,
         description: form.description || undefined,
         houseTypeName: form.houseTypeName,
@@ -105,9 +177,12 @@ export class HouseEditComponent {
           country: form.country,
           postalCode: form.postalCode || undefined
         },
-        photos: form.photos ?? []
+        photos: stagedPhotosToCommit,
+        deletedPhotoIds: this.deletedPhotoIds()
       };
-      await this.facade.save(this.id, payload);
+
+      await this.facade.save(this.id, payload as any);
+
       this.saved.set(true);
       this.dialogRef?.close(true);
     } catch (err: any) {
@@ -118,9 +193,13 @@ export class HouseEditComponent {
   }
 
   cancel() {
-    if (this.dialogRef) {
-      this.dialogRef.close(false);
+    const items = this.form()?.photos ?? [];
+    for (const p of items) {
+      if (p.kind === 'staged' && p.previewUrl) {
+        URL.revokeObjectURL(p.previewUrl);
+      }
     }
+    this.dialogRef?.close(false);
   }
 
   updateField<K extends keyof HouseForm>(key: K, value: HouseForm[K]) {
@@ -136,40 +215,64 @@ export class HouseEditComponent {
     this.error.set(null);
 
     try {
+      const currentPhotos = this.form()?.photos ?? [];
+      const nextSort =
+        currentPhotos.length > 0
+          ? Math.max(...currentPhotos.map((p) => Number(p.sortOrder ?? 0))) + 1
+          : 0;
+
       const uploads = Array.from(files).map(async (file, index) => {
         const formData = new FormData();
         formData.append('File', file);
-        formData.append('TargetType', '0'); // House = 0, assuming enum starts at 0
+        formData.append('TargetType', '0'); // House = 0
 
-        const response = await this.http.post<{ stagedUploadId: string }>(`${this.apiBaseUrl}/api/photos/stage`, formData).toPromise();
-        if (!response) throw new Error('Upload failed');
+        const response = await firstValueFrom(
+          this.http.post<{ stagedUploadId: string }>(`${this.apiBaseUrl}/api/photos/stage`, formData)
+        );
 
         return {
+          kind: 'staged',
           stagedUploadId: response.stagedUploadId,
           label: file.name,
-          sortOrder: this.form()?.photos.length ?? 0 + index
-        } as HouseCommitPhotoItem;
+          sortOrder: nextSort + index,
+          previewUrl: URL.createObjectURL(file)
+        } as StagedPhotoVm;
       });
 
       const newPhotos = await Promise.all(uploads);
-      this.form.update((current) => {
-        if (!current) return current;
-        return { ...current, photos: [...current.photos, ...newPhotos] };
+
+      this.form.update((cur) => {
+        if (!cur) return cur;
+        return { ...cur, photos: [...cur.photos, ...newPhotos] };
       });
     } catch (err: any) {
       this.error.set(err?.message ?? 'Upload failed');
     } finally {
       this.uploading.set(false);
-      input.value = ''; // reset input
+      input.value = '';
     }
   }
 
   removePhoto(index: number) {
-    this.form.update((current) => {
-      if (!current) return current;
-      const photos = [...current.photos];
+    this.form.update((cur) => {
+      if (!cur) return cur;
+
+      const photos = [...cur.photos];
+      const removed = photos[index];
+
+      if (removed?.kind === 'staged' && removed.previewUrl) {
+        URL.revokeObjectURL(removed.previewUrl);
+      }
+
+      if (removed?.kind === 'existing') {
+        this.deletedPhotoIds.update((ids) => [...ids, removed.id]);
+      }
+
       photos.splice(index, 1);
-      return { ...current, photos };
+      return { ...cur, photos };
     });
   }
+
+  trackPhoto = (_index: number, photo: HousePhotoVm) =>
+    photo.kind === 'existing' ? `existing:${photo.id}` : `staged:${photo.stagedUploadId}`;
 }

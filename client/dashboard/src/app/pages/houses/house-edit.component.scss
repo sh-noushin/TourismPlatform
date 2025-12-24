@@ -1,3 +1,12 @@
+:host ::ng-deep .cdk-overlay-pane.house-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface,
+:host ::ng-deep .house-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
 :host {
   width: 100%;
 }
@@ -9,42 +18,21 @@
 }
 
 .glass-panel {
-  width: min(520px, 100%);
+  width: min(920px, 100%);
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: 16px;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
   border: 1px solid rgba(79, 70, 229, 0.15);
-  backdrop-filter: none;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 14px;
-}
-
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.eyebrow {
-  margin: 0;
-  font-size: 0.75rem;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: #5b21b6;
+  padding: 18px;
 }
 
 .header h3 {
   margin: 0;
   font-size: 1.4rem;
   color: #111827;
-}
-
-.subhead {
-  margin: 0;
-  color: #4b5563;
-  font-size: 0.95rem;
 }
 
 .form {
@@ -55,14 +43,27 @@
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 8px;
+  gap: 10px;
+}
+
+.form-grid.top {
+  grid-template-columns: 1fr 1.4fr 1fr;
+  align-items: start;
+}
+
+.description textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.form-grid.address {
+  grid-template-columns: repeat(3, minmax(140px, 1fr));
 }
 
 label {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   font-weight: 600;
   color: #374151;
 }
@@ -72,16 +73,8 @@ label {
   color: #475569;
 }
 
-.combobox {
-  position: relative;
-}
-
 .combobox-field {
   position: relative;
-}
-
-.combobox-field input {
-  padding-right: 42px;
 }
 
 .combobox-field select {
@@ -132,11 +125,6 @@ textarea:focus {
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
 }
 
-textarea {
-  resize: vertical;
-  min-height: 74px;
-}
-
 .file-control {
   display: flex;
   flex-direction: column;
@@ -158,25 +146,52 @@ textarea {
 }
 
 .photos {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  margin-top: 4px;
 }
 
-.photo-item {
-  display: flex;
-  justify-content: space-between;
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.photo-card {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 10px;
   align-items: center;
   background: #fff;
   border: 1px solid rgba(79, 70, 229, 0.15);
-  border-radius: 12px;
-  padding: 8px 12px;
+  border-radius: 14px;
+  padding: 10px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
 }
 
-.photo-text strong {
+.thumb {
+  width: 72px;
+  height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(79, 70, 229, 0.12);
+  background: #f8fafc;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.photo-name {
   display: block;
   color: #111827;
+  font-size: 0.95rem;
+  line-height: 1.2;
 }
 
 .text-button {
@@ -195,7 +210,7 @@ textarea {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding-top: 8px;
+  padding-top: 10px;
   border-top: 1px solid rgba(79, 70, 229, 0.1);
   margin-top: 6px;
 }
@@ -206,12 +221,6 @@ textarea {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.25);
 }
 
 .btn.ghost {
@@ -231,7 +240,6 @@ textarea {
   opacity: 0.65;
   cursor: not-allowed;
   box-shadow: none;
-  transform: none;
 }
 
 .status-bar {
@@ -251,13 +259,13 @@ textarea {
   color: #16a34a;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 740px) {
   .glass-panel {
-    padding: 20px;
-    border-radius: 20px;
+    padding: 16px;
   }
 
-  .form-grid {
+  .form-grid.top,
+  .form-grid.address {
     grid-template-columns: 1fr;
   }
 }

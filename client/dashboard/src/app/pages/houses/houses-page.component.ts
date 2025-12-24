@@ -61,9 +61,7 @@ export class HousesPageComponent {
     });
   });
 
-  readonly actions = [
-    { label: 'Edit', type: 'edit', icon: 'edit' }
-  ];
+  readonly actions = [{ label: 'Edit', type: 'edit', icon: 'edit' }];
 
   constructor(private readonly houses: HousesFacade, private readonly dialog: MatDialog) {
     this.houses.load();
@@ -86,7 +84,10 @@ export class HousesPageComponent {
 
   openDialog(id?: string) {
     const ref = this.dialog.open(HouseEditComponent, {
-      width: '720px',
+      panelClass: 'house-edit-dialog',
+      autoFocus: false,
+      maxWidth: 'none',
+      width: 'min(920px, calc(100vw - 32px))',
       data: { id: id ?? null }
     });
 
@@ -96,6 +97,4 @@ export class HousesPageComponent {
       }
     });
   }
-
-  // data is loaded via `HousesFacade.load()` called in constructor
 }

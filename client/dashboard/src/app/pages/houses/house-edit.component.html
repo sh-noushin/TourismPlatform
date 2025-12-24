@@ -6,7 +6,7 @@
 
     @if (form()) {
       <form class="form" (submit)="save($event)">
-        <section class="form-grid">
+        <section class="form-grid top">
           <label>
             <span class="label-text">Name</span>
             <input
@@ -18,7 +18,8 @@
               required
             />
           </label>
-          <label>
+
+          <label class="description">
             <span class="label-text">Description</span>
             <textarea
               name="description"
@@ -27,25 +28,23 @@
               (input)="updateField('description', $any($event.target).value)"
             ></textarea>
           </label>
+
           <label class="combobox">
             <span class="label-text">Type</span>
             <div class="combobox-field">
               <select
                 name="houseTypeName"
+                [value]="form()?.houseTypeName ?? ''"
                 (change)="updateField('houseTypeName', $any($event.target).value)"
               >
-                <option value="" [selected]="!form()?.houseTypeName">Select type</option>
+                <option value="">Select type</option>
                 @for (type of houseTypes.houseTypes(); track type.id) {
-                  <option
-                    value="{{ type.name }}"
-                    [selected]="form()?.houseTypeName === type.name"
-                  >
-                    {{ type.name }}
-                  </option>
+                  <option [value]="type.name">{{ type.name }}</option>
                 }
               </select>
               <span class="combobox-icon" aria-hidden="true"></span>
             </div>
+
             @if (houseTypes.loading()) {
               <p class="mini-note">Loading types…</p>
             }
@@ -55,7 +54,7 @@
           </label>
         </section>
 
-        <section class="form-grid">
+        <section class="form-grid address">
           <label>
             <span class="label-text">Address line 1</span>
             <input
@@ -67,6 +66,7 @@
               required
             />
           </label>
+
           <label>
             <span class="label-text">Address line 2</span>
             <input
@@ -77,6 +77,7 @@
               (input)="updateField('line2', $any($event.target).value)"
             />
           </label>
+
           <label>
             <span class="label-text">City</span>
             <input
@@ -88,6 +89,7 @@
               required
             />
           </label>
+
           <label>
             <span class="label-text">Region</span>
             <input
@@ -98,6 +100,7 @@
               (input)="updateField('region', $any($event.target).value)"
             />
           </label>
+
           <label>
             <span class="label-text">Country</span>
             <input
@@ -109,6 +112,7 @@
               required
             />
           </label>
+
           <label>
             <span class="label-text">Postal code</span>
             <input
@@ -129,7 +133,7 @@
               multiple
               accept="image/*"
               (change)="onFileSelected($event)"
-              [disabled]="uploading()"
+              [disabled]="uploading() || saving()"
             />
           </label>
           @if (uploading()) {
@@ -137,17 +141,39 @@
           }
         </section>
 
-        <section class="photos">
-          @for (photo of form()?.photos; track photo.stagedUploadId; let i = $index) {
-            <div class="photo-item">
-              <div class="photo-text">
-                <strong>{{ photo.label }}</strong>
-                <p class="mini-note">Sort {{ photo.sortOrder }}</p>
-              </div>
-              <button class="text-button" type="button" (click)="removePhoto(i)">Remove</button>
+        @if ((form()?.photos?.length ?? 0) > 0) {
+          <section class="photos">
+            <div class="photo-grid">
+              @for (photo of form()?.photos; track trackPhoto($index, photo); let i = $index) {
+                <div class="photo-card">
+                  <div class="thumb">
+                    @if (photo.kind === 'existing') {
+                      <img [src]="photo.url" alt="" />
+                    } @else {
+                      @if (photo.previewUrl) {
+                        <img [src]="photo.previewUrl" alt="" />
+                      } @else {
+                        <div class="thumb-placeholder"></div>
+                      }
+                    }
+                  </div>
+
+                  <div class="photo-meta">
+                    <strong class="photo-name">{{ photo.label }}</strong>
+                    <p class="mini-note">Sort {{ photo.sortOrder }}</p>
+                    @if (photo.kind === 'existing') {
+                      <p class="mini-note">Existing</p>
+                    } @else {
+                      <p class="mini-note">New</p>
+                    }
+                  </div>
+
+                  <button class="text-button" type="button" (click)="removePhoto(i)">Remove</button>
+                </div>
+              }
             </div>
-          }
-        </section>
+          </section>
+        }
 
         <section class="actions">
           <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
