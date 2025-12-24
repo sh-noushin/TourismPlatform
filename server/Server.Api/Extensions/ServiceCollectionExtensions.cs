@@ -172,6 +172,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHouseReferenceDataRepository, HouseReferenceDataRepository>();
         services.AddScoped<IHousePhotoRepository, HousePhotoRepository>();
         services.AddScoped<IHouseService, HouseService>();
+        services.AddScoped<IHouseTypeService, HouseTypeService>();
         return services;
     }
 

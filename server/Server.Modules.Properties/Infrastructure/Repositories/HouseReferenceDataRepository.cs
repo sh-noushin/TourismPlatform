@@ -76,4 +76,12 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
         return created;
     }
+
+    public async Task<IReadOnlyCollection<HouseType>> GetHouseTypesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Set<HouseType>()
+            .AsNoTracking()
+            .OrderBy(x => x.Name)
+            .ToListAsync(cancellationToken);
+    }
 }
