@@ -11,7 +11,10 @@ export class AuthFacade {
   readonly userEmail = signal<string | null>(null);
   readonly roles = signal<Set<string>>(new Set());
   readonly permissions = signal<Set<string>>(new Set());
-  readonly isSuperUser = computed(() => this.roles().has('SuperUser') || this.roles().has('Admin'));
+  readonly isSuperUser = computed(() => {
+    const roles = this.roles();
+    return roles.has('SuperUser') || roles.has('SuperAdmin') || roles.has('Admin');
+  });
 
   constructor(private readonly authService: AuthService) {
     this.initFromStorage();

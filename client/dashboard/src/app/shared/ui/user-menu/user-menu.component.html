@@ -1,0 +1,15 @@
+<div class="user-menu" [class.open]="open()">
+  <button type="button" class="user-menu__trigger" (click)="toggle($event)">
+    <div class="avatar">{{ initials }}</div>
+    <div class="meta">
+      <div class="name">{{ name }}</div>
+      <div class="role">{{ role }}</div>
+    </div>
+    <span class="chevron">v</span>
+  </button>
+
+  <div class="user-menu__panel" *ngIf="open()">
+    <button type="button" (click)="onChangePassword($event)">Change password</button>
+    <button type="button" (click)="onLogout($event)">Logout</button>
+  </div>
+</div>

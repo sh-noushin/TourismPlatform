@@ -1,0 +1,26 @@
+@use '../../styles/index' as *;
+
+.exchange-page {
+  display: flex;
+  flex-direction: column;
+  gap: spacing(lg);
+}
+
+.exchange-page__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: spacing(md);
+}
+
+.exchange-page__filters {
+  width: min(420px, 100%);
+}
+
+.exchange-page__error {
+  padding: spacing(md);
+  border: 1px solid $border;
+  border-radius: 0.75rem;
+  background: rgba($danger, 0.08);
+  color: $danger;
+}

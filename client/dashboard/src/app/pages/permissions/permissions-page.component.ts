@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   <section class="permissions-page">
     <div class="permissions-page__header">
       <sf-page-header title="Permissions" subtitle="Manage permissions">
-        <sf-button sfPageHeaderActions variant="ghost" type="button">New permission</sf-button>
+        <sf-button sfPageHeaderActions variant="ghost" type="button" (click)="createNew()">New permission</sf-button>
       </sf-page-header>
       <div class="permissions-page__filters">
         <sf-searchbar placeholder="Search permissions" (valueChange)="setFilter($event)"></sf-searchbar>
@@ -72,5 +72,11 @@ export class PermissionsPageComponent {
       this.tabs.openOrActivate(path, `Permission ${row.id}`);
       this.router.navigateByUrl(path);
     }
+  }
+
+  createNew() {
+    const path = '/admin/permissions/new';
+    this.tabs.openOrActivate(path, 'New permission');
+    this.router.navigateByUrl(path);
   }
 }

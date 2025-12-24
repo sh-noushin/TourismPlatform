@@ -18,11 +18,14 @@ export const routes: Routes = [
       { path: 'tours', loadComponent: () => import('./pages/tours/tours-page.component').then(m => m.ToursPageComponent) },
       { path: 'tours/new', loadComponent: () => import('./pages/tours/tour-edit.component').then(m => m.TourEditComponent) },
       { path: 'tours/:id/edit', loadComponent: () => import('./pages/tours/tour-edit.component').then(m => m.TourEditComponent) },
+      { path: 'exchange', loadComponent: () => import('./pages/exchange/exchange-page.component').then(m => m.ExchangePageComponent) },
       { path: 'users', loadComponent: () => import('./pages/users/users-page.component').then(m => m.UsersPageComponent) },
       { path: 'users/new', loadComponent: () => import('./pages/users/user-edit.component').then(m => m.UserEditComponent) },
       { path: 'users/:id/edit', loadComponent: () => import('./pages/users/user-edit.component').then(m => m.UserEditComponent) },
       { path: 'permissions', loadComponent: () => import('./pages/permissions/permissions-page.component').then(m => m.PermissionsPageComponent) },
+      { path: 'permissions/new', loadComponent: () => import('./pages/permissions/permission-edit.component').then(m => m.PermissionEditComponent) },
       { path: 'permissions/:id/edit', loadComponent: () => import('./pages/permissions/permission-edit.component').then(m => m.PermissionEditComponent) }
+      ,{ path: 'claims', loadComponent: () => import('./pages/claims/claims-page.component').then(m => m.ClaimsPageComponent) }
     ]
   },
   { path: '**', redirectTo: 'login' }

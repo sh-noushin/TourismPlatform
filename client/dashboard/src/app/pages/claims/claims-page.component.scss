@@ -1,0 +1,12 @@
+@use '../../styles/index' as *;
+
+.claims-page {
+  display: flex;
+  flex-direction: column;
+  gap: spacing(lg);
+}
+
+.claims-page p {
+  margin: 0;
+  color: $muted;
+}

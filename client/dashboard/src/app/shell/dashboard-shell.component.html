@@ -1,64 +1,130 @@
 <div class="dashboard-shell">
-  <aside class="dashboard-shell__sidebar">
+  <aside class="sidebar">
     <div class="sidebar__brand">
       <div class="sidebar__logo">TP</div>
       <div>
-        <strong>Tourism Platform</strong>
-        <span>Command center</span>
+        <p class="sidebar__product">Tourism Platform</p>
+        <p class="sidebar__tagline">Dashboard control</p>
       </div>
     </div>
-    <nav class="sidebar__nav">
-      <a *has-permission="'Houses.View'" routerLink="houses" routerLinkActive="active">
-        <span class="sidebar__nav-icon">🏠</span>
-        <span>Houses</span>
-      </a>
-      <a *has-permission="'Tours.View'" routerLink="tours" routerLinkActive="active">
-        <span class="sidebar__nav-icon">🧭</span>
-        <span>Tours</span>
-      </a>
-      <a *has-permission="'Users.Manage'" routerLink="users" routerLinkActive="active">
-        <span class="sidebar__nav-icon">👤</span>
-        <span>Users</span>
-      </a>
-      <a *has-permission="'Users.Manage'" routerLink="permissions" routerLinkActive="active">
-        <span class="sidebar__nav-icon">🔐</span>
-        <span>Permissions</span>
-      </a>
-    </nav>
-    <div class="sidebar__logout">
-      <sf-button variant="ghost" buttonType="button" (click)="logout()">Logout</sf-button>
+
+    <div class="sidebar__badge" *ngIf="auth.isSuperUser()">Super admin mode: every module is unlocked</div>
+
+    <div class="sidebar__section">
+      <p class="sidebar__section-title">Operations</p>
+      <nav class="sidebar__nav">
+        <ng-container *ngFor="let item of operations">
+          <a
+            class="sidebar__link"
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            (click)="canAccess(item.permission) ? openNav(item.path, item.label) : $event.preventDefault()"
+            [attr.aria-disabled]="!canAccess(item.permission)"
+          >
+            <span class="nav-icon">{{ item.label[0] }}</span>
+            <div class="nav-copy">
+              <span class="nav-title">{{ item.label }}</span>
+              <span class="nav-hint">{{ item.hint }}</span>
+            </div>
+            <span class="nav-lock" *ngIf="!canAccess(item.permission)">🔒</span>
+          </a>
+        </ng-container>
+      </nav>
+    </div>
+
+    <div class="sidebar__section">
+      <p class="sidebar__section-title">Access Control</p>
+      <nav class="sidebar__nav">
+        <ng-container *ngFor="let item of accessControls">
+          <div class="sidebar__link--group">
+            <a
+              class="sidebar__link"
+              [routerLink]="item.path"
+              routerLinkActive="active"
+              (click)="canAccess(item.permission) ? openNav(item.path, item.label) : $event.preventDefault()"
+              [attr.aria-disabled]="!canAccess(item.permission)"
+            >
+              <span class="nav-icon">{{ item.label[0] }}</span>
+              <div class="nav-copy">
+                <span class="nav-title">{{ item.label }}</span>
+                <span class="nav-hint">{{ item.hint }}</span>
+              </div>
+              <span class="nav-lock" *ngIf="!canAccess(item.permission)">🔒</span>
+            </a>
+
+            <button
+              *ngIf="item.label.toLowerCase() === 'permissions'"
+              type="button"
+              class="sidebar__expand"
+              (click)="toggleSection('permissions')"
+              [attr.aria-expanded]="expandedSection() === 'permissions'"
+            >
+              <span *ngIf="expandedSection() !== 'permissions'">▸</span>
+              <span *ngIf="expandedSection() === 'permissions'">▾</span>
+            </button>
+
+            <ul *ngIf="expandedSection() === 'permissions'" class="sidebar__sublist">
+              <li *ngFor="let sub of getAccessSubItems(item.label)">
+                <a class="sidebar__sublink" (click)="openNav(item.path + '/' + sub.toLowerCase(), sub)">{{ sub }}</a>
+              </li>
+            </ul>
+          </div>
+        </ng-container>
+      </nav>
+    </div>
+
+    <div class="sidebar__footer">
+      <p class="sidebar__hint">Signed in as {{ displayName() }}</p>
     </div>
   </aside>
 
-  <div class="dashboard-shell__main">
-    <header class="dashboard-shell__topbar">
+  <div class="main">
+    <header class="topbar">
       <div>
-        <p class="topbar__eyebrow">Command Overview</p>
-        <h1>
-          Welcome back,
-          <span *ngIf="auth.userEmail(); else superuserLabel">{{ auth.userEmail() }}</span>
-        </h1>
-        <ng-template #superuserLabel>
-          <span>Superuser</span>
-        </ng-template>
+        <p class="topbar__product">Tourism Platform</p>
+        <p class="topbar__meta">Unified operations workspace</p>
       </div>
       <div class="topbar__actions">
-        <sf-searchbar placeholder="Search analytics" (valueChange)="searchTerm.set($event)"></sf-searchbar>
-        <sf-button variant="ghost" buttonType="button" (click)="logout()">Logout</sf-button>
+        <span class="pill">Support</span>
+        <span class="pill">Docs</span>
+        <user-menu
+          [name]="displayName()"
+          [role]="roleLabel()"
+          [initials]="userInitials()"
+          (changePassword)="onChangePassword()"
+          (logout)="logout()"
+        ></user-menu>
       </div>
     </header>
 
-    <section class="dashboard-shell__overview">
-      <div class="overview-grid">
-        <ng-container *ngFor="let stat of overviewStats">
-          <sf-card class="overview-card">
-            <div class="overview-card__label">{{ stat.label }}</div>
-            <div class="overview-card__value">{{ stat.value }}</div>
-            <div class="overview-card__meta">{{ stat.meta }}</div>
-            <span class="overview-card__trend">{{ stat.trend }}</span>
-          </sf-card>
-        </ng-container>
+    <section class="hero">
+      <div>
+        <p class="hero__eyebrow">Control center</p>
+        <h1 class="hero__title">Manage houses, tours, exchanges, permissions, claims, and users</h1>
+        <p class="hero__meta">Navigation stays on the left so you can focus on actions.</p>
       </div>
+    </section>
+
+    <section class="modules-grid">
+      <ng-container *ngFor="let module of modules">
+        <article class="module-card" *has-permission="module.permission">
+          <div class="module-card__header">
+            <div>
+              <h3>{{ module.label }}</h3>
+              <p>{{ module.description }}</p>
+            </div>
+            <button type="button" class="module-card__view" (click)="openNav(module.path, module.label)">View all</button>
+          </div>
+          <ul *ngIf="module.subItems?.length" class="module-card__list">
+            <li *ngFor="let item of module.subItems">{{ item }}</li>
+          </ul>
+          <div class="module-card__actions">
+            <sf-button buttonType="button" variant="outline" (click)="openQuickForm(module.formType)">
+              Add new {{ module.label | lowercase }}
+            </sf-button>
+          </div>
+        </article>
+      </ng-container>
     </section>
 
     <sf-tabs></sf-tabs>
@@ -69,15 +135,92 @@
   </div>
 </div>
 
-<sf-drawer [open]="drawerOpen()" (openChange)="drawerOpen.set($event)">
-  <div class="drawer-panel">
-    <div class="drawer-panel__header">
+<div class="quick-form-overlay" *ngIf="quickFormType()">
+  <div class="quick-form-overlay__backdrop" (click)="closeQuickForm()"></div>
+  <div class="quick-form-panel">
+    <header class="quick-form-panel__header">
       <div>
-        <h2>Filters</h2>
-        <p>Adjust reporting scope</p>
+        <p class="hero__eyebrow">Quick add</p>
+        <h2>{{ quickFormHeading() }}</h2>
       </div>
-      <sf-button variant="ghost" buttonType="button" (click)="closeDrawer()">Close</sf-button>
-    </div>
-    <p class="drawer-panel__copy">Filters will go here once the API supports scoped views.</p>
+      <button type="button" class="quick-form-panel__close" (click)="closeQuickForm()">✕</button>
+    </header>
+    <form (submit)="submitQuickForm(); $event.preventDefault()" class="quick-form-panel__body">
+      <ng-container [ngSwitch]="quickFormType()">
+        <ng-container *ngSwitchCase="'house'">
+          <label>
+            Name
+            <input type="text" [value]="houseForm().name" (input)="updateHouseField('name', $any($event.target).value)" required />
+          </label>
+          <label>
+            Description
+            <textarea (input)="updateHouseField('description', $any($event.target).value)">{{ houseForm().description }}</textarea>
+          </label>
+          <label>
+            Type
+            <input type="text" [value]="houseForm().houseTypeName" (input)="updateHouseField('houseTypeName', $any($event.target).value)" required />
+          </label>
+          <label>
+            City
+            <input type="text" [value]="houseForm().city" (input)="updateHouseField('city', $any($event.target).value)" />
+          </label>
+          <label>
+            Country
+            <input type="text" [value]="houseForm().country" (input)="updateHouseField('country', $any($event.target).value)" />
+          </label>
+        </ng-container>
+        <ng-container *ngSwitchCase="'tour'">
+          <label>
+            Name
+            <input type="text" [value]="tourForm().name" (input)="updateTourField('name', $any($event.target).value)" required />
+          </label>
+          <label>
+            Description
+            <textarea (input)="updateTourField('description', $any($event.target).value)">{{ tourForm().description }}</textarea>
+          </label>
+          <label>
+            Category
+            <input type="text" [value]="tourForm().category" (input)="updateTourField('category', $any($event.target).value)" />
+          </label>
+        </ng-container>
+        <ng-container *ngSwitchCase="'exchange'">
+          <label>
+            Base currency
+            <input type="text" [value]="exchangeForm().baseCurrency" (input)="updateExchangeField('baseCurrency', $any($event.target).value)" required />
+          </label>
+          <label>
+            Quote currency
+            <input type="text" [value]="exchangeForm().quoteCurrency" (input)="updateExchangeField('quoteCurrency', $any($event.target).value)" required />
+          </label>
+          <label>
+            Amount
+            <input type="number" [value]="exchangeForm().amount" (input)="updateExchangeField('amount', $any($event.target).value)" required />
+          </label>
+        </ng-container>
+        <ng-container *ngSwitchCase="'permission'">
+          <label>
+            Code
+            <input type="text" [value]="permissionForm().code" (input)="updatePermissionField('code', $any($event.target).value)" required />
+          </label>
+          <label>
+            Description
+            <textarea (input)="updatePermissionField('description', $any($event.target).value)">{{ permissionForm().description }}</textarea>
+          </label>
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              [checked]="permissionForm().enabled"
+              (change)="updatePermissionField('enabled', $any($event.target).checked)"
+            />
+            Enabled
+          </label>
+        </ng-container>
+      </ng-container>
+      <p *ngIf="quickFormError()" class="quick-form-panel__error">{{ quickFormError() }}</p>
+      <div class="quick-form-panel__actions">
+        <sf-button variant="ghost" buttonType="button" (click)="closeQuickForm()">Cancel</sf-button>
+        <sf-button buttonType="submit" [loading]="quickFormLoading()">Save</sf-button>
+      </div>
+    </form>
   </div>
-</sf-drawer>
+</div>

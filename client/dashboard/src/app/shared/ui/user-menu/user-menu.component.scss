@@ -1,0 +1,86 @@
+@use '../../../styles/colors' as colors;
+@use '../../../styles/spacing' as spacing;
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing.spacing('sm');
+  padding: 0.5rem 0.75rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.14);
+  color: colors.$primaryContrast;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.user-menu__trigger:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: colors.$primaryContrast;
+  color: colors.$primary;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.name {
+  font-weight: 700;
+}
+
+.role {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.chevron {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.user-menu__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 180px;
+  background: colors.$surface;
+  color: colors.$text;
+  border: 1px solid colors.$border;
+  border-radius: 12px;
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.user-menu__panel button {
+  text-align: left;
+  padding: 0.75rem 0.9rem;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  font-weight: 600;
+  color: inherit;
+}
+
+.user-menu__panel button:hover {
+  background: colors.$bg;
+}
