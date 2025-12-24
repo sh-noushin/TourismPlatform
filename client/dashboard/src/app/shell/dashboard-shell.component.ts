@@ -49,10 +49,10 @@ export class DashboardShellComponent {
   readonly sidebarOpen = signal(true);
 
   readonly menuItems = [
-    { label: 'Houses', path: '/admin/houses', permission: 'Houses.View' },
-    { label: 'Tours', path: '/admin/tours', permission: 'Tours.View' },
-    { label: 'Exchanges', path: '/admin/exchange', permission: 'Exchange.View' },
-    { label: 'Permissions', path: '/admin/permissions', permission: 'Users.Manage' }
+    { label: 'Houses', path: '/admin/houses', permission: 'Houses.View', icon: '🏠' },
+    { label: 'Tours', path: '/admin/tours', permission: 'Tours.View', icon: '🗺️' },
+    { label: 'Exchanges', path: '/admin/exchange', permission: 'Exchange.View', icon: '💱' },
+    { label: 'Permissions', path: '/admin/permissions', permission: 'Users.Manage', icon: '🛡️' }
   ];
 
   readonly quickActions = [

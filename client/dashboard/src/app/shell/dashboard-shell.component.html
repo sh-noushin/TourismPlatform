@@ -32,8 +32,9 @@
               routerLinkActive="active"
               (click)="canAccess(item.permission) ? openNav(item.path, item.label) : $event.preventDefault()"
               [attr.aria-disabled]="!canAccess(item.permission)"
+              [attr.aria-label]="item.label"
             >
-              <span class="nav-icon">{{ item.label[0] }}</span>
+              <span class="nav-icon" aria-hidden="true">{{ item.icon ?? item.label[0] }}</span>
               <span class="nav-title" *ngIf="sidebarOpen()">{{ item.label }}</span>
             </a>
           </ng-container>
