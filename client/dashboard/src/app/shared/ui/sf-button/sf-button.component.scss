@@ -1,41 +1,33 @@
-@use '../../../styles/index' as *;
-
-
-:host {
-  display: inline-flex;
-  width: 100%;
-}
-
-.sf-button {
-  width: 100%;
-  position: relative;
-  border-radius: 0.65rem;
-  font-weight: $font-weight-medium;
-  border: 1px solid transparent;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-  justify-content: center;
-  align-items: center;
-  gap: spacing(sm);
-  min-height: 2.75rem;
-  text-transform: none;
-  box-shadow: 0 6px 18px rgba($primary, 0.25);
-}
-
-.sf-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.spinner {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.content {
-  display: inline-flex;
-  align-items: center;
-  gap: spacing(sm);
-}
+@use '../../../styles/index' as *; 
+host { display: inline-flex; width: 100%; } 
+.sf-button
+ { width: 100%;
+   position: relative; 
+   border-radius: 0.65rem;
+   font-weight: $font-weight-medium;
+   border: 1px solid transparent;
+   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+   justify-content: center; 
+   align-items: center; 
+   gap: spacing(sm);
+   min-height: 2.75rem;
+   text-transform: none;
+   box-shadow: 0 6px 18px rgba($primary, 0.25);
+   } 
+   .sf-button:disabled
+    { opacity: 0.5; 
+      cursor: not-allowed; 
+    } 
+    .spinner {
+       position: absolute;
+       inset: 0;
+       display: grid; 
+       place-items: center;
+       background: rgba(255, 255, 255, 0.6);
+      } 
+      .content 
+      { 
+        display: inline-flex; 
+        align-items: center;
+        gap: spacing(sm); 
+      }

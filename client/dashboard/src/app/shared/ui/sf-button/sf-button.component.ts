@@ -11,11 +11,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SfButtonComponent {
-  // signal-style output
   readonly buttonClick = output<MouseEvent>();
+  readonly lastClick = signal<MouseEvent | null>(null);
 
-  
   handleClick(e: MouseEvent) {
+    this.lastClick.set(e);
     this.buttonClick.emit(e);
   }
 
@@ -26,4 +26,6 @@ export class SfButtonComponent {
   readonly height = input<string | undefined>(undefined);
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
+
+  readonly type = input<'button' | 'submit' | 'reset'>('button');
 }

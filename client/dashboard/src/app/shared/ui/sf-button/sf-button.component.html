@@ -1,7 +1,7 @@
 <button
   mat-flat-button
-  type="button"
   class="sf-button"
+  [attr.type]="type()"
   [style.background]="color()"
   [style.borderColor]="color()"
   [style.color]="textColor()"
