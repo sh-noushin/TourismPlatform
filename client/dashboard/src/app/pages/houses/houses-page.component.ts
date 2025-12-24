@@ -8,15 +8,23 @@ import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
-import { TabService } from '../../core/tab/tab.service';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { HouseEditComponent } from './house-edit.component';
 
 @Component({
   standalone: true,
   selector: 'houses-page',
   templateUrl: './houses-page.component.html',
   styleUrls: ['./houses-page.component.scss'],
-  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent],
+  imports: [
+    CommonModule,
+    SfCardComponent,
+    SfPageHeaderComponent,
+    SfSearchbarComponent,
+    SfTableComponent,
+    SfButtonComponent,
+    MatDialogModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HousesPageComponent {
@@ -57,16 +65,14 @@ export class HousesPageComponent {
     { label: 'Edit', type: 'edit', icon: 'edit' }
   ];
 
-  constructor(private readonly houses: HousesFacade, private readonly tabs: TabService, private readonly router: Router) {
+  constructor(private readonly houses: HousesFacade, private readonly dialog: MatDialog) {
     this.houses.load();
   }
 
   onRowAction(event: { action: any; row: any }) {
     const { action, row } = event;
     if (action?.type === 'edit') {
-      const path = `/admin/houses/${row.id}/edit`;
-      this.tabs.openOrActivate(path, `House ${row.id}`);
-      this.router.navigateByUrl(path);
+      this.openDialog(row.id);
     }
   }
 
@@ -76,6 +82,19 @@ export class HousesPageComponent {
 
   onSortChange(sort: SfTableSort) {
     this.sortSignal.set(sort);
+  }
+
+  openDialog(id?: string) {
+    const ref = this.dialog.open(HouseEditComponent, {
+      width: '720px',
+      data: { id: id ?? null }
+    });
+
+    ref.afterClosed().subscribe((saved) => {
+      if (saved) {
+        this.houses.load();
+      }
+    });
   }
 
   // data is loaded via `HousesFacade.load()` called in constructor

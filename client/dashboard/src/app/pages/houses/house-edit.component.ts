@@ -1,68 +1,242 @@
-import { Component } from '@angular/core';
+import { Component, Inject, Optional, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HousesFacade } from '../../features/houses/houses.facade';
+import { HouseCommitPhotoItem } from '../../api/client';
+
+type HouseForm = {
+  name: string;
+  description: string;
+  houseTypeName: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  region?: string;
+  country: string;
+  postalCode?: string;
+  photos: HouseCommitPhotoItem[];
+};
 
 @Component({
   standalone: true,
   selector: 'house-edit',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, MatDialogModule],
   template: `
-    <div class="edit-shell">
-      <h3>House Edit</h3>
-      <p *ngIf="id">Editing house ID: {{ id }}</p>
-      <form *ngIf="model">
-        <label>Name<br /><input name="name" [(ngModel)]="model.name" /></label><br />
-        <label>Description<br /><textarea name="description" [(ngModel)]="model.description"></textarea></label><br />
-        <label>Line 1<br /><input name="line1" [(ngModel)]="model.line1" /></label>
-        <label>City<br /><input name="city" [(ngModel)]="model.city" /></label>
-        <label>Country<br /><input name="country" [(ngModel)]="model.country" /></label>
-        <div style="margin-top:8px">
-          <button type="button" (click)="save()" [disabled]="saving">Save</button>
+    <div class="edit-shell" (click)="$event.stopPropagation()">
+      <h3>{{ id ? 'Edit house' : 'Create house' }}</h3>
+      @if (form()) {
+        <form class="form" (submit)="save($event)">
+        <label>
+          Name
+          <input
+            type="text"
+            name="name"
+            [value]="form()?.name"
+            (input)="updateField('name', $any($event.target).value)"
+            required
+          />
+        </label>
+        <label>
+          Description
+          <textarea
+            name="description"
+            [value]="form()?.description"
+            (input)="updateField('description', $any($event.target).value)"
+          ></textarea>
+        </label>
+        <label>
+          Type
+          <input
+            type="text"
+            name="houseTypeName"
+            [value]="form()?.houseTypeName"
+            (input)="updateField('houseTypeName', $any($event.target).value)"
+            required
+          />
+        </label>
+        <div class="grid">
+          <label>
+            Address line 1
+            <input
+              type="text"
+              name="line1"
+              [value]="form()?.line1"
+              (input)="updateField('line1', $any($event.target).value)"
+              required
+            />
+          </label>
+          <label>
+            Address line 2
+            <input
+              type="text"
+              name="line2"
+              [value]="form()?.line2"
+              (input)="updateField('line2', $any($event.target).value)"
+            />
+          </label>
+          <label>
+            City
+            <input
+              type="text"
+              name="city"
+              [value]="form()?.city"
+              (input)="updateField('city', $any($event.target).value)"
+              required
+            />
+          </label>
+          <label>
+            Region
+            <input
+              type="text"
+              name="region"
+              [value]="form()?.region"
+              (input)="updateField('region', $any($event.target).value)"
+            />
+          </label>
+          <label>
+            Country
+            <input
+              type="text"
+              name="country"
+              [value]="form()?.country"
+              (input)="updateField('country', $any($event.target).value)"
+              required
+            />
+          </label>
+          <label>
+            Postal code
+            <input
+              type="text"
+              name="postalCode"
+              [value]="form()?.postalCode"
+              (input)="updateField('postalCode', $any($event.target).value)"
+            />
+          </label>
         </div>
-      </form>
-      <p *ngIf="!model">Loading...</p>
-      <p *ngIf="error" style="color:red">{{ error }}</p>
-      <p *ngIf="saved" style="color:green">Saved.</p>
+
+        <div class="actions">
+          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
+          <button type="submit" class="btn primary" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : (id ? 'Update' : 'Create') }}
+          </button>
+        </div>
+        </form>
+      }
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+      @if (saved()) {
+        <p class="success">Saved.</p>
+      }
     </div>
-  `
+  `,
+  styles: [`
+    .edit-shell { display: flex; flex-direction: column; gap: 12px; min-width: 320px; }
+    .form { display: flex; flex-direction: column; gap: 12px; }
+    label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+    input, textarea { padding: 8px 10px; border-radius: 10px; border: 1px solid #d8dbe0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .actions { display: flex; justify-content: flex-end; gap: 8px; }
+    .btn { border-radius: 10px; padding: 10px 14px; border: 1px solid transparent; cursor: pointer; }
+    .btn.ghost { background: #f1f5f9; border-color: #e2e8f0; }
+    .btn.primary { background: #3b82f6; color: #fff; }
+    .error { color: #dc2626; }
+    .success { color: #16a34a; }
+  `]
 })
 export class HouseEditComponent {
-  id: string | null = null;
-  model: any = null;
-  saving = false;
-  saved = false;
-  error: string | null = null;
-  constructor(private route: ActivatedRoute, private facade: HousesFacade) {
-    this.id = route.snapshot.paramMap.get('id');
-    this.load();
+  readonly form = signal<HouseForm | null>(null);
+  readonly saving = signal(false);
+  readonly saved = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly id: string | null;
+
+  constructor(
+    private readonly facade: HousesFacade,
+    @Optional() private readonly route?: ActivatedRoute,
+    @Optional() private readonly dialogRef?: MatDialogRef<HouseEditComponent, boolean>,
+    @Optional() @Inject(MAT_DIALOG_DATA) private readonly data?: { id?: string | null }
+  ) {
+    this.id = this.data?.id ?? this.route?.snapshot.paramMap.get('id') ?? null;
+    void this.load();
   }
 
   private async load() {
     try {
       if (this.id) {
         const res = await this.facade.get(this.id);
-        this.model = res ? { ...res } : { name: '', description: '' };
+        this.form.set({
+          name: res?.name ?? '',
+          description: res?.description ?? '',
+          houseTypeName: res?.houseTypeName ?? '',
+          line1: res?.line1 ?? '',
+          line2: res?.line2 ?? '',
+          city: res?.city ?? '',
+          region: res?.region ?? '',
+          country: res?.country ?? '',
+          postalCode: res?.postalCode ?? '',
+          photos: []
+        });
       } else {
-        this.model = { name: '', description: '' };
+        this.form.set({
+          name: '',
+          description: '',
+          houseTypeName: '',
+          line1: '',
+          line2: '',
+          city: '',
+          region: '',
+          country: '',
+          postalCode: '',
+          photos: []
+        });
       }
     } catch (err: any) {
-      this.error = err?.message ?? 'Failed loading';
+      this.error.set(err?.message ?? 'Failed loading');
     }
   }
 
-  async save() {
-    this.saving = true;
-    this.saved = false;
-    this.error = null;
+  async save(event?: Event) {
+    event?.preventDefault();
+    const form = this.form();
+    if (!form) return;
+    this.saving.set(true);
+    this.saved.set(false);
+    this.error.set(null);
     try {
-      await this.facade.save(this.id, this.model);
-      this.saved = true;
+      const payload = {
+        name: form.name,
+        description: form.description || undefined,
+        houseTypeName: form.houseTypeName,
+        address: {
+          line1: form.line1,
+          line2: form.line2 || undefined,
+          city: form.city,
+          region: form.region || undefined,
+          country: form.country,
+          postalCode: form.postalCode || undefined
+        },
+        photos: form.photos ?? []
+      };
+      await this.facade.save(this.id, payload);
+      this.saved.set(true);
+      this.dialogRef?.close(true);
     } catch (err: any) {
-      this.error = err?.message ?? 'Save failed';
+      this.error.set(err?.message ?? 'Save failed');
     } finally {
-      this.saving = false;
+      this.saving.set(false);
     }
+  }
+
+  cancel() {
+    if (this.dialogRef) {
+      this.dialogRef.close(false);
+    }
+  }
+
+  updateField<K extends keyof HouseForm>(key: K, value: HouseForm[K]) {
+    this.form.update((current) => (current ? { ...current, [key]: value } : current));
   }
 }
