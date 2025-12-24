@@ -1,0 +1,112 @@
+:host ::ng-deep .cdk-overlay-pane.house-type-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface,
+:host ::ng-deep .house-type-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+:host {
+  width: 100%;
+}
+
+.edit-shell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.glass-panel {
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #111827;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.label-text {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+input {
+  border-radius: 12px;
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus {
+  border-color: #4f46e5;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn {
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+}
+
+.btn.ghost {
+  background: #eef2ff;
+  color: #4c1d95;
+}
+
+.btn.primary {
+  background: #4f46e5;
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.35);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.status {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status.error {
+  color: #dc2626;
+}

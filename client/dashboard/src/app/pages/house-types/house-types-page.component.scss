@@ -8,62 +8,22 @@
 
 .house-types-page__header {
   display: flex;
-  align-items: center;
-  gap: spacing(sm);
-}
-
-.house-types-page__header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.overline {
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba($text, 0.7);
-  margin: 0 0 4px;
-}
-
-.house-types-page__content {
-  background: $surface;
-  border: 1px solid $border;
-  border-radius: 18px;
-  padding: spacing(md);
-}
-
-.house-types-page__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
   flex-direction: column;
   gap: spacing(sm);
 }
 
-.house-types-page__item {
-  padding: spacing(sm);
-  border-radius: 12px;
-  border: 1px solid transparent;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba($primary, 0.04);
-  font-weight: 600;
+.house-types-page__filters {
+  width: min(320px, 100%);
 }
 
-.house-types-page__item:hover {
-  border-color: rgba($primary, 0.4);
-}
-
-.house-types-page__meta {
-  font-size: 0.85rem;
-  color: $muted;
+.house-types-page sf-card {
+  padding: 0;
 }
 
 .status {
-  margin: 0;
+  margin: 0.75rem 0 0;
   font-weight: 600;
+  color: $muted;
 }
 
 .status--error {

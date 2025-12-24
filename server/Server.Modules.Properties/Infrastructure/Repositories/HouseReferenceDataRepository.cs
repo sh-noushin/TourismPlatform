@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
@@ -17,17 +19,65 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
 
     public async Task<HouseType> GetOrCreateHouseTypeAsync(string houseTypeName, CancellationToken cancellationToken = default)
     {
-        var normalized = houseTypeName.Trim();
+        var normalized = Normalize(houseTypeName);
 
-        var existing = await _dbContext.Set<HouseType>()
-            .FirstOrDefaultAsync(x => x.Name == normalized, cancellationToken);
-
+        var existing = await GetHouseTypeByNameAsync(normalized, cancellationToken);
         if (existing != null) return existing;
 
         var created = new HouseType { Id = Guid.NewGuid(), Name = normalized };
         _dbContext.Add(created);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return created;
+    }
+
+    public async Task<HouseType?> GetHouseTypeByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Set<HouseType>()
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<HouseType?> GetHouseTypeByNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        var normalized = Normalize(name);
+        return await _dbContext.Set<HouseType>()
+            .FirstOrDefaultAsync(x => x.Name == normalized, cancellationToken);
+    }
+
+    public async Task<HouseType> CreateHouseTypeAsync(string name, CancellationToken cancellationToken = default)
+    {
+        var normalized = Normalize(name);
+        var existing = await GetHouseTypeByNameAsync(normalized, cancellationToken);
+        if (existing != null)
+        {
+            throw new InvalidOperationException($"House type '{normalized}' already exists.");
+        }
+
+        var created = new HouseType { Id = Guid.NewGuid(), Name = normalized };
+        _dbContext.Add(created);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return created;
+    }
+
+    public async Task<HouseType?> UpdateHouseTypeAsync(Guid id, string name, CancellationToken cancellationToken = default)
+    {
+        var normalized = Normalize(name);
+
+        var houseType = await GetHouseTypeByIdAsync(id, cancellationToken);
+        if (houseType == null)
+        {
+            return null;
+        }
+
+        var conflict = await _dbContext.Set<HouseType>()
+            .FirstOrDefaultAsync(x => x.Name == normalized && x.Id != id, cancellationToken);
+        if (conflict != null)
+        {
+            throw new InvalidOperationException($"House type '{normalized}' already exists.");
+        }
+
+        houseType.Name = normalized;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return houseType;
     }
 
     public async Task<Location> GetOrCreateLocationAsync(AddressRequest request, CancellationToken cancellationToken = default)
@@ -83,5 +133,15 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
             .AsNoTracking()
             .OrderBy(x => x.Name)
             .ToListAsync(cancellationToken);
+    }
+
+    private static string Normalize(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException("House type name must not be empty.", nameof(value));
+        }
+
+        return value.Trim();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -23,5 +24,28 @@ public sealed class HouseTypeService : IHouseTypeService
         return houseTypes
             .Select(ht => new HouseTypeDto(ht.Id, ht.Name))
             .ToList();
+    }
+
+    public async Task<HouseTypeDto?> GetHouseTypeAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var houseType = await _referenceDataRepository.GetHouseTypeByIdAsync(id, cancellationToken);
+        if (houseType == null) return null;
+
+        return new HouseTypeDto(houseType.Id, houseType.Name);
+    }
+
+    public async Task<HouseTypeDto> CreateHouseTypeAsync(CreateHouseTypeRequest request, CancellationToken cancellationToken = default)
+    {
+        var created = await _referenceDataRepository.CreateHouseTypeAsync(request.Name, cancellationToken);
+        return new HouseTypeDto(created.Id, created.Name);
+    }
+
+    public async Task UpdateHouseTypeAsync(Guid id, UpdateHouseTypeRequest request, CancellationToken cancellationToken = default)
+    {
+        var updated = await _referenceDataRepository.UpdateHouseTypeAsync(id, request.Name, cancellationToken);
+        if (updated == null)
+        {
+            throw new KeyNotFoundException($"House type '{id}' not found.");
+        }
     }
 }

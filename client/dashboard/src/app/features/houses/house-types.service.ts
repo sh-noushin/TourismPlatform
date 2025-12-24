@@ -16,8 +16,8 @@ export class HouseTypesService {
 
   constructor(private readonly http: HttpClient, @Inject(API_BASE_URL) private readonly apiBaseUrl: string) {}
 
-  async load() {
-    if (this.houseTypes().length) return this.houseTypes();
+  async load(options?: { force?: boolean }) {
+    if (!options?.force && this.houseTypes().length) return this.houseTypes();
     this.loading.set(true);
     this.error.set(null);
     try {
@@ -34,5 +34,17 @@ export class HouseTypesService {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  async getById(id: string) {
+    return firstValueFrom(this.http.get<HouseTypeDto>(`${this.apiBaseUrl}/api/house-types/${id}`));
+  }
+
+  async create(name: string) {
+    return firstValueFrom(this.http.post<HouseTypeDto>(`${this.apiBaseUrl}/api/house-types`, { name }));
+  }
+
+  async update(id: string, name: string) {
+    return firstValueFrom(this.http.put<void>(`${this.apiBaseUrl}/api/house-types/${id}`, { name }));
   }
 }

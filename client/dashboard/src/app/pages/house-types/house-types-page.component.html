@@ -1,23 +1,36 @@
-<div class="house-types-page">
-  <header class="house-types-page__header">
-    <div>
-      <p class="overline">Settings</p>
-      <h1>House types</h1>
+<section class="house-types-page">
+  <div class="house-types-page__header">
+    <sf-page-header title="House types" subtitle="Active reference data">
+      <sf-button
+        sfPageHeaderActions
+        variant="ghost"
+        type="button"
+        (click)="openDialog()"
+      >
+        New house type
+      </sf-button>
+    </sf-page-header>
+    <div class="house-types-page__filters">
+      <sf-searchbar
+        placeholder="Search by name or ID"
+        (valueChange)="setFilter($event)"
+      ></sf-searchbar>
     </div>
-  </header>
+  </div>
 
-  <section class="house-types-page__content">
-    <p class="status" *ngIf="loading()">Loading house types…</p>
-    <p class="status status--error" *ngIf="error()">{{ error() }}</p>
-    <p class="status" *ngIf="!loading() && !error() && types().length === 0">No house types yet.</p>
+  <sf-card>
+    <sf-table
+      [columns]="columns"
+      [data]="displayedTypes()"
+      [loading]="loadingSignal()"
+      [actions]="actions"
+      (sortChange)="onSortChange($event)"
+      (rowAction)="onRowAction($event)"
+    ></sf-table>
 
-    <ul class="house-types-page__list" *ngIf="types().length">
-      @for (type of types(); track type.id) {
-        <li class="house-types-page__item">
-          <span class="house-types-page__label">{{ type.name }}</span>
-          <span class="house-types-page__meta">{{ type.id }}</span>
-        </li>
-      }
-    </ul>
-  </section>
-</div>
+    <p class="status status--error" *ngIf="errorSignal()">{{ errorSignal() }}</p>
+    <p class="status" *ngIf="!loadingSignal() && !errorSignal() && displayedTypes().length === 0">
+      No house types yet.
+    </p>
+  </sf-card>
+</section>
