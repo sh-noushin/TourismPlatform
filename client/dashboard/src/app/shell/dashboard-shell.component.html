@@ -1,42 +1,31 @@
 <div class="dashboard-shell">
-  <aside class="sidebar">
-    <div class="sidebar__brand">
+  <header class="topbar">
+    <button type="button" class="burger" (click)="toggleSidebar()">&#9776;</button>
+    <div class="topbar__brand">
       <div class="sidebar__logo">TP</div>
       <div>
-        <p class="sidebar__product">Tourism Platform</p>
-        <p class="sidebar__tagline">Dashboard control</p>
+        <p class="topbar__product">Tourism Platform</p>
+        <p class="topbar__meta">Admin workspace</p>
       </div>
     </div>
-
-    <div class="sidebar__badge" *ngIf="auth.isSuperUser()">Super admin mode: every module is unlocked</div>
-
-    <div class="sidebar__section">
-      <p class="sidebar__section-title">Operations</p>
-      <nav class="sidebar__nav">
-        <ng-container *ngFor="let item of operations">
-          <a
-            class="sidebar__link"
-            [routerLink]="item.path"
-            routerLinkActive="active"
-            (click)="canAccess(item.permission) ? openNav(item.path, item.label) : $event.preventDefault()"
-            [attr.aria-disabled]="!canAccess(item.permission)"
-          >
-            <span class="nav-icon">{{ item.label[0] }}</span>
-            <div class="nav-copy">
-              <span class="nav-title">{{ item.label }}</span>
-              <span class="nav-hint">{{ item.hint }}</span>
-            </div>
-            <span class="nav-lock" *ngIf="!canAccess(item.permission)">🔒</span>
-          </a>
-        </ng-container>
-      </nav>
+    <div class="topbar__spacer"></div>
+    <div class="topbar__actions">
+      <user-menu
+        [name]="displayName()"
+        [role]="roleLabel()"
+        [initials]="userInitials()"
+        (changePassword)="onChangePassword()"
+        (logout)="logout()"
+      ></user-menu>
     </div>
+  </header>
 
-    <div class="sidebar__section">
-      <p class="sidebar__section-title">Access Control</p>
-      <nav class="sidebar__nav">
-        <ng-container *ngFor="let item of accessControls">
-          <div class="sidebar__link--group">
+  <div class="layout">
+    <aside class="sidebar" [class.collapsed]="!sidebarOpen()">
+      <div class="sidebar__section">
+        <p class="sidebar__section-title" *ngIf="sidebarOpen()">Main</p>
+        <nav class="sidebar__nav">
+          <ng-container *ngFor="let item of menuItems">
             <a
               class="sidebar__link"
               [routerLink]="item.path"
@@ -45,182 +34,42 @@
               [attr.aria-disabled]="!canAccess(item.permission)"
             >
               <span class="nav-icon">{{ item.label[0] }}</span>
-              <div class="nav-copy">
-                <span class="nav-title">{{ item.label }}</span>
-                <span class="nav-hint">{{ item.hint }}</span>
-              </div>
-              <span class="nav-lock" *ngIf="!canAccess(item.permission)">🔒</span>
+              <span class="nav-title" *ngIf="sidebarOpen()">{{ item.label }}</span>
             </a>
+          </ng-container>
+        </nav>
+      </div>
+      <div class="sidebar__footer" *ngIf="sidebarOpen()">
+        <p class="sidebar__hint">Signed in as {{ displayName() }}</p>
+      </div>
+    </aside>
 
-            <button
-              *ngIf="item.label.toLowerCase() === 'permissions'"
-              type="button"
-              class="sidebar__expand"
-              (click)="toggleSection('permissions')"
-              [attr.aria-expanded]="expandedSection() === 'permissions'"
+    <div class="main">
+      <section class="hero">
+        <div>
+          <p class="hero__eyebrow">Control center</p>
+          <h1 class="hero__title">Manage houses, tours, exchanges, and permissions</h1>
+          <p class="hero__meta">Use the left menu to open modules. Tabs keep multiple screens visible.</p>
+        </div>
+        <div class="hero__actions">
+          <ng-container *ngFor="let action of quickActions">
+            <sf-button
+              variant="outline"
+              buttonType="button"
+              *has-permission="action.permission"
+              (click)="openNav(action.path, action.label)"
             >
-              <span *ngIf="expandedSection() !== 'permissions'">▸</span>
-              <span *ngIf="expandedSection() === 'permissions'">▾</span>
-            </button>
-
-            <ul *ngIf="expandedSection() === 'permissions'" class="sidebar__sublist">
-              <li *ngFor="let sub of getAccessSubItems(item.label)">
-                <a class="sidebar__sublink" (click)="openNav(item.path + '/' + sub.toLowerCase(), sub)">{{ sub }}</a>
-              </li>
-            </ul>
-          </div>
-        </ng-container>
-      </nav>
-    </div>
-
-    <div class="sidebar__footer">
-      <p class="sidebar__hint">Signed in as {{ displayName() }}</p>
-    </div>
-  </aside>
-
-  <div class="main">
-    <header class="topbar">
-      <div>
-        <p class="topbar__product">Tourism Platform</p>
-        <p class="topbar__meta">Unified operations workspace</p>
-      </div>
-      <div class="topbar__actions">
-        <span class="pill">Support</span>
-        <span class="pill">Docs</span>
-        <user-menu
-          [name]="displayName()"
-          [role]="roleLabel()"
-          [initials]="userInitials()"
-          (changePassword)="onChangePassword()"
-          (logout)="logout()"
-        ></user-menu>
-      </div>
-    </header>
-
-    <section class="hero">
-      <div>
-        <p class="hero__eyebrow">Control center</p>
-        <h1 class="hero__title">Manage houses, tours, exchanges, permissions, claims, and users</h1>
-        <p class="hero__meta">Navigation stays on the left so you can focus on actions.</p>
-      </div>
-    </section>
-
-    <section class="modules-grid">
-      <ng-container *ngFor="let module of modules">
-        <article class="module-card" *has-permission="module.permission">
-          <div class="module-card__header">
-            <div>
-              <h3>{{ module.label }}</h3>
-              <p>{{ module.description }}</p>
-            </div>
-            <button type="button" class="module-card__view" (click)="openNav(module.path, module.label)">View all</button>
-          </div>
-          <ul *ngIf="module.subItems?.length" class="module-card__list">
-            <li *ngFor="let item of module.subItems">{{ item }}</li>
-          </ul>
-          <div class="module-card__actions">
-            <sf-button variant="outline" (click)="openQuickForm(module.formType)">
-              Add new {{ module.label | lowercase }}
+              {{ action.label }}
             </sf-button>
-          </div>
-        </article>
-      </ng-container>
-    </section>
+          </ng-container>
+        </div>
+      </section>
 
-    <sf-tabs></sf-tabs>
+      <sf-tabs></sf-tabs>
 
-    <main class="dashboard-shell__content">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
-</div>
-
-<div class="quick-form-overlay" *ngIf="quickFormType()">
-  <div class="quick-form-overlay__backdrop" (click)="closeQuickForm()"></div>
-  <div class="quick-form-panel">
-    <header class="quick-form-panel__header">
-      <div>
-        <p class="hero__eyebrow">Quick add</p>
-        <h2>{{ quickFormHeading() }}</h2>
-      </div>
-      <button type="button" class="quick-form-panel__close" (click)="closeQuickForm()">✕</button>
-    </header>
-    <form (submit)="submitQuickForm(); $event.preventDefault()" class="quick-form-panel__body">
-      <ng-container [ngSwitch]="quickFormType()">
-        <ng-container *ngSwitchCase="'house'">
-          <label>
-            Name
-            <input type="text" [value]="houseForm().name" (input)="updateHouseField('name', $any($event.target).value)" required />
-          </label>
-          <label>
-            Description
-            <textarea (input)="updateHouseField('description', $any($event.target).value)">{{ houseForm().description }}</textarea>
-          </label>
-          <label>
-            Type
-            <input type="text" [value]="houseForm().houseTypeName" (input)="updateHouseField('houseTypeName', $any($event.target).value)" required />
-          </label>
-          <label>
-            City
-            <input type="text" [value]="houseForm().city" (input)="updateHouseField('city', $any($event.target).value)" />
-          </label>
-          <label>
-            Country
-            <input type="text" [value]="houseForm().country" (input)="updateHouseField('country', $any($event.target).value)" />
-          </label>
-        </ng-container>
-        <ng-container *ngSwitchCase="'tour'">
-          <label>
-            Name
-            <input type="text" [value]="tourForm().name" (input)="updateTourField('name', $any($event.target).value)" required />
-          </label>
-          <label>
-            Description
-            <textarea (input)="updateTourField('description', $any($event.target).value)">{{ tourForm().description }}</textarea>
-          </label>
-          <label>
-            Category
-            <input type="text" [value]="tourForm().category" (input)="updateTourField('category', $any($event.target).value)" />
-          </label>
-        </ng-container>
-        <ng-container *ngSwitchCase="'exchange'">
-          <label>
-            Base currency
-            <input type="text" [value]="exchangeForm().baseCurrency" (input)="updateExchangeField('baseCurrency', $any($event.target).value)" required />
-          </label>
-          <label>
-            Quote currency
-            <input type="text" [value]="exchangeForm().quoteCurrency" (input)="updateExchangeField('quoteCurrency', $any($event.target).value)" required />
-          </label>
-          <label>
-            Amount
-            <input type="number" [value]="exchangeForm().amount" (input)="updateExchangeField('amount', $any($event.target).value)" required />
-          </label>
-        </ng-container>
-        <ng-container *ngSwitchCase="'permission'">
-          <label>
-            Code
-            <input type="text" [value]="permissionForm().code" (input)="updatePermissionField('code', $any($event.target).value)" required />
-          </label>
-          <label>
-            Description
-            <textarea (input)="updatePermissionField('description', $any($event.target).value)">{{ permissionForm().description }}</textarea>
-          </label>
-          <label class="checkbox">
-            <input
-              type="checkbox"
-              [checked]="permissionForm().enabled"
-              (change)="updatePermissionField('enabled', $any($event.target).checked)"
-            />
-            Enabled
-          </label>
-        </ng-container>
-      </ng-container>
-      <p *ngIf="quickFormError()" class="quick-form-panel__error">{{ quickFormError() }}</p>
-      <div class="quick-form-panel__actions">
-        <sf-button variant="ghost" (click)="closeQuickForm()">Cancel</sf-button>
-        <sf-button (click)="submitQuickForm()" [loading]="quickFormLoading()">Save</sf-button>
-      </div>
-    </form>
+      <main class="dashboard-shell__content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
   </div>
 </div>
