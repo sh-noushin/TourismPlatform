@@ -1,105 +1,130 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { SfButtonComponent } from '../shared/ui/sf-button/sf-button.component';
-import { SfTabsComponent } from '../shared/ui/sf-tabs/sf-tabs.component';
-import { HasPermissionDirective } from '../shared/directives/has-permission.directive';
-import { TabService } from '../core/tab/tab.service';
+import { Router, RouterOutlet } from '@angular/router';
+
+import { TabService, TabItem } from '../core/tab/tab.service';
 import { AuthFacade } from '../core/auth/auth.facade';
-import { UserMenuComponent } from '../shared/ui/user-menu/user-menu.component';
-import { ToastService } from '../shared/ui/toast/toast.service';
+
+type MenuItem = {
+  label: string;
+  basePath: string;
+  short: string;
+};
 
 @Component({
   standalone: true,
   selector: 'dashboard-shell',
+  imports: [CommonModule, RouterOutlet],
   templateUrl: './dashboard-shell.component.html',
   styleUrls: ['./dashboard-shell.component.scss'],
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    SfButtonComponent,
-    SfTabsComponent,
-    HasPermissionDirective,
-    UserMenuComponent
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardShellComponent {
-  readonly userName = computed(() => {
-    const email = this.auth.userEmail();
+  readonly sidebarCollapsed = signal(false);
+  readonly userMenuOpen = signal(false);
+
+  readonly menuItems: MenuItem[] = [
+    { label: 'Houses', basePath: '/admin/houses', short: 'H' },
+    { label: 'Tours', basePath: '/admin/tours', short: 'T' },
+    { label: 'Exchanges', basePath: '/admin/exchange', short: 'E' },
+    { label: 'Permissions', basePath: '/admin/permissions', short: 'P' },
+  ];
+
+  readonly displayName = computed(() => {
+    const a: any = this.auth as any;
+    const name =
+      a.userName?.() ??
+      a.currentUser?.()?.userName ??
+      a.currentUser?.()?.name ??
+      null;
+
+    if (name && String(name).trim().length) return String(name).trim();
+
+    const email = this.auth.userEmail?.() ?? null;
     if (!email) return 'User';
-    const handle = email.split('@')[0] ?? email;
-    return handle.replace(/[\.\_\-]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    return this.prettyNameFromEmail(String(email));
   });
-  readonly displayName = this.userName;
-  readonly roleLabel = computed(() => {
-    if (this.auth.isSuperUser()) return 'Super Admin';
-    const roles = Array.from(this.auth.roles());
-    return roles[0] ?? 'Operator';
-  });
-  readonly userInitials = computed(() => {
-    const name = this.userName();
+
+  readonly initials = computed(() => {
+    const name = (this.displayName() ?? 'User').trim();
     const parts = name.split(/\s+/).filter(Boolean);
-    const letters = parts.map((p) => p[0]).join('').slice(0, 2);
-    return (letters || name.slice(0, 2) || 'U').toUpperCase();
+    const a = parts[0]?.[0] ?? 'U';
+    const b = parts.length > 1 ? (parts[1]?.[0] ?? '') : '';
+    return (a + b).toUpperCase();
   });
 
-  readonly sidebarOpen = signal(true);
-
-  readonly menuItems = [
-    { label: 'Houses', path: '/admin/houses', permission: 'Houses.View', icon: '🏠' },
-    { label: 'Tours', path: '/admin/tours', permission: 'Tours.View', icon: '🗺️' },
-    { label: 'Exchanges', path: '/admin/exchange', permission: 'Exchange.View', icon: '💱' },
-    { label: 'Permissions', path: '/admin/permissions', permission: 'Users.Manage', icon: '🛡️' }
-  ];
-
-  readonly quickActions = [
-    { label: 'New house', path: '/admin/houses/new', permission: 'Houses.View' },
-    { label: 'New tour', path: '/admin/tours/new', permission: 'Tours.View' },
-    { label: 'New exchange', path: '/admin/exchange', permission: 'Exchange.View' },
-    { label: 'New permission', path: '/admin/permissions/new', permission: 'Users.Manage' }
-  ];
+  readonly activeTab = computed<TabItem | null>(() => this.tabs.getActiveTab());
 
   constructor(
-    public readonly auth: AuthFacade,
-    private readonly tabs: TabService,
+    public readonly tabs: TabService,
     private readonly router: Router,
-    private readonly toast: ToastService
-  ) {}
-
-  openNav(path: string, title: string) {
-    const fullPath = this.ensureAdminPath(path);
-    this.tabs.openOrActivate(fullPath, title);
-    void this.router.navigateByUrl(fullPath);
-  }
-
-  private ensureAdminPath(path: string) {
-    return path.startsWith('/admin') ? path : `/admin/${path}`;
-  }
-
-  canAccess(permission: string) {
-    try {
-      return this.auth.hasPermission(permission)();
-    } catch {
-      return false;
+    private readonly auth: AuthFacade
+  ) {
+    if (this.tabs.tabs().length === 0) {
+      const first = this.menuItems[0];
+      const tab = this.tabs.openNewTab(first.basePath, first.label, true);
+      void this.router.navigateByUrl(tab.path);
     }
   }
 
-  onChangePassword() {
-    this.toast.show('Change password flow is not wired yet. Please use your identity provider.', 'info');
+  toggleSidebar() {
+    this.sidebarCollapsed.update(v => !v);
   }
 
-  toggleSidebar() {
-    this.sidebarOpen.update((open) => !open);
+  openMenu(item: MenuItem) {
+    const title = this.nextTitle(item.label);
+    const tab = this.tabs.openNewTab(item.basePath, title, false);
+    void this.router.navigateByUrl(tab.path);
+  }
+
+  activate(tab: TabItem) {
+    this.tabs.activateTab(tab.id);
+    void this.router.navigateByUrl(tab.path);
+  }
+
+  close(tab: TabItem, ev?: Event) {
+    ev?.stopPropagation();
+    ev?.preventDefault();
+
+    const next = this.tabs.closeTab(tab.id);
+    if (next) void this.router.navigateByUrl(next.path);
+  }
+
+  toggleUserMenu() {
+    this.userMenuOpen.update(v => !v);
+  }
+
+  closeUserMenu() {
+    this.userMenuOpen.set(false);
+  }
+
+  changePassword() {
+    this.closeUserMenu();
+    const tab = this.tabs.openNewTab('/admin/change-password', 'Change password', false);
+    void this.router.navigateByUrl(tab.path);
   }
 
   async logout() {
+    this.closeUserMenu();
     try {
       await this.auth.logout();
     } catch {}
     this.tabs.closeAll();
     await this.router.navigateByUrl('/login');
+  }
+
+  private nextTitle(base: string) {
+    const count = this.tabs.tabs().filter(t => (t.title ?? '').startsWith(base)).length;
+    return count ? `${base} (${count + 1})` : base;
+  }
+
+  private prettyNameFromEmail(email: string) {
+    const left = (email.split('@')[0] ?? 'User').trim();
+    const words = left
+      .replace(/[._-]+/g, ' ')
+      .split(' ')
+      .filter(Boolean)
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+    return words.join(' ') || 'User';
   }
 }

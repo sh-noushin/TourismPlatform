@@ -1,76 +1,75 @@
-<div class="dashboard-shell">
-  <header class="topbar">
-    <button type="button" class="burger" (click)="toggleSidebar()">&#9776;</button>
-    <div class="topbar__brand">
-      <div class="sidebar__logo">TP</div>
-      <div>
-        <p class="topbar__product">Tourism Platform</p>
-        <p class="topbar__meta">Admin workspace</p>
-      </div>
-    </div>
-    <div class="topbar__spacer"></div>
-    <div class="topbar__actions">
-      <user-menu
-        [name]="displayName()"
-        [role]="roleLabel()"
-        [initials]="userInitials()"
-        (changePassword)="onChangePassword()"
-        (logout)="logout()"
-      ></user-menu>
-    </div>
-  </header>
+<div class="shell" (click)="closeUserMenu()">
+  <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed()" (click)="$event.stopPropagation()">
+    <div class="sidebar__top">
+      <button type="button" class="icon-btn" (click)="toggleSidebar()" aria-label="Toggle menu">
+        <span class="burger"></span>
+      </button>
 
-  <div class="layout">
-    <aside class="sidebar" [class.collapsed]="!sidebarOpen()">
-      <div class="sidebar__section">
-        <p class="sidebar__section-title" *ngIf="sidebarOpen()">Main</p>
-        <nav class="sidebar__nav">
-          <ng-container *ngFor="let item of menuItems">
-            <a
-              class="sidebar__link"
-              [routerLink]="item.path"
-              routerLinkActive="active"
-              (click)="canAccess(item.permission) ? openNav(item.path, item.label) : $event.preventDefault()"
-              [attr.aria-disabled]="!canAccess(item.permission)"
-              [attr.aria-label]="item.label"
-            >
-              <span class="nav-icon" aria-hidden="true">{{ item.icon ?? item.label[0] }}</span>
-              <span class="nav-title" *ngIf="sidebarOpen()">{{ item.label }}</span>
-            </a>
-          </ng-container>
-        </nav>
-      </div>
-      <div class="sidebar__footer" *ngIf="sidebarOpen()">
-        <p class="sidebar__hint">Signed in as {{ displayName() }}</p>
-      </div>
-    </aside>
-
-    <div class="main">
-      <section class="hero">
-        <div>
-          <p class="hero__eyebrow">Control center</p>
-          <h1 class="hero__title">Manage houses, tours, exchanges, and permissions</h1>
-          <p class="hero__meta">Use the left menu to open modules. Tabs keep multiple screens visible.</p>
+      @if (!sidebarCollapsed()) {
+        <div class="brand">
+          <div class="brand__logo">TP</div>
+          <div class="brand__text">
+            <div class="brand__title">Tourism Platform</div>
+            <div class="brand__subtitle">Admin dashboard</div>
+          </div>
         </div>
-        <div class="hero__actions">
-          <ng-container *ngFor="let action of quickActions">
-            <sf-button
-              variant="outline"
-              buttonType="button"
-              *has-permission="action.permission"
-              (click)="openNav(action.path, action.label)"
-            >
-              {{ action.label }}
-            </sf-button>
-          </ng-container>
-        </div>
-      </section>
-
-      <sf-tabs></sf-tabs>
-
-      <main class="dashboard-shell__content">
-        <router-outlet></router-outlet>
-      </main>
+      }
     </div>
+
+    <nav class="nav">
+      @for (item of menuItems; track item.basePath) {
+        <button type="button" class="nav__item" (click)="openMenu(item)">
+          <span class="nav__icon">{{ item.short }}</span>
+
+          @if (!sidebarCollapsed()) {
+            <span class="nav__label">{{ item.label }}</span>
+          }
+        </button>
+      }
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar" (click)="$event.stopPropagation()">
+      <div class="topbar__title">Dashboard</div>
+
+      <div class="user">
+        <button type="button" class="user__btn" (click)="toggleUserMenu()">
+          <span class="user__avatar">{{ initials() }}</span>
+          <span class="user__name">{{ displayName() }}</span>
+          <span class="user__chev"></span>
+        </button>
+
+        @if (userMenuOpen()) {
+          <div class="user-menu">
+            <button type="button" class="user-menu__item" (click)="changePassword()">Change password</button>
+            <button type="button" class="user-menu__item danger" (click)="logout()">Logout</button>
+          </div>
+        }
+      </div>
+    </header>
+
+    <section class="tabs">
+      <div class="tabs__track">
+        @for (tab of tabs.tabs(); track tab.id) {
+          <button
+            type="button"
+            class="tab"
+            [class.tab--active]="tabs.activeTabId() === tab.id"
+            (click)="activate(tab)"
+          >
+            <span class="tab__title">{{ tab.title || 'Tab' }}</span>
+
+            @if (!tab.pinned) {
+              <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">×</span>
+            }
+          </button>
+        }
+      </div>
+    </section>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
   </div>
 </div>
