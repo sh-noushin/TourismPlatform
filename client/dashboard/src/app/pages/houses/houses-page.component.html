@@ -1,14 +1,14 @@
 <section class="houses-page">
   <div class="houses-page__header">
     <sf-page-header title="Houses" subtitle="Active properties on the platform">
-      <sf-button sfPageHeaderActions variant="ghost" type="button" (click)="openDialog()">New house</sf-button>
+      <div sfPageHeaderActions class="houses-page__header-search">
+        <sf-searchbar
+          placeholder="Search by name, city, type, or country"
+          (valueChange)="setFilter($event)"
+        ></sf-searchbar>
+      </div>
     </sf-page-header>
-    <div class="houses-page__filters">
-      <sf-searchbar
-        placeholder="Search by name, city, type, or country"
-        (valueChange)="setFilter($event)"
-      ></sf-searchbar>
-    </div>
+    <sf-button class="houses-page__header-button" variant="ghost" type="button" (click)="openDialog()">New house</sf-button>
   </div>
 
   <sf-card>

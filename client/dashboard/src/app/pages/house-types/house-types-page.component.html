@@ -1,18 +1,11 @@
 <section class="house-types-page">
   <div class="house-types-page__header">
     <sf-page-header title="House types" subtitle="Active reference data">
-      <sf-button
-        sfPageHeaderActions
-        variant="ghost"
-        type="button"
-        (click)="openDialog()"
-      >
-        New type
-      </sf-button>
+      <div sfPageHeaderActions class="house-types-page__header-search">
+        <sf-searchbar placeholder="Search by name" (valueChange)="setFilter($event)"></sf-searchbar>
+      </div>
     </sf-page-header>
-    <div class="house-types-page__filters">
-      <sf-searchbar placeholder="Search by name" (valueChange)="setFilter($event)"></sf-searchbar>
-    </div>
+    <sf-button class="house-types-page__header-button" variant="ghost" type="button" (click)="openDialog()">New type</sf-button>
   </div>
 
   <sf-card>

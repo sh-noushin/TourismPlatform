@@ -14,14 +14,21 @@
   gap: spacing(md);
 }
 
-.houses-page__filters {
-  width: 100%;
-  max-width: 480px;
+.houses-page__header-search {
+  flex: 1;
+  max-width: 420px;
+}
+
+.houses-page__header-button {
+  margin-left: auto;
 }
 
 @media (max-width: 640px) {
   .houses-page__header {
     flex-direction: column;
     align-items: flex-start;
+  }
+  .houses-page__header-button {
+    margin-left: 0;
   }
 }

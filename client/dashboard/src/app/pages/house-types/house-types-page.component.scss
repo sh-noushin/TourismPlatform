@@ -8,12 +8,9 @@
 
 .house-types-page__header {
   display: flex;
-  flex-direction: column;
-  gap: spacing(sm);
-}
-
-.house-types-page__filters {
-  width: min(320px, 100%);
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing(md);
 }
 
 .house-types-page sf-card {
@@ -21,6 +18,20 @@
   width: min(760px, 100%);
   max-width: 760px;
   margin-inline: auto;
+}
+
+.house-types-page__header-search {
+  flex: 1;
+  max-width: 420px;
+}
+
+.house-types-page__header-button {
+  margin-left: auto;
+}
+
+.house-types-page__header sf-page-header ::ng-deep .actions {
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .status {
