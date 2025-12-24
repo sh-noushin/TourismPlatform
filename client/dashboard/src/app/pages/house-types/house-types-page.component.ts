@@ -58,7 +58,10 @@ export class HouseTypesPageComponent {
     });
   });
 
-  readonly actions = [{ label: 'Edit', type: 'edit', icon: 'edit' }];
+  readonly actions = [
+    { label: '', type: 'edit' },
+    { label: '', type: 'delete' }
+  ];
 
   constructor(private readonly houseTypes: HouseTypesService, private readonly dialog: MatDialog) {
     void this.houseTypes.load();
@@ -76,7 +79,17 @@ export class HouseTypesPageComponent {
     const { action, row } = event;
     if (action?.type === 'edit') {
       this.openDialog(row.id);
+    } else if (action?.type === 'delete') {
+      this.delete(row.id);
     }
+  }
+
+  private async delete(id: string) {
+    if (!confirm('Delete this house type?')) return;
+    try {
+      await this.houseTypes.delete(id);
+      await this.houseTypes.load({ force: true });
+    } catch {}
   }
 
   openDialog(id?: string | null) {

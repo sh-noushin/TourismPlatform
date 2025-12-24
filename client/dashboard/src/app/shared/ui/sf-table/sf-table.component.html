@@ -13,7 +13,7 @@
               </button>
             </th>
           }
-          @if (actionsSignal().length) {
+          @if (effectiveActions().length) {
             <th>Actions</th>
           }
         </tr>
@@ -24,10 +24,16 @@
             @for (column of columnsSignal(); track column.field ?? column.header ?? column) {
               <td [style.text-align]="column.align ?? 'left'">{{ resolveValue(row, column.field) }}</td>
             }
-            @if (actionsSignal().length) {
-              <td>
-                @for (action of actionsSignal(); track action.label) {
-                  <sf-action [label]="action.label" [permission]="action.permission" (actionClick)="emitRowAction(action, row)"></sf-action>
+            @if (effectiveActions().length) {
+              <td class="actions-cell">
+                @for (action of effectiveActions(); track action.type ?? $index) {
+                  <sf-action
+                    [label]="action.label"
+                    [permission]="action.permission"
+                    [icon]="actionIcon(action.type)"
+                    [variant]="actionVariant(action.type)"
+                    (actionClick)="emitRowAction(action, row)"
+                  ></sf-action>
                 }
               </td>
             }

@@ -60,6 +60,11 @@ export class SfTableComponent {
   @Output() sortChange = new EventEmitter<SfTableSort>();
   @Output() rowAction = new EventEmitter<{ action: SfTableRowAction; row: any }>();
 
+  private readonly defaultActions: SfTableRowAction[] = [
+    { label: '', type: 'edit' },
+    { label: '', type: 'delete' }
+  ];
+
   totalPages() {
     const paging = this.pagingSignal();
     if (!paging || paging.pageSize === 0) return 1;
@@ -120,5 +125,22 @@ export class SfTableComponent {
   isSorting(column: SfTableColumn) {
     const sort = this.sortSignal();
     return !!(sort && sort.field === column.field);
+  }
+
+  effectiveActions() {
+    const provided = this.actionsSignal();
+    return provided && provided.length ? provided : this.defaultActions;
+  }
+
+  actionIcon(type?: string) {
+    if (type?.toLowerCase() === 'edit') return 'edit';
+    if (type?.toLowerCase() === 'delete') return 'delete';
+    return 'more_horiz';
+  }
+
+  actionVariant(type?: string): 'edit' | 'delete' | 'default' {
+    if (type?.toLowerCase() === 'edit') return 'edit';
+    if (type?.toLowerCase() === 'delete') return 'delete';
+    return 'default';
   }
 }

@@ -1,0 +1,41 @@
+.sf-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  color: inherit;
+}
+
+.sf-action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.sf-action-button.sf-action--edit {
+  color: #2563eb;
+}
+
+.sf-action-button.sf-action--edit:hover:not(:disabled) {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.sf-action-button.sf-action--delete {
+  color: #dc2626;
+}
+
+.sf-action-button.sf-action--delete:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+}
