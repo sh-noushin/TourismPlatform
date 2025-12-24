@@ -19,7 +19,7 @@
     <nav class="nav">
       @for (item of menuItems; track item.basePath) {
         <button type="button" class="nav__item" (click)="openMenu(item)">
-          <span class="nav__icon">{{ item.short }}</span>
+          <span class="nav__icon" aria-hidden="true">{{ item.icon }}</span>
 
           @if (!sidebarCollapsed()) {
             <span class="nav__label">{{ item.label }}</span>

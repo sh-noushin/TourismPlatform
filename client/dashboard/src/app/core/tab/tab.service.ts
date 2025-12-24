@@ -21,12 +21,16 @@ export class TabService {
     try {
       const loaded = TabStorage.load() as TabItem[] | null;
       if (loaded?.length) {
-        const normalized = loaded.map((t: TabItem) => ({
-          ...t,
-          id: t.id ?? this.createId(),
-        }));
+        const normalized = loaded
+          .map((t: TabItem) => ({
+            ...t,
+            id: t.id ?? this.createId(),
+          }))
+          // drop legacy "Dashboard" tabs or bare /admin tabs
+          .filter((t: TabItem) => !/dashboard/i.test(t.title ?? '') && t.path !== '/admin');
+
         this.tabsSignal.set(normalized);
-        if (!this.activeTabIdSignal()) {
+        if (!this.activeTabIdSignal() && normalized.length) {
           this.activeTabIdSignal.set(normalized[normalized.length - 1].id);
         }
       }

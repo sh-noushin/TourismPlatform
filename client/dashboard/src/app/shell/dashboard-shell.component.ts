@@ -8,7 +8,7 @@ import { TabService, TabItem } from '../core/tab/tab.service';
 type MenuItem = {
   label: string;
   basePath: string;
-  short: string;
+  icon: string;
 };
 
 @Component({
@@ -24,10 +24,10 @@ export class DashboardShellComponent {
   readonly userMenuOpen = signal(false);
 
   readonly menuItems: MenuItem[] = [
-    { label: 'Houses', basePath: '/admin/houses', short: 'H' },
-    { label: 'Tours', basePath: '/admin/tours', short: 'T' },
-    { label: 'Exchanges', basePath: '/admin/exchange', short: 'E' },
-    { label: 'Permissions', basePath: '/admin/permissions', short: 'P' },
+    { label: 'Houses', basePath: '/admin/houses', icon: '🏠' },
+    { label: 'Tours', basePath: '/admin/tours', icon: '🧭' },
+    { label: 'Exchanges', basePath: '/admin/exchange', icon: '💱' },
+    { label: 'Permissions', basePath: '/admin/permissions', icon: '🔐' },
   ];
 
   // SOURCE OF TRUTH: AuthFacade.userName()
@@ -36,7 +36,10 @@ export class DashboardShellComponent {
     if (name) return name;
 
     const email = (this.auth.userEmail?.() ?? '').trim();
-    return email ? this.prettyNameFromEmail(email) : 'User';
+    if (email) return this.prettyNameFromEmail(email);
+
+    if (this.auth.isSuperUser?.()) return 'Super Admin';
+    return 'User';
   });
 
   readonly initials = computed(() => {

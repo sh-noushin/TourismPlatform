@@ -124,9 +124,6 @@ export class LoginPageComponent {
       const navTo = this.returnUrl ?? '/admin';
       await this.router.navigateByUrl(navTo);
 
-      try {
-        this.tabs.openOrActivate(navTo, 'Dashboard', true);
-      } catch {}
     } catch (err: any) {
       this.error.set(err?.message ?? 'Login failed');
     } finally {

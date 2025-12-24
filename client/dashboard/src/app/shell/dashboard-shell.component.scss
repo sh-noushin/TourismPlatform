@@ -11,24 +11,24 @@
 .shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: spacing(lg);
-  padding: spacing(xl);
+  grid-template-columns: 260px 1fr;
+  gap: spacing(md);
+  padding: spacing(md) spacing(md) spacing(md) 0;
 }
 
 .sidebar {
   background: $surface;
   border: 1px solid $border;
-  border-radius: 18px;
-  padding: spacing(lg);
+  border-radius: 0;
+  padding: spacing(md) spacing(md) spacing(md) spacing(sm);
   display: flex;
   flex-direction: column;
   gap: spacing(md);
-  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
 .sidebar--collapsed {
-  padding: spacing(md);
+  padding: spacing(sm);
   width: 84px;
 }
 
