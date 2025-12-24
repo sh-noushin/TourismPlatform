@@ -10,23 +10,21 @@
 
 .glass-panel {
   width: min(520px, 100%);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 255, 0.98));
-  border-radius: 28px;
-  box-shadow: 0 35px 60px rgba(15, 23, 42, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  backdrop-filter: none;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  max-height: fit-content;
-  overflow: hidden;
-  padding: 16px;
+  gap: 10px;
+  padding: 14px;
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .eyebrow {
@@ -39,7 +37,7 @@
 
 .header h3 {
   margin: 0;
-  font-size: 1.85rem;
+  font-size: 1.4rem;
   color: #111827;
 }
 
@@ -52,25 +50,25 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
 }
 
 label {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   font-weight: 600;
   color: #374151;
 }
 
 .label-text {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #475569;
 }
 
@@ -88,9 +86,9 @@ label {
 
 .combobox-field select {
   width: 100%;
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(79, 70, 229, 0.2);
-  padding: 12px 14px;
+  padding: 10px 12px;
   background: #fff;
   font-size: 0.95rem;
   appearance: none;
@@ -108,9 +106,9 @@ label {
 .combobox-icon {
   position: absolute;
   top: 50%;
-  right: 16px;
-  width: 10px;
-  height: 10px;
+  right: 12px;
+  width: 8px;
+  height: 8px;
   border-right: 2px solid #6b7280;
   border-bottom: 2px solid #6b7280;
   transform: translateY(-50%) rotate(45deg);
@@ -121,8 +119,8 @@ input,
 textarea {
   border-radius: 12px;
   border: 1px solid rgba(79, 70, 229, 0.2);
-  padding: 12px 14px;
-  font-size: 0.95rem;
+  padding: 10px 12px;
+  font-size: 0.9rem;
   background: #fff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -136,7 +134,7 @@ textarea:focus {
 
 textarea {
   resize: vertical;
-  min-height: 92px;
+  min-height: 74px;
 }
 
 .file-control {
@@ -147,7 +145,7 @@ textarea {
 
 .file-label input[type='file'] {
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   background: #f8fafc;
   border: 1px dashed rgba(14, 165, 233, 0.6);
   cursor: pointer;
@@ -162,7 +160,7 @@ textarea {
 .photos {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .photo-item {
@@ -172,7 +170,7 @@ textarea {
   background: #fff;
   border: 1px solid rgba(79, 70, 229, 0.15);
   border-radius: 12px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
 }
 
@@ -204,7 +202,7 @@ textarea {
 
 .btn {
   border-radius: 999px;
-  padding: 10px 22px;
+  padding: 8px 18px;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
