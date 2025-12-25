@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 using Server.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +51,14 @@ if (app.Environment.IsDevelopment())
 await app.SeedIdentityAsync();
 
 app.UseApiDocumentation();
+
+var imagesDirectory = Path.Combine(app.Environment.ContentRootPath, "images");
+Directory.CreateDirectory(imagesDirectory);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(imagesDirectory),
+    RequestPath = "/images"
+});
 
 app.UseApiPipeline();
 
