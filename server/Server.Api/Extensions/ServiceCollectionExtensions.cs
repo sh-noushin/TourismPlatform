@@ -21,6 +21,7 @@ using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.Users;
 using Server.Modules.Media.Application.Services;
 using Server.Modules.Media.Contracts.Uploads.Services;
+using Server.Modules.Media.Infrastructure;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Services;
 using Server.Modules.Properties.Domain.Houses.Repositories;
@@ -163,6 +164,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPhotoCommitService, PhotoCommitService>();
         services.AddScoped<IStagedUploadService, StagedUploadService>();
         services.AddScoped<IPhotoCleanupService, PhotoCleanupService>();
+        services.AddHostedService<MediaDirectoryInitializer>();
         return services;
     }
 
