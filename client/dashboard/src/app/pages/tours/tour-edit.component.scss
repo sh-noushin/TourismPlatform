@@ -1,190 +1,284 @@
-@use '../../styles/index' as *;
+﻿@use '../../styles/index' as *;
 
-.tour-edit {
-  display: flex;
-  flex-direction: column;
-  gap: spacing(lg);
-  max-width: 960px;
+:host ::ng-deep .cdk-overlay-pane.tour-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface,
+:host ::ng-deep .tour-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+:host {
   width: 100%;
 }
 
-.tour-edit__header {
+.edit-shell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: spacing(sm) 0;
+}
+
+.glass-panel {
+  width: min(900px, 100%);
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  padding: spacing(md);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: spacing(sm);
+  max-height: min(90vh, 760px);
+  overflow-y: auto;
+}
+
+.tour-edit-header {
   display: flex;
   flex-direction: column;
   gap: spacing(xs);
 }
 
-.tour-edit__eyebrow {
+.tour-edit-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #0f172a;
+}
+
+.eyebrow {
+  margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: $muted;
 }
 
-.tour-edit__subtitle {
-  margin: 0;
-  color: $muted;
-}
-
-.tour-edit__status {
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-.tour-edit__error {
-  color: #b82424;
-}
-
-.tour-edit__success {
-  color: #1f7a32;
-}
-
-.tour-edit__loading,
-.tour-edit__placeholder {
-  font-style: italic;
-  color: $muted;
-  margin: 0;
-}
-
-.tour-edit__form {
-  display: flex;
-  flex-direction: column;
-  gap: spacing(lg);
-}
-
-.tour-edit__form label {
-  display: flex;
-  flex-direction: column;
-  gap: spacing(xs);
-  font-weight: 600;
-}
-
-.tour-edit__form input,
-.tour-edit__form textarea {
-  border: 1px solid $border;
-  border-radius: 6px;
-  padding: spacing(sm);
-  font-size: 1rem;
-  font-family: inherit;
-}
-
-.tour-edit__photos {
-  display: flex;
-  flex-direction: column;
-  gap: spacing(md);
-}
-
-.tour-edit__photos-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: spacing(md);
-}
-
-.tour-edit__upload {
-  display: inline-flex;
-  align-items: center;
-  gap: spacing(xs);
-  border: 1px solid $border;
-  padding: spacing(xs) spacing(sm);
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.tour-edit__upload input {
-  display: none;
-}
-
-.tour-edit__uploading {
+.subtitle {
   margin: 0;
   font-size: 0.9rem;
   color: $muted;
 }
 
-.tour-edit__photos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+.status-bar {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
   gap: spacing(sm);
 }
 
-.tour-edit__photo {
-  border: 1px solid $border;
-  border-radius: 8px;
-  overflow: hidden;
+.status {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status.error {
+  color: #dc2626;
+}
+
+.status.success {
+  color: #16a34a;
+}
+
+.tour-edit-loading,
+.tour-edit-placeholder {
+  margin: 0;
+  padding: spacing(sm) 0;
+  font-style: italic;
+  color: $muted;
+}
+
+.tour-edit-form {
   display: flex;
   flex-direction: column;
-  gap: spacing(xs);
-  background: $surface;
+  gap: spacing(sm);
 }
 
-.tour-edit__photo-preview {
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid rgba(79, 70, 229, 0.08);
+  padding: 12px;
+}
+
+.form-grid.description {
+  grid-template-columns: 1fr;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.label-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: #475569;
+}
+
+input,
+textarea {
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #4f46e5;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
+}
+
+.fileupload-row {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  background: $muted;
+  display: flex;
+  justify-content: flex-start;
+  padding: 4px 0;
 }
 
-.tour-edit__photo-preview img {
+.fileupload-row sf-fileupload {
+  max-width: 180px;
+  width: 100%;
+}
+
+.mini-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.photos {
+  width: 100%;
+}
+
+.photo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.photo-item {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 0.8rem;
+  align-items: center;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid rgba(79, 70, 229, 0.08);
+  padding: 8px 10px;
+}
+
+.photo-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.tour-edit__photo-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: spacing(xs) spacing(sm);
-  font-size: 0.95rem;
+.photo-info {
+  font-size: 0.85rem;
+  color: #0f172a;
 }
 
-.tour-edit__photo-meta button {
+.photo-info span {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.text-button {
   border: none;
-  background: none;
-  color: $danger;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.tour-edit__no-photos {
-  margin: 0;
-  color: $muted;
-}
-
-.tour-edit__submit {
-  border: none;
-  padding: spacing(md) spacing(lg);
-  background-color: $primary;
-  color: $primaryContrast;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.tour-edit__submit:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.tour-edit__cancel {
-  border: 1px solid $border;
-  padding: spacing(md) spacing(lg);
   background: transparent;
-  color: $text;
-  border-radius: 6px;
-  cursor: pointer;
+  color: #2563eb;
   font-weight: 600;
+  cursor: pointer;
+  padding: 0;
 }
 
-.tour-edit__actions {
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.no-photos {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.actions {
   display: flex;
+  justify-content: flex-end;
   gap: spacing(sm);
-  justify-content: flex-start;
+  padding-top: spacing(sm);
+  border-top: 1px solid rgba(79, 70, 229, 0.08);
 }
 
-@media (max-width: 640px) {
-  .tour-edit__photos-header {
+.btn {
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn.ghost {
+  background: #eef2ff;
+  color: #4c1d95;
+}
+
+.btn.primary {
+  background: #4f46e5;
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35);
+}
+
+@media (max-width: 720px) {
+  .glass-panel {
+    padding: spacing(sm);
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .actions {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+
+  .photo-item {
+    grid-template-columns: 48px 1fr;
+    gap: 0.6rem;
   }
 }

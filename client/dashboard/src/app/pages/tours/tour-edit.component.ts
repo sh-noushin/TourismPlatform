@@ -13,6 +13,7 @@ import {
   UpdateTourRequest
 } from '../../api/client';
 import { ToursFacade } from '../../features/tours/tours.facade';
+import { SfFileuploadComponent } from '../../shared/ui/sf-fileupload/sf-fileupload.component';
 
 type ExistingPhotoVm = {
   kind: 'existing';
@@ -42,7 +43,7 @@ type TourForm = {
 @Component({
   standalone: true,
   selector: 'tour-edit',
-  imports: [CommonModule, FormsModule, MatDialogModule],
+  imports: [CommonModule, FormsModule, MatDialogModule, SfFileuploadComponent],
   templateUrl: './tour-edit.component.html',
   styleUrls: ['./tour-edit.component.scss']
 })
