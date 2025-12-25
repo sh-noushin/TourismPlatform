@@ -29,7 +29,7 @@ export class ToursPageComponent {
 
   readonly columns: SfTableColumn[] = [
     { key: 'name', header: 'Name', field: 'name', sortable: true },
-    { key: 'description', header: 'Description', field: 'description' },
+    { key: 'description', header: 'Description', field: 'description', sortable: true },
     { key: 'year', header: 'Year', field: 'year', align: 'end', sortable: true }
   ];
 
