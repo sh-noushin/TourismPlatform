@@ -322,7 +322,8 @@ export class HouseEditComponent implements OnDestroy {
     try {
       await firstValueFrom(
         this.http.request<void>('DELETE', `${this.apiBaseUrl}/api/photos/stage`, {
-          body: payload
+          body: payload,
+          headers: { 'Content-Type': 'application/json' }
         })
       );
     } catch (err) {

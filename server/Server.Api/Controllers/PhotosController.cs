@@ -37,7 +37,7 @@ public class PhotosController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Cleanup([FromBody] CleanupStageUploadsRequest request)
     {
-        if (request?.StagedUploadIds == null || request.StagedUploadIds.Count() == 0)
+        if (request?.StagedUploadIds == null || request.StagedUploadIds.Length == 0)
         {
             return BadRequest(new { message = "At least one staged upload ID must be provided." });
         }

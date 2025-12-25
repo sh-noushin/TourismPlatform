@@ -3,7 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Modules.Media.Contracts.Uploads.Dtos;
 
-public sealed record CleanupStageUploadsRequest(
-    [property: Required]
-    [property: MinLength(1)]
-    Guid[] StagedUploadIds);
+public sealed class CleanupStageUploadsRequest
+{
+    [Required]
+    [MinLength(1)]
+    public Guid[] StagedUploadIds { get; set; } = [];
+}
