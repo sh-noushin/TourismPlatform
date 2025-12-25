@@ -186,6 +186,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITourScheduleRepository, TourScheduleRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<ITourService, TourService>();
+        services.AddScoped<ITourCategoryService, TourCategoryService>();
         return services;
     }
 

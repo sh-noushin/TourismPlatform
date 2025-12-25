@@ -4,4 +4,6 @@ public sealed record UpdateTourRequest(
     string Name,
     string? Description,
     string TourCategoryName,
-    IReadOnlyCollection<TourCommitPhotoItem>? Photos);
+    IReadOnlyCollection<TourCommitPhotoItem>? Photos = null,
+    IReadOnlyCollection<TourScheduleUpdateItem>? Schedules = null,
+    IReadOnlyCollection<Guid>? DeletedScheduleIds = null);

@@ -4,4 +4,5 @@ public sealed record CreateTourRequest(
     string Name,
     string? Description,
     string TourCategoryName,
-    IReadOnlyCollection<TourCommitPhotoItem>? Photos);
+    IReadOnlyCollection<TourCommitPhotoItem>? Photos = null,
+    IReadOnlyCollection<CreateTourScheduleRequest>? Schedules = null);

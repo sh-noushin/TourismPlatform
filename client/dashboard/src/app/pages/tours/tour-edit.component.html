@@ -22,17 +22,31 @@
         <section class="form-grid top">
           <label>
             <span class="label-text">Name</span>
-            <input name="name" type="text" required placeholder="Grand Desert Escape" [(ngModel)]="currentForm.name" />
-          </label>
-          <label>
-            <span class="label-text">Category</span>
             <input
-              name="tourCategoryName"
+              name="name"
               type="text"
               required
-              placeholder="Adventure"
-              [(ngModel)]="currentForm.tourCategoryName"
+              placeholder="Grand Desert Escape"
+              [value]="currentForm.name"
+              (input)="updateField('name', $any($event.target).value)"
             />
+          </label>
+          <label class="combobox">
+            <span class="label-text">Category</span>
+            <sf-dropdown
+              [items]="tourCategoryOptions()"
+              [value]="currentForm.tourCategoryName"
+              (selectionChange)="updateField('tourCategoryName', $event)"
+              placeholder="Select category"
+              name="tourCategoryName"
+            ></sf-dropdown>
+
+            @if (tourCategories.loading()) {
+              <p class="mini-note">Loading categories…</p>
+            }
+            @if (tourCategories.error()) {
+              <p class="status error">{{ tourCategories.error() }}</p>
+            }
           </label>
         </section>
 
@@ -43,9 +57,20 @@
               name="description"
               rows="3"
               placeholder="Share what makes this tour special"
-              [(ngModel)]="currentForm.description"
+              [value]="currentForm.description"
+              (input)="updateField('description', $any($event.target).value)"
             ></textarea>
           </label>
+        </section>
+
+        <section class="schedule-section">
+          <sf-tour-schedule
+            [schedules]="currentForm.schedules"
+            [disabled]="saving()"
+            label="Tour Schedules"
+            (schedulesChange)="onSchedulesChange($event)"
+            (scheduleDeleted)="onScheduleDeleted($event)"
+          ></sf-tour-schedule>
         </section>
 
         <div class="fileupload-row">

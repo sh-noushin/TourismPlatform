@@ -2217,6 +2217,7 @@ export interface components {
             description: null | string;
             tourCategoryName: string;
             photos: null | components["schemas"]["TourCommitPhotoItem"][];
+            schedules: null | components["schemas"]["CreateTourScheduleRequest"][];
         };
         CreateTourScheduleRequest: {
             /** Format: date-time */
@@ -2389,6 +2390,18 @@ export interface components {
             description: null | string;
             tourCategoryName: string;
             photos: null | components["schemas"]["TourCommitPhotoItem"][];
+            schedules: null | components["schemas"]["TourScheduleUpdateItem"][];
+            deletedScheduleIds: null | string[];
+        };
+        TourScheduleUpdateItem: {
+            /** Format: uuid */
+            id: null | string;
+            /** Format: date-time */
+            startAtUtc: string;
+            /** Format: date-time */
+            endAtUtc: string;
+            /** Format: int32 */
+            capacity: number | string;
         };
         UpdateTourScheduleRequest: {
             /** Format: date-time */

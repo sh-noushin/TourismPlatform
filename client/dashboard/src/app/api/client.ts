@@ -2887,6 +2887,7 @@ export class CreateTourRequest implements ICreateTourRequest {
     description!: string | undefined;
     tourCategoryName!: string;
     photos!: TourCommitPhotoItem[] | undefined;
+    schedules!: CreateTourScheduleRequest[] | undefined;
 
     [key: string]: any;
 
@@ -2913,6 +2914,11 @@ export class CreateTourRequest implements ICreateTourRequest {
                 for (let item of _data["photos"])
                     this.photos!.push(TourCommitPhotoItem.fromJS(item));
             }
+            if (Array.isArray(_data["schedules"])) {
+                this.schedules = [] as any;
+                for (let item of _data["schedules"])
+                    this.schedules!.push(CreateTourScheduleRequest.fromJS(item));
+            }
         }
     }
 
@@ -2937,6 +2943,11 @@ export class CreateTourRequest implements ICreateTourRequest {
             for (let item of this.photos)
                 data["photos"].push(item ? item.toJSON() : undefined as any);
         }
+        if (Array.isArray(this.schedules)) {
+            data["schedules"] = [];
+            for (let item of this.schedules)
+                data["schedules"].push(item ? item.toJSON() : undefined as any);
+        }
         return data;
     }
 }
@@ -2946,6 +2957,7 @@ export interface ICreateTourRequest {
     description: string | undefined;
     tourCategoryName: string;
     photos: TourCommitPhotoItem[] | undefined;
+    schedules: CreateTourScheduleRequest[] | undefined;
 
     [key: string]: any;
 }
@@ -4132,6 +4144,66 @@ export interface ITourScheduleDto {
     [key: string]: any;
 }
 
+export class TourScheduleUpdateItem implements ITourScheduleUpdateItem {
+    id!: string | undefined;
+    startAtUtc!: Date;
+    endAtUtc!: Date;
+    capacity!: number;
+
+    [key: string]: any;
+
+    constructor(data?: ITourScheduleUpdateItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.startAtUtc = _data["startAtUtc"] ? new Date(_data["startAtUtc"].toString()) : undefined as any;
+            this.endAtUtc = _data["endAtUtc"] ? new Date(_data["endAtUtc"].toString()) : undefined as any;
+            this.capacity = _data["capacity"];
+        }
+    }
+
+    static fromJS(data: any): TourScheduleUpdateItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new TourScheduleUpdateItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["startAtUtc"] = this.startAtUtc ? this.startAtUtc.toISOString() : undefined as any;
+        data["endAtUtc"] = this.endAtUtc ? this.endAtUtc.toISOString() : undefined as any;
+        data["capacity"] = this.capacity;
+        return data;
+    }
+}
+
+export interface ITourScheduleUpdateItem {
+    id?: string | undefined;
+    startAtUtc: Date;
+    endAtUtc: Date;
+    capacity: number;
+
+    [key: string]: any;
+}
+
 export class TourSummaryDto implements ITourSummaryDto {
     tourId!: string;
     name!: string;
@@ -4383,6 +4455,8 @@ export class UpdateTourRequest implements IUpdateTourRequest {
     description!: string | undefined;
     tourCategoryName!: string;
     photos!: TourCommitPhotoItem[] | undefined;
+    schedules!: TourScheduleUpdateItem[] | undefined;
+    deletedScheduleIds!: string[] | undefined;
 
     [key: string]: any;
 
@@ -4409,6 +4483,16 @@ export class UpdateTourRequest implements IUpdateTourRequest {
                 for (let item of _data["photos"])
                     this.photos!.push(TourCommitPhotoItem.fromJS(item));
             }
+            if (Array.isArray(_data["schedules"])) {
+                this.schedules = [] as any;
+                for (let item of _data["schedules"])
+                    this.schedules!.push(TourScheduleUpdateItem.fromJS(item));
+            }
+            if (Array.isArray(_data["deletedScheduleIds"])) {
+                this.deletedScheduleIds = [] as any;
+                for (let item of _data["deletedScheduleIds"])
+                    this.deletedScheduleIds!.push(item);
+            }
         }
     }
 
@@ -4433,6 +4517,16 @@ export class UpdateTourRequest implements IUpdateTourRequest {
             for (let item of this.photos)
                 data["photos"].push(item ? item.toJSON() : undefined as any);
         }
+        if (Array.isArray(this.schedules)) {
+            data["schedules"] = [];
+            for (let item of this.schedules)
+                data["schedules"].push(item ? item.toJSON() : undefined as any);
+        }
+        if (Array.isArray(this.deletedScheduleIds)) {
+            data["deletedScheduleIds"] = [];
+            for (let item of this.deletedScheduleIds)
+                data["deletedScheduleIds"].push(item);
+        }
         return data;
     }
 }
@@ -4442,6 +4536,8 @@ export interface IUpdateTourRequest {
     description: string | undefined;
     tourCategoryName: string;
     photos: TourCommitPhotoItem[] | undefined;
+    schedules: TourScheduleUpdateItem[] | undefined;
+    deletedScheduleIds: string[] | undefined;
 
     [key: string]: any;
 }

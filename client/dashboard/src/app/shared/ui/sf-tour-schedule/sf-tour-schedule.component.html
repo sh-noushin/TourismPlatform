@@ -1,0 +1,91 @@
+<section class="tour-schedule-section">
+  <header class="schedule-header">
+    <span class="label-text">{{ label() }}</span>
+    <button
+      type="button"
+      class="add-button"
+      [disabled]="disabled()"
+      (click)="toggleAddForm()"
+    >
+      {{ showAddForm() ? 'Cancel' : '+ Add schedule' }}
+    </button>
+  </header>
+
+  @if (showAddForm()) {
+    <div class="add-form">
+      <div class="form-row">
+        <label class="form-field">
+          <span class="field-label">Start date & time</span>
+          <input
+            type="datetime-local"
+            [ngModel]="newSchedule().startAtUtc"
+            (ngModelChange)="updateNewScheduleField('startAtUtc', $event)"
+            [disabled]="disabled()"
+          />
+        </label>
+        <label class="form-field">
+          <span class="field-label">End date & time</span>
+          <input
+            type="datetime-local"
+            [ngModel]="newSchedule().endAtUtc"
+            (ngModelChange)="updateNewScheduleField('endAtUtc', $event)"
+            [disabled]="disabled()"
+          />
+        </label>
+        <label class="form-field capacity">
+          <span class="field-label">Capacity</span>
+          <input
+            type="number"
+            min="1"
+            [ngModel]="newSchedule().capacity"
+            (ngModelChange)="updateNewScheduleField('capacity', +$event)"
+            [disabled]="disabled()"
+          />
+        </label>
+      </div>
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn primary small"
+          [disabled]="disabled()"
+          (click)="addSchedule()"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (sortedSchedules().length > 0) {
+    <div class="schedule-list">
+      @for (schedule of sortedSchedules(); track trackSchedule($index, schedule); let i = $index) {
+        <article class="schedule-item" [class.new]="schedule.isNew">
+          <div class="schedule-info">
+            <div class="schedule-time">
+              <span class="time-label">Start:</span>
+              <span class="time-value">{{ formatDateTime(schedule.startAtUtc) }}</span>
+            </div>
+            <div class="schedule-time">
+              <span class="time-label">End:</span>
+              <span class="time-value">{{ formatDateTime(schedule.endAtUtc) }}</span>
+            </div>
+            <div class="schedule-capacity">
+              <span class="capacity-label">Capacity:</span>
+              <span class="capacity-value">{{ schedule.capacity }}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="text-button remove"
+            [disabled]="disabled()"
+            (click)="removeSchedule(i)"
+          >
+            Remove
+          </button>
+        </article>
+      }
+    </div>
+  } @else if (!showAddForm()) {
+    <p class="no-schedules">No schedules yet. Add one above.</p>
+  }
+</section>

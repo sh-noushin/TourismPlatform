@@ -3243,6 +3243,15 @@
               "$ref": "#/components/schemas/TourCommitPhotoItem"
             }
           }
+          "schedules": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/CreateTourScheduleRequest"
+            }
+          }
         }
       },
       "CreateTourScheduleRequest": {
@@ -3933,6 +3942,58 @@
             "items": {
               "$ref": "#/components/schemas/TourCommitPhotoItem"
             }
+          },
+          "schedules": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/TourScheduleUpdateItem"
+            }
+          },
+          "deletedScheduleIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "TourScheduleUpdateItem": {
+        "required": [
+          "startAtUtc",
+          "endAtUtc",
+          "capacity"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "startAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "capacity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       },

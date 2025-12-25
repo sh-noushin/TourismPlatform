@@ -100,6 +100,7 @@ public sealed class TourService : ITourService
         await _tourRepository.SaveChangesAsync(cancellationToken);
 
         await CommitAndLinkPhotosAsync(tour.Id, request.Photos, now, cancellationToken);
+        await CreateSchedulesAsync(tour.Id, request.Schedules, cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
         return tour.Id;
@@ -125,6 +126,7 @@ public sealed class TourService : ITourService
         await _tourRepository.SaveChangesAsync(cancellationToken);
 
         await CommitAndLinkPhotosAsync(tour.Id, request.Photos, now, cancellationToken);
+        await UpdateSchedulesAsync(tour.Id, request.Schedules, request.DeletedScheduleIds, cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
         return true;
@@ -283,5 +285,96 @@ public sealed class TourService : ITourService
         }
 
         await _tourPhotoRepository.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task CreateSchedulesAsync(
+        Guid tourId,
+        IReadOnlyCollection<CreateTourScheduleRequest>? schedules,
+        CancellationToken cancellationToken)
+    {
+        if (schedules == null || schedules.Count == 0) return;
+
+        var now = DateTime.UtcNow;
+
+        foreach (var schedule in schedules)
+        {
+            if (schedule.Capacity <= 0 || schedule.EndAtUtc <= schedule.StartAtUtc)
+                continue;
+
+            var newSchedule = new TourSchedule
+            {
+                Id = Guid.NewGuid(),
+                TourId = tourId,
+                StartAtUtc = schedule.StartAtUtc,
+                EndAtUtc = schedule.EndAtUtc,
+                Capacity = schedule.Capacity,
+                CreatedAtUtc = now
+            };
+
+            await _tourScheduleRepository.CreateAsync(newSchedule, cancellationToken);
+        }
+
+        await _tourScheduleRepository.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task UpdateSchedulesAsync(
+        Guid tourId,
+        IReadOnlyCollection<TourScheduleUpdateItem>? schedules,
+        IReadOnlyCollection<Guid>? deletedScheduleIds,
+        CancellationToken cancellationToken)
+    {
+        // Handle deletions first
+        if (deletedScheduleIds != null && deletedScheduleIds.Count > 0)
+        {
+            foreach (var scheduleId in deletedScheduleIds)
+            {
+                var schedule = await _tourScheduleRepository.GetForUpdateAsync(scheduleId, cancellationToken);
+                if (schedule != null && schedule.TourId == tourId)
+                {
+                    await _tourScheduleRepository.DeleteAsync(schedule, cancellationToken);
+                }
+            }
+        }
+
+        // Handle creates and updates
+        if (schedules != null && schedules.Count > 0)
+        {
+            var now = DateTime.UtcNow;
+
+            foreach (var item in schedules)
+            {
+                if (item.Capacity <= 0 || item.EndAtUtc <= item.StartAtUtc)
+                    continue;
+
+                if (item.Id == null)
+                {
+                    // Create new schedule
+                    var newSchedule = new TourSchedule
+                    {
+                        Id = Guid.NewGuid(),
+                        TourId = tourId,
+                        StartAtUtc = item.StartAtUtc,
+                        EndAtUtc = item.EndAtUtc,
+                        Capacity = item.Capacity,
+                        CreatedAtUtc = now
+                    };
+
+                    await _tourScheduleRepository.CreateAsync(newSchedule, cancellationToken);
+                }
+                else
+                {
+                    // Update existing schedule
+                    var existingSchedule = await _tourScheduleRepository.GetForUpdateAsync(item.Id.Value, cancellationToken);
+                    if (existingSchedule != null && existingSchedule.TourId == tourId)
+                    {
+                        existingSchedule.StartAtUtc = item.StartAtUtc;
+                        existingSchedule.EndAtUtc = item.EndAtUtc;
+                        existingSchedule.Capacity = item.Capacity;
+                    }
+                }
+            }
+        }
+
+        await _tourScheduleRepository.SaveChangesAsync(cancellationToken);
     }
 }
