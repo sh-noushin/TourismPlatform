@@ -1,0 +1,34 @@
+<div class="edit-shell">
+  <div class="glass-panel">
+    <header class="header">
+      <h3>{{ title() }}</h3>
+    </header>
+
+    <form class="form" (submit)="save($event)">
+      <label>
+        <span class="label-text">Name</span>
+        <input
+          type="text"
+          name="name"
+          autocomplete="off"
+          [value]="name()"
+          (input)="name.set($any($event.target).value)"
+          required
+        />
+      </label>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
+        <button type="submit" class="btn primary" [disabled]="saving()">
+          {{ saving() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+
+      <div class="status-bar">
+        @if (error()) {
+          <span class="status error">{{ error() }}</span>
+        }
+      </div>
+    </form>
+  </div>
+</div>

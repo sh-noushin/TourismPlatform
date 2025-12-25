@@ -1,0 +1,28 @@
+<section class="tour-categories-page">
+  <div class="tour-categories-page__header">
+    <sf-page-header title="Tour categories" subtitle="Manage the categories used to organize tours.">
+      <div sfPageHeaderActions class="tour-categories-page__header-search">
+        <sf-searchbar placeholder="Search categories" (valueChange)="setFilter($event)"></sf-searchbar>
+      </div>
+    </sf-page-header>
+    <sf-button class="tour-categories-page__header-button" variant="ghost" type="button" (buttonClick)="openDialog()">New category</sf-button>
+  </div>
+
+  <sf-card>
+    <sf-table
+      [columns]="columns"
+      [data]="displayedCategories()"
+      [loading]="loadingSignal()"
+      [actions]="actions"
+      (sortChange)="onSortChange($event)"
+      (rowAction)="onRowAction($event)"
+    ></sf-table>
+
+    @if (errorSignal()) {
+      <p class="status status--error">{{ errorSignal() }}</p>
+    }
+    @if (!loadingSignal() && !errorSignal() && displayedCategories().length === 0) {
+      <p class="status">No tour categories yet.</p>
+    }
+  </sf-card>
+</section>

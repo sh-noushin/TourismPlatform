@@ -1,0 +1,30 @@
+.tour-categories-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tour-categories-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tour-categories-page__header-search {
+  width: min(320px, 100%);
+}
+
+.tour-categories-page__header-button {
+  white-space: nowrap;
+}
+
+.status {
+  margin: 12px 0 0;
+  color: #475569;
+}
+
+.status--error {
+  color: #dc2626;
+}

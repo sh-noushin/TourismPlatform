@@ -40,7 +40,15 @@ export class DashboardShellComponent {
         { label: 'House types', path: '/admin/house-types' }
       ]
     },
-    { label: 'Tours', basePath: '/admin/tours', icon: '🧭' },
+    {
+      label: 'Tours management',
+      basePath: '/admin/tours-management',
+      icon: '🧭',
+      subItems: [
+        { label: 'Category', path: '/admin/tour-categories' },
+        { label: 'Tours', path: '/admin/tours' }
+      ]
+    },
     { label: 'Exchanges', basePath: '/admin/exchange', icon: '💱' },
     {
       label: 'Permission management',
@@ -89,6 +97,11 @@ export class DashboardShellComponent {
     const houseGroup = this.menuItems.find(m => m.basePath === '/admin/house-management');
     if (houseGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
       this.expandedMenu.set(houseGroup.basePath);
+    }
+
+    const tourGroup = this.menuItems.find(m => m.basePath === '/admin/tours-management');
+    if (tourGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
+      this.expandedMenu.set(tourGroup.basePath);
     }
   }
 

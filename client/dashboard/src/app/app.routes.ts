@@ -16,6 +16,7 @@ export const routes: Routes = [
       { path: 'houses/new', loadComponent: () => import('./pages/houses/house-edit.component').then(m => m.HouseEditComponent) },
       { path: 'houses/:id/edit', loadComponent: () => import('./pages/houses/house-edit.component').then(m => m.HouseEditComponent) },
       { path: 'house-types', loadComponent: () => import('./pages/house-types/house-types-page.component').then(m => m.HouseTypesPageComponent) },
+      { path: 'tour-categories', loadComponent: () => import('./pages/tour-categories/tour-categories-page.component').then(m => m.TourCategoriesPageComponent) },
       { path: 'tours', loadComponent: () => import('./pages/tours/tours-page.component').then(m => m.ToursPageComponent) },
       { path: 'tours/new', loadComponent: () => import('./pages/tours/tour-edit.component').then(m => m.TourEditComponent) },
       { path: 'tours/:id/edit', loadComponent: () => import('./pages/tours/tour-edit.component').then(m => m.TourEditComponent) },
