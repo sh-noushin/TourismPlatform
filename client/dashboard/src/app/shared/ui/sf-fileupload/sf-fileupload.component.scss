@@ -1,0 +1,52 @@
+@use '../../../styles/index' as *;
+
+:host {
+  display: block;
+}
+
+.sf-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: spacing(sm);
+}
+
+.file-control__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing(lg);
+}
+
+.label-group {
+  display: flex;
+  flex-direction: column;
+  gap: spacing(xs);
+}
+
+.label-text {
+  font-size: 0.85rem;
+  font-weight: $font-weight-semibold;
+  color: $text;
+}
+
+.helper-text {
+  margin: 0;
+  font-size: 0.75rem;
+  color: $muted;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: spacing(sm);
+}
+
+.file-actions input[type='file'] {
+  display: none;
+}
+
+.status-text {
+  margin: 0;
+  font-size: 0.8rem;
+  color: $muted;
+}

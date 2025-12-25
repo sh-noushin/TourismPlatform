@@ -1,0 +1,37 @@
+<section class="sf-file-upload">
+  <div class="file-control__header">
+    <div class="label-group">
+      @if (label()) {
+        <span class="label-text">{{ label() }}</span>
+      }
+      @if (helperText()) {
+        <p class="helper-text">{{ helperText() }}</p>
+      }
+    </div>
+
+    <div class="file-actions">
+      <input
+        #fileInput
+        type="file"
+        [attr.accept]="accept() || null"
+        [attr.multiple]="multiple() ? '' : null"
+        (change)="handleChange($event)"
+        [disabled]="disabled() || loading()"
+      />
+      <sf-button
+        [text]="buttonText()"
+        [disabled]="disabled() || loading()"
+        [loading]="loading()"
+        (buttonClick)="fileInput.click()"
+        [color]="buttonColor()"
+        [textColor]="buttonTextColor()"
+      ></sf-button>
+    </div>
+  </div>
+
+  @if (statusText()) {
+    <p class="status-text">{{ statusText() }}</p>
+  }
+
+  <ng-content></ng-content>
+</section>

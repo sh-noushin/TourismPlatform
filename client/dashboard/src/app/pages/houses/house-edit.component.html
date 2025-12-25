@@ -119,21 +119,15 @@
           </label>
         </section>
 
-        <section class="file-control">
-          <label class="file-label">
-            <span class="label-text">Photos</span>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              (change)="onFileSelected($event)"
-              [disabled]="uploading() || saving()"
-            />
-          </label>
-          @if (uploading()) {
-            <p class="mini-note">Uploading photos…</p>
-          }
-        </section>
+        <sf-fileupload
+          label="Photos"
+          accept="image/*"
+          [multiple]="true"
+          [disabled]="uploading() || saving()"
+          [loading]="uploading()"
+          [statusText]="uploading() ? 'Uploading photos…' : ''"
+          (filesSelected)="onFileSelected($event)"
+        ></sf-fileupload>
 
         @if ((form()?.photos?.length ?? 0) > 0) {
           <section class="photos">

@@ -95,20 +95,6 @@ textarea:focus {
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
 }
 
-.file-control {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.file-label input[type='file'] {
-  border-radius: 12px;
-  padding: 10px;
-  background: #f8fafc;
-  border: 1px dashed rgba(14, 165, 233, 0.6);
-  cursor: pointer;
-}
-
 .mini-note {
   margin: 0;
   font-size: 0.8rem;

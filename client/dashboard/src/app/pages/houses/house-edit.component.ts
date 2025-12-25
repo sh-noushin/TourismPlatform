@@ -8,6 +8,7 @@ import { API_BASE_URL, HouseCommitPhotoItem } from '../../api/client';
 import { HousesFacade } from '../../features/houses/houses.facade';
 import { HouseTypesService } from '../../features/houses/house-types.service';
 import { SfDropdownComponent } from '../../shared/ui/sf-dropdown/sf-dropdown.component';
+import { SfFileuploadComponent } from '../../shared/ui/sf-fileupload/sf-fileupload.component';
 
 type ExistingPhotoVm = {
   kind: 'existing';
@@ -43,7 +44,7 @@ type HouseForm = {
 @Component({
   standalone: true,
   selector: 'house-edit',
-  imports: [CommonModule, MatDialogModule, SfDropdownComponent],
+  imports: [CommonModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent],
   templateUrl: './house-edit.component.html',
   styleUrls: ['./house-edit.component.scss']
 })
@@ -211,9 +212,7 @@ export class HouseEditComponent {
     this.form.update((current) => (current ? { ...current, [key]: value } : current));
   }
 
-  async onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const files = input.files;
+  async onFileSelected(files: FileList | null) {
     if (!files || files.length === 0) return;
 
     this.uploading.set(true);
@@ -254,7 +253,6 @@ export class HouseEditComponent {
       this.error.set(err?.message ?? 'Upload failed');
     } finally {
       this.uploading.set(false);
-      input.value = '';
     }
   }
 
