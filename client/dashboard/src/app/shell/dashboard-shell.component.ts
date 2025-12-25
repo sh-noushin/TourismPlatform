@@ -42,10 +42,18 @@ export class DashboardShellComponent {
     },
     { label: 'Tours', basePath: '/admin/tours', icon: '🧭' },
     { label: 'Exchanges', basePath: '/admin/exchange', icon: '💱' },
-    { label: 'Permissions', basePath: '/admin/permissions', icon: '🔐' },
+    {
+      label: 'Permission management',
+      basePath: '/admin/permissions',
+      icon: '🔐',
+      subItems: [
+        { label: 'Roles', path: '/admin/roles' },
+        { label: 'Users', path: '/admin/users' },
+        { label: 'Permissions', path: '/admin/permissions' }
+      ]
+    },
   ];
 
-  // SOURCE OF TRUTH: AuthFacade.userName()
   readonly displayName = computed(() => {
     const name = (this.auth.userName?.() ?? '').trim();
     if (name) return name;

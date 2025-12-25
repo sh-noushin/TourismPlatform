@@ -20,6 +20,7 @@ export const routes: Routes = [
       { path: 'tours/new', loadComponent: () => import('./pages/tours/tour-edit.component').then(m => m.TourEditComponent) },
       { path: 'tours/:id/edit', loadComponent: () => import('./pages/tours/tour-edit.component').then(m => m.TourEditComponent) },
       { path: 'exchange', loadComponent: () => import('./pages/exchange/exchange-page.component').then(m => m.ExchangePageComponent) },
+      { path: 'roles', loadComponent: () => import('./pages/roles/roles-page.component').then(m => m.RolesPageComponent) },
       { path: 'users', loadComponent: () => import('./pages/users/users-page.component').then(m => m.UsersPageComponent) },
       { path: 'users/new', loadComponent: () => import('./pages/users/user-edit.component').then(m => m.UserEditComponent) },
       { path: 'users/:id/edit', loadComponent: () => import('./pages/users/user-edit.component').then(m => m.UserEditComponent) },
