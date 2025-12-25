@@ -124,7 +124,9 @@ export class HouseEditComponent implements OnDestroy {
       const existingPhotos: ExistingPhotoVm[] = Array.isArray(rawPhotos)
         ? rawPhotos.flatMap((p: any) => {
             const id = (p?.id ?? p?.photoId ?? p?.housePhotoId ?? '').toString();
-            const url = this.normalizeUrl(p?.url ?? p?.publicUrl ?? p?.downloadUrl ?? p?.path);
+            const url = this.normalizeUrl(
+              p?.url ?? p?.publicUrl ?? p?.downloadUrl ?? p?.path ?? p?.permanentRelativePath
+            );
             if (!id || !url) return [];
 
             return [
