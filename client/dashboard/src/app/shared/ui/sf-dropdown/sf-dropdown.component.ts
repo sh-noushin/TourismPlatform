@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  input,
+  output,
+  signal
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { input, output, signal } from '@angular/core';
 
 export interface SfDropdownItem {
   label: string;
@@ -29,19 +36,29 @@ export class SfDropdownComponent {
 
   constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 
-  toggle() {
+  toggle(event?: MouseEvent) {
+    event?.stopPropagation(); // prevents document click from interfering
     if (this.disabled()) return;
+
     this.isOpen.update((current) => !current);
   }
 
-  select(item: SfDropdownItem) {
-    if (this.disabled()) return;
-    if (this.value() === item.value) {
-      this.isOpen.set(false);
-      return;
-    }
+  select(item: SfDropdownItem, event?: MouseEvent) {
+    event?.preventDefault();
+    event?.stopPropagation();
 
-    this.selectionChange.emit(item.value);
+    if (this.disabled()) return;
+
+    // collapse immediately
+    this.close();
+
+    // emit only if changed
+    if (this.value() !== item.value) {
+      this.selectionChange.emit(item.value);
+    }
+  }
+
+  close() {
     this.isOpen.set(false);
   }
 
@@ -50,26 +67,25 @@ export class SfDropdownComponent {
   }
 
   get selectedLabel(): string {
-    const match = this.items().find((item) => item.value === this.value());
+    const match = this.items().find((i) => i.value === this.value());
     return match?.label ?? '';
   }
 
   get hasSelection(): boolean {
-    return this.items().some((item) => item.value === this.value());
+    return this.items().some((i) => i.value === this.value());
   }
 
   @HostListener('document:click', ['$event'])
-  closeOnOutside(event: MouseEvent) {
+  onDocumentClick(event: MouseEvent) {
     if (!this.elementRef.nativeElement.contains(event.target as Node)) {
-      this.isOpen.set(false);
+      this.close();
     }
   }
 
-  @HostListener('document:keydown.escape', ['$event'])
-  closeOnEscape(event: Event) {
-    const keyboardEvent = event as KeyboardEvent;
-    if (keyboardEvent.key === 'Escape') {
-      this.isOpen.set(false);
+  @HostListener('document:keydown', ['$event'])
+  onDocumentKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.close();
     }
   }
 }
