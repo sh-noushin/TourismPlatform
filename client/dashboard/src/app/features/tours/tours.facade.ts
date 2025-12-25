@@ -67,4 +67,28 @@ export class ToursFacade {
       this.saving.set(false);
     }
   }
+
+  async delete(id: string) {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      await firstValueFrom(this.client.toursDELETE(id));
+      await this.load();
+    } catch (err: any) {
+      this.error.set(err?.message ?? 'Failed deleting tour');
+      throw err;
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async unlinkPhoto(tourId: string, photoId: string) {
+    this.error.set(null);
+    try {
+      await firstValueFrom(this.client.photos2(tourId, photoId));
+    } catch (err: any) {
+      this.error.set(err?.message ?? 'Failed removing photo');
+      throw err;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 <section class="tours-page">
   <div class="tours-page__header">
     <sf-page-header title="Tours" subtitle="Experiences managed through the platform">
-      <sf-button sfPageHeaderActions variant="ghost" type="button">New tour</sf-button>
+      <sf-button sfPageHeaderActions variant="ghost" type="button" (buttonClick)="createTour()">New tour</sf-button>
     </sf-page-header>
     <div class="tours-page__filters">
       <sf-searchbar
@@ -10,6 +10,8 @@
       ></sf-searchbar>
     </div>
   </div>
+
+  <p class="tours-page__error" *ngIf="tours.error()">{{ tours.error() }}</p>
 
   <sf-card>
     <sf-table

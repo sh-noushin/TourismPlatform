@@ -1,0 +1,90 @@
+<section class="tour-edit">
+  <header class="tour-edit__header">
+    <div>
+      <p class="tour-edit__eyebrow">{{ id ? 'Tour' : 'New tour' }}</p>
+      <h1>{{ id ? 'Edit tour' : 'Create tour' }}</h1>
+      <p class="tour-edit__subtitle">
+        {{ id ? 'Update the details and media for this experience.' : 'Describe the experience and publish it.' }}
+      </p>
+    </div>
+  </header>
+
+  <p class="tour-edit__status tour-edit__error" *ngIf="error()">{{ error() }}</p>
+  <p class="tour-edit__status tour-edit__success" *ngIf="saved()">Saved.</p>
+
+  <div *ngIf="loadingSignal(); else formBlock" class="tour-edit__loading">
+    Loading tour details…
+  </div>
+
+  <ng-template #formBlock>
+    <form *ngIf="form() as currentForm; else waiting" class="tour-edit__form" (submit)="save($event)">
+      <label>
+        <span>Name</span>
+        <input name="name" type="text" [(ngModel)]="currentForm.name" placeholder="Grand Desert Escape" required />
+      </label>
+
+      <label>
+        <span>Category</span>
+        <input name="tourCategoryName" type="text" [(ngModel)]="currentForm.tourCategoryName" placeholder="Adventure" required />
+      </label>
+
+      <label>
+        <span>Description</span>
+        <textarea
+          name="description"
+          rows="4"
+          [(ngModel)]="currentForm.description"
+          placeholder="Share what makes this tour special"
+        ></textarea>
+      </label>
+
+      <div class="tour-edit__photos">
+        <div class="tour-edit__photos-header">
+          <div>
+            <h2>Photos</h2>
+            <p>Add imagery that highlights the tour.</p>
+          </div>
+          <label class="tour-edit__upload">
+            <span>Upload</span>
+            <input type="file" multiple (change)="onFileSelected($event.target.files)" [disabled]="uploading()" />
+          </label>
+        </div>
+
+        <p class="tour-edit__uploading" *ngIf="uploading()">Uploading files…</p>
+
+        <div *ngIf="currentForm.photos.length; else noPhotos" class="tour-edit__photos-grid">
+          <article class="tour-edit__photo" *ngFor="let photo of currentForm.photos; let i = index; trackBy: trackPhoto">
+            <div class="tour-edit__photo-preview">
+              <ng-container *ngIf="photo.kind === 'existing'; else stagedPreview">
+                <img [src]="photo.url" [alt]="photo.label" />
+              </ng-container>
+              <ng-template #stagedPreview>
+                <img *ngIf="photo.kind === 'staged' && photo.previewUrl" [src]="photo.previewUrl" [alt]="photo.label" />
+              </ng-template>
+            </div>
+            <div class="tour-edit__photo-meta">
+              <span>{{ photo.label }}</span>
+              <button type="button" (click)="removePhoto(i)">Remove</button>
+            </div>
+          </article>
+        </div>
+        <ng-template #noPhotos>
+          <p class="tour-edit__no-photos">No photos yet. Upload one above.</p>
+        </ng-template>
+      </div>
+
+      <div class="tour-edit__actions">
+        <button type="button" class="tour-edit__cancel" (click)="cancel()" [disabled]="saving()">
+          Cancel
+        </button>
+        <button type="submit" class="tour-edit__submit" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save tour' }}
+        </button>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #waiting>
+    <p class="tour-edit__placeholder">No data available yet.</p>
+  </ng-template>
+</section>

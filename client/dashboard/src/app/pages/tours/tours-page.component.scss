@@ -19,6 +19,12 @@
   max-width: 480px;
 }
 
+.tours-page__error {
+  margin: 0 0 spacing(md);
+  color: #b82424;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 640px) {
   .tours-page__header {
     flex-direction: column;

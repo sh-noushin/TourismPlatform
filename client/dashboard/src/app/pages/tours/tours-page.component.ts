@@ -8,15 +8,18 @@ import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
-import { TabService } from '../../core/tab/tab.service';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
+import { TourEditComponent } from './tour-edit.component';
+
+type TourRow = TourSummaryDto & { photoCount: number };
 
 @Component({
   standalone: true,
   selector: 'tours-page',
   templateUrl: './tours-page.component.html',
   styleUrls: ['./tours-page.component.scss'],
-  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent],
+  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent, MatDialogModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToursPageComponent {
@@ -26,7 +29,8 @@ export class ToursPageComponent {
 
   readonly columns: SfTableColumn[] = [
     { key: 'name', header: 'Name', field: 'name', sortable: true },
-    { key: 'category', header: 'Category', field: 'tourCategoryName', sortable: true }
+    { key: 'category', header: 'Category', field: 'tourCategoryName', sortable: true },
+    { key: 'photos', header: 'Photos', field: 'photoCount', align: 'end' }
   ];
 
   readonly displayedTours = computed(() => {
@@ -40,32 +44,75 @@ export class ToursPageComponent {
       : this.tours.items();
 
     const sort = this.sortSignal();
-    if (!sort) return list;
-    const key = sort.field as keyof TourSummaryDto;
-    return [...list].sort((a, b) => {
-      const aValue = (a[key] ?? '').toString().toLowerCase();
-      const bValue = (b[key] ?? '').toString().toLowerCase();
-      return sort.direction === 'asc'
-        ? aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' })
-        : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
-    });
+    const unsorted = sort
+      ? [...list].sort((a, b) => {
+          const key = sort.field as keyof TourSummaryDto;
+          const aValue = (a[key] ?? '').toString().toLowerCase();
+          const bValue = (b[key] ?? '').toString().toLowerCase();
+          return sort.direction === 'asc'
+            ? aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' })
+            : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
+        })
+      : list;
+    return unsorted.map((tour) => ({ ...tour, photoCount: Array.isArray(tour.photos) ? tour.photos.length : 0 }));
   });
 
   readonly actions = [
-    { label: 'Edit', type: 'edit', icon: 'edit' }
+    { label: 'Edit', type: 'edit', icon: 'edit' },
+    { label: 'Delete', type: 'delete', icon: 'delete', color: 'warn' }
   ];
 
-  constructor(private readonly tours: ToursFacade, private readonly tabs: TabService, private readonly router: Router) {
+  constructor(
+    public readonly tours: ToursFacade,
+    private readonly dialog: MatDialog,
+    private readonly confirm: ConfirmService
+  ) {
     this.tours.load();
   }
 
-  onRowAction(event: { action: any; row: any }) {
+  onRowAction(event: { action: any; row: TourRow }) {
     const { action, row } = event;
     if (action?.type === 'edit') {
-      const path = `/admin/tours/${row.id}/edit`;
-      this.tabs.openOrActivate(path, `Tour ${row.id}`);
-      this.router.navigateByUrl(path);
+      this.openDialog(row.tourId);
+      return;
     }
+    if (action?.type === 'delete') {
+      this.confirmDelete(row);
+    }
+  }
+
+  createTour() {
+    this.openDialog();
+  }
+
+  private async confirmDelete(row: TourRow) {
+    const confirmed = await this.confirm.confirm({
+      title: 'Delete tour',
+      message: `Delete ${row.name}?`,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel'
+    });
+    if (!confirmed) return;
+    try {
+      await this.tours.delete(row.tourId);
+    } catch {
+      // error message already surfaced by ToursFacade
+    }
+  }
+
+  private openDialog(id?: string) {
+    const ref = this.dialog.open(TourEditComponent, {
+      panelClass: 'tour-edit-dialog',
+      autoFocus: false,
+      maxWidth: 'none',
+      width: 'min(960px, calc(100vw - 32px))',
+      data: { id: id ?? null }
+    });
+    ref.afterClosed().subscribe((saved) => {
+      if (saved) {
+        this.tours.load();
+      }
+    });
   }
 
   setFilter(value: string) {
