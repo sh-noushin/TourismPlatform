@@ -19,6 +19,17 @@
   max-width: 480px;
 }
 
+.tours-page__header-search {
+  flex: 1;
+  max-width: 420px;
+  margin-top: spacing(xs);
+  margin-left: spacing(lg);
+}
+
+.tours-page__header-button {
+  margin-left: auto;
+}
+
 .tours-page__error {
   margin: 0 0 spacing(md);
   color: #b82424;
@@ -29,5 +40,8 @@
   .tours-page__header {
     flex-direction: column;
     align-items: flex-start;
+  }
+  .tours-page__header-button {
+    margin-left: 0;
   }
 }
