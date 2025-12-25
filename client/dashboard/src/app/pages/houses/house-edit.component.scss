@@ -62,6 +62,16 @@
   grid-template-columns: repeat(3, minmax(140px, 1fr));
 }
 
+.fileupload-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.fileupload-row sf-fileupload {
+  --sf-fileupload-size: 72px;
+}
+
 label {
   display: flex;
   flex-direction: column;

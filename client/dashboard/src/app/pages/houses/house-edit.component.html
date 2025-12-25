@@ -119,13 +119,15 @@
           </label>
         </section>
 
-        <sf-fileupload
-          label="Photos"
-          accept="image/*"
-          [multiple]="true"
-          [disabled]="uploading() || saving()"          
-          (filesSelected)="onFileSelected($event)"
-        ></sf-fileupload>
+        <div class="fileupload-row">
+          <sf-fileupload
+            label="Photos"
+            accept="image/*"
+            [multiple]="true"
+            [disabled]="uploading() || saving()"
+            (filesSelected)="onFileSelected($event)"
+          ></sf-fileupload>
+        </div>
 
         @if ((form()?.photos?.length ?? 0) > 0) {
           <section class="photos">
