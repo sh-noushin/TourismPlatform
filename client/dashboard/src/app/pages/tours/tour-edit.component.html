@@ -1,139 +1,138 @@
-﻿<section class="edit-shell" (click)="$event.stopPropagation()">
-  <div class="glass-panel">
-    <header class="tour-edit-header">
-      <p class="eyebrow">{{ id ? 'Tour' : 'New tour' }}</p>
-      <h2>{{ id ? 'Edit tour' : 'Create tour' }}</h2>
-      <p class="subtitle">
-        {{ id ? 'Update the details and media for this experience.' : 'Describe the experience and publish it.' }}
-      </p>
-    </header>
+﻿<div class="glass-panel" (click)="$event.stopPropagation()">
+  <header class="tour-edit-header">
+    <p class="eyebrow">{{ id ? 'Tour' : 'New tour' }}</p>
+    <h2>{{ id ? 'Edit tour' : 'Create tour' }}</h2>
+    <p class="subtitle">
+      {{ id ? 'Update the details and media for this experience.' : 'Describe the experience and publish it.' }}
+    </p>
+  </header>
 
-    <div class="status-bar">
-      @if (error()) {
-        <span class="status error">{{ error() }}</span>
-      }
-      @if (saved()) {
-        <span class="status success">Saved.</span>
-      }
-    </div>
-
-    @if (loadingSignal()) {
-      <div class="tour-edit-loading">
-        Loading tour details…
-      </div>
-    } @else {
-      @if (form(); as currentForm) {
-        <form class="tour-edit-form" (submit)="save($event)">
-          <section class="form-grid top">
-            <label>
-              <span class="label-text">Name</span>
-              <input
-                name="name"
-                type="text"
-                required
-                placeholder="Grand Desert Escape"
-                [value]="currentForm.name"
-                (input)="updateField('name', $any($event.target).value)"
-              />
-            </label>
-
-            <label class="combobox">
-              <span class="label-text">Category</span>
-              <sf-dropdown
-                [items]="tourCategoryOptions()"
-                [value]="currentForm.tourCategoryName"
-                (selectionChange)="updateField('tourCategoryName', $event)"
-                placeholder="Select category"
-                name="tourCategoryName"
-              ></sf-dropdown>
-
-              @if (tourCategories.loading()) {
-                <p class="mini-note">Loading categories…</p>
-              }
-              @if (tourCategories.error()) {
-                <p class="status error">{{ tourCategories.error() }}</p>
-              }
-            </label>
-          </section>
-
-          <section class="form-grid description">
-            <label>
-              <span class="label-text">Description</span>
-              <textarea
-                name="description"
-                rows="3"
-                placeholder="Share what makes this tour special"
-                [value]="currentForm.description"
-                (input)="updateField('description', $any($event.target).value)"
-              ></textarea>
-            </label>
-          </section>
-
-          <section class="schedule-section">
-            <sf-tour-schedule
-              [schedules]="currentForm.schedules"
-              [disabled]="saving()"
-              [disableAddButton]="!id"
-              label="Tour Schedules"
-              (schedulesChange)="onSchedulesChange($event)"
-              (scheduleDeleted)="onScheduleDeleted($event)"
-            ></sf-tour-schedule>
-            @if (!id) {
-              <p class="mini-note">Schedules become editable after the tour is created.</p>
-            }
-          </section>
-
-          <div class="fileupload-row">
-            <sf-fileupload
-              label="Photos"
-              accept="image/*"
-              [multiple]="true"
-              [disabled]="uploading() || saving()"
-              (filesSelected)="onFileSelected($event)"
-            ></sf-fileupload>
-          </div>
-
-          @if (uploading()) {
-            <p class="mini-note">Uploading files…</p>
-          }
-
-          @if (currentForm.photos.length) {
-            <div class="photos">
-              <div class="photo-list">
-                <article
-                  class="photo-item"
-                  *ngFor="let photo of currentForm.photos; let i = index; trackBy: trackPhoto"
-                >
-                  <div class="photo-thumb">
-                    <img
-                      [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
-                      [alt]="photo.label"
-                      loading="lazy"
-                    />
-                  </div>
-
-                  <div class="photo-info">
-                    <span>{{ photo.label }}</span>
-                  </div>
-
-                  <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
-                </article>
-              </div>
-            </div>
-          } @else {
-            <p class="no-photos">No photos yet. Upload one above.</p>
-          }
-
-          <section class="actions">
-            <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
-            <button type="submit" class="btn primary" [disabled]="saving()">
-              {{ saving() ? 'Saving…' : 'Save tour' }}
-            </button>
-          </section>
-        </form>
-      } @else {
-        <p class="tour-edit-placeholder">No data available yet.</p>
-      }
+  <div class="status-bar">
+    @if (error()) {
+      <span class="status error">{{ error() }}</span>
+    }
+    @if (saved()) {
+      <span class="status success">Saved.</span>
     }
   </div>
-</section>
+
+  @if (loadingSignal()) {
+    <div class="tour-edit-loading">
+      Loading tour details…
+    </div>
+  } @else {
+    @if (form(); as currentForm) {
+      <form class="tour-edit-form" (submit)="save($event)">
+        <section class="form-grid top">
+          <label>
+            <span class="label-text">Name</span>
+            <input
+              name="name"
+              type="text"
+              required
+              placeholder="Grand Desert Escape"
+              [value]="currentForm.name"
+              (input)="updateField('name', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="combobox">
+            <span class="label-text">Category</span>
+            <sf-dropdown
+              [items]="tourCategoryOptions()"
+              [value]="currentForm.tourCategoryName"
+              (selectionChange)="updateField('tourCategoryName', $event)"
+              placeholder="Select category"
+              name="tourCategoryName"
+            ></sf-dropdown>
+
+            @if (tourCategories.loading()) {
+              <p class="mini-note">Loading categories…</p>
+            }
+            @if (tourCategories.error()) {
+              <p class="status error">{{ tourCategories.error() }}</p>
+            }
+          </label>
+        </section>
+
+        <section class="form-grid description">
+          <label>
+            <span class="label-text">Description</span>
+            <textarea
+              name="description"
+              rows="3"
+              placeholder="Share what makes this tour special"
+              [value]="currentForm.description"
+              (input)="updateField('description', $any($event.target).value)"
+            ></textarea>
+          </label>
+        </section>
+
+        <section class="schedule-section">
+          <sf-tour-schedule
+            [schedules]="currentForm.schedules"
+            [disabled]="saving()"
+            [disableAddButton]="!id"
+            label="Tour Schedules"
+            (schedulesChange)="onSchedulesChange($event)"
+            (scheduleDeleted)="onScheduleDeleted($event)"
+          ></sf-tour-schedule>
+
+          @if (!id) {
+            <p class="mini-note">Schedules become editable after the tour is created.</p>
+          }
+        </section>
+
+        <div class="fileupload-row">
+          <sf-fileupload
+            label="Photos"
+            accept="image/*"
+            [multiple]="true"
+            [disabled]="uploading() || saving()"
+            (filesSelected)="onFileSelected($event)"
+          ></sf-fileupload>
+        </div>
+
+        @if (uploading()) {
+          <p class="mini-note">Uploading files…</p>
+        }
+
+        @if (currentForm.photos.length) {
+          <div class="photos">
+            <div class="photo-list">
+              <article
+                class="photo-item"
+                *ngFor="let photo of currentForm.photos; let i = index; trackBy: trackPhoto"
+              >
+                <div class="photo-thumb">
+                  <img
+                    [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
+                    [alt]="photo.label"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div class="photo-info">
+                  <span>{{ photo.label }}</span>
+                </div>
+
+                <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
+              </article>
+            </div>
+          </div>
+        } @else {
+          <p class="no-photos">No photos yet. Upload one above.</p>
+        }
+
+        <section class="actions">
+          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
+          <button type="submit" class="btn primary" [disabled]="saving()">
+            {{ saving() ? 'Saving…' : 'Save tour' }}
+          </button>
+        </section>
+      </form>
+    } @else {
+      <p class="tour-edit-placeholder">No data available yet.</p>
+    }
+  }
+</div>
