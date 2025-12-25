@@ -32,6 +32,20 @@ public class PhotosController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = result.Response.StagedUploadId }, result.Response);
     }
 
+    [HttpDelete("stage")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Cleanup([FromBody] CleanupStageUploadsRequest request)
+    {
+        if (request?.StagedUploadIds == null || request.StagedUploadIds.Count() == 0)
+        {
+            return BadRequest(new { message = "At least one staged upload ID must be provided." });
+        }
+
+        var deletedIds = await _stagedUploadService.DeleteAsync(request.StagedUploadIds, GetCurrentUserId());
+        return Ok(new { deletedStagedUploadIds = deletedIds });
+    }
+
     [HttpGet("stage/{id:guid}")]
     [ProducesResponseType(typeof(StageUploadResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

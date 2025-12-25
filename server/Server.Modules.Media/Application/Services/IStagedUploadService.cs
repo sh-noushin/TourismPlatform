@@ -10,6 +10,11 @@ public interface IStagedUploadService
         CancellationToken cancellationToken = default);
 
     Task<StageUploadResponse?> GetAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyCollection<Guid>> DeleteAsync(
+        IReadOnlyCollection<Guid> stagedUploadIds,
+        Guid? uploadedByUserId,
+        CancellationToken cancellationToken = default);
 }
 
 public sealed record StageUploadServiceResult(

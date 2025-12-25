@@ -94,4 +94,45 @@ public sealed class StagedUploadService : IStagedUploadService
             staged.ExpiresAtUtc,
             staged.TargetType);
     }
+
+    public async Task<IReadOnlyCollection<Guid>> DeleteAsync(
+        IReadOnlyCollection<Guid> stagedUploadIds,
+        Guid? uploadedByUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (stagedUploadIds == null || stagedUploadIds.Count == 0)
+        {
+            return Array.Empty<Guid>();
+        }
+
+        var query = _dbContext.Set<StagedUpload>().Where(s => stagedUploadIds.Contains(s.Id));
+        if (uploadedByUserId.HasValue)
+        {
+            query = query.Where(s => s.UploadedByUserId == uploadedByUserId.Value);
+        }
+
+        var stagedUploads = await query.ToListAsync(cancellationToken);
+        if (stagedUploads.Count == 0)
+        {
+            return Array.Empty<Guid>();
+        }
+
+        var deletedIds = new List<Guid>(stagedUploads.Count);
+
+        foreach (var staged in stagedUploads)
+        {
+            var tempPath = Path.Combine(_environment.ContentRootPath, staged.TempRelativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (File.Exists(tempPath))
+            {
+                File.Delete(tempPath);
+            }
+
+            deletedIds.Add(staged.Id);
+        }
+
+        _dbContext.RemoveRange(stagedUploads);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return deletedIds;
+    }
 }

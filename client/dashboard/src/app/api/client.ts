@@ -22,7 +22,7 @@ export class Client {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = (baseUrl ?? "https://localhost:7110").replace(/\/+$/, "");
+        this.baseUrl = baseUrl ?? "https://localhost:7110/";
     }
 
     /**

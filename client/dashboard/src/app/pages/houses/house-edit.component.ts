@@ -1,4 +1,4 @@
-import { Component, Inject, Optional, computed, signal } from '@angular/core';
+import { Component, Inject, Optional, computed, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -28,6 +28,10 @@ type StagedPhotoVm = {
 
 type HousePhotoVm = ExistingPhotoVm | StagedPhotoVm;
 
+type CleanupStageUploadsRequest = {
+  stagedUploadIds: string[];
+};
+
 type HouseForm = {
   name: string;
   description: string;
@@ -48,15 +52,17 @@ type HouseForm = {
   templateUrl: './house-edit.component.html',
   styleUrls: ['./house-edit.component.scss']
 })
-export class HouseEditComponent {
+export class HouseEditComponent implements OnDestroy {
   readonly form = signal<HouseForm | null>(null);
   readonly saving = signal(false);
   readonly saved = signal(false);
   readonly error = signal<string | null>(null);
   readonly uploading = signal(false);
 
-  // Keep removed existing photo IDs here (send on save)
   readonly deletedPhotoIds = signal<string[]>([]);
+
+  private cleanupScheduled = false;
+  private cleanupPromise: Promise<void> | null = null;
 
   readonly id: string | null;
 
@@ -198,13 +204,9 @@ export class HouseEditComponent {
     }
   }
 
-  cancel() {
-    const items = this.form()?.photos ?? [];
-    for (const p of items) {
-      if (p.kind === 'staged' && p.previewUrl) {
-        URL.revokeObjectURL(p.previewUrl);
-      }
-    }
+  async cancel() {
+    this.revokeStagedPreviewUrls();
+    await this.enqueueCleanup();
     this.dialogRef?.close(false);
   }
 
@@ -256,15 +258,20 @@ export class HouseEditComponent {
     }
   }
 
-  removePhoto(index: number) {
+  async removePhoto(index: number) {
+    let stagedUploadId: string | undefined;
+
     this.form.update((cur) => {
       if (!cur) return cur;
 
       const photos = [...cur.photos];
       const removed = photos[index];
 
-      if (removed?.kind === 'staged' && removed.previewUrl) {
-        URL.revokeObjectURL(removed.previewUrl);
+      if (removed?.kind === 'staged') {
+        stagedUploadId = removed.stagedUploadId;
+        if (removed.previewUrl) {
+          URL.revokeObjectURL(removed.previewUrl);
+        }
       }
 
       if (removed?.kind === 'existing') {
@@ -274,8 +281,64 @@ export class HouseEditComponent {
       photos.splice(index, 1);
       return { ...cur, photos };
     });
+
+    if (stagedUploadId) {
+      await this.cleanupStagedUploads([stagedUploadId], 'remove');
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.revokeStagedPreviewUrls();
+    this.enqueueCleanup();
+  }
+
+  private enqueueCleanup(): Promise<void> {
+    if (this.cleanupScheduled || this.saved()) {
+      return this.cleanupPromise ?? Promise.resolve();
+    }
+
+    this.cleanupScheduled = true;
+    this.cleanupPromise = this.cleanupRemainingStagedPhotos();
+    return this.cleanupPromise;
+  }
+
+  private async cleanupRemainingStagedPhotos() {
+    const stagedIds = this.getStagedUploadIds();
+    if (stagedIds.length === 0) return;
+    await this.cleanupStagedUploads(stagedIds, 'teardown');
+  }
+
+  private getStagedUploadIds(): string[] {
+    const photos = this.form()?.photos ?? [];
+    return photos.filter((p): p is StagedPhotoVm => p.kind === 'staged').map((p) => p.stagedUploadId);
+  }
+
+  private async cleanupStagedUploads(ids: string[], reason: 'remove' | 'teardown'): Promise<void> {
+    if (ids.length === 0) {
+      return;
+    }
+
+    const payload: CleanupStageUploadsRequest = { stagedUploadIds: ids };
+    try {
+      await firstValueFrom(
+        this.http.request<void>('DELETE', `${this.apiBaseUrl}/api/photos/stage`, {
+          body: payload
+        })
+      );
+    } catch (err) {
+      console.warn('Failed to clean up staged uploads', { reason, ids, err });
+    }
   }
 
   trackPhoto = (_index: number, photo: HousePhotoVm) =>
     photo.kind === 'existing' ? `existing:${photo.id}` : `staged:${photo.stagedUploadId}`;
+
+  private revokeStagedPreviewUrls() {
+    const items = this.form()?.photos ?? [];
+    for (const p of items) {
+      if (p.kind === 'staged' && p.previewUrl) {
+        URL.revokeObjectURL(p.previewUrl);
+      }
+    }
+  }
 }

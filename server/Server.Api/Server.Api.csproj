@@ -30,4 +30,8 @@
     <ProjectReference Include="..\Server.SharedKernel\Server.SharedKernel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="images\houses\Temp\" />
+  </ItemGroup>
+
 </Project>
