@@ -4,7 +4,11 @@
       <thead>
         <tr>
           @for (column of columnsSignal(); track column.field ?? column.header ?? column) {
-            <th [style.text-align]="column.align ?? 'left'" [style.width]="column.width">
+            <th
+              [class.align-end]="column.align === 'end'"
+              [style.text-align]="column.align ?? 'left'"
+              [style.width]="column.width"
+            >
               <button type="button" class="header-button" [class.sortable]="column.sortable" (click)="toggleSort(column)">
                 {{ column.header }}
                 @if (isSorting(column)) {

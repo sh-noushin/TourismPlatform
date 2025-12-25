@@ -60,6 +60,10 @@ thead {
   cursor: pointer;
 }
 
+.align-end .header-button {
+  justify-content: flex-end;
+}
+
 .header-button.sortable:hover {
   color: $primary;
 }
