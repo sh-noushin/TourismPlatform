@@ -134,10 +134,15 @@
             <div class="photo-list">
               @for (photo of form()?.photos; track trackPhoto($index, photo); let i = $index) {
                 <div class="photo-item">
+                  <div class="photo-thumb">
+                    <img
+                      [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
+                      [alt]="photo.label"
+                      loading="lazy"
+                    />
+                  </div>
                   <div class="photo-info">
                     <strong>{{ photo.label }}</strong>
-                    <span>Sort {{ photo.sortOrder }}</span>
-                    <span>{{ photo.kind === 'existing' ? 'Existing' : 'New' }}</span>
                   </div>
                   <button class="text-button" type="button" (click)="removePhoto(i)">Remove</button>
                 </div>
