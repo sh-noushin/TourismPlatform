@@ -157,7 +157,8 @@ public sealed class HouseServiceCoverageTests
                 Description: "d2",
                 HouseTypeName: "Villa",
                 Address: Address(),
-                Photos: new[] { new HouseCommitPhotoItem(stagedUploadId, "L", 1) }),
+                Photos: new[] { new HouseCommitPhotoItem(stagedUploadId, "L", 1) },
+                DeletedPhotoIds: null),
             currentUserId: null));
 
         Assert.True(db.Context.Set<HousePhoto>().Any(x => x.HouseId == houseId && x.PhotoId == photoId));
@@ -170,7 +171,8 @@ public sealed class HouseServiceCoverageTests
                 Description: "d3",
                 HouseTypeName: "Villa",
                 Address: Address(),
-                Photos: new[] { new HouseCommitPhotoItem(Guid.NewGuid(), "L", 1) }),
+                Photos: new[] { new HouseCommitPhotoItem(Guid.NewGuid(), "L", 1) },
+                DeletedPhotoIds: null),
             currentUserId: null));
 
         var links = db.Context.Set<HousePhoto>().Where(x => x.HouseId == houseId && x.PhotoId == photoId).ToList();
@@ -194,10 +196,58 @@ public sealed class HouseServiceCoverageTests
 
         var ok = await service.UpdateAsync(
             Guid.NewGuid(),
-            new UpdateHouseRequest("N", "d", "T", Address(), Photos: null),
+            new UpdateHouseRequest("N", "d", "T", Address(), Photos: null, DeletedPhotoIds: null),
             currentUserId: null);
 
         Assert.False(ok);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_RemovesDeletedPhotos_AndCleansUpFiles()
+    {
+        await using var db = new TestDb();
+
+        var serviceForCreate = new HouseService(
+            db.Context,
+            Mock.Of<IPhotoCommitService>(),
+            Mock.Of<IPhotoCleanupService>(),
+            new HouseRepository(db.Context),
+            new HouseReferenceDataRepository(db.Context),
+            new HousePhotoRepository(db.Context));
+
+        var houseId = await serviceForCreate.CreateAsync(new CreateHouseRequest("H", "d", "T", Address(), Photos: null), currentUserId: null);
+
+        var photoId = Guid.NewGuid();
+        db.Context.Add(new Photo { Id = photoId, UuidFileName = "p.jpg", PermanentRelativePath = "images/houses/photos/p.jpg", ContentType = "image/jpeg", FileSize = 1, CreatedAtUtc = DateTime.UtcNow });
+        db.Context.Add(new HousePhoto { HouseId = houseId, PhotoId = photoId, Label = "L", SortOrder = 0, CreatedAtUtc = DateTime.UtcNow });
+        await db.Context.SaveChangesAsync();
+
+        var cleanup = new Mock<IPhotoCleanupService>(MockBehavior.Strict);
+        cleanup
+            .Setup(s => s.CleanupOrphanedPhotosAsync(It.Is<IReadOnlyCollection<Guid>>(ids => ids.Count == 1 && ids.Contains(photoId)), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<Guid>());
+
+        var service = new HouseService(
+            db.Context,
+            Mock.Of<IPhotoCommitService>(),
+            cleanup.Object,
+            new HouseRepository(db.Context),
+            new HouseReferenceDataRepository(db.Context),
+            new HousePhotoRepository(db.Context));
+
+        Assert.True(await service.UpdateAsync(
+            houseId,
+            new UpdateHouseRequest(
+                Name: "H",
+                Description: "d",
+                HouseTypeName: "T",
+                Address: Address(),
+                Photos: null,
+                DeletedPhotoIds: new[] { photoId }),
+            currentUserId: null));
+
+        Assert.False(db.Context.Set<HousePhoto>().Any(x => x.HouseId == houseId && x.PhotoId == photoId));
+        cleanup.VerifyAll();
     }
 
     [Fact]

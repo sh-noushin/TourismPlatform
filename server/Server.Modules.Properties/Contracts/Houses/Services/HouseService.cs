@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Media.Application.Services;
 using Server.Modules.Media.Contracts.Uploads.Dtos;
@@ -125,6 +126,8 @@ public sealed class HouseService : IHouseService
 
         await _houseRepository.SaveChangesAsync(cancellationToken);
 
+        await RemoveLinkedPhotosAsync(house.Id, request.DeletedPhotoIds, cancellationToken);
+
         await CommitAndLinkPhotosAsync(house.Id, request.Photos, now, cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
@@ -191,5 +194,28 @@ public sealed class HouseService : IHouseService
         }
 
         await _housePhotoRepository.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task RemoveLinkedPhotosAsync(
+        Guid houseId,
+        IReadOnlyCollection<Guid>? photoIds,
+        CancellationToken cancellationToken)
+    {
+        if (photoIds == null || photoIds.Count == 0) return;
+
+        var removed = new List<Guid>(photoIds.Count);
+
+        foreach (var photoId in photoIds)
+        {
+            if (await _housePhotoRepository.RemoveLinkAsync(houseId, photoId, cancellationToken))
+            {
+                removed.Add(photoId);
+            }
+        }
+
+        if (removed.Count == 0) return;
+
+        await _housePhotoRepository.SaveChangesAsync(cancellationToken);
+        await _photoCleanupService.CleanupOrphanedPhotosAsync(removed, cancellationToken);
     }
 }

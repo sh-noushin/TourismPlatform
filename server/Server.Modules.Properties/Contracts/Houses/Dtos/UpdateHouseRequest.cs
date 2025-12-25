@@ -5,4 +5,5 @@ public sealed record UpdateHouseRequest(
     string? Description,
     string HouseTypeName,
     AddressRequest Address,
-    IReadOnlyCollection<HouseCommitPhotoItem>? Photos);
+    IReadOnlyCollection<HouseCommitPhotoItem>? Photos,
+    IReadOnlyCollection<Guid>? DeletedPhotoIds);
