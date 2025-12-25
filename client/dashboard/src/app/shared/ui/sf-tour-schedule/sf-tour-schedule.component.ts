@@ -35,11 +35,13 @@ export class SfTourScheduleComponent {
     capacity: 10
   });
 
-  readonly sortedSchedules = computed(() =>
-    [...this.schedules()].sort(
-      (a, b) => new Date(a.startAtUtc).getTime() - new Date(b.startAtUtc).getTime()
-    )
-  );
+  readonly sortedSchedules = computed(() => {
+    const schedules = this.schedules();
+    const existing = schedules.filter((s) => !s.isNew);
+    const pending = schedules.filter((s) => s.isNew);
+    existing.sort((a, b) => new Date(a.startAtUtc).getTime() - new Date(b.startAtUtc).getTime());
+    return [...existing, ...pending];
+  });
 
   // Count of new (unsaved) schedules
   readonly pendingCount = computed(() =>
