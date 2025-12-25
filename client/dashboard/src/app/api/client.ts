@@ -4207,7 +4207,9 @@ export interface ITourScheduleUpdateItem {
 export class TourSummaryDto implements ITourSummaryDto {
     tourId!: string;
     name!: string;
+    description!: string | undefined;
     tourCategoryName!: string;
+    year!: number | undefined;
     photos!: TourPhotoDto[];
 
     [key: string]: any;
@@ -4232,7 +4234,9 @@ export class TourSummaryDto implements ITourSummaryDto {
             }
             this.tourId = _data["tourId"];
             this.name = _data["name"];
+            this.description = _data["description"];
             this.tourCategoryName = _data["tourCategoryName"];
+            this.year = _data["year"];
             if (Array.isArray(_data["photos"])) {
                 this.photos = [] as any;
                 for (let item of _data["photos"])
@@ -4256,7 +4260,9 @@ export class TourSummaryDto implements ITourSummaryDto {
         }
         data["tourId"] = this.tourId;
         data["name"] = this.name;
+        data["description"] = this.description;
         data["tourCategoryName"] = this.tourCategoryName;
+        data["year"] = this.year;
         if (Array.isArray(this.photos)) {
             data["photos"] = [];
             for (let item of this.photos)
@@ -4269,7 +4275,9 @@ export class TourSummaryDto implements ITourSummaryDto {
 export interface ITourSummaryDto {
     tourId: string;
     name: string;
+    description: string | undefined;
     tourCategoryName: string;
+    year: number | undefined;
     photos: TourPhotoDto[];
 
     [key: string]: any;

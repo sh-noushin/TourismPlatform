@@ -51,7 +51,9 @@ public sealed class TourService : ITourService
             .Select(t => new TourSummaryDto(
                 t.Id,
                 t.Name,
+                t.Description,
                 t.TourCategory.Name,
+                t.CreatedAtUtc.Year,
                 photosByTour.TryGetValue(t.Id, out var ph) ? ph : Array.Empty<TourPhotoDto>()))
             .ToList();
     }

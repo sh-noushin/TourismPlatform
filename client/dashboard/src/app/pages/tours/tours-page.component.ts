@@ -29,15 +29,15 @@ export class ToursPageComponent {
 
   readonly columns: SfTableColumn[] = [
     { key: 'name', header: 'Name', field: 'name', sortable: true },
-    { key: 'category', header: 'Category', field: 'tourCategoryName', sortable: true },
-    { key: 'photos', header: 'Photos', field: 'photoCount', align: 'end' }
+    { key: 'description', header: 'Description', field: 'description' },
+    { key: 'year', header: 'Year', field: 'year', align: 'end', sortable: true }
   ];
 
   readonly displayedTours = computed(() => {
     const filter = this.filterSignal().toLowerCase();
     const list = filter
       ? this.tours.items().filter((tour) =>
-          [tour.name, tour.tourCategoryName]
+          [tour.name, tour.description, tour.tourCategoryName, tour.year?.toString()]
             .filter(Boolean)
             .some((value) => value?.toLowerCase().includes(filter))
         )
@@ -54,7 +54,11 @@ export class ToursPageComponent {
             : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
         })
       : list;
-    return unsorted.map((tour) => ({ ...tour, photoCount: Array.isArray(tour.photos) ? tour.photos.length : 0 }));
+    return unsorted.map((tour) => ({
+      ...tour,
+      photoCount: Array.isArray(tour.photos) ? tour.photos.length : 0,
+      year: tour.year ?? undefined
+    }));
   });
 
   readonly actions: SfTableRowAction[] = [
