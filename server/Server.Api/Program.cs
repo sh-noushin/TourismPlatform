@@ -61,7 +61,5 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseApiPipeline();
-
 app.MapControllers();
-
 app.Run();
