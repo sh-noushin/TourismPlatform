@@ -23,6 +23,7 @@ export class SfTourScheduleComponent {
   readonly schedules = input<TourScheduleItem[]>([]);
   readonly disabled = input<boolean>(false);
   readonly label = input<string>('Schedules');
+  readonly disableAddButton = input<boolean>(false);
 
   readonly schedulesChange = output<TourScheduleItem[]>();
   readonly scheduleDeleted = output<TourScheduleItem>();
@@ -49,6 +50,9 @@ export class SfTourScheduleComponent {
   readonly showAddedMessage = signal(false);
 
   toggleAddForm() {
+    if (this.disableAddButton()) {
+      return;
+    }
     this.showAddForm.update((v) => !v);
     if (this.showAddForm()) {
       this.resetNewSchedule();
@@ -64,6 +68,9 @@ export class SfTourScheduleComponent {
   }
 
   addSchedule() {
+    if (this.disableAddButton()) {
+      return;
+    }
     const schedule = this.newSchedule();
     if (!schedule.startAtUtc || !schedule.endAtUtc || !schedule.capacity) {
       return;

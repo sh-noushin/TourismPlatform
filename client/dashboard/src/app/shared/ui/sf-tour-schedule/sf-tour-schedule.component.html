@@ -9,7 +9,7 @@
     <button
       type="button"
       class="add-button"
-      [disabled]="disabled()"
+      [disabled]="disabled() || disableAddButton()"
       (click)="toggleAddForm()"
     >
       {{ showAddForm() ? 'Cancel' : '+ Add schedule' }}
@@ -58,7 +58,7 @@
         <button
           type="button"
           class="btn primary small"
-          [disabled]="disabled()"
+          [disabled]="disabled() || disableAddButton()"
           (click)="addSchedule()"
         >
           Add

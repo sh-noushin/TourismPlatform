@@ -69,17 +69,19 @@
             </label>
           </section>
 
-          @if (id) {
-            <section class="schedule-section">
-              <sf-tour-schedule
-                [schedules]="currentForm.schedules"
-                [disabled]="saving()"
-                label="Tour Schedules"
-                (schedulesChange)="onSchedulesChange($event)"
-                (scheduleDeleted)="onScheduleDeleted($event)"
-              ></sf-tour-schedule>
-            </section>
-          }
+          <section class="schedule-section">
+            <sf-tour-schedule
+              [schedules]="currentForm.schedules"
+              [disabled]="saving()"
+              [disableAddButton]="!id"
+              label="Tour Schedules"
+              (schedulesChange)="onSchedulesChange($event)"
+              (scheduleDeleted)="onScheduleDeleted($event)"
+            ></sf-tour-schedule>
+            @if (!id) {
+              <p class="mini-note">Schedules become editable after the tour is created.</p>
+            }
+          </section>
 
           <div class="fileupload-row">
             <sf-fileupload
