@@ -63,14 +63,19 @@
 }
 
 .fileupload-row {
-  margin-top: 4px;
+  width: 100%;
+  margin: 4px 0;
   display: flex;
   justify-content: center;
+  align-items: center;
+  padding: 8px 0 4px;
 }
 
 .fileupload-row sf-fileupload {
-  max-width: 360px;
+  max-width: 160px;
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .photo-thumb {
