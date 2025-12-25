@@ -1,6 +1,11 @@
 <section class="tour-schedule-section">
   <header class="schedule-header">
     <span class="label-text">{{ label() }}</span>
+    @if (pendingCount() > 0) {
+      <span class="pending-badge" title="These schedules will be saved when you save the tour">
+        {{ pendingCount() }} pending
+      </span>
+    }
     <button
       type="button"
       class="add-button"
@@ -10,6 +15,12 @@
       {{ showAddForm() ? 'Cancel' : '+ Add schedule' }}
     </button>
   </header>
+
+  @if (showAddedMessage()) {
+    <div class="success-message">
+      ✓ Schedule added! It will be saved when you save the tour.
+    </div>
+  }
 
   @if (showAddForm()) {
     <div class="add-form">
@@ -59,8 +70,11 @@
   @if (sortedSchedules().length > 0) {
     <div class="schedule-list">
       @for (schedule of sortedSchedules(); track trackSchedule($index, schedule); let i = $index) {
-        <article class="schedule-item" [class.new]="schedule.isNew">
+        <article class="schedule-item" [class.new]="schedule.isNew" [class.pending]="schedule.isNew">
           <div class="schedule-info">
+            @if (schedule.isNew) {
+              <span class="pending-indicator" title="Not yet saved">●</span>
+            }
             <div class="schedule-time">
               <span class="time-label">Start:</span>
               <span class="time-value">{{ formatDateTime(schedule.startAtUtc) }}</span>

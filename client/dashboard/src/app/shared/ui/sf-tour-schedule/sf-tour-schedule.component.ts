@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 export interface TourScheduleItem {
   id?: string;
+  tempId?: string; // temporary ID for tracking before save
   startAtUtc: string;
   endAtUtc: string;
   capacity: number;
@@ -39,6 +40,14 @@ export class SfTourScheduleComponent {
     )
   );
 
+  // Count of new (unsaved) schedules
+  readonly pendingCount = computed(() =>
+    this.schedules().filter(s => s.isNew).length
+  );
+
+  // Signal for showing success message when schedule is added
+  readonly showAddedMessage = signal(false);
+
   toggleAddForm() {
     this.showAddForm.update((v) => !v);
     if (this.showAddForm()) {
@@ -65,6 +74,7 @@ export class SfTourScheduleComponent {
     }
 
     const newItem: TourScheduleItem = {
+      tempId: crypto.randomUUID(), // temporary unique ID for tracking
       startAtUtc: schedule.startAtUtc,
       endAtUtc: schedule.endAtUtc,
       capacity: schedule.capacity,
@@ -75,6 +85,10 @@ export class SfTourScheduleComponent {
     this.schedulesChange.emit(updated);
     this.showAddForm.set(false);
     this.resetNewSchedule();
+
+    // Show success message briefly
+    this.showAddedMessage.set(true);
+    setTimeout(() => this.showAddedMessage.set(false), 2000);
   }
 
   removeSchedule(index: number) {
@@ -105,5 +119,5 @@ export class SfTourScheduleComponent {
   }
 
   trackSchedule = (index: number, item: TourScheduleItem) =>
-    item.id ?? `new-${index}-${item.startAtUtc}`;
+    item.id ?? item.tempId ?? `new-${index}-${item.startAtUtc}`;
 }

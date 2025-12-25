@@ -20,6 +20,45 @@
   color: #475569;
 }
 
+.pending-badge {
+  background: rgba(251, 146, 60, 0.15);
+  color: #c2410c;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+
+.success-message {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pending-indicator {
+  color: #f97316;
+  font-size: 0.6rem;
+  margin-right: 0.25rem;
+}
+
 .add-button {
   background: transparent;
   border: 1px solid rgba(79, 70, 229, 0.3);
