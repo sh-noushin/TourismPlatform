@@ -20,7 +20,9 @@ import { ExchangeFacade } from '../../features/exchange/exchange.facade';
         </div>
       </div>
 
-      <div *ngIf="facade.error()" class="exchange-page__error">{{ facade.error() }}</div>
+      @if (facade.error()) {
+        <div class="exchange-page__error">{{ facade.error() }}</div>
+      }
 
       <sf-card>
         <sf-table

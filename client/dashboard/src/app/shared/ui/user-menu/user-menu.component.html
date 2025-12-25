@@ -8,8 +8,10 @@
     <span class="chevron">v</span>
   </button>
 
-  <div class="user-menu__panel" *ngIf="open()">
+  @if (open()) {
+    <div class="user-menu__panel">
     <button type="button" (click)="onChangePassword($event)">Change password</button>
     <button type="button" (click)="onLogout($event)">Logout</button>
-  </div>
+    </div>
+  }
 </div>

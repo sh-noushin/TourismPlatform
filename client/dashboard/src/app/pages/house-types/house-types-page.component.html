@@ -18,9 +18,11 @@
       (rowAction)="onRowAction($event)"
     ></sf-table>
 
-    <p class="status status--error" *ngIf="errorSignal()">{{ errorSignal() }}</p>
-    <p class="status" *ngIf="!loadingSignal() && !errorSignal() && displayedTypes().length === 0">
-      No house types yet.
-    </p>
+    @if (errorSignal()) {
+      <p class="status status--error">{{ errorSignal() }}</p>
+    }
+    @if (!loadingSignal() && !errorSignal() && displayedTypes().length === 0) {
+      <p class="status">No house types yet.</p>
+    }
   </sf-card>
 </section>

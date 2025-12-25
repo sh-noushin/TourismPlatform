@@ -11,7 +11,9 @@
     </div>
   </div>
 
-  <p class="tours-page__error" *ngIf="tours.error()">{{ tours.error() }}</p>
+  @if (tours.error()) {
+    <p class="tours-page__error">{{ tours.error() }}</p>
+  }
 
   <sf-card>
     <sf-table

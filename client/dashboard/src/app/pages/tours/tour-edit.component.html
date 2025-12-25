@@ -9,113 +9,122 @@
     </header>
 
     <div class="status-bar">
-      <span class="status error" *ngIf="error()">{{ error() }}</span>
-      <span class="status success" *ngIf="saved()">Saved.</span>
+      @if (error()) {
+        <span class="status error">{{ error() }}</span>
+      }
+      @if (saved()) {
+        <span class="status success">Saved.</span>
+      }
     </div>
 
-    <div *ngIf="loadingSignal(); else formBlock" class="tour-edit-loading">
-      Loading tour details…
-    </div>
+    @if (loadingSignal()) {
+      <div class="tour-edit-loading">
+        Loading tour details…
+      </div>
+    } @else {
+      @if (form() as currentForm) {
+        <form class="tour-edit-form" (submit)="save($event)">
+          <section class="form-grid top">
+            <label>
+              <span class="label-text">Name</span>
+              <input
+                name="name"
+                type="text"
+                required
+                placeholder="Grand Desert Escape"
+                [value]="currentForm.name"
+                (input)="updateField('name', $any($event.target).value)"
+              />
+            </label>
+            <label class="combobox">
+              <span class="label-text">Category</span>
+              <sf-dropdown
+                [items]="tourCategoryOptions()"
+                [value]="currentForm.tourCategoryName"
+                (selectionChange)="updateField('tourCategoryName', $event)"
+                placeholder="Select category"
+                name="tourCategoryName"
+              ></sf-dropdown>
 
-    <ng-template #formBlock>
-      <form *ngIf="form() as currentForm; else waiting" class="tour-edit-form" (submit)="save($event)">
-        <section class="form-grid top">
-          <label>
-            <span class="label-text">Name</span>
-            <input
-              name="name"
-              type="text"
-              required
-              placeholder="Grand Desert Escape"
-              [value]="currentForm.name"
-              (input)="updateField('name', $any($event.target).value)"
-            />
-          </label>
-          <label class="combobox">
-            <span class="label-text">Category</span>
-            <sf-dropdown
-              [items]="tourCategoryOptions()"
-              [value]="currentForm.tourCategoryName"
-              (selectionChange)="updateField('tourCategoryName', $event)"
-              placeholder="Select category"
-              name="tourCategoryName"
-            ></sf-dropdown>
+              @if (tourCategories.loading()) {
+                <p class="mini-note">Loading categories…</p>
+              }
+              @if (tourCategories.error()) {
+                <p class="status error">{{ tourCategories.error() }}</p>
+              }
+            </label>
+          </section>
 
-            @if (tourCategories.loading()) {
-              <p class="mini-note">Loading categories…</p>
-            }
-            @if (tourCategories.error()) {
-              <p class="status error">{{ tourCategories.error() }}</p>
-            }
-          </label>
-        </section>
+          <section class="form-grid description">
+            <label>
+              <span class="label-text">Description</span>
+              <textarea
+                name="description"
+                rows="3"
+                placeholder="Share what makes this tour special"
+                [value]="currentForm.description"
+                (input)="updateField('description', $any($event.target).value)"
+              ></textarea>
+            </label>
+          </section>
 
-        <section class="form-grid description">
-          <label>
-            <span class="label-text">Description</span>
-            <textarea
-              name="description"
-              rows="3"
-              placeholder="Share what makes this tour special"
-              [value]="currentForm.description"
-              (input)="updateField('description', $any($event.target).value)"
-            ></textarea>
-          </label>
-        </section>
+          <section class="schedule-section">
+            <sf-tour-schedule
+              [schedules]="currentForm.schedules"
+              [disabled]="saving()"
+              label="Tour Schedules"
+              (schedulesChange)="onSchedulesChange($event)"
+              (scheduleDeleted)="onScheduleDeleted($event)"
+            ></sf-tour-schedule>
+          </section>
 
-        <section class="schedule-section">
-          <sf-tour-schedule
-            [schedules]="currentForm.schedules"
-            [disabled]="saving()"
-            label="Tour Schedules"
-            (schedulesChange)="onSchedulesChange($event)"
-            (scheduleDeleted)="onScheduleDeleted($event)"
-          ></sf-tour-schedule>
-        </section>
-
-        <div class="fileupload-row">
-          <sf-fileupload
-            label="Photos"
-            accept="image/*"
-            [multiple]="true"
-            [disabled]="uploading() || saving()"
-            (filesSelected)="onFileSelected($event)"
-          ></sf-fileupload>
-        </div>
-        <p class="mini-note" *ngIf="uploading()">Uploading files…</p>
-
-        <div class="photos" *ngIf="currentForm.photos.length; else noPhotos">
-          <div class="photo-list">
-            <article class="photo-item" *ngFor="let photo of currentForm.photos; let i = index; trackBy: trackPhoto">
-              <div class="photo-thumb">
-                <img
-                  [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
-                  [alt]="photo.label"
-                  loading="lazy"
-                />
-              </div>
-              <div class="photo-info">
-                <span>{{ photo.label }}</span>
-              </div>
-              <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
-            </article>
+          <div class="fileupload-row">
+            <sf-fileupload
+              label="Photos"
+              accept="image/*"
+              [multiple]="true"
+              [disabled]="uploading() || saving()"
+              (filesSelected)="onFileSelected($event)"
+            ></sf-fileupload>
           </div>
-        </div>
-        <ng-template #noPhotos>
-          <p class="no-photos">No photos yet. Upload one above.</p>
-        </ng-template>
+          @if (uploading()) {
+            <p class="mini-note">Uploading files…</p>
+          }
 
-        <section class="actions">
-          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
-          <button type="submit" class="btn primary" [disabled]="saving()">
-            {{ saving() ? 'Saving…' : 'Save tour' }}
-          </button>
-        </section>
-      </form>
-    </ng-template>
+          @if (currentForm.photos.length) {
+            <div class="photos">
+              <div class="photo-list">
+                @for (let photo of currentForm.photos; let i = index; trackBy: trackPhoto) {
+                  <article class="photo-item">
+                    <div class="photo-thumb">
+                      <img
+                        [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
+                        [alt]="photo.label"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="photo-info">
+                      <span>{{ photo.label }}</span>
+                    </div>
+                    <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
+                  </article>
+                }
+              </div>
+            </div>
+          } @else {
+            <p class="no-photos">No photos yet. Upload one above.</p>
+          }
 
-    <ng-template #waiting>
-      <p class="tour-edit-placeholder">No data available yet.</p>
-    </ng-template>
+          <section class="actions">
+            <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
+            <button type="submit" class="btn primary" [disabled]="saving()">
+              {{ saving() ? 'Saving…' : 'Save tour' }}
+            </button>
+          </section>
+        </form>
+      } @else {
+        <p class="tour-edit-placeholder">No data available yet.</p>
+      }
+    }
   </div>
 </section>

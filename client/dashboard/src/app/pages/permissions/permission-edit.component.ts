@@ -11,18 +11,27 @@ import { PermissionsFacade } from '../../features/permissions/permissions.facade
   template: `
     <div class="edit-shell">
       <h3>Permission Edit</h3>
-      <p *ngIf="id">Editing permission ID: {{ id }}</p>
-      <form *ngIf="model">
-        <label>Code<br /><input name="code" [(ngModel)]="model.code" /></label><br />
-        <label>Description<br /><input name="description" [(ngModel)]="model.description" /></label><br />
-        <label>Enabled <input type="checkbox" name="isEnabled" [(ngModel)]="model.isEnabled" /></label>
-        <div style="margin-top:8px">
-          <button type="button" (click)="save()" [disabled]="saving">Save</button>
-        </div>
-      </form>
-      <p *ngIf="!model">Loading...</p>
-      <p *ngIf="error" style="color:red">{{ error }}</p>
-      <p *ngIf="saved" style="color:green">Saved.</p>
+      @if (id) {
+        <p>Editing permission ID: {{ id }}</p>
+      }
+      @if (model) {
+        <form>
+          <label>Code<br /><input name="code" [(ngModel)]="model.code" /></label><br />
+          <label>Description<br /><input name="description" [(ngModel)]="model.description" /></label><br />
+          <label>Enabled <input type="checkbox" name="isEnabled" [(ngModel)]="model.isEnabled" /></label>
+          <div style="margin-top:8px">
+            <button type="button" (click)="save()" [disabled]="saving">Save</button>
+          </div>
+        </form>
+      } @else {
+        <p>Loading...</p>
+      }
+      @if (error) {
+        <p style="color:red">{{ error }}</p>
+      }
+      @if (saved) {
+        <p style="color:green">Saved.</p>
+      }
     </div>
   `
 })

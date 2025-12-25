@@ -22,7 +22,9 @@
         <button type="submit" class="btn primary" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}</button>
       </div>
 
-      <p class="status error" *ngIf="error()">{{ error() }}</p>
+      @if (error()) {
+        <p class="status error">{{ error() }}</p>
+      }
     </form>
   </div>
 </div>

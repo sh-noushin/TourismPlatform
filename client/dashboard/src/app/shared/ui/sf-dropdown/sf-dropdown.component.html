@@ -9,31 +9,36 @@
     [disabled]="disabled()"
     (click)="toggle($event)"
   >
-    <span class="sf-dropdown-label">
-      <ng-container *ngIf="hasSelection; else placeholderTpl">
-        {{ selectedLabel }}
-      </ng-container>
-      <ng-template #placeholderTpl>{{ placeholder() }}</ng-template>
-    </span>
+      <span class="sf-dropdown-label">
+        @if (hasSelection) {
+          <ng-container>{{ selectedLabel }}</ng-container>
+        } @else {
+          <ng-template>{{ placeholder() }}</ng-template>
+        }
+      </span>
 
     <span class="sf-dropdown-icon" aria-hidden="true"></span>
   </button>
 
-  <ul
-    *ngIf="isOpen()"
-    class="sf-dropdown-menu"
-    role="listbox"
-    (click)="$event.stopPropagation()"
-  >
-    <li
-      *ngFor="let item of items(); trackBy: trackItem"
-      role="option"
-      [attr.aria-selected]="item.value === value()"
-      [class.selected]="item.value === value()"
-      (click)="select(item, $event)"
+  @if (isOpen()) {
+    <ul
+      class="sf-dropdown-menu"
+      role="listbox"
+      (click)="$event.stopPropagation()"
     >
-      <span>{{ item.label }}</span>
-      <span *ngIf="item.hint" class="sf-dropdown-hint">{{ item.hint }}</span>
-    </li>
-  </ul>
+      @for (let item of items(); trackBy: trackItem) {
+        <li
+          role="option"
+          [attr.aria-selected]="item.value === value()"
+          [class.selected]="item.value === value()"
+          (click)="select(item, $event)"
+        >
+          <span>{{ item.label }}</span>
+          @if (item.hint) {
+            <span class="sf-dropdown-hint">{{ item.hint }}</span>
+          }
+        </li>
+      }
+    </ul>
+  }
 </div>
