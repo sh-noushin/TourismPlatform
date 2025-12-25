@@ -10,11 +10,38 @@
   gap: spacing(sm);
 }
 
-.file-control__header {
+.upload-card {
+  border-radius: 1.25rem;
+  padding: spacing(md);
+  background: linear-gradient(180deg, rgba($primary, 0.1), rgba($primary, 0.02));
+  border: 1px dashed rgba($primary, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: spacing(sm);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, rgba($primary, 0.6), transparent 60%);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: spacing(lg);
+  justify-content: center;
+  border: 1px solid rgba($primary, 0.5);
+}
+
+.icon-circle svg {
+  width: 32px;
+  height: 32px;
+  fill: #ffffff;
+  filter: drop-shadow(0 10px 20px rgba($primary, 0.25));
 }
 
 .label-group {
@@ -24,21 +51,21 @@
 }
 
 .label-text {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: $font-weight-semibold;
   color: $text;
 }
 
 .helper-text {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: $muted;
 }
 
 .file-actions {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: spacing(sm);
 }
 
 .file-actions input[type='file'] {
@@ -49,4 +76,5 @@
   margin: 0;
   font-size: 0.8rem;
   color: $muted;
+  text-align: center;
 }

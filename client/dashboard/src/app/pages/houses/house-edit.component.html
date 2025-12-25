@@ -131,31 +131,14 @@
 
         @if ((form()?.photos?.length ?? 0) > 0) {
           <section class="photos">
-            <div class="photo-grid">
+            <div class="photo-list">
               @for (photo of form()?.photos; track trackPhoto($index, photo); let i = $index) {
-                <div class="photo-card">
-                  <div class="thumb">
-                    @if (photo.kind === 'existing') {
-                      <img [src]="photo.url" alt="" />
-                    } @else {
-                      @if (photo.previewUrl) {
-                        <img [src]="photo.previewUrl" alt="" />
-                      } @else {
-                        <div class="thumb-placeholder"></div>
-                      }
-                    }
+                <div class="photo-item">
+                  <div class="photo-info">
+                    <strong>{{ photo.label }}</strong>
+                    <span>Sort {{ photo.sortOrder }}</span>
+                    <span>{{ photo.kind === 'existing' ? 'Existing' : 'New' }}</span>
                   </div>
-
-                  <div class="photo-meta">
-                    <strong class="photo-name">{{ photo.label }}</strong>
-                    <p class="mini-note">Sort {{ photo.sortOrder }}</p>
-                    @if (photo.kind === 'existing') {
-                      <p class="mini-note">Existing</p>
-                    } @else {
-                      <p class="mini-note">New</p>
-                    }
-                  </div>
-
                   <button class="text-button" type="button" (click)="removePhoto(i)">Remove</button>
                 </div>
               }

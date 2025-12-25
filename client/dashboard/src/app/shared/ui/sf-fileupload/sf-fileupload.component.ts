@@ -19,13 +19,14 @@ export class SfFileuploadComponent {
   readonly label = input<string>('');
   readonly helperText = input<string>('');
   readonly statusText = input<string>('');
-  readonly buttonText = input<string>('Choose files');
+  readonly buttonText = input<string>('Browse files');
   readonly accept = input<string>('');
   readonly multiple = input<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
-  readonly buttonColor = input<string>('#4f46e5');
+  readonly buttonColor = input<string>('#6366f1');
   readonly buttonTextColor = input<string>('#ffffff');
+  readonly buttonWidth = input<string>('160px');
 
   readonly filesSelected = output<FileList | null>();
 
