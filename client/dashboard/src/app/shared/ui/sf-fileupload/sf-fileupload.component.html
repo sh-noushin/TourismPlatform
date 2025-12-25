@@ -1,46 +1,25 @@
-<section class="sf-file-upload">
-  <div class="upload-card">
-    <div class="icon-circle" aria-hidden="true">
-      <svg viewBox="0 0 64 64" role="presentation">
-        <path
-          d="M25 29h-3a8 8 0 1 0 0 16h28a6 6 0 0 0 0-12 6 6 0 0 0-.4 0 8 8 0 0 0-7.8-5.8h-2.7a1 1 0 0 1-.9-.5l-2.1-3.3a1 1 0 0 0-1.6-.1l-7 7a1 1 0 0 0 0 1.4l7 7a1 1 0 0 0 1.6-.1l2.1-3.3a1 1 0 0 1 .9-.5h2.7a8 8 0 1 1 7.3 11H22a6 6 0 0 1 0-12h3a1 1 0 0 0 0-2z"
-        ></path>
-      </svg>
-    </div>
+<input
+  #fileInput
+  class="sf-fileupload__input"
+  type="file"
+  [attr.accept]="accept() || null"
+  [attr.multiple]="multiple() ? '' : null"
+  [disabled]="disabled()"
+  (change)="onFilesChanged($event)"
+/>
 
-    @if (label() || helperText()) {
-      <div class="label-group">
-        @if (label()) {
-          <span class="label-text">{{ label() }}</span>
-        }
-        @if (helperText()) {
-          <p class="helper-text">{{ helperText() }}</p>
-        }
-      </div>
-    }
-
-    <div class="file-actions">
-      <input
-        #fileInput
-        type="file"
-        [attr.accept]="accept() || null"
-        [attr.multiple]="multiple() ? '' : null"
-        (change)="handleChange($event)"
-        [disabled]="disabled() || loading()"
-      />
-      <sf-button
-        [text]="buttonText()"
-        [disabled]="disabled() || loading()"
-        [loading]="loading()"
-        (buttonClick)="fileInput.click()"
-        [color]="buttonColor()"
-        [textColor]="buttonTextColor()"
-        [width]="buttonWidth()"
-      ></sf-button>
-    </div>
-  </div>
-
-  @if (statusText()) {
-    <p class="status-text">{{ statusText() }}</p>
-  }
-</section>
+<button
+  type="button"
+  class="sf-fileupload__trigger"
+  aria-label="Upload file"
+  [disabled]="disabled()"
+  (click)="openPicker(fileInput)"
+>
+  <img
+    class="sf-fileupload__icon"
+    [src]="iconSrc()"
+    alt=""
+    aria-hidden="true"
+    draggable="false"
+  />
+</button>

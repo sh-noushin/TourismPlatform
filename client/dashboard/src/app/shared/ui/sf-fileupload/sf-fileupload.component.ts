@@ -1,38 +1,31 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SfButtonComponent } from '../sf-button/sf-button.component';
 
 @Component({
   standalone: true,
   selector: 'sf-fileupload',
-  imports: [CommonModule, SfButtonComponent],
+  imports: [CommonModule],
   templateUrl: './sf-fileupload.component.html',
   styleUrls: ['./sf-fileupload.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SfFileuploadComponent {
-  readonly label = input<string>('');
-  readonly helperText = input<string>('');
-  readonly statusText = input<string>('');
-  readonly buttonText = input<string>('Browse files');
   readonly accept = input<string>('');
   readonly multiple = input<boolean>(false);
   readonly disabled = input<boolean>(false);
-  readonly loading = input<boolean>(false);
-  readonly buttonColor = input<string>('#6366f1');
-  readonly buttonTextColor = input<string>('#ffffff');
-  readonly buttonWidth = input<string>('160px');
+  readonly iconSrc = input<string>('assets/sf-upload-icon.png');
 
   readonly filesSelected = output<FileList | null>();
 
-  handleChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.filesSelected.emit(input.files);
-    input.value = '';
+  openPicker(fileInput: HTMLInputElement) {
+    if (this.disabled()) return;
+    fileInput.click();
+  }
+
+  onFilesChanged(event: Event) {
+    const el = event.target as HTMLInputElement;
+    this.filesSelected.emit(el.files);
+
+    el.value = '';
   }
 }

@@ -123,9 +123,7 @@
           label="Photos"
           accept="image/*"
           [multiple]="true"
-          [disabled]="uploading() || saving()"
-          [loading]="uploading()"
-          [statusText]="uploading() ? 'Uploading photos…' : ''"
+          [disabled]="uploading() || saving()"          
           (filesSelected)="onFileSelected($event)"
         ></sf-fileupload>
 
