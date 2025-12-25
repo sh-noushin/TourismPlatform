@@ -22,7 +22,7 @@
         Loading tour details…
       </div>
     } @else {
-      @if (form() as currentForm) {
+      @if (form(); as currentForm) {
         <form class="tour-edit-form" (submit)="save($event)">
           <section class="form-grid top">
             <label>
@@ -36,6 +36,7 @@
                 (input)="updateField('name', $any($event.target).value)"
               />
             </label>
+
             <label class="combobox">
               <span class="label-text">Category</span>
               <sf-dropdown
@@ -87,6 +88,7 @@
               (filesSelected)="onFileSelected($event)"
             ></sf-fileupload>
           </div>
+
           @if (uploading()) {
             <p class="mini-note">Uploading files…</p>
           }
@@ -94,21 +96,24 @@
           @if (currentForm.photos.length) {
             <div class="photos">
               <div class="photo-list">
-                @for (let photo of currentForm.photos; let i = index; trackBy: trackPhoto) {
-                  <article class="photo-item">
-                    <div class="photo-thumb">
-                      <img
-                        [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
-                        [alt]="photo.label"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div class="photo-info">
-                      <span>{{ photo.label }}</span>
-                    </div>
-                    <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
-                  </article>
-                }
+                <article
+                  class="photo-item"
+                  *ngFor="let photo of currentForm.photos; let i = index; trackBy: trackPhoto"
+                >
+                  <div class="photo-thumb">
+                    <img
+                      [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
+                      [alt]="photo.label"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div class="photo-info">
+                    <span>{{ photo.label }}</span>
+                  </div>
+
+                  <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
+                </article>
               </div>
             </div>
           } @else {

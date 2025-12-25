@@ -6,7 +6,7 @@ import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.component';
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
-import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
+import { SfTableColumn, SfTableRowAction, SfTableSort } from '../../shared/models/table.models';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
@@ -57,7 +57,7 @@ export class ToursPageComponent {
     return unsorted.map((tour) => ({ ...tour, photoCount: Array.isArray(tour.photos) ? tour.photos.length : 0 }));
   });
 
-  readonly actions = [
+  readonly actions: SfTableRowAction[] = [
     { label: 'Edit', type: 'edit', icon: 'edit' },
     { label: 'Delete', type: 'delete', icon: 'delete', color: 'warn' }
   ];

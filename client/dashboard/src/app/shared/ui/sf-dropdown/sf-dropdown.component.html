@@ -26,19 +26,18 @@
       role="listbox"
       (click)="$event.stopPropagation()"
     >
-      @for (let item of items(); trackBy: trackItem) {
-        <li
-          role="option"
-          [attr.aria-selected]="item.value === value()"
-          [class.selected]="item.value === value()"
-          (click)="select(item, $event)"
-        >
-          <span>{{ item.label }}</span>
-          @if (item.hint) {
-            <span class="sf-dropdown-hint">{{ item.hint }}</span>
-          }
-        </li>
-      }
+      <li
+        role="option"
+        *ngFor="let item of items(); trackBy: trackItem"
+        [attr.aria-selected]="item.value === value()"
+        [class.selected]="item.value === value()"
+        (click)="select(item, $event)"
+      >
+        <span>{{ item.label }}</span>
+        @if (item.hint) {
+          <span class="sf-dropdown-hint">{{ item.hint }}</span>
+        }
+      </li>
     </ul>
   }
 </div>
