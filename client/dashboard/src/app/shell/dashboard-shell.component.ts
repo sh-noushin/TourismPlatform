@@ -32,32 +32,32 @@ export class DashboardShellComponent {
 
   readonly menuItems: MenuItem[] = [
     {
-      label: 'House management',
+      label: 'مدیریت املاک',
       basePath: '/admin/house-management',
       icon: '🏠',
       subItems: [
-        { label: 'Houses', path: '/admin/houses' },
-        { label: 'House types', path: '/admin/house-types' }
+        { label: 'املاک', path: '/admin/houses' },
+        { label: 'انواع املاک', path: '/admin/house-types' }
       ]
     },
     {
-      label: 'Tours management',
+      label: 'مدیریت تورها',
       basePath: '/admin/tours-management',
       icon: '🧭',
       subItems: [
-        { label: 'Category', path: '/admin/tour-categories' },
-        { label: 'Tours', path: '/admin/tours' }
+        { label: 'دسته‌بندی‌ها', path: '/admin/tour-categories' },
+        { label: 'تورها', path: '/admin/tours' }
       ]
     },
-    { label: 'Exchanges', basePath: '/admin/exchange', icon: '💱' },
+    { label: 'صرافی', basePath: '/admin/exchange', icon: '💱' },
     {
-      label: 'Permission management',
+      label: 'مدیریت دسترسی‌ها',
       basePath: '/admin/permissions',
       icon: '🔐',
       subItems: [
-        { label: 'Roles', path: '/admin/roles' },
-        { label: 'Users', path: '/admin/users' },
-        { label: 'Permissions', path: '/admin/permissions' }
+        { label: 'نقش‌ها', path: '/admin/roles' },
+        { label: 'کاربران', path: '/admin/users' },
+        { label: 'دسترسی‌ها', path: '/admin/permissions' }
       ]
     },
   ];
