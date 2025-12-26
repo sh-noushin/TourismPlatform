@@ -3,21 +3,11 @@
 :host {
   display: block;
   min-height: 100vh;
-
-  /* middle-blue header area + fade to your normal bg */
-  background: linear-gradient(
-    180deg,
-    rgba($topbarBg, 0.95) 0%,
-    rgba($topbarBg, 0.78) 240px,
-    $bg 240px
-  );
-
+  background: linear-gradient(180deg, $dashboardBgStart 0%, $dashboardBgEnd 100%);
   color: $text;
   font-family: $font-body;
 }
 
-
-/* Desktop / Tablet layout (sidebar on the right) */
 .shell {
   min-height: 100vh;
   display: grid;
@@ -27,12 +17,10 @@
   padding: 0 0 0 spacing(md);
 }
 
-/* Collapsed state (desktop/tablet): keep narrow sidebar */
 .shell.shell--collapsed {
   grid-template-columns: 1fr 72px;
 }
 
-/* Sidebar */
 .sidebar {
   grid-area: sidebar;
   background: $sidebarBg;
@@ -46,7 +34,6 @@
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 }
 
-/* Collapsed sidebar (desktop/tablet) */
 .sidebar--collapsed {
   padding: spacing(sm);
   width: 72px;
@@ -97,7 +84,6 @@
 .burger::before { top: -5px; }
 .burger::after { top: 5px; }
 
-/* Brand */
 .brand {
   display: flex;
   align-items: center;
@@ -115,7 +101,7 @@
   place-items: center;
   font-weight: 800;
   color: #ffffff;
-  background: linear-gradient(135deg, rgba($primary, 1), rgba($primary, 0.7));
+  background: linear-gradient(135deg, #6d4cff, #2f80ed);
   flex: 0 0 auto;
 }
 
@@ -139,7 +125,6 @@
   padding: spacing(sm) 4px 0;
 }
 
-/* Nav */
 .nav {
   display: flex;
   flex-direction: column;
@@ -270,7 +255,6 @@
   background: $primary;
 }
 
-/* Main */
 .main {
   grid-area: main;
   display: flex;
@@ -279,57 +263,57 @@
   min-width: 0;
 }
 
-/* Topbar (now light, not purple) */
-.topbar {
-  background: linear-gradient(180deg, rgba($topbarBg, 1), rgba($topbarBg, 0.92));
-  color: $topbarText;
-
+.user-header {
+  background: $surface;
+  color: $text;
   border-radius: 18px;
-  padding: spacing(lg);
+  padding: spacing(md);
   display: flex;
-  align-items: center;
   justify-content: flex-start;
-  position: relative;
-
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 10px 35px rgba($topbarBg, 0.35);
-
-  overflow: visible;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid $border;
 }
 
-
-.user { position: relative; }
+.user {
+  position: relative;
+}
 
 .user__btn {
   display: inline-flex;
   align-items: center;
   gap: spacing(sm);
-
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.12);
-  color: $topbarText;
-
-  padding: 8px 10px;
+  border: 1px solid $border;
+  background: $bg;
+  color: $text;
+  padding: 8px 12px;
   border-radius: 14px;
   cursor: pointer;
-  text-transform: none;
 }
 
 .user__btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba($primary, 0.06);
+  border-color: rgba($primary, 0.18);
 }
 
 .user__avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-
-  background: rgba(255, 255, 255, 0.92);
-  color: $topbarBg;
-
+  background: $primary;
+  color: $primaryContrast;
   display: grid;
   place-items: center;
   font-weight: 900;
+  font-size: 0.85rem;
+}
+
+.user__name {
+  font-weight: 700;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user__chev {
@@ -337,28 +321,14 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 6px solid rgba(255, 255, 255, 0.85);
+  border-top: 6px solid rgba($text, 0.6);
 }
 
-
-.user__name {
-  font-weight: 800;
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Dropdown: open inward */
 .user-menu {
   position: absolute;
   top: calc(100% + 10px);
   inset-inline-start: 0;
-  inset-inline-end: auto;
-
-  width: 220px;
-  max-inline-size: calc(100vw - (2 * spacing(lg)));
-
+  width: 200px;
   background: $surface;
   border: 1px solid $border;
   border-radius: 14px;
@@ -386,7 +356,6 @@
   color: $danger;
 }
 
-/* Tabs */
 .tabs {
   background: $surface;
   border: 1px solid $border;
@@ -423,7 +392,9 @@
   border-color: rgba($primary, 0.22);
 }
 
-.tab__title { font-weight: 750; }
+.tab__title {
+  font-weight: 750;
+}
 
 .tab__close {
   width: 22px;
@@ -432,11 +403,10 @@
   display: grid;
   place-items: center;
   background: rgba(0, 0, 0, 0.10);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
 }
 
-/* Content */
 .content {
   background: $surface;
   border: 1px solid $border;
@@ -447,78 +417,44 @@
   overflow: auto;
 }
 
-/* Mobile responsive layout */
 @media (max-width: 1080px) {
-  /* Fix specificity: collapsed must not force 2 columns on mobile */
   .shell,
   .shell.shell--collapsed {
     grid-template-columns: 1fr;
     grid-template-areas:
       "sidebar"
       "main";
-    padding: spacing(lg);
+    padding: spacing(md);
   }
 
   .sidebar {
     width: 100%;
+    border-radius: 18px;
   }
 
-  /* Collapsed sidebar becomes a horizontal sticky top bar on mobile */
-  .sidebar.sidebar--collapsed {
+  .sidebar--collapsed {
     width: 100%;
-    flex-direction: row-reverse;
-    align-items: center;
+  }
+}
 
+@media (max-width: 768px) {
+  .shell {
     padding: spacing(sm);
-    gap: spacing(sm);
-
-    position: sticky;
-    top: spacing(lg);
-    z-index: 50;
   }
 
-  .sidebar.sidebar--collapsed .sidebar__top {
-    padding: 0;
-    justify-content: flex-end;
+  .sidebar {
+    padding: spacing(sm);
   }
 
-  .sidebar.sidebar--collapsed .nav {
-    flex: 1;
-    margin-top: 0;
-
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    gap: 6px;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
+  .nav__item {
+    padding: 8px 10px;
   }
 
-  .sidebar.sidebar--collapsed .nav__group {
-    display: flex;
-    flex-direction: row;
-    gap: 6px;
+  .user-header {
+    padding: spacing(sm);
   }
 
-  .sidebar.sidebar--collapsed .nav__item {
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    justify-content: center;
-    border-radius: 14px;
-  }
-
-  .sidebar.sidebar--collapsed .nav__icon {
-    order: 0;
-    width: 36px;
-    height: 36px;
-    font-size: 1rem;
-  }
-
-  .sidebar.sidebar--collapsed .nav__chev {
-    display: none;
+  .content {
+    padding: spacing(md);
   }
 }
