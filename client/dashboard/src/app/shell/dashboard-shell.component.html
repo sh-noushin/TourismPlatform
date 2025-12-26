@@ -4,15 +4,6 @@
       <button type="button" class="icon-btn" (click)="toggleSidebar()" aria-label="Toggle menu">
         <span class="burger"></span>
       </button>
-
-      @if (!sidebarCollapsed()) {
-        <div class="brand">
-          <div class="brand__logo">TP</div>
-          <div class="brand__text">
-            <div class="brand__title">Tourism Platform</div>
-          </div>
-        </div>
-      }
     </div>
 
     <nav class="nav">
@@ -53,11 +44,22 @@
         </div>
       }
     </nav>
+
+    @if (!sidebarCollapsed()) {
+      <div class="sidebar__brand">
+        <div class="brand">
+          <div class="brand__logo">TP</div>
+          <div class="brand__text">
+            <div class="brand__title">پلتفرم گردشگری</div>
+          </div>
+        </div>
+      </div>
+    }
   </aside>
 
   <div class="main">
     <header class="topbar" (click)="$event.stopPropagation()">
-      <div class="topbar__title">Admin dashboard</div>
+      <div class="topbar__title">داشبورد ادمین</div>
 
       <div class="user">
         <button type="button" class="user__btn" (click)="toggleUserMenu()">
@@ -87,7 +89,7 @@
             <span class="tab__title">{{ tab.title || 'Tab' }}</span>
 
             @if (!tab.pinned) {
-              <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">×</span>
+              <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">╟-</span>
             }
           </button>
         }

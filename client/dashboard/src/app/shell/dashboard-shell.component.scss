@@ -44,8 +44,8 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-direction: row-reverse;
-  gap: spacing(sm);
+  padding: 0 4px; /* align toggle with menu padding */
+  gap: spacing(xs);
 }
 
 .icon-btn {
@@ -105,6 +105,13 @@
   font-weight: 800;
   line-height: 1.1;
   font-size: 0.92rem; /* smaller */
+}
+
+.sidebar__brand {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: spacing(sm) 4px 0;
 }
 
 .brand__subtitle {

@@ -86,13 +86,11 @@ export class DashboardShellComponent {
     public readonly tabs: TabService,
     private readonly router: Router
   ) {
-    // default tab: houses
     if (this.tabs.tabs().length === 0) {
       const t = this.tabs.openNewTab('/admin/houses', 'Houses', true);
       void this.router.navigateByUrl(t.path);
     }
 
-    // auto-expand House management if active tab is one of its sub routes
     const active = this.activeTabPath();
     const houseGroup = this.menuItems.find(m => m.basePath === '/admin/house-management');
     if (houseGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
