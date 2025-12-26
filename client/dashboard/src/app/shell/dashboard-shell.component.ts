@@ -43,7 +43,7 @@ export class DashboardShellComponent {
     {
       label: 'مدیریت تورها',
       basePath: '/admin/tours-management',
-      icon: '🧭',
+      icon: '🧳',
       subItems: [
         { label: 'دسته‌بندی‌ها', path: '/admin/tour-categories' },
         { label: 'تورها', path: '/admin/tours' }
