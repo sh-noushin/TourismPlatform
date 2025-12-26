@@ -67,17 +67,17 @@ export class SfDropdownComponent {
   }
 
   get selectedLabel(): string {
+    if (this.value() == null || this.value() === '') return this.placeholder();
     const match = this.items().find((i) => i.value === this.value());
-    return match?.label ?? '';
+    return match?.label ?? this.placeholder();
   }
 
   get hasSelection(): boolean {
-    return this.items().some((i) => i.value === this.value());
+    return true;
   }
 
   @HostListener('document:mousedown', ['$event'])
   onDocumentMouseDown(event: MouseEvent) {
-    // Use composedPath for shadow DOM and better reliability
     const path = (event.composedPath && event.composedPath()) || [];
     if (!path.includes(this.elementRef.nativeElement)) {
       this.close();
