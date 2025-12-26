@@ -1,7 +1,11 @@
-<div class="shell" [class.shell--collapsed]="sidebarCollapsed()" (click)="closeUserMenu()">
-  <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed()" (click)="$event.stopPropagation()">
+<div
+  class="shell"
+  [class.shell--collapsed]="sidebarCollapsed()"
+  (click)="closeUserMenu()"
+>
+  <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed()">
     <div class="sidebar__top">
-      <button type="button" class="icon-btn" (click)="toggleSidebar()" aria-label="Toggle menu">
+      <button type="button" class="icon-btn" (click)="toggleSidebar(); $event.stopPropagation()" aria-label="Toggle menu">
         <span class="burger"></span>
       </button>
     </div>
@@ -13,7 +17,7 @@
             type="button"
             class="nav__item"
             [class.nav__item--active]="isMenuActive(item)"
-            (click)="openMenu(item)"
+            (click)="openMenu(item); closeUserMenu(); $event.stopPropagation()"
             [attr.aria-expanded]="item.subItems?.length ? expandedMenu() === item.basePath : null"
           >
             <span class="nav__icon" aria-hidden="true">{{ item.icon }}</span>
@@ -34,7 +38,7 @@
                   type="button"
                   class="nav__submenu-item"
                   [class.nav__submenu-item--active]="isSubMenuItemActive(sub)"
-                  (click)="openSubMenuItem(item, sub)"
+                  (click)="openSubMenuItem(item, sub); closeUserMenu(); $event.stopPropagation()"
                 >
                   {{ sub.label }}
                 </button>
@@ -58,18 +62,22 @@
   </aside>
 
   <div class="main">
-    <header class="topbar" (click)="$event.stopPropagation()">
+    <header class="topbar">
       <div class="user">
-        <button type="button" class="user__btn" (click)="toggleUserMenu()">
+        <button type="button" class="user__btn" (click)="toggleUserMenu($event)">
           <span class="user__avatar">{{ initials() }}</span>
           <span class="user__name">{{ displayName() }}</span>
           <span class="user__chev"></span>
         </button>
 
         @if (userMenuOpen()) {
-          <div class="user-menu">
-            <button type="button" class="user-menu__item" (click)="changePassword()">Change password</button>
-            <button type="button" class="user-menu__item danger" (click)="logout()">Logout</button>
+          <div class="user-menu" (click)="$event.stopPropagation()">
+            <button type="button" class="user-menu__item" (click)="changePassword(); closeUserMenu()">
+              Change password
+            </button>
+            <button type="button" class="user-menu__item danger" (click)="logout(); closeUserMenu()">
+              Logout
+            </button>
           </div>
         }
       </div>
@@ -82,7 +90,7 @@
             type="button"
             class="tab"
             [class.tab--active]="tabs.activeTabId() === tab.id"
-            (click)="activate(tab)"
+            (click)="activate(tab); closeUserMenu(); $event.stopPropagation()"
           >
             <span class="tab__title">{{ tab.title || 'Tab' }}</span>
 
@@ -94,7 +102,7 @@
       </div>
     </section>
 
-    <main class="content">
+    <main class="content" (click)="closeUserMenu()">
       <router-outlet></router-outlet>
     </main>
   </div>

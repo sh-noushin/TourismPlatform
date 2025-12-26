@@ -36,7 +36,7 @@
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
-/* Collapsed sidebar (desktop/tablet): narrow vertical bar */
+/* Collapsed sidebar (desktop/tablet) */
 .sidebar--collapsed {
   padding: spacing(sm);
   width: 72px;
@@ -104,19 +104,12 @@
   flex: 0 0 auto;
 }
 
-.brand__text {
-  min-width: 0;
-}
+.brand__text { min-width: 0; }
 
 .brand__title {
   font-weight: 800;
   line-height: 1.1;
   font-size: 0.92rem;
-}
-
-.brand__subtitle {
-  color: $muted;
-  font-size: 0.82rem;
 }
 
 .sidebar__brand {
@@ -195,7 +188,6 @@
   border-right: 5px solid transparent;
   border-top: 6px solid rgba($text, 0.65);
   margin-right: 6px;
-  margin-left: 0;
   transition: transform 0.2s ease;
 }
 
@@ -278,12 +270,11 @@
   box-shadow: 0 10px 35px rgba(109, 76, 255, 0.35);
   position: relative;
 
+  /* allow dropdown to overflow */
   overflow: visible;
 }
 
-.user {
-  position: relative;
-}
+.user { position: relative; }
 
 .user__btn {
   display: inline-flex;
@@ -325,6 +316,7 @@
   border-top: 6px solid rgba(255, 255, 255, 0.85);
 }
 
+/* Dropdown: always open inward (like mobile) */
 .user-menu {
   position: absolute;
   top: calc(100% + 10px);
@@ -394,9 +386,7 @@
   border-color: rgba(109, 76, 255, 0.18);
 }
 
-.tab__title {
-  font-weight: 750;
-}
+.tab__title { font-weight: 750; }
 
 .tab__close {
   width: 22px;
@@ -419,7 +409,9 @@
   overflow: auto;
 }
 
+/* Mobile responsive layout */
 @media (max-width: 1080px) {
+  /* Fix specificity: collapsed must not force 2 columns on mobile */
   .shell,
   .shell.shell--collapsed {
     grid-template-columns: 1fr;
@@ -442,7 +434,6 @@
 
     padding: spacing(sm);
     gap: spacing(sm);
-
     border-radius: 18px;
 
     position: sticky;
@@ -493,12 +484,5 @@
 
   .sidebar.sidebar--collapsed .nav__chev {
     display: none;
-  }
-
-  .user-menu {
-    inset-inline-start: 0;
-    inset-inline-end: auto;
-
-    width: min(220px, calc(100vw - (2 * spacing(lg))));
   }
 }
