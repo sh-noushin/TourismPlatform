@@ -278,7 +278,6 @@
   box-shadow: 0 10px 35px rgba(109, 76, 255, 0.35);
   position: relative;
 
-  /* IMPORTANT: allow dropdown to overflow outside the header */
   overflow: visible;
 }
 
@@ -330,8 +329,8 @@
   position: absolute;
   top: calc(100% + 10px);
 
-  inset-inline-end: 0;
-  inset-inline-start: auto;
+  inset-inline-start: 0;
+  inset-inline-end: auto;
 
   width: 220px;
   max-inline-size: calc(100vw - (2 * spacing(lg)));
