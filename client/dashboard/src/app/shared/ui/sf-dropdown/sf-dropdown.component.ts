@@ -75,9 +75,11 @@ export class SfDropdownComponent {
     return this.items().some((i) => i.value === this.value());
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentMouseDown(event: MouseEvent) {
+    // Use composedPath for shadow DOM and better reliability
+    const path = (event.composedPath && event.composedPath()) || [];
+    if (!path.includes(this.elementRef.nativeElement)) {
       this.close();
     }
   }
