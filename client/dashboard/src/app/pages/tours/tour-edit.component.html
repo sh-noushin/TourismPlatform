@@ -100,24 +100,23 @@
         @if (currentForm.photos.length) {
           <div class="photos">
             <div class="photo-list">
-              <article
-                class="photo-item"
-                *ngFor="let photo of currentForm.photos; let i = index; trackBy: trackPhoto"
-              >
-                <div class="photo-thumb">
-                  <img
-                    [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
-                    [alt]="photo.label"
-                    loading="lazy"
-                  />
-                </div>
+              @for (photo of currentForm.photos; track trackPhoto($index, photo); let i = $index) {
+                <article class="photo-item">
+                  <div class="photo-thumb">
+                    <img
+                      [src]="photo.kind === 'existing' ? photo.url : photo.previewUrl"
+                      [alt]="photo.label"
+                      loading="lazy"
+                    />
+                  </div>
 
-                <div class="photo-info">
-                  <span>{{ photo.label }}</span>
-                </div>
+                  <div class="photo-info">
+                    <span>{{ photo.label }}</span>
+                  </div>
 
-                <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
-              </article>
+                  <button type="button" class="text-button" (click)="removePhoto(i)">Remove</button>
+                </article>
+              }
             </div>
           </div>
         } @else {
