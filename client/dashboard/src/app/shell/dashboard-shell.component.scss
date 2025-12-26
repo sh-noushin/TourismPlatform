@@ -3,10 +3,19 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: linear-gradient(180deg, #6d4cff 0%, #7a56ff 24%, #f4f6fb 24%);
+
+  /* middle-blue header area + fade to your normal bg */
+  background: linear-gradient(
+    180deg,
+    rgba($topbarBg, 0.95) 0%,
+    rgba($topbarBg, 0.78) 240px,
+    $bg 240px
+  );
+
   color: $text;
   font-family: $font-body;
 }
+
 
 /* Desktop / Tablet layout (sidebar on the right) */
 .shell {
@@ -23,24 +32,24 @@
   grid-template-columns: 1fr 72px;
 }
 
+/* Sidebar */
 .sidebar {
   grid-area: sidebar;
-  background: $surface;
+  background: $sidebarBg;
   border: 1px solid $border;
-  border-radius: 0;
+  border-radius: 18px;
   padding: spacing(md) spacing(sm);
   display: flex;
   flex-direction: column;
   text-align: right;
   gap: spacing(sm);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 }
 
 /* Collapsed sidebar (desktop/tablet) */
 .sidebar--collapsed {
   padding: spacing(sm);
   width: 72px;
-  border-radius: 0;
 }
 
 .sidebar__top {
@@ -60,6 +69,11 @@
   cursor: pointer;
   display: grid;
   place-items: center;
+}
+
+.icon-btn:hover {
+  background: rgba($primary, 0.06);
+  border-color: rgba($primary, 0.25);
 }
 
 .burger {
@@ -83,6 +97,7 @@
 .burger::before { top: -5px; }
 .burger::after { top: 5px; }
 
+/* Brand */
 .brand {
   display: flex;
   align-items: center;
@@ -100,7 +115,7 @@
   place-items: center;
   font-weight: 800;
   color: #ffffff;
-  background: linear-gradient(135deg, #6d4cff, #2f80ed);
+  background: linear-gradient(135deg, rgba($primary, 1), rgba($primary, 0.7));
   flex: 0 0 auto;
 }
 
@@ -112,6 +127,11 @@
   font-size: 0.92rem;
 }
 
+.brand__subtitle {
+  color: $muted;
+  font-size: 0.82rem;
+}
+
 .sidebar__brand {
   margin-top: auto;
   display: flex;
@@ -119,6 +139,7 @@
   padding: spacing(sm) 4px 0;
 }
 
+/* Nav */
 .nav {
   display: flex;
   flex-direction: column;
@@ -139,7 +160,7 @@
   justify-content: flex-end;
   flex-direction: row;
   gap: 6px;
-  padding: 6px 4px;
+  padding: 6px 6px;
   border-radius: 12px;
   border: 1px solid transparent;
   background: transparent;
@@ -151,13 +172,13 @@
 }
 
 .nav__item:hover {
-  background: $bg;
-  border-color: $border;
+  background: rgba($primary, 0.06);
+  border-color: rgba($primary, 0.16);
 }
 
 .nav__item--active {
-  background: rgba($primary, 0.15);
-  border-color: rgba($primary, 0.35);
+  background: rgba($primary, 0.10);
+  border-color: rgba($primary, 0.25);
 }
 
 .nav__icon {
@@ -186,7 +207,7 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 6px solid rgba($text, 0.65);
+  border-top: 6px solid rgba($text, 0.55);
   margin-right: 6px;
   transition: transform 0.2s ease;
 }
@@ -233,14 +254,12 @@
 }
 
 .nav__submenu-item:hover {
-  background: transparent;
   text-decoration: underline;
   text-decoration-color: rgba($primary, 0.55);
   text-underline-offset: 3px;
 }
 
 .nav__submenu-item--active {
-  background: transparent;
   color: $primary;
   font-weight: 750;
   text-decoration: none;
@@ -251,6 +270,7 @@
   background: $primary;
 }
 
+/* Main */
 .main {
   grid-area: main;
   display: flex;
@@ -259,20 +279,24 @@
   min-width: 0;
 }
 
+/* Topbar (now light, not purple) */
 .topbar {
-  background: #6d4cff;
-  color: #ffffff;
+  background: linear-gradient(180deg, rgba($topbarBg, 1), rgba($topbarBg, 0.92));
+  color: $topbarText;
+
   border-radius: 18px;
   padding: spacing(lg);
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  box-shadow: 0 10px 35px rgba(109, 76, 255, 0.35);
   position: relative;
 
-  /* allow dropdown to overflow */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 35px rgba($topbarBg, 0.35);
+
   overflow: visible;
 }
+
 
 .user { position: relative; }
 
@@ -280,32 +304,32 @@
   display: inline-flex;
   align-items: center;
   gap: spacing(sm);
+
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  color: $topbarText;
+
   padding: 8px 10px;
   border-radius: 14px;
   cursor: pointer;
   text-transform: none;
 }
 
+.user__btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
 .user__avatar {
   width: 40px;
   height: 40px;
   border-radius: 999px;
+
   background: rgba(255, 255, 255, 0.92);
-  color: #6d4cff;
+  color: $topbarBg;
+
   display: grid;
   place-items: center;
   font-weight: 900;
-}
-
-.user__name {
-  font-weight: 800;
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .user__chev {
@@ -316,11 +340,19 @@
   border-top: 6px solid rgba(255, 255, 255, 0.85);
 }
 
-/* Dropdown: always open inward (like mobile) */
+
+.user__name {
+  font-weight: 800;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Dropdown: open inward */
 .user-menu {
   position: absolute;
   top: calc(100% + 10px);
-
   inset-inline-start: 0;
   inset-inline-end: auto;
 
@@ -330,7 +362,7 @@
   background: $surface;
   border: 1px solid $border;
   border-radius: 14px;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
   overflow: hidden;
   z-index: 60;
 }
@@ -354,6 +386,7 @@
   color: $danger;
 }
 
+/* Tabs */
 .tabs {
   background: $surface;
   border: 1px solid $border;
@@ -381,9 +414,13 @@
   cursor: pointer;
 }
 
+.tab:hover {
+  border-color: rgba($primary, 0.18);
+}
+
 .tab--active {
-  background: rgba(109, 76, 255, 0.14);
-  border-color: rgba(109, 76, 255, 0.18);
+  background: rgba($primary, 0.10);
+  border-color: rgba($primary, 0.22);
 }
 
 .tab__title { font-weight: 750; }
@@ -399,6 +436,7 @@
   line-height: 1;
 }
 
+/* Content */
 .content {
   background: $surface;
   border: 1px solid $border;
@@ -423,7 +461,6 @@
 
   .sidebar {
     width: 100%;
-    border-radius: 18px;
   }
 
   /* Collapsed sidebar becomes a horizontal sticky top bar on mobile */
@@ -434,7 +471,6 @@
 
     padding: spacing(sm);
     gap: spacing(sm);
-    border-radius: 18px;
 
     position: sticky;
     top: spacing(lg);

@@ -1,25 +1,43 @@
-// Core palette used throughout the dashboard
+// Core palette used throughout the dashboard (fresh, clean, not heavy)
 $bg: rgb(245, 247, 250);
 $surface: rgb(255, 255, 255);
 $text: rgb(15, 23, 42);
 $muted: rgb(75, 85, 99);
 $border: rgb(226, 232, 240);
-$primary: rgb(56, 153, 255);
+
+// Accent (clean blue)
+$primary: rgb(37, 99, 235);
 $primaryContrast: rgb(255, 255, 255);
+
+// Sidebar
 $sidebarBg: rgb(255, 255, 255);
-$sidebarActiveBg: rgb(24, 120, 242);
+$sidebarActiveBg: rgb(37, 99, 235);
 $sidebarActiveText: rgb(255, 255, 255);
-$topbarBg: rgb(248, 250, 252);
+
+// Topbar (light)
+$topbarBg: rgb(255, 255, 255);
+
+// Status
 $danger: rgb(239, 68, 68);
 $warning: rgb(249, 115, 22);
 $success: rgb(34, 197, 94);
-$tableHeaderBg: rgba(37, 99, 235, 0.08);
-$tableHeaderBorder: rgba(37, 99, 235, 0.15);
-$loginHeroGradientStart: rgba(92, 92, 199, 1);
-$loginHeroGradientMid: rgba(143, 95, 237, 1);
-$loginHeroGradientEnd: rgba(161, 78, 253, 1);
-$loginGlow: rgba(255, 255, 255, 0.35);
-$loginHeroOverlay: rgba(255, 255, 255, 0.08);
-$loginBadgeBg: rgba(255, 255, 255, 0.18);
-$dashboardBgStart: rgba(7, 12, 28, 1);
-$dashboardBgEnd: rgba(15, 23, 42, 1);
+
+// Tables
+$tableHeaderBg: rgba(37, 99, 235, 0.06);
+$tableHeaderBorder: rgba(37, 99, 235, 0.12);
+
+// Login (brighter, less “sad”)
+$loginHeroGradientStart: rgba(59, 130, 246, 1);
+$loginHeroGradientMid: rgba(99, 102, 241, 1);
+$loginHeroGradientEnd: rgba(37, 99, 235, 1);
+$loginGlow: rgba(255, 255, 255, 0.45);
+$loginHeroOverlay: rgba(255, 255, 255, 0.10);
+$loginBadgeBg: rgba(255, 255, 255, 0.22);
+
+// Dashboard background (light)
+$dashboardBgStart: rgba(245, 247, 250, 1);
+$dashboardBgEnd: rgba(236, 242, 255, 1);
+
+
+$topbarBg: rgb(79, 129, 245);
+$topbarText: rgb(255, 255, 255);
