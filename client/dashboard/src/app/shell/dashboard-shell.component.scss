@@ -279,6 +279,21 @@
   position: relative;
 }
 
+.user {
+  position: relative;
+}
+
+.user-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 999; 
+}
+
+.user-menu {
+  z-index: 1000; 
+}
+
 .user__btn {
   display: inline-flex;
   align-items: center;

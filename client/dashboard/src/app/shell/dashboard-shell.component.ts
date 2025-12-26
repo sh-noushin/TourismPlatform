@@ -141,14 +141,15 @@ export class DashboardShellComponent {
     void this.router.navigateByUrl(activeTab.path);
   }
 
-  toggleUserMenu(event?: MouseEvent) {
-    event?.stopPropagation();
-    this.userMenuOpen.set(!this.userMenuOpen());
-  }
+  toggleUserMenu(event: MouseEvent): void {
+  event.stopPropagation();
+  this.userMenuOpen.update(v => !v);
+}
 
-closeUserMenu() {
+closeUserMenu(): void {
   this.userMenuOpen.set(false);
 }
+
 
 
   changePassword() {
