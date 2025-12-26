@@ -130,10 +130,10 @@
   width: 100%;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
-  flex-direction: row-reverse;
-  gap: 8px;
-  padding: 6px 8px; /* smaller */
+  justify-content: flex-end; /* pull label/icon to the right */
+  flex-direction: row;
+  gap: 6px; /* tighter gap between text and icon */
+  padding: 6px 4px; /* tighter right space */
   border-radius: 12px;
   border: 1px solid transparent;
   background: transparent;
@@ -166,6 +166,9 @@
   color: $primary;
   flex: 0 0 auto;
   font-size: 0.95rem; /* emoji size */
+  order: 2; /* push icon to the right */
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .nav__label {
@@ -174,13 +177,14 @@
 }
 
 .nav__chev {
+  order: -1;
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid rgba($text, 0.65);
+  margin-right: 6px;
   margin-left: 0;
-  margin-right: 0;
   transition: transform 0.2s ease;
 }
 
