@@ -73,14 +73,14 @@
   <div class="main">
     <div class="user-header" (click)="$event.stopPropagation()">
       <div class="user">
-        <button type="button" class="user__btn" (click)="toggleUserMenu($event)">
+        <button #userMenuBtn type="button" class="user__btn" (click)="toggleUserMenu($event)">
           <span class="user__avatar">{{ initials() }}</span>
           <span class="user__name">{{ displayName() }}</span>
           <span class="user__chev"></span>
         </button>
 
         @if (userMenuOpen()) {
-          <div class="user-menu" (click)="$event.stopPropagation()">
+          <div #userMenu class="user-menu" (click)="$event.stopPropagation()">
             <button type="button" class="user-menu__item" (click)="changePassword(); closeUserMenu()">
               Change password
             </button>

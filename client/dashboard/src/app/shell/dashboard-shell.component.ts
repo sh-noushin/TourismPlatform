@@ -1,3 +1,4 @@
+import { ElementRef, ViewChild, HostListener } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
@@ -28,6 +29,8 @@ type MenuItem = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardShellComponent {
+  @ViewChild('userMenuBtn', { read: ElementRef }) userMenuBtnRef!: ElementRef<HTMLElement>;
+  @ViewChild('userMenu', { read: ElementRef }) userMenuRef!: ElementRef<HTMLElement>;
   readonly sidebarCollapsed = signal(false);
   readonly userMenuOpen = signal(false);
   readonly expandedMenu = signal<string | null>(null);
@@ -151,6 +154,17 @@ export class DashboardShellComponent {
 
   closeUserMenu(): void {
     this.userMenuOpen.set(false);
+  }
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentMouseDown(event: MouseEvent) {
+    if (!this.userMenuOpen()) return;
+    const btn = this.userMenuBtnRef?.nativeElement;
+    const menu = this.userMenuRef?.nativeElement;
+    const path = (event.composedPath && event.composedPath()) || [];
+    if (btn && path.includes(btn)) return;
+    if (menu && path.includes(menu)) return;
+    this.closeUserMenu();
   }
 
   changePassword() {
