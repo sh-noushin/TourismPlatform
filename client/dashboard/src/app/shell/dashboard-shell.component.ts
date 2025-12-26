@@ -12,7 +12,7 @@ type SubMenuItem = {
 
 type MenuItem = {
   label: string;
-  basePath: string; // used as group id for expand/collapse
+  basePath: string;
   icon: string;
   subItems?: SubMenuItem[];
 };
@@ -92,6 +92,7 @@ export class DashboardShellComponent {
     }
 
     const active = this.activeTabPath();
+
     const houseGroup = this.menuItems.find(m => m.basePath === '/admin/house-management');
     if (houseGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
       this.expandedMenu.set(houseGroup.basePath);
@@ -109,10 +110,9 @@ export class DashboardShellComponent {
 
   openMenu(item: MenuItem) {
     if (item.subItems?.length) {
-      this.expandedMenu.update((current) => (current === item.basePath ? null : item.basePath));
+      this.expandedMenu.update(current => (current === item.basePath ? null : item.basePath));
       return;
     }
-
     this.openTab(item.basePath, item.label);
   }
 
@@ -142,15 +142,13 @@ export class DashboardShellComponent {
   }
 
   toggleUserMenu(event: MouseEvent): void {
-  event.stopPropagation();
-  this.userMenuOpen.update(v => !v);
-}
+    event.stopPropagation();
+    this.userMenuOpen.update(v => !v);
+  }
 
-closeUserMenu(): void {
-  this.userMenuOpen.set(false);
-}
-
-
+  closeUserMenu(): void {
+    this.userMenuOpen.set(false);
+  }
 
   changePassword() {
     this.closeUserMenu();
@@ -158,13 +156,22 @@ closeUserMenu(): void {
     void this.router.navigateByUrl(tab.path);
   }
 
-  async logout() {
+  async logout(event?: MouseEvent) {
+    event?.stopPropagation();
+    event?.preventDefault();
+
     this.closeUserMenu();
+
     try {
       await this.auth.logout();
     } catch {}
-    this.tabs.closeAll();
-    await this.router.navigateByUrl('/login');
+
+    try {
+      this.tabs.closeAll();
+    } catch {}
+
+    // Guaranteed redirect (avoids guards/tabs navigating back)
+    window.location.replace('/login');
   }
 
   private nextTitle(base: string) {
@@ -185,7 +192,7 @@ closeUserMenu(): void {
   isMenuActive(item: MenuItem) {
     const active = this.activeTabPath();
     if (item.subItems?.length) {
-      return item.subItems.some((sub) => this.normalize(sub.path) === active);
+      return item.subItems.some(sub => this.normalize(sub.path) === active);
     }
     return this.normalize(item.basePath) === active;
   }

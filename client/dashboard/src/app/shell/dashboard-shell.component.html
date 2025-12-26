@@ -3,9 +3,18 @@
   [class.shell--collapsed]="sidebarCollapsed()"
   (click)="closeUserMenu()"
 >
-  <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed()" (click)="$event.stopPropagation()">
+  <aside
+    class="sidebar"
+    [class.sidebar--collapsed]="sidebarCollapsed()"
+    (click)="$event.stopPropagation()"
+  >
     <div class="sidebar__top">
-      <button type="button" class="icon-btn" (click)="toggleSidebar()" aria-label="Toggle menu">
+      <button
+        type="button"
+        class="icon-btn"
+        (click)="toggleSidebar()"
+        aria-label="Toggle menu"
+      >
         <span class="burger"></span>
       </button>
     </div>
@@ -64,28 +73,23 @@
   <div class="main">
     <div class="user-header" (click)="$event.stopPropagation()">
       <div class="user">
-  <button type="button" class="user__btn" (click)="toggleUserMenu($event)">
-    <span class="user__avatar">{{ initials() }}</span>
-    <span class="user__name">{{ displayName() }}</span>
-    <span class="user__chev"></span>
-  </button>
+        <button type="button" class="user__btn" (click)="toggleUserMenu($event)">
+          <span class="user__avatar">{{ initials() }}</span>
+          <span class="user__name">{{ displayName() }}</span>
+          <span class="user__chev"></span>
+        </button>
 
-  @if (userMenuOpen()) {
-    <!-- clicking anywhere outside -->
-    <div class="user-menu-backdrop" (click)="closeUserMenu()"></div>
-
-    <!-- clicking inside should NOT close -->
-    <div class="user-menu" (click)="$event.stopPropagation()">
-      <button type="button" class="user-menu__item" (click)="changePassword(); closeUserMenu()">
-        Change password
-      </button>
-      <button type="button" class="user-menu__item danger" (click)="logout(); closeUserMenu()">
-        Logout
-      </button>
-    </div>
-  }
-</div>
-
+        @if (userMenuOpen()) {
+          <div class="user-menu" (click)="$event.stopPropagation()">
+            <button type="button" class="user-menu__item" (click)="changePassword(); closeUserMenu()">
+              Change password
+            </button>
+            <button type="button" class="user-menu__item danger" (click)="logout($event)">
+              Logout
+            </button>
+          </div>
+        }
+      </div>
     </div>
 
     <section class="tabs">
