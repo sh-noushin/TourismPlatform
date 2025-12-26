@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { AuthFacade } from '../core/auth/auth.facade';
 import { TabService, TabItem } from '../core/tab/tab.service';
+import { ChangePasswordPageComponent } from '../pages/change-password/change-password-page.component';
 
 type SubMenuItem = {
   label: string;
@@ -20,7 +22,7 @@ type MenuItem = {
 @Component({
   standalone: true,
   selector: 'dashboard-shell',
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, MatDialogModule],
   templateUrl: './dashboard-shell.component.html',
   styleUrls: ['./dashboard-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,7 +86,8 @@ export class DashboardShellComponent {
   constructor(
     public readonly auth: AuthFacade,
     public readonly tabs: TabService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly dialog: MatDialog
   ) {
     if (this.tabs.tabs().length === 0) {
       const t = this.tabs.openNewTab('/admin/houses', 'املاک', true);
@@ -152,8 +155,12 @@ export class DashboardShellComponent {
 
   changePassword() {
     this.closeUserMenu();
-    const tab = this.tabs.openNewTab('/admin/change-password', 'Change password', false);
-    void this.router.navigateByUrl(tab.path);
+    this.dialog.open(ChangePasswordPageComponent, {
+      panelClass: 'change-password-dialog',
+      autoFocus: false,
+      maxWidth: 'min(520px, calc(100vw - 32px))',
+      width: 'min(520px, 100%)'
+    });
   }
 
   async logout(event?: MouseEvent) {

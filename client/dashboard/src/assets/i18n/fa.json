@@ -1,0 +1,34 @@
+{
+  "MENU": {
+    "HOUSE_MANAGEMENT": "مدیریت املاک",
+    "HOUSES": "املاک",
+    "HOUSE_TYPES": "انواع املاک",
+    "TOURS_MANAGEMENT": "مدیریت تورها",
+    "TOUR_CATEGORIES": "دسته‌بندی‌ها",
+    "TOURS": "تورها",
+    "EXCHANGE": "صرافی",
+    "PERMISSIONS": "دسترسی‌ها",
+    "ROLES": "نقش‌ها",
+    "USERS": "کاربران"
+  },
+  "USER": {
+    "CHANGE_PASSWORD": "تغییر رمز عبور",
+    "LOGOUT": "خروج"
+  },
+  "TABS": {
+    "NEW_HOUSE": "املاک جدید"
+  },
+  "CHANGE_PASSWORD_PAGE": {
+    "TITLE": "تغییر رمز عبور",
+    "SUBTITLE": "برای امنیت حساب‌تان رمز عبور جدید باید حداقل ۶ کاراکتر، شامل حرف بزرگ، عدد و نماد خاص باشد.",
+    "CURRENT_PASSWORD": "رمز عبور فعلی",
+    "NEW_PASSWORD": "رمز عبور جدید",
+    "CONFIRM_PASSWORD": "تکرار رمز عبور جدید",
+    "SUBMIT": "به‌روزرسانی رمز",
+    "CANCEL": "لغو",
+    "SUCCESS": "رمز عبور شما به‌روزرسانی شد.",
+    "ERROR_MISMATCH": "تکرار رمز عبور با مقدار جدید مطابقت ندارد.",
+    "ERROR_PATTERN": "رمز عبور باید شامل حرف بزرگ، عدد و نماد خاص باشد.",
+    "ERROR_MIN_LENGTH": "رمز عبور باید حداقل ۶ کاراکتر باشد."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "MENU": {
+    "HOUSE_MANAGEMENT": "House management",
+    "HOUSES": "Houses",
+    "HOUSE_TYPES": "House types",
+    "TOURS_MANAGEMENT": "Tours management",
+    "TOUR_CATEGORIES": "Categories",
+    "TOURS": "Tours",
+    "EXCHANGE": "Exchange",
+    "PERMISSIONS": "Permissions",
+    "ROLES": "Roles",
+    "USERS": "Users"
+  },
+  "USER": {
+    "CHANGE_PASSWORD": "Change password",
+    "LOGOUT": "Logout"
+  },
+  "TABS": {
+    "NEW_HOUSE": "New house"
+  },
+  "CHANGE_PASSWORD_PAGE": {
+    "TITLE": "Change password",
+    "SUBTITLE": "Keep your account safe: the new password must be at least 6 characters and include an uppercase letter, a number, and a special symbol.",
+    "CURRENT_PASSWORD": "Current password",
+    "NEW_PASSWORD": "New password",
+    "CONFIRM_PASSWORD": "Confirm new password",
+    "SUBMIT": "Update password",
+    "CANCEL": "Cancel",
+    "SUCCESS": "Your password has been updated.",
+    "ERROR_MISMATCH": "The confirmation password does not match.",
+    "ERROR_PATTERN": "Password must include an uppercase letter, a number, and a special character.",
+    "ERROR_MIN_LENGTH": "Password must be at least 6 characters long."
+  }
+}
