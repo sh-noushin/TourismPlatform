@@ -87,7 +87,7 @@ export class DashboardShellComponent {
     private readonly router: Router
   ) {
     if (this.tabs.tabs().length === 0) {
-      const t = this.tabs.openNewTab('/admin/houses', 'Houses', true);
+      const t = this.tabs.openNewTab('/admin/houses', 'املاک', true);
       void this.router.navigateByUrl(t.path);
     }
 

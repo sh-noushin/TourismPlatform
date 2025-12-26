@@ -272,15 +272,10 @@
   padding: spacing(lg);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: spacing(md);
+  justify-content: flex-start;
+  gap: 0;
   box-shadow: 0 10px 35px rgba(109, 76, 255, 0.35);
   position: relative;
-}
-
-.topbar__title {
-  font-weight: 900;
-  letter-spacing: 0.02em;
 }
 
 .user {

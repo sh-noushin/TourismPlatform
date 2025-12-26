@@ -59,8 +59,6 @@
 
   <div class="main">
     <header class="topbar" (click)="$event.stopPropagation()">
-      <div class="topbar__title">داشبورد ادمین</div>
-
       <div class="user">
         <button type="button" class="user__btn" (click)="toggleUserMenu()">
           <span class="user__avatar">{{ initials() }}</span>
@@ -89,7 +87,7 @@
             <span class="tab__title">{{ tab.title || 'Tab' }}</span>
 
             @if (!tab.pinned) {
-              <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">╟-</span>
+              <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">x</span>
             }
           </button>
         }
