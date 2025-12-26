@@ -9,14 +9,13 @@
     [disabled]="disabled()"
     (click)="toggle($event)"
   >
-      <span class="sf-dropdown-label">
-        @if (hasSelection) {
-          <ng-container>{{ selectedLabel }}</ng-container>
-        } @else {
-          <ng-template>{{ placeholder() }}</ng-template>
-        }
-      </span>
-
+    <span class="sf-dropdown-label">
+      @if (hasSelection) {
+        <ng-container>{{ selectedLabel }}</ng-container>
+      } @else {
+        <ng-template>{{ placeholder() }}</ng-template>
+      }
+    </span>
     <span class="sf-dropdown-icon" aria-hidden="true"></span>
   </button>
 
