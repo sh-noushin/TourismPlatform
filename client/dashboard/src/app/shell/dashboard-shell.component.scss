@@ -277,6 +277,9 @@
   justify-content: flex-start;
   box-shadow: 0 10px 35px rgba(109, 76, 255, 0.35);
   position: relative;
+
+  /* IMPORTANT: allow dropdown to overflow outside the header */
+  overflow: visible;
 }
 
 .user {
@@ -325,9 +328,14 @@
 
 .user-menu {
   position: absolute;
-  right: 0;
   top: calc(100% + 10px);
+
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+
   width: 220px;
+  max-inline-size: calc(100vw - (2 * spacing(lg)));
+
   background: $surface;
   border: 1px solid $border;
   border-radius: 14px;
@@ -412,9 +420,7 @@
   overflow: auto;
 }
 
-/* Mobile responsive layout */
 @media (max-width: 1080px) {
-  /* Fix specificity: collapsed must not force 2 columns on mobile */
   .shell,
   .shell.shell--collapsed {
     grid-template-columns: 1fr;
@@ -432,7 +438,7 @@
   /* Collapsed sidebar becomes a horizontal sticky top bar on mobile */
   .sidebar.sidebar--collapsed {
     width: 100%;
-    flex-direction: row-reverse; /* RTL: burger stays on the right */
+    flex-direction: row-reverse;
     align-items: center;
 
     padding: spacing(sm);
@@ -488,5 +494,12 @@
 
   .sidebar.sidebar--collapsed .nav__chev {
     display: none;
+  }
+
+  .user-menu {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+
+    width: min(220px, calc(100vw - (2 * spacing(lg))));
   }
 }
