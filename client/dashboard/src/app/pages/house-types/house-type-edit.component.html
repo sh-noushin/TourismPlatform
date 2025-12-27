@@ -6,7 +6,7 @@
 
     <form class="form" (submit)="save($event)">
       <label>
-        <span class="label-text">Name</span>
+        <span class="label-text">{{ 'TYPE_DIALOG.NAME' | translate }}</span>
         <input
           type="text"
           name="name"
@@ -18,8 +18,12 @@
       </label>
 
       <div class="actions">
-        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
-        <button type="submit" class="btn primary" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}</button>
+        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn primary" [disabled]="saving()">
+          {{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
+        </button>
       </div>
 
       @if (error()) {

@@ -10,7 +10,7 @@
               [style.width]="column.width"
             >
               <button type="button" class="header-button" [class.sortable]="column.sortable" (click)="toggleSort(column)">
-                {{ column.header }}
+                {{ column.headerKey ? (column.headerKey | translate) : column.header }}
                 @if (isSorting(column)) {
                   <span class="indicator">{{ sortSignal()?.direction === 'asc' ? '▲' : '▼' }}</span>
                 }
@@ -18,7 +18,7 @@
             </th>
           }
           @if (effectiveActions().length) {
-            <th class="actions-header">Actions</th>
+            <th class="actions-header">{{ 'TABLE.ACTIONS' | translate }}</th>
           }
         </tr>
       </thead>
@@ -32,7 +32,7 @@
               <td class="actions-cell">
                 @for (action of effectiveActions(); track action.type ?? $index) {
                   <sf-action
-                    [label]="action.label"
+                    [label]="action.labelKey ? (action.labelKey | translate) : action.label"
                     [permission]="action.permission"
                     [icon]="actionIcon(action.type)"
                     [variant]="actionVariant(action.type)"
@@ -49,15 +49,26 @@
 
   @if (!loadingSignal() && dataSignal().length === 0) {
     <div class="empty-state">
-      <sf-empty-state title="Nothing to show" description="Try widening the filters"></sf-empty-state>
+      <sf-empty-state
+        title="{{ 'COMMON.NOTHING_TO_SHOW' | translate }}"
+        description="{{ 'COMMON.TRY_WIDENING_FILTERS' | translate }}"
+      ></sf-empty-state>
     </div>
   }
 
   @if (pagingSignal()) {
     <div class="footer">
-      <button type="button" (click)="navigatePage('prev')" [disabled]="isFirstPage()">Previous</button>
-      <span>Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <button type="button" (click)="navigatePage('next')" [disabled]="isLastPage()">Next</button>
+      <button type="button" (click)="navigatePage('prev')" [disabled]="isFirstPage()">
+        {{ 'COMMON.PREVIOUS' | translate }}
+      </button>
+      <span
+        >{{
+          'COMMON.PAGE_INFO' | translate: { current: currentPage(), total: totalPages() }
+        }}</span
+      >
+      <button type="button" (click)="navigatePage('next')" [disabled]="isLastPage()">
+        {{ 'COMMON.NEXT' | translate }}
+      </button>
     </div>
   }
 

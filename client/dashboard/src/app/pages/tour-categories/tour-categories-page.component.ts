@@ -9,6 +9,8 @@ import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { TourCategoriesService, TourCategoryDto } from '../../features/tours/tour-categories.service';
 import { TourCategoryEditComponent } from './tour-category-edit.component';
+import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -24,7 +26,7 @@ import { TourCategoryEditComponent } from './tour-category-edit.component';
     SfTableComponent,
     SfButtonComponent,
     MatDialogModule,
-    TourCategoryEditComponent
+    TranslateModule
   ]
 })
 export class TourCategoriesPageComponent {
@@ -33,7 +35,7 @@ export class TourCategoriesPageComponent {
   readonly loadingSignal = computed(() => this.tourCategories.loading());
   readonly errorSignal = computed(() => this.tourCategories.error());
 
-  readonly columns: SfTableColumn[] = [{ key: 'name', header: 'Name', field: 'name', sortable: true }];
+  readonly columns: SfTableColumn[] = [{ key: 'name', header: 'Name', headerKey: 'TABLE_HEADERS.NAME', field: 'name', sortable: true }];
 
   readonly displayedCategories = computed(() => {
     const filter = this.filterSignal().toLowerCase();
@@ -63,7 +65,12 @@ export class TourCategoriesPageComponent {
     { label: '', type: 'delete' }
   ];
 
-  constructor(private readonly tourCategories: TourCategoriesService, private readonly dialog: MatDialog) {
+  constructor(
+    private readonly tourCategories: TourCategoriesService,
+    private readonly dialog: MatDialog,
+    private readonly confirm: ConfirmService,
+    private readonly translate: TranslateService
+  ) {
     void this.tourCategories.load();
   }
 
@@ -85,7 +92,13 @@ export class TourCategoriesPageComponent {
   }
 
   private async delete(id: string) {
-    if (!confirm('Delete this tour category?')) return;
+    const confirmed = await this.confirm.confirm({
+      title: this.translate.instant('CONFIRM_DIALOG.TITLE'),
+      message: this.translate.instant('TOUR_CATEGORIES_PAGE.DELETE_CONFIRMATION'),
+      confirmLabel: this.translate.instant('CONFIRM_DIALOG.CONFIRM'),
+      cancelLabel: this.translate.instant('CONFIRM_DIALOG.CANCEL')
+    });
+    if (!confirmed) return;
     try {
       await this.tourCategories.delete(id);
       await this.tourCategories.load({ force: true });

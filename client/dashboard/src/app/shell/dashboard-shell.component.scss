@@ -21,6 +21,17 @@
   grid-template-columns: 1fr 72px;
 }
 
+/* LTR layout: sidebar on left */
+:host-context([dir="ltr"]) .shell {
+  grid-template-columns: 220px 1fr;
+  grid-template-areas: "sidebar main";
+  padding: 0 spacing(md) 0 0;
+}
+
+:host-context([dir="ltr"]) .shell.shell--collapsed {
+  grid-template-columns: 72px 1fr;
+}
+
 .sidebar {
   grid-area: sidebar;
   background: $sidebarBg;
@@ -34,6 +45,11 @@
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 }
 
+/* LTR sidebar alignment */
+:host-context([dir="ltr"]) .sidebar {
+  text-align: left;
+}
+
 .sidebar--collapsed {
   padding: spacing(sm);
   width: 72px;
@@ -45,6 +61,10 @@
   justify-content: flex-end;
   padding: 0 4px;
   gap: spacing(xs);
+}
+
+:host-context([dir="ltr"]) .sidebar__top {
+  justify-content: flex-start;
 }
 
 .icon-btn {

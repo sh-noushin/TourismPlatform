@@ -9,6 +9,7 @@ import { HousesFacade } from '../../features/houses/houses.facade';
 import { HouseTypesService } from '../../features/houses/house-types.service';
 import { SfDropdownComponent } from '../../shared/ui/sf-dropdown/sf-dropdown.component';
 import { SfFileuploadComponent } from '../../shared/ui/sf-fileupload/sf-fileupload.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 type ExistingPhotoVm = {
   kind: 'existing';
@@ -48,7 +49,7 @@ type HouseForm = {
 @Component({
   standalone: true,
   selector: 'house-edit',
-  imports: [CommonModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent],
+  imports: [CommonModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent, TranslateModule],
   templateUrl: './house-edit.component.html',
   styleUrls: ['./house-edit.component.scss']
 })
@@ -75,6 +76,7 @@ export class HouseEditComponent implements OnDestroy {
     private readonly http: HttpClient,
     @Inject(API_BASE_URL) private readonly apiBaseUrl: string,
     public readonly houseTypes: HouseTypesService,
+    private readonly translate: TranslateService,
     @Optional() private readonly route?: ActivatedRoute,
     @Optional() private readonly dialogRef?: MatDialogRef<HouseEditComponent, boolean>,
     @Optional() @Inject(MAT_DIALOG_DATA) private readonly data?: { id?: string | null }

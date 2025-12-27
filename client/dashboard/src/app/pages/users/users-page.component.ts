@@ -9,31 +9,13 @@ import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { UserSummaryDto, UsersFacade } from '../../features/users/users.facade';
 import { TabService } from '../../core/tab/tab.service';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'users-page',
-  template: `
-  <section class="users-page">
-    <div class="users-page__header">
-        <sf-page-header title="Users" subtitle="Platform users">
-        <sf-button sfPageHeaderActions variant="ghost" type="button" (click)="createUser()">New user</sf-button>
-      </sf-page-header>
-      <div class="users-page__filters">
-        <sf-searchbar placeholder="Search users" (valueChange)="setFilter($event)"></sf-searchbar>
-      </div>
-    </div>
-
-    @if (users.error()) {
-      <div class="users-page__error">{{ users.error() }}</div>
-    }
-
-    <sf-card>
-      <sf-table [columns]="columns" [data]="displayedUsers()" [loading]="loadingSignal()" [actions]="actions" (rowAction)="onRowAction($event)" (sortChange)="onSortChange($event)"></sf-table>
-    </sf-card>
-  </section>
-  `,
-  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent],
+  templateUrl: './users-page.component.html',
+  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersPageComponent {
@@ -43,8 +25,8 @@ export class UsersPageComponent {
   readonly loadingSignal = computed(() => this.users.loading());
 
   readonly columns: SfTableColumn[] = [
-    { key: 'email', header: 'Email', field: 'email', sortable: true },
-    { key: 'name', header: 'Name', field: 'fullName', sortable: true }
+    { key: 'email', header: 'Email', headerKey: 'TABLE_HEADERS.EMAIL', field: 'email', sortable: true },
+    { key: 'name', header: 'Name', headerKey: 'TABLE_HEADERS.NAME', field: 'fullName', sortable: true }
   ];
 
   readonly displayedUsers = computed(() => {
@@ -60,7 +42,7 @@ export class UsersPageComponent {
     });
   });
 
-  readonly actions = [{ label: 'Edit', type: 'edit', icon: 'edit' }];
+  readonly actions = [{ label: 'Edit', labelKey: 'TABLE_ACTIONS.EDIT', type: 'edit', icon: 'edit' }];
 
   constructor(public readonly users: UsersFacade, private readonly tabs: TabService, private readonly router: Router) {
     this.users.load();

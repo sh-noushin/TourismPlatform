@@ -1,14 +1,16 @@
 <div class="edit-shell" (click)="$event.stopPropagation()">
   <div class="glass-panel">
     <header class="header">
-      <h3>{{ id ? 'Edit house' : 'Create house' }}</h3>
+      <h3>
+        {{ id ? ('HOUSES.EDIT_TITLE' | translate) : ('HOUSES.CREATE_TITLE' | translate) }}
+      </h3>
     </header>
 
     @if (form()) {
       <form class="form" (submit)="save($event)">
         <section class="form-grid top">
           <label>
-            <span class="label-text">Name</span>
+            <span class="label-text">{{ 'HOUSES.NAME' | translate }}</span>
             <input
               type="text"
               name="name"
@@ -20,7 +22,7 @@
           </label>
 
           <label class="description">
-            <span class="label-text">Description</span>
+            <span class="label-text">{{ 'HOUSES.DESCRIPTION' | translate }}</span>
             <textarea
               name="description"
               rows="3"
@@ -30,17 +32,17 @@
           </label>
 
           <label class="combobox">
-            <span class="label-text">Type</span>
+            <span class="label-text">{{ 'HOUSES.TYPE' | translate }}</span>
             <sf-dropdown
               [items]="houseTypeOptions()"
               [value]="form()?.houseTypeName ?? ''"
               (selectionChange)="updateField('houseTypeName', $event)"
-              placeholder="Select type"
+              placeholder="{{ 'HOUSES.SELECT_TYPE' | translate }}"
               name="houseTypeName"
             ></sf-dropdown>
 
             @if (houseTypes.loading()) {
-              <p class="mini-note">Loading types…</p>
+              <p class="mini-note">{{ 'HOUSES.LOADING_TYPES' | translate }}</p>
             }
             @if (houseTypes.error()) {
               <p class="status error">{{ houseTypes.error() }}</p>
@@ -50,7 +52,7 @@
 
         <section class="form-grid address">
           <label>
-            <span class="label-text">Address line 1</span>
+            <span class="label-text">{{ 'HOUSES.ADDRESS_LINE_1' | translate }}</span>
             <input
               type="text"
               name="line1"
@@ -62,7 +64,7 @@
           </label>
 
           <label>
-            <span class="label-text">Address line 2</span>
+            <span class="label-text">{{ 'HOUSES.ADDRESS_LINE_2' | translate }}</span>
             <input
               type="text"
               name="line2"
@@ -73,7 +75,7 @@
           </label>
 
           <label>
-            <span class="label-text">City</span>
+            <span class="label-text">{{ 'HOUSES.CITY' | translate }}</span>
             <input
               type="text"
               name="city"
@@ -85,7 +87,7 @@
           </label>
 
           <label>
-            <span class="label-text">Region</span>
+            <span class="label-text">{{ 'HOUSES.REGION' | translate }}</span>
             <input
               type="text"
               name="region"
@@ -96,7 +98,7 @@
           </label>
 
           <label>
-            <span class="label-text">Country</span>
+            <span class="label-text">{{ 'HOUSES.COUNTRY' | translate }}</span>
             <input
               type="text"
               name="country"
@@ -108,7 +110,7 @@
           </label>
 
           <label>
-            <span class="label-text">Postal code</span>
+            <span class="label-text">{{ 'HOUSES.POSTAL_CODE' | translate }}</span>
             <input
               type="text"
               name="postalCode"
@@ -121,7 +123,7 @@
 
         <div class="fileupload-row">
           <sf-fileupload
-            label="Photos"
+            label="{{ 'HOUSES.PHOTOS' | translate }}"
             accept="image/*"
             [multiple]="true"
             [disabled]="uploading() || saving()"
@@ -144,7 +146,9 @@
                   <div class="photo-info">
                     <strong>{{ photo.label }}</strong>
                   </div>
-                  <button class="text-button" type="button" (click)="removePhoto(i)">Remove</button>
+                  <button class="text-button" type="button" (click)="removePhoto(i)">
+                    {{ 'HOUSES.REMOVE_PHOTO' | translate }}
+                  </button>
                 </div>
               }
             </div>
@@ -152,9 +156,15 @@
         }
 
         <section class="actions">
-          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
+          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
           <button type="submit" class="btn primary" [disabled]="saving()">
-            {{ saving() ? 'Saving...' : (id ? 'Update' : 'Create') }}
+            {{
+              saving()
+                ? ('COMMON.SAVING' | translate)
+                : (id ? ('COMMON.UPDATE' | translate) : ('COMMON.CREATE' | translate))
+            }}
           </button>
         </section>
       </form>
@@ -165,7 +175,7 @@
         <span class="status error">{{ error() }}</span>
       }
       @if (saved()) {
-        <span class="status success">Saved.</span>
+        <span class="status success">{{ 'HOUSES.SAVED' | translate }}</span>
       }
     </div>
   </div>

@@ -13,7 +13,7 @@
         type="button"
         class="icon-btn"
         (click)="toggleSidebar()"
-        aria-label="Toggle menu"
+        aria-label="{{ 'ARIA.TOGGLE_MENU' | translate }}"
       >
         <span class="burger"></span>
       </button>
@@ -32,7 +32,7 @@
             <span class="nav__icon" aria-hidden="true">{{ item.icon }}</span>
 
             @if (!sidebarCollapsed()) {
-              <span class="nav__label">{{ item.label }}</span>
+              <span class="nav__label">{{ item.labelKey | translate }}</span>
             }
 
             @if (!sidebarCollapsed() && item.subItems?.length) {
@@ -49,7 +49,7 @@
                   [class.nav__submenu-item--active]="isSubMenuItemActive(sub)"
                   (click)="openSubMenuItem(item, sub)"
                 >
-                  {{ sub.label }}
+                  {{ sub.labelKey | translate }}
                 </button>
               }
             </div>
@@ -63,7 +63,7 @@
         <div class="brand">
           <div class="brand__logo">TP</div>
           <div class="brand__text">
-            <div class="brand__title">پلتفرم گردشگری</div>
+            <div class="brand__title">{{ 'BRAND.TITLE' | translate }}</div>
           </div>
         </div>
       </div>
@@ -82,10 +82,10 @@
         @if (userMenuOpen()) {
           <div #userMenu class="user-menu" (click)="$event.stopPropagation()">
             <button type="button" class="user-menu__item" (click)="changePassword(); closeUserMenu()">
-              Change password
+              {{ 'USER.CHANGE_PASSWORD' | translate }}
             </button>
             <button type="button" class="user-menu__item danger" (click)="logout($event)">
-              Logout
+              {{ 'USER.LOGOUT' | translate }}
             </button>
           </div>
         }
@@ -101,7 +101,9 @@
             [class.tab--active]="tabs.activeTabId() === tab.id"
             (click)="activate(tab)"
           >
-            <span class="tab__title">{{ tab.title || 'Tab' }}</span>
+            <span class="tab__title">
+              {{ tab.title || ('TABS.DEFAULT_TAB' | translate) }}
+            </span>
 
             @if (!tab.pinned) {
               <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">x</span>

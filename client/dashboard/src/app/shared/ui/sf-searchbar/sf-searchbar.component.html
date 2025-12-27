@@ -10,14 +10,14 @@
       [value]="valueSignal()"
       (input)="onInput($event)"
       (keydown.escape)="clear()"
-      aria-label="Search"
+      aria-label="{{ 'ARIA.SEARCH' | translate }}"
     />
 
     @if (valueSignal().length) {
       <button
         type="button"
         class="sf-searchbar__clear"
-        aria-label="Clear"
+        aria-label="{{ 'ARIA.CLEAR' | translate }}"
         (click)="clear()"
       >
         <mat-icon aria-hidden="true">close</mat-icon>

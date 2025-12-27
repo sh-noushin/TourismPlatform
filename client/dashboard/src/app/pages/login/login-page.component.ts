@@ -3,86 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthFacade } from '../../core/auth/auth.facade';
 import { TabService } from '../../core/tab/tab.service';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-login-page',
-  imports: [SfButtonComponent],
-  template: `
-  <section class="login-shell">
-    <div class="login-card">
-     <div class="avatar" aria-hidden="true">
-  <svg class="avatar__svg" viewBox="0 0 24 24" aria-hidden="true">
-    <circle cx="12" cy="8" r="3.2"></circle>
-    <path d="M4.5 20c1.8-4.2 13.2-4.2 15 0"></path>
-  </svg>
-</div>
-
-
-      <form class="login-form" (submit)="onSubmit($event)">
-        <div class="field">
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18">
-              <path
-                d="M12 12a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14Z"
-              />
-            </svg>
-          </span>
-
-          <input
-            type="email"
-            name="username"
-            autocomplete="username"
-            placeholder="Username"
-            [value]="email()"
-            (input)="email.set($any($event.target).value)"
-            required
-          />
-        </div>
-
-        <div class="field">
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18">
-              <path
-                d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 0 1 4 0v2h-4Z"
-              />
-            </svg>
-          </span>
-
-          <input
-            type="password"
-            name="password"
-            autocomplete="current-password"
-            placeholder="Password"
-            [value]="password()"
-            (input)="password.set($any($event.target).value)"
-            required
-          />
-        </div>
-
-        <div class="row">
-             <a class="forgot" href="#" (click)="onForgot($event)">Forgot Password?</a>
-        </div>
-
-        <sf-button
-          class="login-btn"
-          type="submit"
-          text="LOGIN"
-          height="54px"
-          width="100%"
-          color="#7b8b9b"
-          textColor="#ffffff"
-          [loading]="loading()"
-          [disabled]="!formValid() || loading()"
-        ></sf-button>
-
-        @if (error()) {
-          <p class="error">{{ error() }}</p>
-        }
-      </form>
-    </div>
-  </section>
-  `,
+  imports: [SfButtonComponent, TranslateModule],
+  templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent {
@@ -101,7 +28,8 @@ export class LoginPageComponent {
     private readonly auth: AuthFacade,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly tabs: TabService
+    private readonly tabs: TabService,
+    private readonly translate: TranslateService
   ) {
     const q = this.route.snapshot.queryParamMap.get('returnUrl');
     if (q) this.returnUrl = q;
@@ -111,7 +39,7 @@ export class LoginPageComponent {
     e.preventDefault();
 
     if (!this.formValid()) {
-      this.error.set('Please provide a valid email and password (min 6 chars).');
+      this.error.set(this.translate.instant('LOGIN_PAGE.ERROR_INVALID'));
       return;
     }
 
@@ -125,7 +53,7 @@ export class LoginPageComponent {
       await this.router.navigateByUrl(navTo);
 
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Login failed');
+      this.error.set(err?.message ?? this.translate.instant('LOGIN_PAGE.ERROR_LOGIN_FAILED'));
     } finally {
       this.loading.set(false);
     }
@@ -133,6 +61,6 @@ export class LoginPageComponent {
 
   onForgot(e: Event) {
     e.preventDefault();
-    this.error.set('Please contact support to reset your password.');
+    this.error.set(this.translate.instant('LOGIN_PAGE.ERROR_CONTACT_SUPPORT'));
   }
 }

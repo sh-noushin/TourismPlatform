@@ -11,6 +11,7 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { HouseEditComponent } from './house-edit.component';
 import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -24,7 +25,8 @@ import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
     SfSearchbarComponent,
     SfTableComponent,
     SfButtonComponent,
-    MatDialogModule
+    MatDialogModule,
+    TranslateModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -34,10 +36,10 @@ export class HousesPageComponent {
 
   readonly loadingSignal = computed(() => this.houses.loading());
   readonly columns: SfTableColumn[] = [
-    { key: 'name', header: 'Name', field: 'name', sortable: true },
-    { key: 'type', header: 'Type', field: 'houseTypeName', sortable: true },
-    { key: 'city', header: 'City', field: 'city', sortable: true },
-    { key: 'country', header: 'Country', field: 'country', sortable: true }
+    { key: 'name', header: 'Name', headerKey: 'TABLE_HEADERS.NAME', field: 'name', sortable: true },
+    { key: 'type', header: 'Type', headerKey: 'TABLE_HEADERS.TYPE', field: 'houseTypeName', sortable: true },
+    { key: 'city', header: 'City', headerKey: 'TABLE_HEADERS.CITY', field: 'city', sortable: true },
+    { key: 'country', header: 'Country', headerKey: 'TABLE_HEADERS.COUNTRY', field: 'country', sortable: true }
   ];
 
   readonly displayedHouses = computed(() => {
@@ -63,14 +65,15 @@ export class HousesPageComponent {
   });
 
   readonly actions = [
-    { label: 'Edit', type: 'edit', icon: 'edit' },
-    { label: 'Delete', type: 'delete', icon: 'delete' }
+    { label: 'Edit', labelKey: 'TABLE_ACTIONS.EDIT', type: 'edit', icon: 'edit' },
+    { label: 'Delete', labelKey: 'TABLE_ACTIONS.DELETE', type: 'delete', icon: 'delete' }
   ];
 
   constructor(
     private readonly houses: HousesFacade,
     private readonly dialog: MatDialog,
-    private readonly confirm: ConfirmService
+    private readonly confirm: ConfirmService,
+    private readonly translate: TranslateService
   ) {
     this.houses.load();
   }
@@ -87,10 +90,10 @@ export class HousesPageComponent {
       const houseId = row?.houseId ?? row?.id ?? null;
       if (!houseId) return;
       const confirmed = await this.confirm.confirm({
-        title: 'Delete house',
-        message: `Delete ${row?.name ?? 'this house'}?`,
-        confirmLabel: 'Delete',
-        cancelLabel: 'Cancel'
+        title: this.translate.instant('CONFIRM_DIALOG.TITLE'),
+        message: this.translate.instant('HOUSES_PAGE.DELETE_CONFIRMATION', { name: row?.name ?? '' }),
+        confirmLabel: this.translate.instant('CONFIRM_DIALOG.CONFIRM'),
+        cancelLabel: this.translate.instant('CONFIRM_DIALOG.CANCEL')
       });
       if (!confirmed) return;
       try {

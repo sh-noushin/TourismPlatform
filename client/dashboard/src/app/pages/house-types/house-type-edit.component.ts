@@ -2,25 +2,29 @@ import { ChangeDetectionStrategy, Component, computed, Inject, Optional, signal 
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HouseTypesService } from '../../features/houses/house-types.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'house-type-edit',
   templateUrl: './house-type-edit.component.html',
   styleUrls: ['./house-type-edit.component.scss'],
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HouseTypeEditComponent {
   readonly name = signal('');
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
-  readonly title = computed(() => (this.id ? 'Edit house type' : 'Create house type'));
+  readonly title = computed(() =>
+    this.id ? this.translate.instant('TYPE_DIALOG.EDIT_TITLE') : this.translate.instant('TYPE_DIALOG.CREATE_TITLE')
+  );
 
   readonly id: string | null;
 
   constructor(
     private readonly houseTypes: HouseTypesService,
+    private readonly translate: TranslateService,
     @Optional() private readonly dialogRef?: MatDialogRef<HouseTypeEditComponent, boolean>,
     @Optional() @Inject(MAT_DIALOG_DATA) private readonly data?: { id?: string | null }
   ) {
@@ -33,7 +37,7 @@ export class HouseTypeEditComponent {
 
     const trimmed = this.name().trim();
     if (!trimmed) {
-      this.error.set('Name is required.');
+      this.error.set(this.translate.instant('TYPE_DIALOG.NAME_REQUIRED'));
       return;
     }
 
@@ -48,7 +52,7 @@ export class HouseTypeEditComponent {
       }
       this.dialogRef?.close(true);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Unable to save house type.');
+      this.error.set(err?.message ?? this.translate.instant('TYPE_DIALOG.SAVE_FAILED'));
     } finally {
       this.saving.set(false);
     }
@@ -71,7 +75,7 @@ export class HouseTypeEditComponent {
       const type = await this.houseTypes.getById(this.id);
       this.name.set(type.name);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Failed to load house type.');
+      this.error.set(err?.message ?? this.translate.instant('TYPE_DIALOG.LOAD_FAILED'));
     }
   }
 }

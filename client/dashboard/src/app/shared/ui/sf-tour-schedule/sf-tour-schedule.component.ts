@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface TourScheduleItem {
   id?: string;
@@ -16,7 +17,7 @@ export interface TourScheduleItem {
   selector: 'sf-tour-schedule',
   templateUrl: './sf-tour-schedule.component.html',
   styleUrls: ['./sf-tour-schedule.component.scss'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SfTourScheduleComponent {

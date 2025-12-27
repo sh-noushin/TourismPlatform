@@ -19,6 +19,7 @@ import { TourCategoriesService } from '../../features/tours/tour-categories.serv
 import { SfDropdownComponent } from '../../shared/ui/sf-dropdown/sf-dropdown.component';
 import { SfFileuploadComponent } from '../../shared/ui/sf-fileupload/sf-fileupload.component';
 import { SfTourScheduleComponent, TourScheduleItem } from '../../shared/ui/sf-tour-schedule/sf-tour-schedule.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 type ExistingPhotoVm = {
   kind: 'existing';
@@ -49,7 +50,7 @@ type TourForm = {
 @Component({
   standalone: true,
   selector: 'tour-edit',
-  imports: [CommonModule, FormsModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent, SfTourScheduleComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent, SfTourScheduleComponent, TranslateModule],
   templateUrl: './tour-edit.component.html',
   styleUrls: ['./tour-edit.component.scss']
 })

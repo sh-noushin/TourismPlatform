@@ -3,18 +3,19 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { AuthFacade } from '../core/auth/auth.facade';
 import { TabService, TabItem } from '../core/tab/tab.service';
 import { ChangePasswordPageComponent } from '../pages/change-password/change-password-page.component';
 
 type SubMenuItem = {
-  label: string;
+  labelKey: string;
   path: string;
 };
 
 type MenuItem = {
-  label: string;
+  labelKey: string;
   basePath: string;
   icon: string;
   subItems?: SubMenuItem[];
@@ -23,7 +24,7 @@ type MenuItem = {
 @Component({
   standalone: true,
   selector: 'dashboard-shell',
-  imports: [CommonModule, RouterOutlet, MatDialogModule],
+  imports: [CommonModule, RouterOutlet, MatDialogModule, TranslateModule],
   templateUrl: './dashboard-shell.component.html',
   styleUrls: ['./dashboard-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,32 +38,32 @@ export class DashboardShellComponent {
 
   readonly menuItems: MenuItem[] = [
     {
-      label: 'مدیریت املاک',
+      labelKey: 'MENU.HOUSE_MANAGEMENT',
       basePath: '/admin/house-management',
       icon: '🏠',
       subItems: [
-        { label: 'املاک', path: '/admin/houses' },
-        { label: 'انواع املاک', path: '/admin/house-types' }
+        { labelKey: 'MENU.HOUSES', path: '/admin/houses' },
+        { labelKey: 'MENU.HOUSE_TYPES', path: '/admin/house-types' }
       ]
     },
     {
-      label: 'مدیریت تورها',
+      labelKey: 'MENU.TOURS_MANAGEMENT',
       basePath: '/admin/tours-management',
       icon: '🧳',
       subItems: [
-        { label: 'دسته‌بندی‌ها', path: '/admin/tour-categories' },
-        { label: 'تورها', path: '/admin/tours' }
+        { labelKey: 'MENU.TOUR_CATEGORIES', path: '/admin/tour-categories' },
+        { labelKey: 'MENU.TOURS', path: '/admin/tours' }
       ]
     },
-    { label: 'صرافی', basePath: '/admin/exchange', icon: '💱' },
+    { labelKey: 'MENU.EXCHANGE', basePath: '/admin/exchange', icon: '💱' },
     {
-      label: 'مدیریت دسترسی‌ها',
+      labelKey: 'MENU.PERMISSIONS',
       basePath: '/admin/permissions',
       icon: '🔐',
       subItems: [
-        { label: 'نقش‌ها', path: '/admin/roles' },
-        { label: 'کاربران', path: '/admin/users' },
-        { label: 'دسترسی‌ها', path: '/admin/permissions' }
+        { labelKey: 'MENU.ROLES', path: '/admin/roles' },
+        { labelKey: 'MENU.USERS', path: '/admin/users' },
+        { labelKey: 'MENU.PERMISSIONS', path: '/admin/permissions' }
       ]
     },
   ];
@@ -90,10 +91,12 @@ export class DashboardShellComponent {
     public readonly auth: AuthFacade,
     public readonly tabs: TabService,
     private readonly router: Router,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly translate: TranslateService
   ) {
     if (this.tabs.tabs().length === 0) {
-      const t = this.tabs.openNewTab('/admin/houses', 'املاک', true);
+      const tabTitle = this.translate.instant('MENU.HOUSES');
+      const t = this.tabs.openNewTab('/admin/houses', tabTitle, true);
       void this.router.navigateByUrl(t.path);
     }
 
@@ -119,12 +122,12 @@ export class DashboardShellComponent {
       this.expandedMenu.update(current => (current === item.basePath ? null : item.basePath));
       return;
     }
-    this.openTab(item.basePath, item.label);
+    this.openTab(item.basePath, this.translate.instant(item.labelKey));
   }
 
   openSubMenuItem(item: MenuItem, sub: SubMenuItem) {
     this.expandedMenu.set(item.basePath);
-    this.openTab(sub.path, sub.label);
+    this.openTab(sub.path, this.translate.instant(sub.labelKey));
   }
 
   activate(tab: TabItem) {

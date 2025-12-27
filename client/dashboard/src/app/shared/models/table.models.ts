@@ -3,6 +3,7 @@ export type SfTableSortDirection = 'asc' | 'desc';
 export interface SfTableColumn<T = Record<string, unknown>> {
   key: string;
   header: string;
+  headerKey?: string;
   field?: keyof T | string;
   sortable?: boolean;
   width?: string;
@@ -11,6 +12,7 @@ export interface SfTableColumn<T = Record<string, unknown>> {
 
 export interface SfTableRowAction {
   label: string;
+  labelKey?: string;
   type: string;
   icon?: string;
   color?: 'primary' | 'warn' | 'muted';
