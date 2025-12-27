@@ -168,14 +168,17 @@ export class DashboardShellComponent {
   }
 
   changePassword() {
-    this.closeUserMenu();
-    this.dialog.open(ChangePasswordPageComponent, {
-      panelClass: 'change-password-dialog',
-      autoFocus: false,
-      maxWidth: 'min(520px, calc(100vw - 32px))',
-      width: 'min(520px, 100%)'
-    });
-  }
+  this.closeUserMenu();
+
+  this.dialog.open(ChangePasswordPageComponent, {
+    panelClass: 'change-password-dialog',
+    backdropClass: 'change-password-backdrop', 
+    autoFocus: false,
+    maxWidth: 'min(520px, calc(100vw - 32px))',
+    width: 'min(520px, 100%)'
+  });
+}
+
 
   async logout(event?: MouseEvent) {
     event?.stopPropagation();
