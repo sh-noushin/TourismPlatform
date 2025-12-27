@@ -12,36 +12,31 @@
 /* Layout */
 .shell {
   min-height: 100vh;
-  display: grid;
-
-  /* LTR default: sidebar left */
-  grid-template-columns: 220px 1fr;
-  grid-template-areas: "sidebar main";
-
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
   gap: spacing(md);
   padding: 0 spacing(md);
   direction: inherit;
 }
 
-.shell.shell--collapsed {
-  grid-template-columns: 72px 1fr;
+.shell.shell--rtl {
+  flex-direction: row-reverse; /* physically move sidebar to right */
+  direction: rtl;
 }
 
-/* RTL: sidebar right */
+/* dir-based fallback */
 :host([dir='rtl']) .shell,
 :host-context([dir='rtl']) .shell {
-  grid-template-columns: 1fr 220px;
-  grid-template-areas: "main sidebar";
-}
-
-:host([dir='rtl']) .shell.shell--collapsed,
-:host-context([dir='rtl']) .shell.shell--collapsed {
-  grid-template-columns: 1fr 72px;
+  flex-direction: row-reverse;
+  direction: rtl;
 }
 
 /* Sidebar */
 .sidebar {
   grid-area: sidebar;
+  flex: 0 0 var(--sidebar-width, 220px);
+  width: var(--sidebar-width, 220px);
   background: $sidebarBg;
   border: 1px solid $border;
   border-radius: 18px;
@@ -58,7 +53,7 @@
 
 .sidebar--collapsed {
   padding: spacing(sm);
-  width: 72px;
+  width: var(--sidebar-width, 72px);
 }
 
 .sidebar__top {
@@ -152,9 +147,8 @@
   --submenu-indent: calc(var(--nav-pad) + var(--nav-icon) + var(--nav-gap)); /* LTR good */
 }
 
-:host([dir='rtl']) .nav,
-:host-context([dir='rtl']) .nav {
-  --submenu-indent: 18px; /* key fix for your screenshot */
+.shell--rtl .nav {
+  --submenu-indent: 18px; /* key fix for RTL */
 }
 
 .nav {
@@ -300,6 +294,7 @@
 /* Main */
 .main {
   grid-area: main;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: spacing(md);
@@ -488,11 +483,16 @@
 @media (max-width: 1080px) {
   .shell,
   .shell.shell--collapsed {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "sidebar"
-      "main";
+    display: flex;
+    flex-direction: column;
     padding: spacing(md);
+  }
+
+  .shell.shell--rtl,
+  :host([dir='rtl']) .shell,
+  :host-context([dir='rtl']) .shell {
+    flex-direction: column;
+    direction: rtl;
   }
 
   .sidebar {

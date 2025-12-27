@@ -130,6 +130,7 @@ export class DashboardShellComponent implements OnDestroy {
     const dir = this.lang() === 'fa' ? 'rtl' : 'ltr';
     this.document.documentElement.setAttribute('dir', dir);
     this.document.documentElement.setAttribute('lang', this.lang());
+    this.document.body?.setAttribute('dir', dir);
   }
 
   toggleSidebar() {
