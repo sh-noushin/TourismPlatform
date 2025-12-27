@@ -6,47 +6,40 @@
   background: linear-gradient(180deg, $dashboardBgStart 0%, $dashboardBgEnd 100%);
   color: $text;
   font-family: $font-body;
-
-  /* important: all rtl/ltr behavior comes from dir on host or html */
   direction: inherit;
 }
 
-/* -------------------------------------------------------
-   Layout
-   Default is RTL (Farsi): sidebar on the right
-------------------------------------------------------- */
-
+/* Layout */
 .shell {
   min-height: 100vh;
   display: grid;
-  direction: inherit;
 
-  grid-template-columns: 1fr 220px;
-  grid-template-areas: "main sidebar";
+  /* LTR default: sidebar left */
+  grid-template-columns: 220px 1fr;
+  grid-template-areas: "sidebar main";
+
   gap: spacing(md);
   padding: 0 spacing(md);
+  direction: inherit;
 }
 
 .shell.shell--collapsed {
-  grid-template-columns: 1fr 72px;
-}
-
-/* LTR (English): sidebar on the left */
-:host([dir="ltr"]) .shell,
-:host-context([dir="ltr"]) .shell {
-  grid-template-columns: 220px 1fr;
-  grid-template-areas: "sidebar main";
-}
-
-:host([dir="ltr"]) .shell.shell--collapsed,
-:host-context([dir="ltr"]) .shell.shell--collapsed {
   grid-template-columns: 72px 1fr;
 }
 
-/* -------------------------------------------------------
-   Sidebar
-------------------------------------------------------- */
+/* RTL: sidebar right */
+:host([dir='rtl']) .shell,
+:host-context([dir='rtl']) .shell {
+  grid-template-columns: 1fr 220px;
+  grid-template-areas: "main sidebar";
+}
 
+:host([dir='rtl']) .shell.shell--collapsed,
+:host-context([dir='rtl']) .shell.shell--collapsed {
+  grid-template-columns: 1fr 72px;
+}
+
+/* Sidebar */
 .sidebar {
   grid-area: sidebar;
   background: $sidebarBg;
@@ -58,8 +51,9 @@
   gap: spacing(sm);
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 
-  /* start = right in RTL, left in LTR */
+  /* critical: no hardcoded left/right */
   text-align: start;
+  direction: inherit;
 }
 
 .sidebar--collapsed {
@@ -70,10 +64,9 @@
 .sidebar__top {
   display: flex;
   align-items: center;
-
-  /* start = right in RTL, left in LTR */
-  justify-content: flex-start;
+  justify-content: flex-start; /* start => left in LTR, right in RTL */
   padding: 0 4px;
+  gap: spacing(xs);
 }
 
 .icon-btn {
@@ -85,7 +78,6 @@
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: background 160ms ease, border-color 160ms ease;
 }
 
 .icon-btn:hover {
@@ -112,12 +104,13 @@
 }
 
 .burger::before { top: -5px; }
-.burger::after  { top:  5px; }
+.burger::after { top: 5px; }
 
+/* Brand */
 .sidebar__brand {
   margin-top: auto;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start; /* start side */
   padding: spacing(sm) 4px 0;
 }
 
@@ -141,22 +134,28 @@
   flex: 0 0 auto;
 }
 
-.brand__text {
-  min-width: 0;
-}
+.brand__text { min-width: 0; }
 
 .brand__title {
   font-weight: 800;
   line-height: 1.1;
   font-size: 0.92rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* -------------------------------------------------------
-   Navigation
-------------------------------------------------------- */
+/* Navigation */
+.nav {
+  --nav-pad: 6px;
+  --nav-gap: 6px;
+  --nav-icon: 30px;
+
+  /* submenu indentation: make RTL smaller so it does NOT start too far from right */
+  --submenu-indent: calc(var(--nav-pad) + var(--nav-icon) + var(--nav-gap)); /* LTR good */
+}
+
+:host([dir='rtl']) .nav,
+:host-context([dir='rtl']) .nav {
+  --submenu-indent: 18px; /* key fix for your screenshot */
+}
 
 .nav {
   display: flex;
@@ -175,22 +174,18 @@
   width: 100%;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-
-  padding: 6px 6px;
+  gap: var(--nav-gap);
+  padding: var(--nav-pad);
   border-radius: 12px;
   border: 1px solid transparent;
   background: transparent;
-
   color: $text;
   cursor: pointer;
 
-  /* start = right in RTL, left in LTR */
-  text-align: start;
+  /* important: direction-driven layout */
   direction: inherit;
-
-  font-size: 0.84rem;
-  line-height: 1.1;
+  text-align: start;
+  justify-content: flex-start;
 }
 
 .nav__item:hover {
@@ -204,8 +199,8 @@
 }
 
 .nav__icon {
-  width: 30px;
-  height: 30px;
+  width: var(--nav-icon);
+  height: var(--nav-icon);
   border-radius: 10px;
   display: grid;
   place-items: center;
@@ -221,58 +216,36 @@
   min-width: 0;
   font-weight: 750;
   font-size: 0.82rem;
-
-  /* start = right in RTL, left in LTR */
   text-align: start;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
+/* Triangle always at the "end": right in LTR, left in RTL */
 .nav__chev {
+  margin-inline-start: auto;
   width: 0;
   height: 0;
-
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid rgba($text, 0.55);
-
-  /* spacing between label and chevron in both RTL/LTR */
-  margin-inline-start: 6px;
-
   transition: transform 0.2s ease;
-  flex: 0 0 auto;
 }
 
 .nav__chev--open {
   transform: rotate(180deg);
 }
 
-/* -------------------------------------------------------
-   Submenu
-   This is the main fix:
-   - use logical properties
-   - text aligns to "start" (right in RTL)
-   - padding-inline-start aligns submenu text under the parent label
-------------------------------------------------------- */
-
+/* Submenu: no big wrong margin in RTL */
 .nav__submenu {
   display: flex;
   flex-direction: column;
   gap: 6px;
 
-  /* align submenu under the parent label start */
-  /* icon(30) + gap(6) + button padding(6) = 42px */
-  padding-inline-start: 42px;
-
-  /* a small separation from the menu button block */
+  padding-inline-start: var(--submenu-indent);
   margin-top: 2px;
 
-  /* vertical guide on the start side (right in RTL, left in LTR) */
   border-inline-start: 1px solid rgba($primary, 0.14);
+  margin-inline-start: 6px;
 
-  /* keeps items full width and consistent */
   align-items: stretch;
 }
 
@@ -285,12 +258,10 @@
   font-weight: 650;
   border-radius: 10px;
 
-  /* dot indicator space on start side */
-  padding-block: 6px;
-  padding-inline-start: 18px;
-  padding-inline-end: 12px;
+  padding-block: 5px;
+  padding-inline-start: 14px;
+  padding-inline-end: 10px;
 
-  /* start = right in RTL, left in LTR */
   text-align: start;
   cursor: pointer;
   line-height: 1.15;
@@ -326,10 +297,7 @@
   background: $primary;
 }
 
-/* -------------------------------------------------------
-   Main area
-------------------------------------------------------- */
-
+/* Main */
 .main {
   grid-area: main;
   display: flex;
@@ -338,26 +306,33 @@
   min-width: 0;
 }
 
+/* Header */
 .user-header {
   background: $surface;
   color: $text;
   border-radius: 18px;
   padding: spacing(md);
+
   display: flex;
   align-items: center;
-  border: 1px solid $border;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-
-  /* keep user menu on the "inline end" visually */
   justify-content: flex-end;
+  gap: spacing(sm);
+
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid $border;
+
+  direction: inherit;
 }
 
-/* in RTL, flex-end is left, so we flip to flex-start to keep it on the right */
-:host([dir="rtl"]) .user-header,
-:host-context([dir="rtl"]) .user-header {
-  justify-content: flex-start;
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: spacing(sm);
 }
 
+.header-end { justify-content: flex-end; width: 100%; }
+
+/* User dropdown */
 .user {
   position: relative;
 }
@@ -409,11 +384,10 @@
   border-top: 6px solid rgba($text, 0.6);
 }
 
-/* dropdown aligned to inline end (right in LTR, left in RTL) */
 .user-menu {
   position: absolute;
   top: calc(100% + 10px);
-  inset-inline-end: 0;
+  inset-inline-end: 0; /* right in LTR, left in RTL */
   width: 200px;
   background: $surface;
   border: 1px solid $border;
@@ -442,10 +416,7 @@
   color: $danger;
 }
 
-/* -------------------------------------------------------
-   Tabs
-------------------------------------------------------- */
-
+/* Tabs */
 .tabs {
   background: $surface;
   border: 1px solid $border;
@@ -459,9 +430,7 @@
   gap: 8px;
   overflow: auto;
   padding-bottom: 2px;
-
-  /* follow the language direction */
-  direction: inherit;
+  direction: inherit; /* important */
 }
 
 .tab {
@@ -474,8 +443,7 @@
   border: 1px solid transparent;
   background: $bg;
   cursor: pointer;
-
-  direction: inherit;
+  direction: inherit; /* important */
 }
 
 .tab:hover {
@@ -513,9 +481,9 @@
   overflow: auto;
 }
 
-/* -------------------------------------------------------
-   Responsive
-------------------------------------------------------- */
+/* -----------------------------
+   MEDIA QUERIES (kept)
+----------------------------- */
 
 @media (max-width: 1080px) {
   .shell,
@@ -534,6 +502,7 @@
 
   .sidebar.sidebar--collapsed {
     width: 100%;
+    flex-direction: row;
     align-items: center;
     justify-content: flex-start;
 
@@ -555,6 +524,7 @@
     margin-top: 0;
 
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 6px;
 
@@ -579,16 +549,14 @@
     border-radius: 14px;
   }
 
-  .sidebar.sidebar--collapsed .nav__label,
-  .sidebar.sidebar--collapsed .nav__chev,
-  .sidebar.sidebar--collapsed .nav__submenu {
-    display: none;
-  }
-
   .sidebar.sidebar--collapsed .nav__icon {
     width: 36px;
     height: 36px;
     font-size: 1rem;
+  }
+
+  .sidebar.sidebar--collapsed .nav__submenu {
+    display: none;
   }
 }
 
@@ -597,4 +565,8 @@
   .sidebar { padding: spacing(sm); }
   .user-header { padding: spacing(sm); }
   .content { padding: spacing(md); }
+
+  .nav__item {
+    padding: 8px 10px;
+  }
 }

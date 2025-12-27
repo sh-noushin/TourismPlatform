@@ -1,4 +1,9 @@
-<div class="lang-selector" [class.open]="langMenuOpen()">
+<div
+  class="lang-selector"
+  [class.open]="langMenuOpen()"
+  [class.lang-selector--ltr]="currentLang() === 'en'"
+  [class.lang-selector--rtl]="currentLang() === 'fa'"
+>
   <button class="lang-trigger" type="button" (click)="toggleLangMenu($event)">
     <span class="flag">
       <svg *ngIf="currentLang() === 'fa'" width="24" height="16" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg">
