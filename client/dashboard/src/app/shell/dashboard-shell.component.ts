@@ -1,9 +1,20 @@
-import { ElementRef, ViewChild, HostListener } from '@angular/core';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  HostBinding,
+  Inject,
+  OnDestroy,
+} from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import { AuthFacade } from '../core/auth/auth.facade';
 import { TabService, TabItem } from '../core/tab/tab.service';
@@ -29,9 +40,12 @@ type MenuItem = {
   styleUrls: ['./dashboard-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardShellComponent {
+export class DashboardShellComponent implements OnDestroy {
   @ViewChild('userMenuBtn', { read: ElementRef }) userMenuBtnRef!: ElementRef<HTMLElement>;
   @ViewChild('userMenu', { read: ElementRef }) userMenuRef!: ElementRef<HTMLElement>;
+
+  private readonly subs = new Subscription();
+
   readonly sidebarCollapsed = signal(false);
   readonly userMenuOpen = signal(false);
   readonly expandedMenu = signal<string | null>(null);
@@ -43,8 +57,8 @@ export class DashboardShellComponent {
       icon: '🏠',
       subItems: [
         { labelKey: 'MENU.HOUSES', path: '/admin/houses' },
-        { labelKey: 'MENU.HOUSE_TYPES', path: '/admin/house-types' }
-      ]
+        { labelKey: 'MENU.HOUSE_TYPES', path: '/admin/house-types' },
+      ],
     },
     {
       labelKey: 'MENU.TOURS_MANAGEMENT',
@@ -52,8 +66,8 @@ export class DashboardShellComponent {
       icon: '🧳',
       subItems: [
         { labelKey: 'MENU.TOUR_CATEGORIES', path: '/admin/tour-categories' },
-        { labelKey: 'MENU.TOURS', path: '/admin/tours' }
-      ]
+        { labelKey: 'MENU.TOURS', path: '/admin/tours' },
+      ],
     },
     { labelKey: 'MENU.EXCHANGE', basePath: '/admin/exchange', icon: '💱' },
     {
@@ -63,10 +77,21 @@ export class DashboardShellComponent {
       subItems: [
         { labelKey: 'MENU.ROLES', path: '/admin/roles' },
         { labelKey: 'MENU.USERS', path: '/admin/users' },
-        { labelKey: 'MENU.PERMISSIONS', path: '/admin/permissions' }
-      ]
+        { labelKey: 'MENU.PERMISSIONS', path: '/admin/permissions' },
+      ],
     },
   ];
+
+  @HostBinding('attr.lang')
+  get langAttr(): string {
+    return (this.translate.currentLang || this.translate.getDefaultLang() || 'fa') as string;
+  }
+
+  @HostBinding('attr.dir')
+  get dirAttr(): 'rtl' | 'ltr' {
+    const lang = this.langAttr.toLowerCase();
+    return lang === 'fa' || lang === 'fa-ir' ? 'rtl' : 'ltr';
+  }
 
   readonly displayName = computed(() => {
     const name = (this.auth.userName?.() ?? '').trim();
@@ -75,8 +100,8 @@ export class DashboardShellComponent {
     const email = (this.auth.userEmail?.() ?? '').trim();
     if (email) return this.prettyNameFromEmail(email);
 
-    if (this.auth.isSuperUser?.()) return 'Super Admin';
-    return 'User';
+    if (this.auth.isSuperUser?.()) return this.translate.instant('USER.SUPER_ADMIN');
+    return this.translate.instant('USER.DEFAULT_NAME');
   });
 
   readonly initials = computed(() => {
@@ -92,12 +117,22 @@ export class DashboardShellComponent {
     public readonly tabs: TabService,
     private readonly router: Router,
     private readonly dialog: MatDialog,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    @Inject(DOCUMENT) private readonly document: Document
   ) {
+    this.applyDocumentDir();
+
+    this.subs.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.applyDocumentDir();
+      })
+    );
+
     if (this.tabs.tabs().length === 0) {
-      const tabTitle = this.translate.instant('MENU.HOUSES');
-      const t = this.tabs.openNewTab('/admin/houses', tabTitle, true);
-      void this.router.navigateByUrl(t.path);
+      this.translate.get('MENU.HOUSES').subscribe(tabTitle => {
+        const t = this.tabs.openNewTab('/admin/houses', tabTitle, true);
+        void this.router.navigateByUrl(t.path);
+      });
     }
 
     const active = this.activeTabPath();
@@ -111,6 +146,10 @@ export class DashboardShellComponent {
     if (tourGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
       this.expandedMenu.set(tourGroup.basePath);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   toggleSidebar() {
@@ -171,17 +210,16 @@ export class DashboardShellComponent {
   }
 
   changePassword() {
-  this.closeUserMenu();
+    this.closeUserMenu();
 
-  this.dialog.open(ChangePasswordPageComponent, {
-    panelClass: 'change-password-dialog',
-    backdropClass: 'change-password-backdrop', 
-    autoFocus: false,
-    maxWidth: 'min(520px, calc(100vw - 32px))',
-    width: 'min(520px, 100%)'
-  });
-}
-
+    this.dialog.open(ChangePasswordPageComponent, {
+      panelClass: 'change-password-dialog',
+      backdropClass: 'change-password-backdrop',
+      autoFocus: false,
+      maxWidth: 'min(520px, calc(100vw - 32px))',
+      width: 'min(520px, 100%)',
+    });
+  }
 
   async logout(event?: MouseEvent) {
     event?.stopPropagation();
@@ -197,8 +235,25 @@ export class DashboardShellComponent {
       this.tabs.closeAll();
     } catch {}
 
-    // Guaranteed redirect (avoids guards/tabs navigating back)
     window.location.replace('/login');
+  }
+
+  isMenuActive(item: MenuItem) {
+    const active = this.activeTabPath();
+    if (item.subItems?.length) {
+      return item.subItems.some(sub => this.normalize(sub.path) === active);
+    }
+    return this.normalize(item.basePath) === active;
+  }
+
+  isSubMenuItemActive(sub: SubMenuItem) {
+    return this.normalize(sub.path) === this.activeTabPath();
+  }
+
+  private applyDocumentDir() {
+    const dir = this.dirAttr;
+    this.document.documentElement.setAttribute('dir', dir);
+    this.document.documentElement.setAttribute('lang', this.langAttr);
   }
 
   private nextTitle(base: string) {
@@ -214,18 +269,6 @@ export class DashboardShellComponent {
     const title = this.nextTitle(label);
     const tab = this.tabs.openNewTab(path, title, false);
     void this.router.navigateByUrl(tab.path);
-  }
-
-  isMenuActive(item: MenuItem) {
-    const active = this.activeTabPath();
-    if (item.subItems?.length) {
-      return item.subItems.some(sub => this.normalize(sub.path) === active);
-    }
-    return this.normalize(item.basePath) === active;
-  }
-
-  isSubMenuItemActive(sub: SubMenuItem) {
-    return this.normalize(sub.path) === this.activeTabPath();
   }
 
   private activeTabPath() {
@@ -244,6 +287,6 @@ export class DashboardShellComponent {
       .split(' ')
       .filter(Boolean)
       .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
-    return words.join(' ') || 'User';
+    return words.join(' ') || this.translate.instant('USER.DEFAULT_NAME');
   }
 }

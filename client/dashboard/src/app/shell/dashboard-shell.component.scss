@@ -6,31 +6,46 @@
   background: linear-gradient(180deg, $dashboardBgStart 0%, $dashboardBgEnd 100%);
   color: $text;
   font-family: $font-body;
+
+  /* important: all rtl/ltr behavior comes from dir on host or html */
+  direction: inherit;
 }
+
+/* -------------------------------------------------------
+   Layout
+   Default is RTL (Farsi): sidebar on the right
+------------------------------------------------------- */
 
 .shell {
   min-height: 100vh;
   display: grid;
+  direction: inherit;
+
   grid-template-columns: 1fr 220px;
   grid-template-areas: "main sidebar";
   gap: spacing(md);
-  padding: 0 0 0 spacing(md);
+  padding: 0 spacing(md);
 }
 
 .shell.shell--collapsed {
   grid-template-columns: 1fr 72px;
 }
 
-/* LTR layout: sidebar on left */
+/* LTR (English): sidebar on the left */
+:host([dir="ltr"]) .shell,
 :host-context([dir="ltr"]) .shell {
   grid-template-columns: 220px 1fr;
   grid-template-areas: "sidebar main";
-  padding: 0 spacing(md) 0 0;
 }
 
+:host([dir="ltr"]) .shell.shell--collapsed,
 :host-context([dir="ltr"]) .shell.shell--collapsed {
   grid-template-columns: 72px 1fr;
 }
+
+/* -------------------------------------------------------
+   Sidebar
+------------------------------------------------------- */
 
 .sidebar {
   grid-area: sidebar;
@@ -40,14 +55,11 @@
   padding: spacing(md) spacing(sm);
   display: flex;
   flex-direction: column;
-  text-align: right;
   gap: spacing(sm);
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
-}
 
-/* LTR sidebar alignment */
-:host-context([dir="ltr"]) .sidebar {
-  text-align: left;
+  /* start = right in RTL, left in LTR */
+  text-align: start;
 }
 
 .sidebar--collapsed {
@@ -58,13 +70,10 @@
 .sidebar__top {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding: 0 4px;
-  gap: spacing(xs);
-}
 
-:host-context([dir="ltr"]) .sidebar__top {
+  /* start = right in RTL, left in LTR */
   justify-content: flex-start;
+  padding: 0 4px;
 }
 
 .icon-btn {
@@ -76,6 +85,7 @@
   cursor: pointer;
   display: grid;
   place-items: center;
+  transition: background 160ms ease, border-color 160ms ease;
 }
 
 .icon-btn:hover {
@@ -95,22 +105,28 @@
 .burger::after {
   content: '';
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   width: 16px;
   height: 2px;
   background: rgba($text, 0.75);
 }
 
 .burger::before { top: -5px; }
-.burger::after { top: 5px; }
+.burger::after  { top:  5px; }
+
+.sidebar__brand {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-start;
+  padding: spacing(sm) 4px 0;
+}
 
 .brand {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  flex-direction: row-reverse;
   gap: spacing(sm);
   min-width: 0;
+  direction: inherit;
 }
 
 .brand__logo {
@@ -125,25 +141,22 @@
   flex: 0 0 auto;
 }
 
-.brand__text { min-width: 0; }
+.brand__text {
+  min-width: 0;
+}
 
 .brand__title {
   font-weight: 800;
   line-height: 1.1;
   font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.brand__subtitle {
-  color: $muted;
-  font-size: 0.82rem;
-}
-
-.sidebar__brand {
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
-  padding: spacing(sm) 4px 0;
-}
+/* -------------------------------------------------------
+   Navigation
+------------------------------------------------------- */
 
 .nav {
   display: flex;
@@ -162,16 +175,20 @@
   width: 100%;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  flex-direction: row;
   gap: 6px;
+
   padding: 6px 6px;
   border-radius: 12px;
   border: 1px solid transparent;
   background: transparent;
+
   color: $text;
   cursor: pointer;
-  text-align: left;
+
+  /* start = right in RTL, left in LTR */
+  text-align: start;
+  direction: inherit;
+
   font-size: 0.84rem;
   line-height: 1.1;
 }
@@ -197,38 +214,66 @@
   color: $primary;
   flex: 0 0 auto;
   font-size: 0.95rem;
-  order: 0;
-  margin: 0;
 }
 
 .nav__label {
+  flex: 1 1 auto;
+  min-width: 0;
   font-weight: 750;
   font-size: 0.82rem;
+
+  /* start = right in RTL, left in LTR */
+  text-align: start;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nav__chev {
-  order: 2;
   width: 0;
   height: 0;
+
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid rgba($text, 0.55);
-  margin-left: 6px;
+
+  /* spacing between label and chevron in both RTL/LTR */
+  margin-inline-start: 6px;
+
   transition: transform 0.2s ease;
+  flex: 0 0 auto;
 }
 
 .nav__chev--open {
   transform: rotate(180deg);
 }
 
+/* -------------------------------------------------------
+   Submenu
+   This is the main fix:
+   - use logical properties
+   - text aligns to "start" (right in RTL)
+   - padding-inline-start aligns submenu text under the parent label
+------------------------------------------------------- */
+
 .nav__submenu {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 6px;
-  padding-left: 38px;
-  margin-left: 6px;
-  border-left: 1px solid rgba($primary, 0.14);
+
+  /* align submenu under the parent label start */
+  /* icon(30) + gap(6) + button padding(6) = 42px */
+  padding-inline-start: 42px;
+
+  /* a small separation from the menu button block */
+  margin-top: 2px;
+
+  /* vertical guide on the start side (right in RTL, left in LTR) */
+  border-inline-start: 1px solid rgba($primary, 0.14);
+
+  /* keeps items full width and consistent */
+  align-items: stretch;
 }
 
 .nav__submenu-item {
@@ -239,8 +284,14 @@
   font-size: 0.76rem;
   font-weight: 650;
   border-radius: 10px;
-  padding: 6px 12px 6px 16px;
-  text-align: left;
+
+  /* dot indicator space on start side */
+  padding-block: 6px;
+  padding-inline-start: 18px;
+  padding-inline-end: 12px;
+
+  /* start = right in RTL, left in LTR */
+  text-align: start;
   cursor: pointer;
   line-height: 1.15;
 }
@@ -248,7 +299,7 @@
 .nav__submenu-item::before {
   content: '';
   position: absolute;
-  left: 8px;
+  inset-inline-start: 2px;
   top: 50%;
   width: 6px;
   height: 6px;
@@ -256,26 +307,6 @@
   transform: translateY(-50%);
   background: rgba($primary, 0.35);
   opacity: 0;
-}
-
-:host-context([dir="rtl"]) .nav__submenu {
-  align-items: flex-end;
-  padding-left: 0;
-  padding-right: 42px;
-  margin-left: 0;
-  margin-right: 8px;
-  border-left: 0;
-  border-right: 1px solid rgba($primary, 0.14);
-}
-
-:host-context([dir="rtl"]) .nav__submenu-item {
-  padding: 6px 16px 6px 12px;
-  text-align: right;
-}
-
-:host-context([dir="rtl"]) .nav__submenu-item::before {
-  right: 8px;
-  left: auto;
 }
 
 .nav__submenu-item:hover {
@@ -295,6 +326,10 @@
   background: $primary;
 }
 
+/* -------------------------------------------------------
+   Main area
+------------------------------------------------------- */
+
 .main {
   grid-area: main;
   display: flex;
@@ -308,34 +343,23 @@
   color: $text;
   border-radius: 18px;
   padding: spacing(md);
-  justify-content: flex-end;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
   border: 1px solid $border;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+
+  /* keep user menu on the "inline end" visually */
+  justify-content: flex-end;
+}
+
+/* in RTL, flex-end is left, so we flip to flex-start to keep it on the right */
+:host([dir="rtl"]) .user-header,
+:host-context([dir="rtl"]) .user-header {
+  justify-content: flex-start;
 }
 
 .user {
   position: relative;
-}
-
-.user {
-  position: relative;
-}
-
-.user-menu-backdrop {
-  position: fixed;
-  inset: 0;
-  background: transparent;
-  z-index: 999; 
-}
-
-.user-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 1000;
 }
 
 .user__btn {
@@ -348,6 +372,7 @@
   padding: 8px 12px;
   border-radius: 14px;
   cursor: pointer;
+  direction: inherit;
 }
 
 .user__btn:hover {
@@ -373,6 +398,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: start;
 }
 
 .user__chev {
@@ -383,10 +409,11 @@
   border-top: 6px solid rgba($text, 0.6);
 }
 
+/* dropdown aligned to inline end (right in LTR, left in RTL) */
 .user-menu {
   position: absolute;
   top: calc(100% + 10px);
-  inset-inline-start: 0;
+  inset-inline-end: 0;
   width: 200px;
   background: $surface;
   border: 1px solid $border;
@@ -398,7 +425,7 @@
 
 .user-menu__item {
   width: 100%;
-  text-align: left;
+  text-align: start;
   padding: 12px 14px;
   border: none;
   background: transparent;
@@ -415,6 +442,10 @@
   color: $danger;
 }
 
+/* -------------------------------------------------------
+   Tabs
+------------------------------------------------------- */
+
 .tabs {
   background: $surface;
   border: 1px solid $border;
@@ -428,7 +459,9 @@
   gap: 8px;
   overflow: auto;
   padding-bottom: 2px;
-  direction: rtl;
+
+  /* follow the language direction */
+  direction: inherit;
 }
 
 .tab {
@@ -441,7 +474,8 @@
   border: 1px solid transparent;
   background: $bg;
   cursor: pointer;
-  direction: ltr;
+
+  direction: inherit;
 }
 
 .tab:hover {
@@ -455,6 +489,7 @@
 
 .tab__title {
   font-weight: 750;
+  text-align: start;
 }
 
 .tab__close {
@@ -478,6 +513,10 @@
   overflow: auto;
 }
 
+/* -------------------------------------------------------
+   Responsive
+------------------------------------------------------- */
+
 @media (max-width: 1080px) {
   .shell,
   .shell.shell--collapsed {
@@ -495,7 +534,6 @@
 
   .sidebar.sidebar--collapsed {
     width: 100%;
-    flex-direction: row-reverse;
     align-items: center;
     justify-content: flex-start;
 
@@ -517,7 +555,6 @@
     margin-top: 0;
 
     display: flex;
-    flex-direction: row-reverse;
     align-items: center;
     gap: 6px;
 
@@ -542,16 +579,16 @@
     border-radius: 14px;
   }
 
+  .sidebar.sidebar--collapsed .nav__label,
+  .sidebar.sidebar--collapsed .nav__chev,
+  .sidebar.sidebar--collapsed .nav__submenu {
+    display: none;
+  }
+
   .sidebar.sidebar--collapsed .nav__icon {
-    order: 0;
     width: 36px;
     height: 36px;
     font-size: 1rem;
-  }
-
-  /* hide submenu if any (safety) */
-  .sidebar.sidebar--collapsed .nav__submenu {
-    display: none;
   }
 }
 
@@ -560,27 +597,4 @@
   .sidebar { padding: spacing(sm); }
   .user-header { padding: spacing(sm); }
   .content { padding: spacing(md); }
-}
-
-
-@media (max-width: 768px) {
-  .shell {
-    padding: spacing(sm);
-  }
-
-  .sidebar {
-    padding: spacing(sm);
-  }
-
-  .nav__item {
-    padding: 8px 10px;
-  }
-
-  .user-header {
-    padding: spacing(sm);
-  }
-
-  .content {
-    padding: spacing(md);
-  }
 }
