@@ -143,12 +143,11 @@
   --nav-gap: 6px;
   --nav-icon: 30px;
 
-  /* submenu indentation: make RTL smaller so it does NOT start too far from right */
   --submenu-indent: calc(var(--nav-pad) + var(--nav-icon) + var(--nav-gap)); /* LTR good */
 }
 
 .shell--rtl .nav {
-  --submenu-indent: 18px; /* key fix for RTL */
+  --submenu-indent: 45px; 
 }
 
 .nav {
