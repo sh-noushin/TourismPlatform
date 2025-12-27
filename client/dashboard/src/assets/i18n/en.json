@@ -31,4 +31,76 @@
     "ERROR_PATTERN": "Password must include an uppercase letter, a number, and a special character.",
     "ERROR_MIN_LENGTH": "Password must be at least 6 characters long."
   }
+  ,
+  "COMMON": {
+    "SAVE": "Save",
+    "SAVING": "Saving...",
+    "CANCEL": "Cancel",
+    "CREATE": "Create",
+    "UPDATE": "Update",
+    "NEW": "New",
+    "REMOVE": "Remove",
+    "LOADING": "Loading...",
+    "NO_DATA": "No data available yet.",
+    "NO_PHOTOS": "No photos yet. Upload one above.",
+    "UPLOADING": "Uploading files...",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next",
+    "PAGE_INFO": "Page {{current}} of {{total}}",
+    "ACTIONS": "Actions",
+    "SAVED": "Saved."
+  },
+  "TOUR_EDIT": {
+    "NEW_TITLE": "Create tour",
+    "EDIT_TITLE": "Edit tour",
+    "NAME": "Name",
+    "CATEGORY": "Category",
+    "DESCRIPTION": "Description",
+    "SCHEDULE_NOTE": "Schedules become editable after the tour is created.",
+    "LOADING_CATEGORIES": "Loading categories...",
+    "UPLOADING_FILES": "Uploading files...",
+    "REMOVE_PHOTO": "Remove",
+    "NO_PHOTOS": "No photos yet. Upload one above.",
+    "CANCEL": "Cancel",
+    "SAVED": "Saved."
+  },
+  "HOUSES": {
+    "NEW": "New house",
+    "CREATE_TITLE": "Create house",
+    "EDIT_TITLE": "Edit house",
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "TYPE": "Type",
+    "ADDRESS_LINE_1": "Address line 1",
+    "ADDRESS_LINE_2": "Address line 2",
+    "CITY": "City",
+    "REGION": "Region",
+    "COUNTRY": "Country",
+    "POSTAL_CODE": "Postal code",
+    "LOADING_TYPES": "Loading types...",
+    "REMOVE_PHOTO": "Remove",
+    "NO_PHOTOS": "No photos yet. Upload one above.",
+    "CANCEL": "Cancel",
+    "SAVED": "Saved."
+  },
+  "TABLE": {
+    "ACTIONS": "Actions",
+    "NO_ITEMS": "No items to display."
+  },
+  "USERS": {
+    "NEW_USER": "New user",
+    "EDIT_USER": "Edit user",
+    "CREATE_USER": "Create user",
+    "RESET": "Reset",
+    "UPDATE": "Update",
+    "SAVED": "Saved."
+  },
+  "CATEGORIES": {
+    "NEW_CATEGORY": "New category",
+    "NO_CATEGORIES": "No tour categories yet."
+  },
+  "TYPES": {
+    "NEW_TYPE": "New type",
+    "NO_TYPES": "No house types yet."
+  }
 }
