@@ -258,6 +258,26 @@
   opacity: 0;
 }
 
+:host-context([dir="rtl"]) .nav__submenu {
+  align-items: flex-end;
+  padding-left: 0;
+  padding-right: 42px;
+  margin-left: 0;
+  margin-right: 8px;
+  border-left: 0;
+  border-right: 1px solid rgba($primary, 0.14);
+}
+
+:host-context([dir="rtl"]) .nav__submenu-item {
+  padding: 6px 16px 6px 12px;
+  text-align: right;
+}
+
+:host-context([dir="rtl"]) .nav__submenu-item::before {
+  right: 8px;
+  left: auto;
+}
+
 .nav__submenu-item:hover {
   text-decoration: underline;
   text-decoration-color: rgba($primary, 0.55);
