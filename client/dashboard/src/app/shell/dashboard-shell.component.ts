@@ -37,6 +37,7 @@ export class DashboardShellComponent implements OnDestroy {
 
   readonly sidebarCollapsed = signal(false);
   readonly userMenuOpen = signal(false);
+  readonly langMenuOpen = signal(false);
   readonly expandedMenu = signal<string | null>(null);
 
   // Language source of truth
@@ -179,22 +180,44 @@ export class DashboardShellComponent implements OnDestroy {
     this.userMenuOpen.update(v => !v);
   }
 
+  toggleLangMenu(event: Event): void {
+    event.stopPropagation();
+    this.langMenuOpen.set(!this.langMenuOpen());
+  }
+
   closeUserMenu(): void {
     this.userMenuOpen.set(false);
   }
 
   @HostListener('document:mousedown', ['$event'])
   onDocumentMouseDown(event: MouseEvent) {
-    if (!this.userMenuOpen()) return;
-
-    const btn = this.userMenuBtnRef?.nativeElement;
-    const menu = this.userMenuRef?.nativeElement;
     const path = (event.composedPath && event.composedPath()) || [];
 
-    if (btn && path.includes(btn)) return;
-    if (menu && path.includes(menu)) return;
+    if (this.userMenuOpen()) {
+      const btn = this.userMenuBtnRef?.nativeElement;
+      const menu = this.userMenuRef?.nativeElement;
+      if (!(btn && path.includes(btn)) && !(menu && path.includes(menu))) {
+        this.closeUserMenu();
+      } else {
+        return;
+      }
+    }
 
-    this.closeUserMenu();
+    if (this.langMenuOpen()) {
+      const target = event.target as HTMLElement;
+      if (!target || !target.closest || !target.closest('.lang-selector')) {
+        this.langMenuOpen.set(false);
+      } else {
+        return;
+      }
+    }
+  }
+
+  setLang(lang: 'en' | 'fa') {
+    this.translate.use(lang);
+    this.lang.set(lang);
+    this.applyDocumentDir();
+    this.langMenuOpen.set(false);
   }
 
   changePassword() {
