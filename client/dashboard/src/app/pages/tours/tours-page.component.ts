@@ -31,7 +31,7 @@ export class ToursPageComponent {
   readonly columns: SfTableColumn[] = [
     { key: 'name', header: 'Name', headerKey: 'TABLE_HEADERS.NAME', field: 'name', sortable: true },
     { key: 'description', header: 'Description', headerKey: 'TABLE_HEADERS.DESCRIPTION', field: 'description', sortable: true },
-    { key: 'year', header: 'Year', headerKey: 'TABLE_HEADERS.YEAR', field: 'year', align: 'end', sortable: true }
+    { key: 'year', header: 'Year', headerKey: 'TABLE_HEADERS.YEAR', field: 'year', sortable: true }
   ];
 
   readonly displayedTours = computed(() => {
