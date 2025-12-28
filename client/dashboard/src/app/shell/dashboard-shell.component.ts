@@ -146,6 +146,14 @@ export class DashboardShellComponent implements OnDestroy {
 
   openMenu(item: MenuItem) {
     if (item.subItems?.length) {
+      // When the sidebar is collapsed, clicking a parent should open its first sub-item directly
+      if (this.sidebarCollapsed() && item.subItems.length) {
+        const first = item.subItems[0];
+        this.expandedMenu.set(item.basePath);
+        this.openTab(first.path, first.label);
+        return;
+      }
+
       this.expandedMenu.update(current => (current === item.basePath ? null : item.basePath));
       return;
     }
