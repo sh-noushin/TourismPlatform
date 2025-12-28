@@ -344,11 +344,19 @@ export class DashboardShellComponent implements OnDestroy {
     }
 
     const tabs = this.tabs.tabs();
+    const labelCounters = new Map<string, number>();
+
     tabs.forEach(tab => {
       const key = this.normalize(tab.path);
-      const label = labelMap.get(key);
-      if (label && tab.title !== label) {
-        this.tabs.updateTitle(tab.id, label);
+      const baseLabel = labelMap.get(key);
+      if (!baseLabel) return;
+
+      const count = (labelCounters.get(baseLabel) ?? 0) + 1;
+      labelCounters.set(baseLabel, count);
+
+      const newTitle = count > 1 ? `${baseLabel} (${count})` : baseLabel;
+      if (tab.title !== newTitle) {
+        this.tabs.updateTitle(tab.id, newTitle);
       }
     });
   }
