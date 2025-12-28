@@ -103,6 +103,7 @@ export class DashboardShellComponent implements OnDestroy {
       const t = this.tabs.openNewTab('/admin/houses', this.translate.instant('MENU.HOUSES'), true);
       void this.router.navigateByUrl(t.path);
     }
+    this.relabelTabs(); // ensure titles match current lang on load
 
     const active = this.activeTabPath();
 
@@ -120,6 +121,7 @@ export class DashboardShellComponent implements OnDestroy {
       const next = (lang === 'en' ? 'en' : 'fa') as 'en' | 'fa';
       this.lang.set(next);
       this.applyDocumentDir();
+      this.relabelTabs();
     });
   }
 
@@ -217,6 +219,7 @@ export class DashboardShellComponent implements OnDestroy {
     this.translate.use(lang);
     this.lang.set(lang);
     this.applyDocumentDir();
+    this.relabelTabs();
     this.langMenuOpen.set(false);
   }
 
@@ -321,6 +324,25 @@ export class DashboardShellComponent implements OnDestroy {
         ]
       },
     ];
+  }
+
+  private relabelTabs(): void {
+    const labelMap = new Map<string, string>();
+    const menus = this.buildMenuItems();
+
+    for (const m of menus) {
+      labelMap.set(this.normalize(m.basePath), m.label);
+      m.subItems?.forEach(s => labelMap.set(this.normalize(s.path), s.label));
+    }
+
+    const tabs = this.tabs.tabs();
+    tabs.forEach(tab => {
+      const key = this.normalize(tab.path);
+      const label = labelMap.get(key);
+      if (label && tab.title !== label) {
+        this.tabs.updateTitle(tab.id, label);
+      }
+    });
   }
 
   private updateSidebarWidthVar(collapsed: boolean): void {

@@ -151,6 +151,13 @@ export class TabService {
     TabStorage.clear();
   }
 
+  updateTitle(id: string, title: string) {
+    this.tabsSignal.update((tabs: TabItem[]) =>
+      tabs.map((t: TabItem) => (t.id === id ? { ...t, title } : t))
+    );
+    TabStorage.save(this.tabsSignal());
+  }
+
   private createId() {
     return (crypto as any)?.randomUUID ? (crypto as any).randomUUID() : Math.random().toString(36).slice(2);
   }
