@@ -336,10 +336,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 8px 14px;
-  min-width: 150px;
-  border-radius: 22px;
+  gap: 6px;
+  padding: 7px 12px;
+  min-width: 138px;
+  border-radius: 20px;
   border: 1px solid #e4e7ed;
   background: #ffffff;
   box-shadow: 0 8px 26px rgba(24, 37, 89, 0.10);
@@ -361,8 +361,8 @@
 .lang-trigger .flag {
   display: inline-grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 4px 12px rgba(24, 37, 89, 0.10);
@@ -370,13 +370,13 @@
 }
 
 .lang-trigger .flag svg {
-  width: 22px;
-  height: 14px;
+  width: 20px;
+  height: 13px;
   border-radius: 999px;
 }
 
 .lang-trigger__label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #101828;
 }
@@ -407,12 +407,12 @@
   position: absolute;
   inset-block-start: calc(100% + 10px);
   inset-inline-start: 0;
-  min-width: 190px;
+  min-width: 176px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #e8ebf2;
   box-shadow: 0 20px 70px rgba(24, 37, 89, 0.12);
-  padding: 10px 10px;
+  padding: 9px 9px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -424,8 +424,8 @@
   position: absolute;
   inset-block-start: -8px;
   inset-inline-end: 18px; /* nudge left for LTR */
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   background: #ffffff;
   border-left: 1px solid #e8ebf2;
   border-top: 1px solid #e8ebf2;
@@ -461,8 +461,8 @@
 .lang-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: 10px;
+  padding: 9px 11px;
   border: none;
   background: transparent;
   border-radius: 12px;
@@ -483,8 +483,8 @@
 .lang-item__flag {
   display: inline-grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 8px 18px rgba(24, 37, 89, 0.10);
@@ -492,13 +492,13 @@
 }
 
 .lang-item__flag svg {
-  width: 24px;
+  width: 22px;
   height: auto;
   border-radius: 999px;
 }
 
 .lang-item__label {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: #1b1d4a;
   letter-spacing: 0.15px;
