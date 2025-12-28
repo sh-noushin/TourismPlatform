@@ -32,6 +32,19 @@
   direction: rtl;
 }
 
+.shell.shell--rtl .sidebar,
+:host([dir='rtl']) .shell .sidebar,
+:host-context([dir='rtl']) .shell .sidebar {
+  order: 2;
+  margin-inline-start: auto; /* push sidebar to the right edge */
+}
+
+.shell.shell--rtl .main,
+:host([dir='rtl']) .shell .main,
+:host-context([dir='rtl']) .shell .main {
+  order: 1;
+}
+
 /* Sidebar */
 .sidebar {
   grid-area: sidebar;
