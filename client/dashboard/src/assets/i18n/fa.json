@@ -86,11 +86,11 @@
   },
   "TOUR_EDIT": {
     "EYEBROW_TOUR": "تور",
-    "EYEBROW_NEW": "تور جدید",
+    "EYEBROW_NEW": "",
     "NEW_TITLE": "ایجاد تور",
     "EDIT_TITLE": "ویرایش تور",
     "SUBTITLE_EDIT": "جزئیات و رسانه‌های این تجربه را به‌روز کنید.",
-    "SUBTITLE_CREATE": "توضیح دهید و تور را منتشر کنید.",
+    "SUBTITLE_CREATE": "",
     "NAME": "نام",
     "NAME_PLACEHOLDER": "مثلاً کویر نوردی",
     "CATEGORY": "دسته‌بندی",

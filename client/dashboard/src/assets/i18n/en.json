@@ -58,7 +58,7 @@
     "SAVE": "Save",
     "SAVING": "Saving...",
     "CANCEL": "Cancel",
-    "CREATE": "Create",
+    "CREATE": "Save",
     "UPDATE": "Update",
     "NEW": "New",
     "REMOVE": "Remove",
@@ -86,11 +86,11 @@
   },
   "TOUR_EDIT": {
     "EYEBROW_TOUR": "Tour",
-    "EYEBROW_NEW": "New tour",
+    "EYEBROW_NEW": "",
     "NEW_TITLE": "Create tour",
     "EDIT_TITLE": "Edit tour",
     "SUBTITLE_EDIT": "Update the details and media for this experience.",
-    "SUBTITLE_CREATE": "Describe the experience and publish it.",
+    "SUBTITLE_CREATE": "",
     "NAME": "Name",
     "NAME_PLACEHOLDER": "Grand Desert Escape",
     "CATEGORY": "Category",
@@ -106,7 +106,7 @@
     "REMOVE_PHOTO": "Remove",
     "NO_PHOTOS": "No photos yet. Upload one above.",
     "CANCEL": "Cancel",
-    "SAVE_TOUR": "Save tour",
+    "SAVE_TOUR": "Save",
     "SAVED": "Saved."
   },
   "TOUR_CATEGORIES_PAGE": {
