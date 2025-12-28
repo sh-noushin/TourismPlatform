@@ -423,13 +423,22 @@
   content: '';
   position: absolute;
   inset-block-start: -8px;
-  inset-inline-end: 22px; 
+  inset-inline-end: 18px; /* nudge left for LTR */
   width: 12px;
   height: 12px;
   background: #ffffff;
   border-left: 1px solid #e8ebf2;
   border-top: 1px solid #e8ebf2;
   transform: rotate(45deg);
+}
+
+/* LTR fine-tune: nudge menu and arrow slightly left */
+.lang-selector:not(.lang-selector--rtl) .lang-menu {
+  transform: translateX(-14px);
+}
+
+.lang-selector:not(.lang-selector--rtl) .lang-menu::before {
+  inset-inline-end: 32px;
 }
 
 .lang-selector.lang-selector--rtl .lang-menu {
