@@ -239,6 +239,76 @@ textarea:focus {
   color: #16a34a;
 }
 
+:host-context([dir='ltr']) .edit-shell {
+  direction: ltr;
+  text-align: left;
+}
+
+:host-context([dir='ltr']) .glass-panel {
+  direction: ltr;
+  text-align: left;
+}
+
+:host-context([dir='ltr']) .header h3 {
+  text-align: left;
+}
+
+:host-context([dir='ltr']) label {
+  text-align: left;
+}
+
+:host-context([dir='ltr']) .label-text {
+  text-align: left;
+}
+
+:host-context([dir='ltr']) .actions {
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+:host-context([dir='ltr']) .btn.ghost { order: 1; }
+:host-context([dir='ltr']) .btn.primary { order: 2; }
+
+:host-context([dir='ltr']) .mini-note,
+:host-context([dir='ltr']) .no-photos {
+  text-align: left;
+}
+
+:host-context([dir='rtl']) .edit-shell {
+  direction: rtl;
+  text-align: right;
+}
+
+:host-context([dir='rtl']) .glass-panel {
+  direction: rtl;
+  text-align: right;
+}
+
+:host-context([dir='rtl']) .header h3 {
+  text-align: right;
+}
+
+:host-context([dir='rtl']) label {
+  text-align: right;
+}
+
+:host-context([dir='rtl']) .label-text {
+  text-align: right;
+}
+
+:host-context([dir='rtl']) .actions {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+:host-context([dir='rtl']) .btn.ghost { order: 2; }
+:host-context([dir='rtl']) .btn.primary { order: 1; }
+
+:host-context([dir='rtl']) .mini-note,
+:host-context([dir='rtl']) .no-photos {
+  text-align: right;
+}
+
 @media (max-width: 740px) {
   .glass-panel {
     padding: 16px;

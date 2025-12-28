@@ -89,3 +89,31 @@
 .sf-dropdown.disabled .sf-dropdown-trigger {
   background: #f3f4f6;
 }
+
+:host-context([dir='ltr']) .sf-dropdown-trigger {
+  text-align: left;
+  flex-direction: row;
+}
+
+:host-context([dir='ltr']) .sf-dropdown-icon {
+  margin-left: 12px;
+  margin-right: 0;
+}
+
+:host-context([dir='ltr']) .sf-dropdown-menu {
+  text-align: left;
+}
+
+:host-context([dir='rtl']) .sf-dropdown-trigger {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+:host-context([dir='rtl']) .sf-dropdown-icon {
+  margin-right: 12px;
+  margin-left: 0;
+}
+
+:host-context([dir='rtl']) .sf-dropdown-menu {
+  text-align: right;
+}
