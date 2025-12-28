@@ -1,28 +1,35 @@
 @use '../../../styles/index' as *; 
-host { display: inline-flex; width: 100%; } 
-.sf-button
- { width: 100%;
-   position: relative; 
-   border-radius: 0.65rem;
-   font-weight: $font-weight-medium;
-   border: 1px solid transparent;
-   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-   justify-content: center; 
-   align-items: center; 
-   gap: spacing(sm);
-   min-height: 2.75rem;
-   text-transform: none;
-   box-shadow: 0 6px 18px rgba($primary, 0.25);
-   } 
-   .sf-button:disabled
-    { opacity: 0.5; 
-      cursor: not-allowed; 
-    } 
-   
-      
-      .content 
-      { 
-        display: inline-flex; 
-        align-items: center;
-        gap: spacing(sm); 
-      }
+host { display: inline-flex; width: 100%; }
+
+.sf-button {
+  display: inline-flex;
+  width: 100%;
+  position: relative;
+  border-radius: 0.65rem;
+  font-weight: $font-weight-medium;
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  justify-content: center;
+  align-items: center;
+  gap: spacing(sm);
+  min-height: 2.75rem;
+  text-transform: none;
+  box-shadow: 0 6px 18px rgba($primary, 0.25);
+  text-align: center;
+  direction: inherit;
+}
+
+.sf-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacing(sm);
+  width: 100%;
+  text-align: center;
+  direction: inherit;
+}

@@ -58,8 +58,8 @@
     "SAVE": "ذخیره",
     "SAVING": "در حال ذخیره...",
     "CANCEL": "انصراف",
-    "CREATE": "ایجاد",
-    "UPDATE": "به‌روزرسانی",
+    "CREATE": "ذخیره",
+    "UPDATE": "ذخیره",
     "NEW": "جدید",
     "REMOVE": "حذف",
     "LOADING": "در حال بارگذاری...",
@@ -106,7 +106,7 @@
     "REMOVE_PHOTO": "حذف",
     "NO_PHOTOS": "هنوز عکسی بارگذاری نشده است.",
     "CANCEL": "انصراف",
-    "SAVE_TOUR": "ذخیره تور",
+    "SAVE_TOUR": "ذخیره",
     "SAVED": "ذخیره شد."
   },
   "TOUR_CATEGORIES_PAGE": {
