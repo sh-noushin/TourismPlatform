@@ -111,7 +111,7 @@
   },
   "TOUR_CATEGORIES_PAGE": {
     "TITLE": "Tour categories",
-    "SUBTITLE": "Manage the categories used to organize tours.",
+    "SUBTITLE": "",
     "SEARCH_PLACEHOLDER": "Search categories",
     "NEW_CATEGORY": "New category",
     "NO_CATEGORIES": "No tour categories yet.",
