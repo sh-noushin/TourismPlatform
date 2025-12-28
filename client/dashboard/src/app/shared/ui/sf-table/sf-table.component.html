@@ -6,7 +6,7 @@
           @for (column of columnsSignal(); track column.field ?? column.header ?? column) {
             <th
               [class.align-end]="column.align === 'end'"
-              [style.text-align]="column.align ?? 'left'"
+              [style.text-align]="column.align ?? 'start'"
               [style.width]="column.width"
             >
               <button type="button" class="header-button" [class.sortable]="column.sortable" (click)="toggleSort(column)">
@@ -26,7 +26,7 @@
         @for (row of dataSignal(); track row.id ?? row) {
           <tr>
             @for (column of columnsSignal(); track column.field ?? column.header ?? column) {
-              <td [style.text-align]="column.align ?? 'left'">{{ resolveValue(row, column.field) }}</td>
+              <td [style.text-align]="column.align ?? 'start'">{{ resolveValue(row, column.field) }}</td>
             }
             @if (effectiveActions().length) {
               <td class="actions-cell">

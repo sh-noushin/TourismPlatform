@@ -17,15 +17,19 @@
 table {
   width: 100%;
   border-collapse: collapse;
+  direction: inherit;
 }
 
 th,
  td {
   padding: spacing(sm);
   border-bottom: 1px solid $border;
+  text-align: inherit;
+  vertical-align: middle;
 }
 
 th {
+  text-align: inherit;
   background: linear-gradient(180deg, $tableHeaderBg 0%, color.adjust($tableHeaderBg, $lightness: -2%) 100%);
   color: color.adjust($text, $lightness: -30%);
   border-bottom: 1px solid $tableHeaderBorder;
@@ -50,14 +54,18 @@ thead {
   width: 100%;
   background: none;
   border: none;
-  text-align: left;
+  text-align: inherit;
   font-weight: $font-weight-medium;
   color: $text;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: spacing(xs);
   cursor: pointer;
+}
+
+.header-button .indicator {
+  margin-inline-start: auto;
 }
 
 .align-end .header-button {
@@ -112,4 +120,30 @@ thead {
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.85);
+}
+
+/* RTL alignment */
+:host {
+  display: block;
+  direction: inherit;
+}
+
+:host-context([dir='rtl']) table {
+  direction: rtl;
+}
+
+:host-context([dir='rtl']) th,
+:host-context([dir='rtl']) td {
+  text-align: right;
+}
+
+:host-context([dir='rtl']) .header-button {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+:host-context([dir='rtl']) .header-button .indicator {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
 }
