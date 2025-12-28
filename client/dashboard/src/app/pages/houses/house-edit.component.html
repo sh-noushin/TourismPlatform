@@ -154,6 +154,9 @@
             </div>
           </section>
         }
+        @else {
+          <p class="no-photos">{{ 'HOUSES.NO_PHOTOS' | translate }}</p>
+        }
 
         <section class="actions">
           <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
