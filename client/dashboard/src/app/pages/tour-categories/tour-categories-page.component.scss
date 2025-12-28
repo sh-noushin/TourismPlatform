@@ -20,6 +20,11 @@
   white-space: nowrap;
 }
 
+:host-context([dir='rtl']) .tour-categories-page__header-button {
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .status {
   margin: 12px 0 0;
   color: #475569;
