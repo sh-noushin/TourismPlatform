@@ -1,6 +1,14 @@
 <div class="sf-table-wrapper">
   <div class="sf-table-scroll">
     <table>
+      <colgroup>
+        @for (column of columnsSignal(); track column.field ?? column.header ?? column) {
+          <col [style.width]="colWidth(column)" />
+        }
+        @if (effectiveActions().length) {
+          <col style="width: 140px" />
+        }
+      </colgroup>
       <thead>
         <tr>
           @for (column of columnsSignal(); track column.field ?? column.header ?? column) {

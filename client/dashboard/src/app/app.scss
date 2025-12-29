@@ -1,5 +1,25 @@
 @use './styles/index' as *;
 
+/* Nazanin local font bundle (place woff/woff2 in src/assets/fonts/)
+	 Files expected:
+		 - src/assets/fonts/nazanin.woff2
+		 - src/assets/fonts/nazanin-700.woff2
+*/
+@font-face {
+	font-family: 'NazaninLocal';
+	src: url('/assets/fonts/nazanin.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'NazaninLocal';
+	src: url('/assets/fonts/nazanin-700.woff2') format('woff2');
+	font-weight: 700;
+	font-style: bold;
+	font-display: swap;
+}
+
 :root {
 	font-family: $font-body;
 	background: $bg;
@@ -20,4 +40,82 @@ app-root {
 
 a {
 	color: inherit;
+}
+
+/* RTL font override (apply broadly) */
+html[dir='rtl'],
+html[dir='rtl'] body,
+html[dir='rtl'] * {
+	font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+/* Ensure overlays/dialogs pick it up too */
+html[dir='rtl'] body .cdk-overlay-pane,
+html[dir='rtl'] body .cdk-overlay-pane * {
+  font-family: 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+/* Explicitly include common text elements to avoid mixed heading/body fonts in RTL */
+html[dir='rtl'] h1,
+html[dir='rtl'] h2,
+html[dir='rtl'] h3,
+html[dir='rtl'] h4,
+html[dir='rtl'] h5,
+html[dir='rtl'] h6,
+html[dir='rtl'] label,
+html[dir='rtl'] input,
+html[dir='rtl'] textarea,
+html[dir='rtl'] button {
+  font-family: 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+/* Ensure tables, common component containers, and menus use Nazanin in RTL/Farsi */
+html[dir='rtl'] table,
+html[dir='rtl'] th,
+html[dir='rtl'] td,
+html[dir='rtl'] .table,
+html[dir='rtl'] .mat-table,
+html[dir='rtl'] .mat-cell,
+html[dir='rtl'] .cdk-table,
+html[dir='rtl'] .sf-table,
+html[dir='rtl'] .sf-table *,
+html[dir='rtl'] .mat-menu-panel,
+html[dir='rtl'] .mat-menu-item,
+html[dir='rtl'] nav,
+html[dir='rtl'] .menu,
+html[dir='rtl'] .dropdown,
+html[dir='rtl'] [lang='fa'],
+html[dir='rtl'] :lang(fa) {
+	font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+/* Specific stronger rule for table cells to avoid mixed fonts */
+html[dir='rtl'] table td,
+html[dir='rtl'] table th {
+	font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+/* Broad Farsi selectors: ensure menus, navs, lists, buttons, inputs and common components use Nazanin when page language is Farsi */
+html[lang='fa'],
+html[dir='rtl'],
+:lang(fa) {
+	font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+html[lang='fa'] body,
+html[lang='fa'] body *,
+html[lang='fa'] nav,
+html[lang='fa'] .menu,
+html[lang='fa'] .dropdown,
+html[lang='fa'] .mat-menu-panel,
+html[lang='fa'] .mat-list,
+html[lang='fa'] button,
+html[lang='fa'] input,
+html[lang='fa'] textarea,
+html[lang='fa'] table,
+html[lang='fa'] th,
+html[lang='fa'] td,
+html[lang='fa'] [class^="sf-"],
+html[lang='fa'] [class*=" sf-"] {
+	font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
 }

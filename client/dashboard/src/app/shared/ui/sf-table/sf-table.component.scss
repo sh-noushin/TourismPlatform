@@ -18,6 +18,8 @@ table {
   width: 100%;
   border-collapse: collapse;
   direction: inherit;
+  font-family: inherit;
+  table-layout: fixed;
 }
 
 th,
@@ -26,6 +28,21 @@ th,
   border-bottom: 1px solid $border;
   text-align: inherit;
   vertical-align: middle;
+  font-family: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Normalize font sizing so headers and cells match visually */
+th,
+td,
+.header-button,
+.header-button *,
+.actions-cell,
+.actions-cell * {
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 th {
@@ -128,22 +145,67 @@ thead {
   direction: inherit;
 }
 
-:host-context([dir='rtl']) table {
+:host-context([dir='rtl']) table,
+:host-context([lang='fa']) table,
+:host-context(:lang(fa)) table {
   direction: rtl;
+  table-layout: fixed !important;
 }
 
 :host-context([dir='rtl']) th,
-:host-context([dir='rtl']) td {
+:host-context([lang='fa']) th,
+:host-context(:lang(fa)) th,
+:host-context([dir='rtl']) td,
+:host-context([lang='fa']) td,
+:host-context(:lang(fa)) td {
   text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-:host-context([dir='rtl']) .header-button {
+:host-context([dir='rtl']) .header-button,
+:host-context([lang='fa']) .header-button,
+:host-context(:lang(fa)) .header-button {
   flex-direction: row-reverse;
   justify-content: flex-end;
   text-align: right;
 }
 
-:host-context([dir='rtl']) .header-button .indicator {
+:host-context([dir='rtl']) .header-button .indicator,
+:host-context([lang='fa']) .header-button .indicator,
+:host-context(:lang(fa)) .header-button .indicator {
   margin-inline-start: 0;
   margin-inline-end: auto;
+}
+
+/* Force consistent font in RTL tables */
+:host-context([dir='rtl']) table,
+:host-context([lang='fa']) table,
+:host-context(:lang(fa)) table,
+:host-context([dir='rtl']) th,
+:host-context([lang='fa']) th,
+:host-context(:lang(fa)) th,
+:host-context([dir='rtl']) td,
+:host-context([lang='fa']) td,
+:host-context(:lang(fa)) td,
+:host-context([dir='rtl']) .header-button,
+:host-context([lang='fa']) .header-button,
+:host-context(:lang(fa)) .header-button,
+:host-context([dir='rtl']) .header-button * ,
+:host-context([lang='fa']) .header-button * ,
+:host-context(:lang(fa)) .header-button * ,
+:host-context([dir='rtl']) .actions-cell,
+:host-context([lang='fa']) .actions-cell,
+:host-context(:lang(fa)) .actions-cell,
+:host-context([dir='rtl']) .actions-cell * ,
+:host-context([lang='fa']) .actions-cell * ,
+:host-context(:lang(fa)) .actions-cell * {
+  font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+/* Ensure component host and children prefer Nazanin when page is Farsi */
+:host-context([lang='fa']),
+:host-context(:lang(fa)) {
+  font-family: 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
 }

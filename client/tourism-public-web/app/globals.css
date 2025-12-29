@@ -11,6 +11,26 @@
   --radius: 0.75rem;
 }
 
+/* Nazanin local font bundle (place woff/woff2 in public/fonts/)
+   Files expected:
+     - public/fonts/nazanin.woff2
+     - public/fonts/nazanin-700.woff2
+*/
+@font-face {
+  font-family: 'NazaninLocal';
+  src: url('/fonts/nazanin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NazaninLocal';
+  src: url('/fonts/nazanin-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: bold;
+  font-display: swap;
+}
+
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--text);
@@ -75,3 +95,53 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Farsi / RTL override: prefer Nazanin where available for menus, tables, and components */
+html[lang='fa'],
+html[dir='rtl'],
+:lang(fa),
+[lang='fa'] {
+  font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
+}
+
+/* Apply specifically to tables, navs and common UI containers to avoid mixed fonts */
+html[lang='fa'] table,
+html[lang='fa'] th,
+html[lang='fa'] td,
+html[lang='fa'] nav,
+html[lang='fa'] .menu,
+html[lang='fa'] .dropdown,
+html[dir='rtl'] table,
+html[dir='rtl'] th,
+html[dir='rtl'] td,
+html[dir='rtl'] nav,
+html[dir='rtl'] .menu {
+  font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
+}
+
+/* Broad Farsi selectors: ensure menus, navs, lists, buttons, inputs and common components use Nazanin when page language is Farsi */
+html[lang='fa'],
+html[dir='rtl'],
+:lang(fa) {
+  font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
+}
+
+html[lang='fa'] body,
+html[lang='fa'] body *,
+html[lang='fa'] nav,
+html[lang='fa'] .menu,
+html[lang='fa'] .dropdown,
+html[lang='fa'] .mat-menu-panel,
+html[lang='fa'] .mat-list,
+html[lang='fa'] button,
+html[lang='fa'] input,
+html[lang='fa'] textarea,
+html[lang='fa'] table,
+html[lang='fa'] th,
+html[lang='fa'] td,
+html[lang='fa'] [class^="sf-"],
+html[lang='fa'] [class*=" sf-"] {
+  font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
+}
+
+/* If you want to include local font files later, add @font-face here and update family name accordingly. */

@@ -117,6 +117,18 @@ export class SfTableComponent {
     this.rowAction.emit({ action, row });
   }
 
+  colWidth(column: SfTableColumn) {
+    const provided = column?.width;
+    if (provided) return provided;
+    const actions = this.effectiveActions();
+    const autoCols = (this.columnsSignal() ?? []).length - (actions && actions.length ? 1 : 0);
+    if (autoCols <= 0) return 'auto';
+    if (actions && actions.length) {
+      return `calc((100% - 140px) / ${autoCols})`;
+    }
+    return `calc(100% / ${autoCols})`;
+  }
+
   resolveValue(row: any, field?: keyof any | string) {
     if (!field) return '';
     const path = field.toString().split('.');
