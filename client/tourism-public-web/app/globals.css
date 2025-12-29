@@ -126,7 +126,7 @@ html[dir='rtl'],
   font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
 }
 
-html[lang='fa'] body,
+  font-size: 18px !important;
 html[lang='fa'] body *,
 html[lang='fa'] nav,
 html[lang='fa'] .menu,
@@ -144,4 +144,53 @@ html[lang='fa'] [class*=" sf-"] {
   font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
 }
 
-/* If you want to include local font files later, add @font-face here and update family name accordingly. */
+@font-face {
+  font-family: 'Nazanin';
+  src: url('/fonts/NAZANIN.TTF') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:lang(fa),
+html[lang='fa'],
+html[dir='rtl'] {
+  font-family: 'Nazanin', 'NazaninLocal', 'B Nazanin', system-ui, -apple-system, sans-serif !important;
+  font-size: 25px !important;
+}
+
+html[lang='fa'] body,
+html[lang='fa'] body *,
+:lang(fa) body,
+:lang(fa) body * {
+  font-family: 'Nazanin', 'NazaninLocal', 'B Nazanin', system-ui, -apple-system, sans-serif !important;
+  font-size: 18px !important;
+}
+
+/* Side menu: use Nazanin at 35px when page is Farsi/RTL */
+html[lang='fa'] .side-menu,
+html[lang='fa'] .sidemenu,
+html[lang='fa'] .sidebar,
+:lang(fa) .side-menu,
+:lang(fa) .sidemenu,
+:lang(fa) .sidebar,
+html[dir='rtl'] .side-menu,
+html[dir='rtl'] .sidemenu,
+html[dir='rtl'] .sidebar {
+  font-family: 'Nazanin', 'NazaninLocal', 'B Nazanin', system-ui, -apple-system, sans-serif !important;
+  font-size: 24px !important;
+}
+
+/* Override nested sidebar items that set their own font-size in component styles */
+html[lang='fa'] .sidebar .nav__label,
+html[lang='fa'] .sidebar .nav__item,
+html[lang='fa'] .sidebar .nav__submenu-item,
+:lang(fa) .sidebar .nav__label,
+:lang(fa) .sidebar .nav__item,
+:lang(fa) .sidebar .nav__submenu-item,
+html[dir='rtl'] .sidebar .nav__label,
+html[dir='rtl'] .sidebar .nav__item,
+html[dir='rtl'] .sidebar .nav__submenu-item {
+  font-family: 'Nazanin', 'NazaninLocal', 'B Nazanin', system-ui, -apple-system, sans-serif !important;
+  font-size: 24px !important;
+}

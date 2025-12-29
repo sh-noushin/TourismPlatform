@@ -9,6 +9,17 @@
   direction: inherit;
 }
 
+/* Farsi/RTL overrides inside component scope to ensure precedence */
+:host-context([dir='rtl']) .nav__label,
+:host-context([dir='rtl']) .nav__item,
+:host-context([dir='rtl']) .nav__submenu-item,
+:host-context([lang='fa']) .nav__label,
+:host-context([lang='fa']) .nav__item,
+:host-context([lang='fa']) .nav__submenu-item {
+  font-family: 'Nazanin', 'NazaninLocal', 'B Nazanin', Tahoma, $font-body !important;
+  font-size: 17px ;
+}
+
 /* Layout */
 .shell {
   min-height: 100vh;
