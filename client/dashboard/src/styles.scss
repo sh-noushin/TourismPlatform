@@ -165,3 +165,12 @@ html[dir='rtl'] .mat-mdc-dialog-surface .mini-note,
 html[dir='rtl'] .mat-mdc-dialog-surface .no-photos {
   text-align: right !important;
 }
+
+/* Force Nazanin on all elements when page is Farsi/RTL so components inherit it.
+   Exclude Material icon elements so ligature icons continue to use the Material Icons font. */
+html[lang='fa'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
+html[dir='rtl'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
+body[lang='fa'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
+body[dir='rtl'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined) {
+  font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', Tahoma, $font-body !important;
+}

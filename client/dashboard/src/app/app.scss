@@ -172,3 +172,18 @@ html[dir='rtl'] .sidebar .nav__submenu-item {
 	font-family: 'Nazanin', 'NazaninLocal', 'B Nazanin', 'Tahoma', $font-body !important;
 	font-size: 24px !important;
 }
+
+/* Ensure Material icon ligatures/fonts still render when RTL overrides are applied */
+mat-icon,
+.mat-icon,
+.material-icons,
+.material-icons-outlined {
+	font-family: 'Material Icons' !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: inherit !important;
+	line-height: 1 !important;
+	-webkit-font-feature-settings: 'liga' !important;
+	-webkit-font-smoothing: antialiased !important;
+	font-feature-settings: 'liga' !important;
+}
