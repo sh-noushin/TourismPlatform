@@ -120,13 +120,10 @@ export class SfTableComponent {
   colWidth(column: SfTableColumn) {
     const provided = column?.width;
     if (provided) return provided;
-    const actions = this.effectiveActions();
-    const autoCols = (this.columnsSignal() ?? []).length - (actions && actions.length ? 1 : 0);
-    if (autoCols <= 0) return 'auto';
-    if (actions && actions.length) {
-      return `calc((100% - 140px) / ${autoCols})`;
-    }
-    return `calc(100% / ${autoCols})`;
+    const columnsCount = (this.columnsSignal() ?? []).length;
+    if (!columnsCount) return 'auto';
+    const actionWidth = this.effectiveActions().length ? 140 : 0;
+    return `calc((100% - ${actionWidth}px) / ${columnsCount})`;
   }
 
   resolveValue(row: any, field?: keyof any | string) {

@@ -82,7 +82,9 @@ thead {
 }
 
 .header-button .indicator {
-  margin-inline-start: auto;
+  margin-inline-start: spacing(xs);
+  margin-inline-end: 0;
+  flex-shrink: 0;
 }
 
 .align-end .header-button {
@@ -164,19 +166,30 @@ thead {
   white-space: nowrap;
 }
 
+:host-context([dir='rtl']) th,
+:host-context([lang='fa']) th,
+:host-context(:lang(fa)) th {
+  padding-inline-start: spacing(sm); 
+  padding-inline-end: spacing(sm);
+}
+
 :host-context([dir='rtl']) .header-button,
 :host-context([lang='fa']) .header-button,
 :host-context(:lang(fa)) .header-button {
-  flex-direction: row-reverse;
-  justify-content: flex-end;
+  flex-direction: row; 
+  justify-content: flex-start; 
   text-align: right;
+  direction: rtl;
 }
 
+/* Ensure the indicator appears after the header text by using logical margin. */
 :host-context([dir='rtl']) .header-button .indicator,
 :host-context([lang='fa']) .header-button .indicator,
 :host-context(:lang(fa)) .header-button .indicator {
-  margin-inline-start: 0;
-  margin-inline-end: auto;
+  margin-inline-start: spacing(xs); /* places indicator snug after the label in RTL */
+  margin-inline-end: 0;
+  /* keep the indicator glyph LTR so triangle points correctly and stays adjacent */
+  direction: ltr;
 }
 
 /* Force consistent font in RTL tables */
