@@ -44,7 +44,36 @@ type HouseForm = {
   country: string;
   postalCode?: string;
   photos: HousePhotoVm[];
+  listingType: number;
+  price: number;
+  currency: string;
 };
+
+type ListingTypeOption = {
+  value: number;
+  labelKey: string;
+};
+
+type CurrencyOption = {
+  value: string;
+  label: string;
+};
+
+const LISTING_TYPE_OPTIONS: ListingTypeOption[] = [
+  { value: 1, labelKey: 'HOUSES.LISTING_RENT' },
+  { value: 2, labelKey: 'HOUSES.LISTING_BUY' }
+];
+
+const DEFAULT_LISTING_TYPE = LISTING_TYPE_OPTIONS[1].value;
+const DEFAULT_CURRENCY = 'USD';
+const DEFAULT_PRICE = 0;
+
+const CURRENCY_OPTIONS: CurrencyOption[] = [
+  { value: 'USD', label: 'USD' },
+  { value: 'EUR', label: 'EUR' },
+  { value: 'CAD', label: 'CAD' },
+  { value: 'GBP', label: 'GBP' }
+];
 
 @Component({
   standalone: true,
@@ -70,6 +99,15 @@ export class HouseEditComponent implements OnDestroy {
   readonly houseTypeOptions = computed(() =>
     this.houseTypes.houseTypes().map((type) => ({ label: type.name, value: type.name }))
   );
+
+  readonly listingTypeOptions = LISTING_TYPE_OPTIONS;
+  readonly currencyOptions = computed(() => CURRENCY_OPTIONS);
+
+  parseNumber(value: unknown) {
+    const v = typeof value === 'string' ? value : String(value ?? '');
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  }
 
   constructor(
     private readonly facade: HousesFacade,
@@ -113,6 +151,9 @@ export class HouseEditComponent implements OnDestroy {
           region: '',
           country: '',
           postalCode: '',
+          listingType: DEFAULT_LISTING_TYPE,
+          price: DEFAULT_PRICE,
+          currency: DEFAULT_CURRENCY,
           photos: []
         });
         return;
@@ -153,6 +194,9 @@ export class HouseEditComponent implements OnDestroy {
         region: address?.region ?? res?.region ?? '',
         country: address?.country ?? res?.country ?? '',
         postalCode: address?.postalCode ?? res?.postalCode ?? '',
+        listingType: Number(res?.listingType ?? DEFAULT_LISTING_TYPE),
+        price: Number(res?.price ?? DEFAULT_PRICE),
+        currency: res?.currency ?? DEFAULT_CURRENCY,
         photos: existingPhotos
       });
     } catch (err: any) {
@@ -184,6 +228,9 @@ export class HouseEditComponent implements OnDestroy {
       const payload: any = {
         name: form.name,
         description: form.description || undefined,
+        listingType: form.listingType,
+        price: form.price,
+        currency: form.currency,
         houseTypeName: form.houseTypeName,
         address: {
           line1: form.line1,

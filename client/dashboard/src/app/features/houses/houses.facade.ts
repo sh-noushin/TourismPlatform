@@ -7,6 +7,7 @@ export interface HousesQuery {
   pageSize?: number;
   search?: string;
   sort?: string;
+  listingType?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +25,7 @@ export class HousesFacade {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const res = await firstValueFrom(this.client.housesAll());
+      const res = await firstValueFrom(this.client.housesAll(query.listingType));
       // res is an array of HouseSummaryDto
       this.items.set(res ?? []);
       this.total.set(Array.isArray(res) ? res.length : 0);

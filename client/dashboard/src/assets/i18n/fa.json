@@ -152,6 +152,12 @@
     "PHOTOS": "عکس‌ها",
     "REMOVE_PHOTO": "حذف",
     "NO_PHOTOS": "هنوز عکسی وجود ندارد.از بالا عکس بارگذاری کنید.",
+    "LISTING_TYPE": "نوع آگهی",
+    "LISTING_RENT": "رهن/اجاره",
+    "LISTING_BUY": "فروش",
+    "PRICE": "قیمت",
+    "CURRENCY": "واحد پول",
+    "SELECT_CURRENCY": "واحد پول را انتخاب کنید",
     "CANCEL": "انصراف",
     "SAVED": "ذخیره شد."
   },

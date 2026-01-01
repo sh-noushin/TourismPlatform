@@ -50,6 +50,50 @@
           </label>
         </section>
 
+        <section class="form-grid listing">
+          <div class="listing-type" role="radiogroup" aria-label="{{ 'HOUSES.LISTING_TYPE' | translate }}">
+            <span class="label-text">{{ 'HOUSES.LISTING_TYPE' | translate }}</span>
+            <div class="listing-options">
+              @for (option of listingTypeOptions; track option.value) {
+                <label class="listing-option">
+                  <input
+                    type="radio"
+                    name="listingType"
+                    [checked]="form()?.listingType === option.value"
+                    (change)="updateField('listingType', option.value)"
+                  />
+                  <span>{{ option.labelKey | translate }}</span>
+                </label>
+              }
+            </div>
+          </div>
+
+          <label>
+            <span class="label-text">{{ 'HOUSES.PRICE' | translate }}</span>
+            <input
+              type="number"
+              inputmode="decimal"
+              step="0.01"
+              min="0"
+              name="price"
+              [value]="form()?.price ?? 0"
+              (input)="updateField('price', parseNumber($any($event.target).value))"
+              required
+            />
+          </label>
+
+          <label class="combobox">
+            <span class="label-text">{{ 'HOUSES.CURRENCY' | translate }}</span>
+            <sf-dropdown
+              [items]="currencyOptions()"
+              [value]="form()?.currency ?? ''"
+              (selectionChange)="updateField('currency', $event)"
+              placeholder="{{ 'HOUSES.SELECT_CURRENCY' | translate }}"
+              name="currency"
+            ></sf-dropdown>
+          </label>
+        </section>
+
         <section class="form-grid address">
           <label>
             <span class="label-text">{{ 'HOUSES.ADDRESS_LINE_1' | translate }}</span>

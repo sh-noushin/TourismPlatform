@@ -147,6 +147,12 @@
     "PHOTOS": "Photos",
     "REMOVE_PHOTO": "Remove",
     "NO_PHOTOS": "No photos yet. Upload one above.",
+    "LISTING_TYPE": "Listing type",
+    "LISTING_RENT": "Rent",
+    "LISTING_BUY": "Buy",
+    "PRICE": "Price",
+    "CURRENCY": "Currency",
+    "SELECT_CURRENCY": "Select currency",
     "CANCEL": "Cancel",
     "SAVED": "Saved."
   },
