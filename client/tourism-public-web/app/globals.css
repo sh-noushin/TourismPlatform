@@ -124,9 +124,8 @@ html[lang='fa'],
 html[dir='rtl'],
 :lang(fa) {
   font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
-}
-
   font-size: 18px !important;
+}
 html[lang='fa'] body *,
 html[lang='fa'] nav,
 html[lang='fa'] .menu,

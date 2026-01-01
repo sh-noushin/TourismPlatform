@@ -10,7 +10,7 @@ const sizeStyles: Record<Size, string> = {
   lg: "px-4 py-3 text-base",
 };
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   size?: Size;
 }
 

@@ -27,10 +27,8 @@ const buildHeaders = (req: NextRequest) => {
   return headers;
 };
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params?: { path?: string[] } }
-) {
+export async function GET(request: NextRequest, context: any) {
+  const params = await (context?.params ?? {});
   let targetUrl: URL;
 
   try {
