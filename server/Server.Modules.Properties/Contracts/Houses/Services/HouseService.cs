@@ -52,6 +52,8 @@ public sealed class HouseService : IHouseService
                 h.Id,
                 h.Name,
                 h.ListingType,
+                h.Price,
+                h.Currency,
                 h.HouseType.Name,
                 h.Address.Location.City,
                 h.Address.Location.Country,
@@ -71,6 +73,8 @@ public sealed class HouseService : IHouseService
             house.Name,
             house.Description,
             house.ListingType,
+            house.Price,
+            house.Currency,
             house.HouseType.Name,
             house.Address.Line1,
             house.Address.Line2,
@@ -97,6 +101,8 @@ public sealed class HouseService : IHouseService
             Name = request.Name.Trim(),
             Description = request.Description,
             ListingType = request.ListingType,
+            Price = request.Price,
+            Currency = request.Currency.Trim(),
             HouseTypeId = houseType.Id,
             AddressId = address.Id,
             CreatedAtUtc = now,
@@ -128,6 +134,8 @@ public sealed class HouseService : IHouseService
         house.Name = request.Name.Trim();
         house.Description = request.Description;
         house.ListingType = request.ListingType;
+        house.Price = request.Price;
+        house.Currency = request.Currency.Trim();
         house.HouseTypeId = houseType.Id;
         house.AddressId = address.Id;
         house.UpdatedAtUtc = now;

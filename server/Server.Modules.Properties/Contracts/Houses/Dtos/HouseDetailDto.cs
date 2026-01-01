@@ -7,6 +7,8 @@ public sealed record HouseDetailDto(
     string Name,
     string? Description,
     HouseListingType ListingType,
+    decimal Price,
+    string Currency,
     string? HouseTypeName,
     string? Line1,
     string? Line2,

@@ -9,6 +9,9 @@ public sealed class House
 
     public HouseListingType ListingType { get; set; } = HouseListingType.Buy;
 
+    public decimal Price { get; set; }
+    public string Currency { get; set; } = "USD";
+
     public Guid HouseTypeId { get; set; }
     public HouseType HouseType { get; set; } = null!;
 

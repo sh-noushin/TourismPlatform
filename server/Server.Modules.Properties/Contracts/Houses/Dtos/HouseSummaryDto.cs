@@ -6,6 +6,8 @@ public sealed record HouseSummaryDto(
     Guid HouseId,
     string Name,
     HouseListingType ListingType,
+    decimal Price,
+    string Currency,
     string? HouseTypeName,
     string? City,
     string? Country,

@@ -6,6 +6,8 @@ public sealed record UpdateHouseRequest(
     string Name,
     string? Description,
     HouseListingType ListingType,
+    decimal Price,
+    string Currency,
     string HouseTypeName,
     AddressRequest Address,
     IReadOnlyCollection<HouseCommitPhotoItem>? Photos,
