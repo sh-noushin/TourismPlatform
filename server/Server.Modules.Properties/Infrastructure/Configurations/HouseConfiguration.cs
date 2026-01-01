@@ -22,6 +22,11 @@ public sealed class HouseConfiguration : IEntityTypeConfiguration<House>
         builder.Property(x => x.Description)
             .HasMaxLength(4000);
 
+        builder.Property(x => x.ListingType)
+            .IsRequired()
+            .HasConversion<int>()
+            .HasDefaultValue(HouseListingType.Buy);
+
         builder.Property(x => x.CreatedAtUtc).IsRequired();
         builder.Property(x => x.UpdatedAtUtc);
         builder.Property(x => x.CreatedByUserId);
@@ -43,5 +48,6 @@ public sealed class HouseConfiguration : IEntityTypeConfiguration<House>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.Name);
+        builder.HasIndex(x => x.ListingType);
     }
 }

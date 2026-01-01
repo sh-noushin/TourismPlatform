@@ -13,12 +13,22 @@ public sealed class HouseRepository : BaseRepository<House>, IHouseRepository
     }
 
     public async Task<IReadOnlyCollection<House>> GetListAsync(CancellationToken cancellationToken = default)
+        => await GetListAsync(listingType: null, cancellationToken);
+
+    public async Task<IReadOnlyCollection<House>> GetListAsync(HouseListingType? listingType, CancellationToken cancellationToken = default)
     {
-        return await Set
+        IQueryable<House> query = Set
             .AsNoTracking()
             .Include(h => h.HouseType)
             .Include(h => h.Address)
-                .ThenInclude(a => a.Location)
+            .ThenInclude(a => a.Location);
+
+        if (listingType is not null)
+        {
+            query = query.Where(h => h.ListingType == listingType);
+        }
+
+        return await query
             .OrderBy(h => h.Name)
             .ToListAsync(cancellationToken);
     }

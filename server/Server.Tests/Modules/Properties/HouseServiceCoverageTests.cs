@@ -69,7 +69,13 @@ public sealed class HouseServiceCoverageTests
             new HousePhotoRepository(db.Context));
 
         var houseId = await service.CreateAsync(
-            new CreateHouseRequest("H", "d", "T", Address(), Photos: null),
+            new CreateHouseRequest(
+                Name: "H",
+                Description: "d",
+                ListingType: HouseListingType.Buy,
+                HouseTypeName: "T",
+                Address: Address(),
+                Photos: null),
             currentUserId: null);
 
         var photoId = Guid.NewGuid();
@@ -139,6 +145,7 @@ public sealed class HouseServiceCoverageTests
             new CreateHouseRequest(
                 Name: "  My House ",
                 Description: "d",
+                ListingType: HouseListingType.Buy,
                 HouseTypeName: "  Villa ",
                 Address: Address(),
                 Photos: null),
@@ -155,6 +162,7 @@ public sealed class HouseServiceCoverageTests
             new UpdateHouseRequest(
                 Name: "  My House 2 ",
                 Description: "d2",
+                ListingType: HouseListingType.Buy,
                 HouseTypeName: "Villa",
                 Address: Address(),
                 Photos: new[] { new HouseCommitPhotoItem(stagedUploadId, "L", 1) },
@@ -169,6 +177,7 @@ public sealed class HouseServiceCoverageTests
             new UpdateHouseRequest(
                 Name: "My House 3",
                 Description: "d3",
+                ListingType: HouseListingType.Buy,
                 HouseTypeName: "Villa",
                 Address: Address(),
                 Photos: new[] { new HouseCommitPhotoItem(Guid.NewGuid(), "L", 1) },
@@ -196,7 +205,14 @@ public sealed class HouseServiceCoverageTests
 
         var ok = await service.UpdateAsync(
             Guid.NewGuid(),
-            new UpdateHouseRequest("N", "d", "T", Address(), Photos: null, DeletedPhotoIds: null),
+            new UpdateHouseRequest(
+                Name: "N",
+                Description: "d",
+                ListingType: HouseListingType.Buy,
+                HouseTypeName: "T",
+                Address: Address(),
+                Photos: null,
+                DeletedPhotoIds: null),
             currentUserId: null);
 
         Assert.False(ok);
@@ -215,7 +231,15 @@ public sealed class HouseServiceCoverageTests
             new HouseReferenceDataRepository(db.Context),
             new HousePhotoRepository(db.Context));
 
-        var houseId = await serviceForCreate.CreateAsync(new CreateHouseRequest("H", "d", "T", Address(), Photos: null), currentUserId: null);
+        var houseId = await serviceForCreate.CreateAsync(
+            new CreateHouseRequest(
+                Name: "H",
+                Description: "d",
+                ListingType: HouseListingType.Buy,
+                HouseTypeName: "T",
+                Address: Address(),
+                Photos: null),
+            currentUserId: null);
 
         var photoId = Guid.NewGuid();
         db.Context.Add(new Photo { Id = photoId, UuidFileName = "p.jpg", PermanentRelativePath = "images/houses/photos/p.jpg", ContentType = "image/jpeg", FileSize = 1, CreatedAtUtc = DateTime.UtcNow });
@@ -240,6 +264,7 @@ public sealed class HouseServiceCoverageTests
             new UpdateHouseRequest(
                 Name: "H",
                 Description: "d",
+                ListingType: HouseListingType.Buy,
                 HouseTypeName: "T",
                 Address: Address(),
                 Photos: null,
@@ -284,7 +309,13 @@ public sealed class HouseServiceCoverageTests
             new HousePhotoRepository(db.Context));
 
         var houseId = await serviceForCreate.CreateAsync(
-            new CreateHouseRequest("H", "d", "T", Address(), Photos: null),
+            new CreateHouseRequest(
+                Name: "H",
+                Description: "d",
+                ListingType: HouseListingType.Buy,
+                HouseTypeName: "T",
+                Address: Address(),
+                Photos: null),
             currentUserId: null);
 
         var photoId = Guid.NewGuid();
@@ -328,7 +359,15 @@ public sealed class HouseServiceCoverageTests
 
         Assert.False(await service.UnlinkPhotoAsync(Guid.NewGuid(), Guid.NewGuid()));
 
-        var houseId = await service.CreateAsync(new CreateHouseRequest("H", null, "T", Address(), Photos: null), currentUserId: null);
+        var houseId = await service.CreateAsync(
+            new CreateHouseRequest(
+                Name: "H",
+                Description: null,
+                ListingType: HouseListingType.Buy,
+                HouseTypeName: "T",
+                Address: Address(),
+                Photos: null),
+            currentUserId: null);
         Assert.False(await service.UnlinkPhotoAsync(houseId, Guid.NewGuid()));
 
         cleanup.VerifyNoOtherCalls();
@@ -347,7 +386,15 @@ public sealed class HouseServiceCoverageTests
             new HouseReferenceDataRepository(db.Context),
             new HousePhotoRepository(db.Context));
 
-        var houseId = await serviceForCreate.CreateAsync(new CreateHouseRequest("H", null, "T", Address(), Photos: null), currentUserId: null);
+        var houseId = await serviceForCreate.CreateAsync(
+            new CreateHouseRequest(
+                Name: "H",
+                Description: null,
+                ListingType: HouseListingType.Buy,
+                HouseTypeName: "T",
+                Address: Address(),
+                Photos: null),
+            currentUserId: null);
 
         var photoId = Guid.NewGuid();
         db.Context.Add(new Photo { Id = photoId, UuidFileName = "p.jpg", PermanentRelativePath = "images/houses/photos/p.jpg", ContentType = "image/jpeg", FileSize = 1, CreatedAtUtc = DateTime.UtcNow });

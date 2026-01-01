@@ -36,9 +36,14 @@ public sealed class HouseService : IHouseService
         _housePhotoRepository = housePhotoRepository;
     }
 
-    public async Task<IReadOnlyCollection<HouseSummaryDto>> GetListAsync(CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<HouseSummaryDto>> GetListAsync(CancellationToken cancellationToken = default)
+        => GetListAsync(listingType: null, cancellationToken);
+
+    public async Task<IReadOnlyCollection<HouseSummaryDto>> GetListAsync(
+        HouseListingType? listingType,
+        CancellationToken cancellationToken = default)
     {
-        var houses = await _houseRepository.GetListAsync(cancellationToken);
+        var houses = await _houseRepository.GetListAsync(listingType, cancellationToken);
         var houseIds = houses.Select(h => h.Id).ToArray();
         var photosByHouse = await _housePhotoRepository.GetPhotosByHouseIdsAsync(houseIds, cancellationToken);
 
@@ -46,6 +51,7 @@ public sealed class HouseService : IHouseService
             .Select(h => new HouseSummaryDto(
                 h.Id,
                 h.Name,
+                h.ListingType,
                 h.HouseType.Name,
                 h.Address.Location.City,
                 h.Address.Location.Country,
@@ -64,6 +70,7 @@ public sealed class HouseService : IHouseService
             house.Id,
             house.Name,
             house.Description,
+            house.ListingType,
             house.HouseType.Name,
             house.Address.Line1,
             house.Address.Line2,
@@ -89,6 +96,7 @@ public sealed class HouseService : IHouseService
             Id = Guid.NewGuid(),
             Name = request.Name.Trim(),
             Description = request.Description,
+            ListingType = request.ListingType,
             HouseTypeId = houseType.Id,
             AddressId = address.Id,
             CreatedAtUtc = now,
@@ -119,6 +127,7 @@ public sealed class HouseService : IHouseService
 
         house.Name = request.Name.Trim();
         house.Description = request.Description;
+        house.ListingType = request.ListingType;
         house.HouseTypeId = houseType.Id;
         house.AddressId = address.Id;
         house.UpdatedAtUtc = now;

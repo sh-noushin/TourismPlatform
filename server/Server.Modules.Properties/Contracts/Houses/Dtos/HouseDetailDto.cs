@@ -1,9 +1,12 @@
 namespace Server.Modules.Properties.Contracts.Houses.Dtos;
 
+using Server.Modules.Properties.Domain.Houses;
+
 public sealed record HouseDetailDto(
     Guid HouseId,
     string Name,
     string? Description,
+    HouseListingType ListingType,
     string? HouseTypeName,
     string? Line1,
     string? Line2,

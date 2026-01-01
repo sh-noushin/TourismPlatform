@@ -7,6 +7,8 @@ public sealed class House
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
 
+    public HouseListingType ListingType { get; set; } = HouseListingType.Buy;
+
     public Guid HouseTypeId { get; set; }
     public HouseType HouseType { get; set; } = null!;
 
