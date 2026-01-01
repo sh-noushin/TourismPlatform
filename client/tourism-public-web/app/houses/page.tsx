@@ -12,7 +12,7 @@ type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
 type SearchParams = Record<string, string | string[] | undefined>;
 
 interface HousesPageProps {
-  searchParams: SearchParams;
+  searchParams: SearchParams | Promise<SearchParams>;
 }
 
 const filterHouses = (houses: HouseSummaryDto[], filters: HouseFiltersShape) => {
@@ -48,7 +48,8 @@ const sortHouses = (houses: HouseSummaryDto[], sort: HouseFiltersShape["sort"]) 
 };
 
 export default async function HousesPage({ searchParams }: HousesPageProps) {
-  const filters = parseHouseFilters(searchParams);
+  const resolvedSearchParams = (await Promise.resolve(searchParams)) ?? {};
+  const filters = parseHouseFilters(resolvedSearchParams);
 
   const [houseTypes, houses] = await Promise.all([
     fetchHouseTypes().catch((error) => {
@@ -84,7 +85,7 @@ export default async function HousesPage({ searchParams }: HousesPageProps) {
           page={currentPage}
           pageSize={filters.pageSize}
           totalCount={totalCount}
-          currentQuery={searchParams}
+          currentQuery={resolvedSearchParams}
         />
       </div>
     </div>

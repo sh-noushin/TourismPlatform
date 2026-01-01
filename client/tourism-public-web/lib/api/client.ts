@@ -24,8 +24,12 @@ export async function getJson<T = unknown>(path: string, params?: QueryParams): 
   const search = serializeParams(params);
   const proxyPath = buildProxyPath(path);
   if (typeof window === "undefined") {
-    const base = process.env.API_BASE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`;
-    const url = `${base.replace(/\/$/, "")}/api/proxy${proxyPath}${search}`;
+    const base = process.env.API_BASE_URL;
+    if (!base) {
+      throw new Error("API_BASE_URL must be defined for server-side requests");
+    }
+
+    const url = `${base.replace(/\/$/, "")}${proxyPath}${search}`;
     const response = await fetch(url, {
       headers: { Accept: "application/json" },
     });
