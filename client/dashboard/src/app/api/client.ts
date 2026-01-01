@@ -611,10 +611,15 @@ export class Client {
     }
 
     /**
+     * @param listingType (optional) 
      * @return OK
      */
-    housesAll(): Observable<HouseSummaryDto[]> {
-        let url_ = this.baseUrl + "/api/houses";
+    housesAll(listingType: number | undefined): Observable<HouseSummaryDto[]> {
+        let url_ = this.baseUrl + "/api/houses?";
+        if (listingType === null)
+            throw new globalThis.Error("The parameter 'listingType' cannot be null.");
+        else if (listingType !== undefined)
+            url_ += "listingType=" + encodeURIComponent("" + listingType) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1022,6 +1027,315 @@ export class Client {
     }
 
     /**
+     * @return OK
+     */
+    houseTypesGET(): Observable<void> {
+        let url_ = this.baseUrl + "/api/house-types";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHouseTypesGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHouseTypesGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processHouseTypesGET(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Created
+     */
+    houseTypesPOST(body: CreateHouseTypeRequest): Observable<HouseTypeDto> {
+        let url_ = this.baseUrl + "/api/house-types";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHouseTypesPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHouseTypesPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<HouseTypeDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<HouseTypeDto>;
+        }));
+    }
+
+    protected processHouseTypesPOST(response: HttpResponseBase): Observable<HouseTypeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = HouseTypeDto.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ProblemDetails.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    houseTypesGET2(id: string): Observable<HouseTypeDto> {
+        let url_ = this.baseUrl + "/api/house-types/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHouseTypesGET2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHouseTypesGET2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<HouseTypeDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<HouseTypeDto>;
+        }));
+    }
+
+    protected processHouseTypesGET2(response: HttpResponseBase): Observable<HouseTypeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HouseTypeDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return No Content
+     */
+    houseTypesPUT(id: string, body: UpdateHouseTypeRequest): Observable<void> {
+        let url_ = this.baseUrl + "/api/house-types/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHouseTypesPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHouseTypesPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processHouseTypesPUT(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ProblemDetails.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return No Content
+     */
+    houseTypesDELETE(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/house-types/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHouseTypesDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHouseTypesDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processHouseTypesDELETE(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @return Created
      */
     stagePOST(body: Body): Observable<StageUploadResponse> {
@@ -1083,6 +1397,64 @@ export class Client {
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    stageDELETE(body: CleanupStageUploadsRequest): Observable<void> {
+        let url_ = this.baseUrl + "/api/photos/stage";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processStageDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStageDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processStageDELETE(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -1830,6 +2202,315 @@ export class Client {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    tourCategoriesGET(): Observable<void> {
+        let url_ = this.baseUrl + "/api/tour-categories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTourCategoriesGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTourCategoriesGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTourCategoriesGET(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Created
+     */
+    tourCategoriesPOST(body: CreateTourCategoryRequest): Observable<TourCategoryDto> {
+        let url_ = this.baseUrl + "/api/tour-categories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTourCategoriesPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTourCategoriesPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TourCategoryDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TourCategoryDto>;
+        }));
+    }
+
+    protected processTourCategoriesPOST(response: HttpResponseBase): Observable<TourCategoryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = TourCategoryDto.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ProblemDetails.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    tourCategoriesGET2(id: string): Observable<TourCategoryDto> {
+        let url_ = this.baseUrl + "/api/tour-categories/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTourCategoriesGET2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTourCategoriesGET2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TourCategoryDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TourCategoryDto>;
+        }));
+    }
+
+    protected processTourCategoriesGET2(response: HttpResponseBase): Observable<TourCategoryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TourCategoryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return No Content
+     */
+    tourCategoriesPUT(id: string, body: UpdateTourCategoryRequest): Observable<void> {
+        let url_ = this.baseUrl + "/api/tour-categories/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTourCategoriesPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTourCategoriesPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTourCategoriesPUT(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ProblemDetails.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return No Content
+     */
+    tourCategoriesDELETE(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/tour-categories/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTourCategoriesDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTourCategoriesDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTourCategoriesDELETE(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -2643,6 +3324,65 @@ export interface IAddressRequest {
     [key: string]: any;
 }
 
+export class CleanupStageUploadsRequest implements ICleanupStageUploadsRequest {
+    stagedUploadIds!: string[];
+
+    [key: string]: any;
+
+    constructor(data?: ICleanupStageUploadsRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+        if (!data) {
+            this.stagedUploadIds = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["stagedUploadIds"])) {
+                this.stagedUploadIds = [] as any;
+                for (let item of _data["stagedUploadIds"])
+                    this.stagedUploadIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CleanupStageUploadsRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CleanupStageUploadsRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.stagedUploadIds)) {
+            data["stagedUploadIds"] = [];
+            for (let item of this.stagedUploadIds)
+                data["stagedUploadIds"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ICleanupStageUploadsRequest {
+    stagedUploadIds: string[];
+
+    [key: string]: any;
+}
+
 export class CreateBookingRequest implements ICreateBookingRequest {
     tourScheduleId!: string;
     seats!: number;
@@ -2754,6 +3494,9 @@ export interface ICreateExchangeOrderRequest {
 export class CreateHouseRequest implements ICreateHouseRequest {
     name!: string;
     description!: string | undefined;
+    listingType!: number;
+    price!: number;
+    currency!: string;
     houseTypeName!: string;
     address!: AddressRequest;
     photos!: HouseCommitPhotoItem[] | undefined;
@@ -2780,6 +3523,9 @@ export class CreateHouseRequest implements ICreateHouseRequest {
             }
             this.name = _data["name"];
             this.description = _data["description"];
+            this.listingType = _data["listingType"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
             this.houseTypeName = _data["houseTypeName"];
             this.address = _data["address"] ? AddressRequest.fromJS(_data["address"]) : new AddressRequest();
             if (Array.isArray(_data["photos"])) {
@@ -2805,6 +3551,9 @@ export class CreateHouseRequest implements ICreateHouseRequest {
         }
         data["name"] = this.name;
         data["description"] = this.description;
+        data["listingType"] = this.listingType;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
         data["houseTypeName"] = this.houseTypeName;
         data["address"] = this.address ? this.address.toJSON() : undefined as any;
         if (Array.isArray(this.photos)) {
@@ -2819,9 +3568,60 @@ export class CreateHouseRequest implements ICreateHouseRequest {
 export interface ICreateHouseRequest {
     name: string;
     description: string | undefined;
+    listingType: number;
+    price: number;
+    currency: string;
     houseTypeName: string;
     address: AddressRequest;
     photos: HouseCommitPhotoItem[] | undefined;
+
+    [key: string]: any;
+}
+
+export class CreateHouseTypeRequest implements ICreateHouseTypeRequest {
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateHouseTypeRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateHouseTypeRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateHouseTypeRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICreateHouseTypeRequest {
+    name: string;
 
     [key: string]: any;
 }
@@ -2882,12 +3682,60 @@ export interface ICreatePermissionDefinitionRequest {
     [key: string]: any;
 }
 
+export class CreateTourCategoryRequest implements ICreateTourCategoryRequest {
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateTourCategoryRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateTourCategoryRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTourCategoryRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICreateTourCategoryRequest {
+    name: string;
+
+    [key: string]: any;
+}
+
 export class CreateTourRequest implements ICreateTourRequest {
     name!: string;
     description!: string | undefined;
     tourCategoryName!: string;
-    photos!: TourCommitPhotoItem[] | undefined;
-    schedules!: CreateTourScheduleRequest[] | undefined;
+    photos?: TourCommitPhotoItem[] | undefined;
+    schedules?: CreateTourScheduleRequest[] | undefined;
 
     [key: string]: any;
 
@@ -2956,8 +3804,8 @@ export interface ICreateTourRequest {
     name: string;
     description: string | undefined;
     tourCategoryName: string;
-    photos: TourCommitPhotoItem[] | undefined;
-    schedules: CreateTourScheduleRequest[] | undefined;
+    photos?: TourCommitPhotoItem[] | undefined;
+    schedules?: CreateTourScheduleRequest[] | undefined;
 
     [key: string]: any;
 }
@@ -3190,6 +4038,9 @@ export class HouseDetailDto implements IHouseDetailDto {
     houseId!: string;
     name!: string;
     description!: string | undefined;
+    listingType!: number;
+    price!: number;
+    currency!: string;
     houseTypeName!: string | undefined;
     line1!: string | undefined;
     line2!: string | undefined;
@@ -3222,6 +4073,9 @@ export class HouseDetailDto implements IHouseDetailDto {
             this.houseId = _data["houseId"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.listingType = _data["listingType"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
             this.houseTypeName = _data["houseTypeName"];
             this.line1 = _data["line1"];
             this.line2 = _data["line2"];
@@ -3253,6 +4107,9 @@ export class HouseDetailDto implements IHouseDetailDto {
         data["houseId"] = this.houseId;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["listingType"] = this.listingType;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
         data["houseTypeName"] = this.houseTypeName;
         data["line1"] = this.line1;
         data["line2"] = this.line2;
@@ -3273,6 +4130,9 @@ export interface IHouseDetailDto {
     houseId: string;
     name: string;
     description: string | undefined;
+    listingType: number;
+    price: number;
+    currency: string;
     houseTypeName: string | undefined;
     line1: string | undefined;
     line2: string | undefined;
@@ -3348,6 +4208,9 @@ export interface IHousePhotoDto {
 export class HouseSummaryDto implements IHouseSummaryDto {
     houseId!: string;
     name!: string;
+    listingType!: number;
+    price!: number;
+    currency!: string;
     houseTypeName!: string | undefined;
     city!: string | undefined;
     country!: string | undefined;
@@ -3375,6 +4238,9 @@ export class HouseSummaryDto implements IHouseSummaryDto {
             }
             this.houseId = _data["houseId"];
             this.name = _data["name"];
+            this.listingType = _data["listingType"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
             this.houseTypeName = _data["houseTypeName"];
             this.city = _data["city"];
             this.country = _data["country"];
@@ -3401,6 +4267,9 @@ export class HouseSummaryDto implements IHouseSummaryDto {
         }
         data["houseId"] = this.houseId;
         data["name"] = this.name;
+        data["listingType"] = this.listingType;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
         data["houseTypeName"] = this.houseTypeName;
         data["city"] = this.city;
         data["country"] = this.country;
@@ -3416,10 +4285,65 @@ export class HouseSummaryDto implements IHouseSummaryDto {
 export interface IHouseSummaryDto {
     houseId: string;
     name: string;
+    listingType: number;
+    price: number;
+    currency: string;
     houseTypeName: string | undefined;
     city: string | undefined;
     country: string | undefined;
     photos: HousePhotoDto[];
+
+    [key: string]: any;
+}
+
+export class HouseTypeDto implements IHouseTypeDto {
+    id!: string;
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IHouseTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): HouseTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HouseTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IHouseTypeDto {
+    id: string;
+    name: string;
 
     [key: string]: any;
 }
@@ -3880,6 +4804,58 @@ export interface IStageUploadResponse {
     [key: string]: any;
 }
 
+export class TourCategoryDto implements ITourCategoryDto {
+    id!: string;
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ITourCategoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): TourCategoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TourCategoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ITourCategoryDto {
+    id: string;
+    name: string;
+
+    [key: string]: any;
+}
+
 export class TourCommitPhotoItem implements ITourCommitPhotoItem {
     stagedUploadId!: string;
     label!: string;
@@ -4196,7 +5172,7 @@ export class TourScheduleUpdateItem implements ITourScheduleUpdateItem {
 }
 
 export interface ITourScheduleUpdateItem {
-    id?: string | undefined;
+    id: string | undefined;
     startAtUtc: Date;
     endAtUtc: Date;
     capacity: number;
@@ -4209,7 +5185,7 @@ export class TourSummaryDto implements ITourSummaryDto {
     name!: string;
     description!: string | undefined;
     tourCategoryName!: string;
-    year!: number | undefined;
+    year!: number;
     photos!: TourPhotoDto[];
 
     [key: string]: any;
@@ -4277,7 +5253,7 @@ export interface ITourSummaryDto {
     name: string;
     description: string | undefined;
     tourCategoryName: string;
-    year: number | undefined;
+    year: number;
     photos: TourPhotoDto[];
 
     [key: string]: any;
@@ -4334,9 +5310,13 @@ export interface IUpdateExchangeOrderStatusRequest {
 export class UpdateHouseRequest implements IUpdateHouseRequest {
     name!: string;
     description!: string | undefined;
+    listingType!: number;
+    price!: number;
+    currency!: string;
     houseTypeName!: string;
     address!: AddressRequest;
     photos!: HouseCommitPhotoItem[] | undefined;
+    deletedPhotoIds!: string[] | undefined;
 
     [key: string]: any;
 
@@ -4360,12 +5340,20 @@ export class UpdateHouseRequest implements IUpdateHouseRequest {
             }
             this.name = _data["name"];
             this.description = _data["description"];
+            this.listingType = _data["listingType"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
             this.houseTypeName = _data["houseTypeName"];
             this.address = _data["address"] ? AddressRequest.fromJS(_data["address"]) : new AddressRequest();
             if (Array.isArray(_data["photos"])) {
                 this.photos = [] as any;
                 for (let item of _data["photos"])
                     this.photos!.push(HouseCommitPhotoItem.fromJS(item));
+            }
+            if (Array.isArray(_data["deletedPhotoIds"])) {
+                this.deletedPhotoIds = [] as any;
+                for (let item of _data["deletedPhotoIds"])
+                    this.deletedPhotoIds!.push(item);
             }
         }
     }
@@ -4385,12 +5373,20 @@ export class UpdateHouseRequest implements IUpdateHouseRequest {
         }
         data["name"] = this.name;
         data["description"] = this.description;
+        data["listingType"] = this.listingType;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
         data["houseTypeName"] = this.houseTypeName;
         data["address"] = this.address ? this.address.toJSON() : undefined as any;
         if (Array.isArray(this.photos)) {
             data["photos"] = [];
             for (let item of this.photos)
                 data["photos"].push(item ? item.toJSON() : undefined as any);
+        }
+        if (Array.isArray(this.deletedPhotoIds)) {
+            data["deletedPhotoIds"] = [];
+            for (let item of this.deletedPhotoIds)
+                data["deletedPhotoIds"].push(item);
         }
         return data;
     }
@@ -4399,9 +5395,61 @@ export class UpdateHouseRequest implements IUpdateHouseRequest {
 export interface IUpdateHouseRequest {
     name: string;
     description: string | undefined;
+    listingType: number;
+    price: number;
+    currency: string;
     houseTypeName: string;
     address: AddressRequest;
     photos: HouseCommitPhotoItem[] | undefined;
+    deletedPhotoIds: string[] | undefined;
+
+    [key: string]: any;
+}
+
+export class UpdateHouseTypeRequest implements IUpdateHouseTypeRequest {
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateHouseTypeRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateHouseTypeRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateHouseTypeRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IUpdateHouseTypeRequest {
+    name: string;
 
     [key: string]: any;
 }
@@ -4458,13 +5506,61 @@ export interface IUpdatePermissionDefinitionRequest {
     [key: string]: any;
 }
 
+export class UpdateTourCategoryRequest implements IUpdateTourCategoryRequest {
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateTourCategoryRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateTourCategoryRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTourCategoryRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IUpdateTourCategoryRequest {
+    name: string;
+
+    [key: string]: any;
+}
+
 export class UpdateTourRequest implements IUpdateTourRequest {
     name!: string;
     description!: string | undefined;
     tourCategoryName!: string;
-    photos!: TourCommitPhotoItem[] | undefined;
-    schedules!: TourScheduleUpdateItem[] | undefined;
-    deletedScheduleIds!: string[] | undefined;
+    photos?: TourCommitPhotoItem[] | undefined;
+    schedules?: TourScheduleUpdateItem[] | undefined;
+    deletedScheduleIds?: string[] | undefined;
 
     [key: string]: any;
 
@@ -4543,9 +5639,9 @@ export interface IUpdateTourRequest {
     name: string;
     description: string | undefined;
     tourCategoryName: string;
-    photos: TourCommitPhotoItem[] | undefined;
-    schedules: TourScheduleUpdateItem[] | undefined;
-    deletedScheduleIds: string[] | undefined;
+    photos?: TourCommitPhotoItem[] | undefined;
+    schedules?: TourScheduleUpdateItem[] | undefined;
+    deletedScheduleIds?: string[] | undefined;
 
     [key: string]: any;
 }
