@@ -22,6 +22,18 @@ public sealed class TourConfiguration : IEntityTypeConfiguration<Tour>
         builder.Property(x => x.Description)
             .HasMaxLength(4000);
 
+        builder.Property(x => x.Price)
+            .IsRequired()
+            .HasPrecision(18, 2)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(0m);
+
+        builder.Property(x => x.Currency)
+            .IsRequired()
+            .HasMaxLength(3)
+            .HasColumnType("nvarchar(3)")
+            .HasDefaultValue("USD");
+
         builder.Property(x => x.CreatedAtUtc).IsRequired();
         builder.Property(x => x.UpdatedAtUtc);
         builder.Property(x => x.CreatedByUserId);

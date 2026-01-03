@@ -53,6 +53,8 @@ public sealed class TourService : ITourService
                 t.Name,
                 t.Description,
                 t.TourCategory.Name,
+                t.Price,
+                t.Currency,
                 t.CreatedAtUtc.Year,
                 photosByTour.TryGetValue(t.Id, out var ph) ? ph : Array.Empty<TourPhotoDto>()))
             .ToList();
@@ -76,6 +78,8 @@ public sealed class TourService : ITourService
             tour.Name,
             tour.Description,
             tour.TourCategory.Name,
+            tour.Price,
+            tour.Currency,
             scheduleDtos,
             photos);
     }
@@ -94,6 +98,8 @@ public sealed class TourService : ITourService
             Name = request.Name.Trim(),
             Description = request.Description,
             TourCategoryId = category.Id,
+            Price = request.Price,
+            Currency = request.Currency.Trim(),
             CreatedAtUtc = now,
             CreatedByUserId = currentUserId
         };
@@ -122,6 +128,8 @@ public sealed class TourService : ITourService
         tour.Name = request.Name.Trim();
         tour.Description = request.Description;
         tour.TourCategoryId = category.Id;
+        tour.Price = request.Price;
+        tour.Currency = request.Currency.Trim();
         tour.UpdatedAtUtc = now;
         tour.UpdatedByUserId = currentUserId;
 

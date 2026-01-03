@@ -4,6 +4,8 @@ public sealed record UpdateTourRequest(
     string Name,
     string? Description,
     string TourCategoryName,
+    decimal Price,
+    string Currency,
     IReadOnlyCollection<TourCommitPhotoItem>? Photos = null,
     IReadOnlyCollection<TourScheduleUpdateItem>? Schedules = null,
     IReadOnlyCollection<Guid>? DeletedScheduleIds = null);
