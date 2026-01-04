@@ -22,9 +22,6 @@ export function Hero() {
         <h1 className="mt-4 font-serif text-5xl font-semibold tracking-[0.08em] md:text-7xl">
           TRAVEL
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-base text-sky-50/90 md:text-lg">
-          The best travel agency for your tours in Thailand
-        </p>
       </div>
     </section>
   );
