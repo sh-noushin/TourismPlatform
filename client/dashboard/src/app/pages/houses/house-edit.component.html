@@ -141,16 +141,22 @@
             />
           </label>
 
-          <label>
+          <label class="combobox">
             <span class="label-text">{{ 'HOUSES.COUNTRY' | translate }}</span>
-            <input
-              type="text"
+            <sf-dropdown
+              [items]="countryOptions()"
+              [value]="form()?.country ?? ''"
+              (selectionChange)="updateField('country', $event)"
+              placeholder="{{ 'HOUSES.SELECT_COUNTRY' | translate }}"
               name="country"
-              autocomplete="off"
-              [value]="form()?.country"
-              (input)="updateField('country', $any($event.target).value)"
-              required
-            />
+            ></sf-dropdown>
+
+            @if (loadingCountries()) {
+              <p class="mini-note">{{ 'HOUSES.LOADING_COUNTRIES' | translate }}</p>
+            }
+            @if (countriesError()) {
+              <p class="mini-note status error">{{ countriesError() }}</p>
+            }
           </label>
 
           <label>

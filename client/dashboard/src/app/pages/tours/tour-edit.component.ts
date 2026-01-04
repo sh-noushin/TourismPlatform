@@ -344,17 +344,17 @@ export class TourEditComponent implements OnDestroy {
     });
 
     if (this.id) {
-      const payload = new UpdateTourRequest(
-        form.name.trim(),
-        descriptionValue || undefined,
-        categoryName,
-        form.price,
-        currencyCode,
-        form.countryCode,
-        commitItems.length > 0 ? commitItems : undefined,
-        scheduleUpdateItems.length > 0 ? scheduleUpdateItems : undefined,
-        this.deletedScheduleIds().length > 0 ? [...this.deletedScheduleIds()] : undefined
-      );
+      const payload = new UpdateTourRequest({
+        name: form.name.trim(),
+        description: descriptionValue || undefined,
+        tourCategoryName: categoryName,
+        price: form.price,
+        currency: currencyCode,
+        countryCode: form.countryCode,
+        photos: commitItems.length > 0 ? commitItems : undefined,
+        schedules: scheduleUpdateItems.length > 0 ? scheduleUpdateItems : undefined,
+        deletedScheduleIds: this.deletedScheduleIds().length > 0 ? [...this.deletedScheduleIds()] : undefined
+      });
 
       return payload;
     } else {
@@ -366,16 +366,17 @@ export class TourEditComponent implements OnDestroy {
         return schedule;
       });
 
-      const payload = new CreateTourRequest(
-        form.name.trim(),
-        descriptionValue || undefined,
-        categoryName,
-        form.price,
-        currencyCode,
-        form.countryCode,
-        commitItems.length > 0 ? commitItems : undefined,
-        newSchedules.length > 0 ? newSchedules : undefined
-      );
+
+      const payload = new CreateTourRequest({
+        name: form.name.trim(),
+        description: descriptionValue || undefined,
+        tourCategoryName: categoryName,
+        price: form.price,
+        currency: currencyCode,
+        countryCode: form.countryCode,
+        photos: commitItems.length > 0 ? commitItems : undefined,
+        schedules: newSchedules.length > 0 ? newSchedules : undefined
+      });
 
       return payload;
     }

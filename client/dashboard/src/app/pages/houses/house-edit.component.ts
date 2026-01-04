@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { API_BASE_URL, HouseCommitPhotoItem } from '../../api/client';
+import { API_BASE_URL, Client, CountryDto, HouseCommitPhotoItem } from '../../api/client';
 import { HousesFacade } from '../../features/houses/houses.facade';
 import { HouseTypesService } from '../../features/houses/house-types.service';
 import { SfDropdownComponent } from '../../shared/ui/sf-dropdown/sf-dropdown.component';
@@ -102,6 +102,9 @@ export class HouseEditComponent implements OnDestroy {
 
   readonly listingTypeOptions = LISTING_TYPE_OPTIONS;
   readonly currencyOptions = computed(() => CURRENCY_OPTIONS);
+  readonly countryOptions = signal<{ label: string; value: string }[]>([]);
+  readonly loadingCountries = signal(false);
+  readonly countriesError = signal<string | null>(null);
 
   parseNumber(value: unknown) {
     const v = typeof value === 'string' ? value : String(value ?? '');
@@ -112,6 +115,7 @@ export class HouseEditComponent implements OnDestroy {
   constructor(
     private readonly facade: HousesFacade,
     private readonly http: HttpClient,
+    private readonly client: Client,
     @Inject(API_BASE_URL) private readonly apiBaseUrl: string,
     public readonly houseTypes: HouseTypesService,
     private readonly translate: TranslateService,
@@ -122,6 +126,7 @@ export class HouseEditComponent implements OnDestroy {
     this.id = this.data?.id ?? this.route?.snapshot.paramMap.get('id') ?? null;
     void this.load();
     void this.houseTypes.load();
+    void this.loadCountries();
   }
 
   private normalizeUrl(url: string | undefined | null): string {
@@ -201,6 +206,23 @@ export class HouseEditComponent implements OnDestroy {
       });
     } catch (err: any) {
       this.error.set(err?.message ?? 'Failed loading');
+    }
+  }
+
+  private async loadCountries() {
+    this.loadingCountries.set(true);
+    this.countriesError.set(null);
+
+    try {
+      const countries = await firstValueFrom(this.client.toursCountries());
+      const options = (countries ?? [])
+        .map((country: CountryDto) => ({ label: country.name, value: country.code }))
+        .sort((left, right) => left.label.localeCompare(right.label));
+      this.countryOptions.set(options);
+    } catch (err: any) {
+      this.countriesError.set(err?.message ?? 'Failed loading countries');
+    } finally {
+      this.loadingCountries.set(false);
     }
   }
 

@@ -147,6 +147,7 @@
     "COUNTRY": "Country",
     "POSTAL_CODE": "Postal code",
     "LOADING_TYPES": "Loading types...",
+    "LOADING_COUNTRIES": "Loading countries...",
     "PHOTOS": "Photos",
     "REMOVE_PHOTO": "Remove",
     "NO_PHOTOS": "No photos yet. Upload one above.",
