@@ -2,12 +2,16 @@
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostBinding,
   HostListener,
+  Inject,
+  OnDestroy,
   input,
   output,
   signal
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 
 export interface SfDropdownItem {
   label: string;
@@ -23,7 +27,7 @@ export interface SfDropdownItem {
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SfDropdownComponent {
+export class SfDropdownComponent implements OnDestroy {
   readonly items = input<SfDropdownItem[]>([]);
   readonly value = input<string | null>(null);
   readonly placeholder = input<string>('Select');
@@ -34,7 +38,26 @@ export class SfDropdownComponent {
   readonly selectionChange = output<string>();
   readonly isOpen = signal(false);
 
-  constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
+  private readonly direction = signal<'ltr' | 'rtl'>('ltr');
+  private readonly observer: MutationObserver;
+
+  @HostBinding('attr.dir')
+  get hostDir() {
+    return this.direction();
+  }
+
+  constructor(
+    private readonly elementRef: ElementRef<HTMLElement>,
+    @Inject(DOCUMENT) private readonly document: Document
+  ) {
+    const root = this.document.documentElement;
+    this.direction.set(root.dir === 'rtl' ? 'rtl' : 'ltr');
+    this.observer = new MutationObserver(() => {
+      const dir = root.dir === 'rtl' ? 'rtl' : 'ltr';
+      this.direction.set(dir);
+    });
+    this.observer.observe(root, { attributes: true, attributeFilter: ['dir'] });
+  }
 
   toggle(event?: MouseEvent) {
     event?.stopPropagation();
@@ -71,6 +94,10 @@ export class SfDropdownComponent {
 
   get hasSelection(): boolean {
     return true;
+  }
+
+  ngOnDestroy() {
+    this.observer.disconnect();
   }
 
   @HostListener('document:mousedown', ['$event'])
