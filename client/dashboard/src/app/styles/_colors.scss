@@ -38,6 +38,11 @@ $loginBadgeBg: rgba(255, 255, 255, 0.22);
 $dashboardBgStart: rgba(245, 247, 250, 1);
 $dashboardBgEnd: rgba(236, 242, 255, 1);
 
+$topbarBg: mix($primary, $surface, 18%);
+$topbarText: $text;                      
 
-$topbarBg: rgb(79, 129, 245);
-$topbarText: rgb(255, 255, 255);
+
+$dashboardBgStart: rgb(248, 250, 252);   
+$dashboardBgEnd: rgb(236, 239, 244);     
+$topbarBg: rgb(230, 235, 242);           
+$topbarText: rgb(15, 23, 42);
