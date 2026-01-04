@@ -145,6 +145,7 @@
     "CITY": "City",
     "REGION": "Region",
     "COUNTRY": "Country",
+    "SELECT_COUNTRY": "Select country",
     "POSTAL_CODE": "Postal code",
     "LOADING_TYPES": "Loading types...",
     "LOADING_COUNTRIES": "Loading countries...",

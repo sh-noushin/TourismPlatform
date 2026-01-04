@@ -150,6 +150,7 @@
     "CITY": "شهر",
     "REGION": "استان / منطقه",
     "COUNTRY": "کشور",
+    "SELECT_COUNTRY": "کشور را انتخاب کنید",
     "POSTAL_CODE": "کد پستی",
     "LOADING_TYPES": "در حال بارگذاری انواع...",
     "LOADING_COUNTRIES": "در حال بارگذاری کشورها...",
