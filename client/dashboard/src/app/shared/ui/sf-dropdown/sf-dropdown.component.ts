@@ -11,7 +11,6 @@
   signal
 } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { DOCUMENT } from '@angular/common';
 
 export interface SfDropdownItem {
   label: string;
