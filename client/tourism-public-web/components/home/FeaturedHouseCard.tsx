@@ -14,27 +14,38 @@ interface FeaturedHouseCardProps {
 export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCardProps) {
   const primaryPhoto = house.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
-  const location = [house.city, house.country].filter(Boolean).join(", ");
+  const name = house.name?.trim() || "Untitled stay";
+  const type = house.houseTypeName?.trim() || "Featured house";
+  const location = [house.city?.trim(), house.country?.trim()].filter(Boolean).join(", ");
+  const locationText = location || "Location coming soon";
+  const hasImage = Boolean(src);
+  const initial = name.charAt(0).toUpperCase();
 
   return (
     <Link
       href={`/houses/${house.houseId}`}
       className="group flex h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_20px_35px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_25px_45px_rgba(15,23,42,0.16)] sm:min-h-[16rem]"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
-        <div className={`relative h-36 bg-slate-200/60 sm:h-full ${
-          imageSide === "right" ? "sm:order-2" : ""
-        }`}>
-          {src ? (
+      <div className="grid h-full grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
+        <div
+          className={`relative h-36 bg-slate-200/60 sm:h-full ${
+            imageSide === "right" ? "sm:order-2" : ""
+          }`}
+        >
+          {hasImage ? (
             <Image
               src={src}
-              alt={house.name}
+              alt={primaryPhoto?.label ?? name}
               fill
               sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
               className="object-cover object-center"
               loading="lazy"
             />
-          ) : null}
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-4xl font-semibold text-slate-400">
+              {initial || "H"}
+            </div>
+          )}
         </div>
 
         <div
@@ -42,12 +53,12 @@ export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCa
             imageSide === "right" ? "sm:order-1" : ""
           }`}
         >
-          <div className="space-y-3 w-full sm:min-h-[120px]">
+          <div className="w-full space-y-3 sm:min-h-[120px]">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
-              {house.houseTypeName ?? "Featured house"}
+              {type}
             </p>
-            <h3 className="line-clamp-2 text-lg font-semibold text-slate-900">{house.name}</h3>
-            {location ? <p className="line-clamp-1 text-sm text-slate-700">{location}</p> : null}
+            <h3 className="line-clamp-2 text-lg font-semibold text-slate-900">{name}</h3>
+            <p className="line-clamp-1 text-sm text-slate-700">{locationText}</p>
           </div>
           <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-800/80">
             See more details
