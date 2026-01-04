@@ -26,26 +26,26 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <FeaturedTours page={toursPage} pageSize={4} />
 
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="bg-white py-12">
+        <div className="mx-auto max-w-5xl px-5">
           <div className="text-center text-slate-800">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">Stays you will love</p>
-            <h2 className="mt-3 font-serif text-3xl font-semibold text-slate-900 md:text-4xl">
+            <h2 className="mt-2 font-serif text-3xl font-semibold text-slate-900 md:text-[32px]">
               Featured houses
             </h2>
-            <p className="mx-auto mt-3 max-w-3xl text-base text-slate-700">
+            <p className="mx-auto mt-2 max-w-3xl text-sm text-slate-700 md:text-base">
               Browse comfortable stays that pair perfectly with your adventure.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <FeaturedHouses />
           </div>
 
-          <div className="mt-10 flex justify-center">
+          <div className="mt-8 flex justify-center">
             <Link
               href="/houses"
-              className="rounded-full border border-slate-900 px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-900 transition hover:border-slate-900/60 hover:bg-slate-900 hover:text-white"
+              className="rounded-full border border-slate-900 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-900 transition hover:border-slate-900/60 hover:bg-slate-900 hover:text-white"
             >
               All houses
             </Link>

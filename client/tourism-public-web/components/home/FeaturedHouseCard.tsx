@@ -42,11 +42,11 @@ export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCa
   return (
     <Link
       href={`/houses/${house.houseId}`}
-      className="group flex h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_20px_35px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_25px_45px_rgba(15,23,42,0.16)] sm:min-h-[16rem]"
+      className="group flex h-full w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)] sm:w-[calc(100%-20px)] sm:min-h-[14rem]"
     >
       <div className="grid h-full grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
         <div
-          className={`relative h-36 bg-slate-200/60 sm:h-full ${
+          className={`relative h-32 bg-slate-200/60 sm:h-full ${
             imageSide === "right" ? "sm:order-2" : ""
           }`}
         >
@@ -71,17 +71,17 @@ export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCa
             imageSide === "right" ? "sm:order-1" : ""
           }`}
         >
-          <div className="w-full space-y-3 sm:min-h-[120px]">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
+          <div className="w-full space-y-2 sm:min-h-[110px]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-800">
               {type}
             </p>
-            <h3 className="line-clamp-2 text-lg font-semibold text-slate-900">{name}</h3>
-            <p className="line-clamp-1 text-sm text-slate-700">{locationText}</p>
-            <p className="line-clamp-2 text-sm text-slate-700">{contextCopy}</p>
+            <h3 className="line-clamp-2 text-base font-semibold text-slate-900 md:text-lg">{name}</h3>
+            <p className="line-clamp-1 text-xs text-slate-700 md:text-sm">{locationText}</p>
+            <p className="line-clamp-2 text-xs text-slate-700 md:text-sm">{contextCopy}</p>
           </div>
-          <div className="flex items-center justify-between text-sm text-slate-700">
-            <span className="font-semibold text-slate-900">{priceLabel}</span>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-800/80">
+          <div className="flex items-center justify-between text-xs text-slate-700 md:text-sm">
+            <span className="font-semibold text-slate-900 text-sm md:text-base">{priceLabel}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-800/80 md:text-[11px]">
               See more details
             </span>
           </div>

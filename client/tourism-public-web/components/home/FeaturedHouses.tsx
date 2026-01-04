@@ -16,7 +16,7 @@ export async function FeaturedHouses() {
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 sm:auto-rows-fr">
+    <div className="grid gap-5 sm:grid-cols-2 sm:auto-rows-fr">
       {houses.map((house, index) => {
         const rowIndex = Math.floor(index / 2);
         const imageSide = rowIndex % 2 === 0 ? "left" : "right";

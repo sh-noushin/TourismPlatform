@@ -15,11 +15,11 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/30 to-[#f0f7fb]" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-28 text-center text-white">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-sky-100/80">
+      <div className="relative mx-auto max-w-6xl px-5 pb-14 pt-16 text-center text-white">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sky-100/80 md:text-[11px]">
           Trips
         </p>
-        <h1 className="mt-4 font-serif text-5xl font-semibold tracking-[0.08em] md:text-7xl">
+        <h1 className="mt-3 font-serif text-4xl font-semibold tracking-[0.06em] md:text-5xl">
           TRAVEL
         </h1>
       </div>
