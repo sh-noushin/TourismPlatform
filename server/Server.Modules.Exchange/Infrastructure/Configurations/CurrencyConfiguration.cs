@@ -19,6 +19,11 @@ public sealed class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
             .IsRequired()
             .HasMaxLength(3);
 
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(256)
+            .HasColumnType("nvarchar(256)");
+
         builder.HasIndex(x => x.Code)
             .IsUnique();
     }

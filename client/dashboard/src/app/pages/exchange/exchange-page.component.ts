@@ -7,6 +7,7 @@ import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { ExchangeRateDto } from '../../api/client';
 import { ExchangeFacade } from '../../features/exchange/exchange.facade';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -14,9 +15,9 @@ import { ExchangeFacade } from '../../features/exchange/exchange.facade';
   template: `
     <section class="exchange-page">
       <div class="exchange-page__header">
-        <sf-page-header title="Exchange" subtitle="Live currency rates"></sf-page-header>
+        <sf-page-header title="{{ 'EXCHANGE_PAGE.TITLE' | translate }}" subtitle="{{ 'EXCHANGE_PAGE.SUBTITLE' | translate }}"></sf-page-header>
         <div class="exchange-page__filters">
-          <sf-searchbar placeholder="Search currency code" (valueChange)="filter.set($event)"></sf-searchbar>
+          <sf-searchbar placeholder="{{ 'EXCHANGE_PAGE.SEARCH_PLACEHOLDER' | translate }}" (valueChange)="filter.set($event)"></sf-searchbar>
         </div>
       </div>
 
@@ -35,7 +36,7 @@ import { ExchangeFacade } from '../../features/exchange/exchange.facade';
     </section>
   `,
   styleUrls: ['./exchange-page.component.scss'],
-  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent],
+  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExchangePageComponent {
@@ -43,10 +44,10 @@ export class ExchangePageComponent {
   readonly sortSignal = signal<SfTableSort | null>(null);
 
   readonly columns: SfTableColumn[] = [
-    { key: 'base', header: 'Base', field: 'baseCurrencyCode', sortable: true },
-    { key: 'quote', header: 'Quote', field: 'quoteCurrencyCode', sortable: true },
-    { key: 'rate', header: 'Rate', field: 'rate', sortable: true },
-    { key: 'captured', header: 'Captured (UTC)', field: 'capturedAtUtc', sortable: true }
+    { key: 'base', header: 'Base', headerKey: 'TABLE_HEADERS.BASE', field: 'baseCurrencyCode', sortable: true },
+    { key: 'quote', header: 'Quote', headerKey: 'TABLE_HEADERS.QUOTE', field: 'quoteCurrencyCode', sortable: true },
+    { key: 'rate', header: 'Rate', headerKey: 'TABLE_HEADERS.RATE', field: 'rate', sortable: true },
+    { key: 'captured', header: 'Captured (UTC)', headerKey: 'TABLE_HEADERS.CAPTURED_UTC', field: 'capturedAtUtc', sortable: true }
   ];
 
   readonly displayed = computed(() => {

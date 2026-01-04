@@ -20,6 +20,9 @@ export interface TourResultsProps {
   currentQuery: Record<string, QueryValue>;
   basePath?: string;
   title?: string;
+  page?: number;
+  pageSize?: number;
+  totalCount?: number;
 }
 
 function firstQueryValue(v: QueryValue): string | undefined {

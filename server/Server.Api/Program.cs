@@ -49,6 +49,7 @@ if (app.Environment.IsDevelopment())
 }
 
 await app.SeedIdentityAsync();
+await app.SeedReferenceDataAsync();
 
 app.UseApiDocumentation();
 

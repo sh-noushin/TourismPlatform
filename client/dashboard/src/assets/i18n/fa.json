@@ -1,0 +1,279 @@
+{
+  "BRAND": {
+    "TITLE": "پلتفرم گردشگری"
+  },
+  "LANG": {
+    "FARSI": "فارسی",
+    "ENGLISH": "انگلیسی"
+  },
+  "MENU": {
+    "HOUSE_MANAGEMENT": "مدیریت املاک",
+    "HOUSES": "املاک",
+    "HOUSE_TYPES": "انواع املاک",
+    "TOURS_MANAGEMENT": "مدیریت تورها",
+    "TOUR_CATEGORIES": "دسته‌بندی تورها",
+    "TOURS": "تورها",
+    "EXCHANGE": "صرافی",
+    "PERMISSIONS": "دسترسی‌ها",
+    "ROLES": "نقش‌ها",
+    "USERS": "کاربران"
+  },
+  "USER": {
+    "CHANGE_PASSWORD": "تغییر رمز عبور",
+    "LOGOUT": "خروج"
+  },
+  "LOGIN_PAGE": {
+    "USERNAME_PLACEHOLDER": "نام کاربری",
+    "PASSWORD_PLACEHOLDER": "رمز عبور",
+    "FORGOT_PASSWORD": "رمز عبور را فراموش کرده‌اید؟",
+    "SUBMIT": "ورود",
+    "ERROR_INVALID": "ایمیل معتبر و رمز عبور حداقل ۶ کاراکتر وارد کنید.",
+    "ERROR_LOGIN_FAILED": "ورود ناموفق بود",
+    "ERROR_CONTACT_SUPPORT": "برای بازیابی رمز با پشتیبانی تماس بگیرید."
+  },
+  "TABS": {
+    "NEW_HOUSE": "ملک جدید",
+    "DEFAULT_TAB": "تب"
+  },
+  "ARIA": {
+    "TOGGLE_MENU": "باز و بسته کردن منو",
+    "SEARCH": "جستجو",
+    "CLEAR": "پاک کردن",
+    "UPLOAD_FILE": "بارگذاری فایل"
+  },
+  "CHANGE_PASSWORD_PAGE": {
+    "TITLE": "تغییر رمز عبور",
+    "SUBTITLE": "رمز جدید باید حداقل ۶ کاراکتر و شامل حرف بزرگ، عدد و نماد باشد.",
+    "CURRENT_PASSWORD": "رمز عبور فعلی",
+    "NEW_PASSWORD": "رمز عبور جدید",
+    "CONFIRM_PASSWORD": "تأیید رمز عبور جدید",
+    "SUBMIT": "به‌روزرسانی رمز عبور",
+    "CANCEL": "انصراف",
+    "SUCCESS": "رمز عبور با موفقیت به‌روزرسانی شد.",
+    "ERROR_MISMATCH": "رمز عبور تأیید هم‌خوان نیست.",
+    "ERROR_PATTERN": "رمز عبور باید شامل حرف بزرگ، عدد و کاراکتر ویژه باشد.",
+    "ERROR_MIN_LENGTH": "رمز عبور باید حداقل ۶ کاراکتر باشد."
+  },
+  "COMMON": {
+    "SAVE": "ذخیره",
+    "SAVING": "در حال ذخیره...",
+    "CANCEL": "انصراف",
+    "CREATE": "ذخیره",
+    "UPDATE": "ذخیره",
+    "NEW": "جدید",
+    "REMOVE": "حذف",
+    "LOADING": "در حال بارگذاری...",
+    "NO_DATA": "داده‌ای موجود نیست.",
+    "NO_PHOTOS": "هنوز عکسی بارگذاری نشده است.",
+    "UPLOADING": "در حال بارگذاری فایل‌ها...",
+    "PREVIOUS": "قبلی",
+    "NEXT": "بعدی",
+    "PAGE_INFO": "صفحه {{current}} از {{total}}",
+    "PAGE_X_OF_Y": "صفحه {{page}} از {{total}}",
+    "ACTIONS": "اقدامات",
+    "SAVED": "ذخیره شد.",
+    "ADD": "افزودن",
+    "CONFIRM": "تأیید",
+    "NOTHING_TO_SHOW": "چیزی برای نمایش نیست",
+    "TRY_WIDENING_FILTERS": "فیلترها را گسترده‌تر کنید",
+    "SELECT": "انتخاب کنید"
+  },
+  "TOURS_PAGE": {
+    "TITLE": "تورها",
+    "SEARCH_PLACEHOLDER": "جستجو بر اساس نام یا دسته‌بندی",
+    "NEW_TOUR": "تور جدید",
+    "DELETE_CONFIRMATION": "تور {{name}} حذف شود؟"
+  },
+  "TOUR_EDIT": {
+    "EYEBROW_TOUR": "تور",
+    "EYEBROW_NEW": "",
+    "NEW_TITLE": "ایجاد تور",
+    "EDIT_TITLE": "ویرایش تور",
+    "SUBTITLE_EDIT": "جزئیات و رسانه‌های این تجربه را به‌روز کنید.",
+    "SUBTITLE_CREATE": "",
+    "NAME": "نام",
+    "NAME_PLACEHOLDER": "مثلاً کویر نوردی",
+    "CATEGORY": "دسته‌بندی",
+    "SELECT_CATEGORY": "انتخاب دسته‌بندی",
+    "COUNTRY": "کشور",
+    "SELECT_COUNTRY": "یک کشور انتخاب کنید",
+    "DESCRIPTION": "توضیحات",
+    "DESCRIPTION_PLACEHOLDER": "ویژگی‌های خاص این تور را بنویسید",
+    "TOUR_SCHEDULES": "برنامه‌های تور",
+    "SCHEDULE_NOTE": "برنامه‌ها پس از ایجاد تور قابل ویرایش‌اند.",
+    "LOADING_CATEGORIES": "در حال بارگذاری دسته‌بندی‌ها...",
+    "LOADING_COUNTRIES": "در حال بارگذاری کشورها...",
+    "LOADING_TOUR": "در حال بارگذاری جزئیات تور...",
+    "PHOTOS": "عکس‌ها",
+    "UPLOADING_FILES": "در حال بارگذاری فایل‌ها...",
+    "REMOVE_PHOTO": "حذف",
+    "NO_PHOTOS": "هنوز عکسی وجود ندارد.از بالا عکس بارگذاری کنید.",
+    "CANCEL": "انصراف",
+    "SAVE_TOUR": "ذخیره",
+    "SAVED": "ذخیره شد."
+  },
+  "TOUR_CATEGORIES_PAGE": {
+    "TITLE": "دسته‌بندی تورها",
+    "SUBTITLE": "",
+    "SEARCH_PLACEHOLDER": "جستجو در دسته‌بندی‌ها",
+    "NEW_CATEGORY": "دسته‌بندی جدید",
+    "NO_CATEGORIES": "هنوز دسته‌بندی ثبت نشده است.",
+    "DELETE_CONFIRMATION": "این دسته‌بندی حذف شود؟"
+  },
+  "CATEGORY_DIALOG": {
+    "EDIT_TITLE": "ویرایش دسته‌بندی تور",
+    "CREATE_TITLE": "ایجاد دسته‌بندی تور",
+    "NAME": "نام",
+    "NAME_REQUIRED": "نام الزامی است.",
+    "CANCEL": "انصراف",
+    "SAVE": "ذخیره",
+    "SAVING": "در حال ذخیره...",
+    "SAVE_FAILED": "امکان ذخیره دسته‌بندی نیست.",
+    "LOAD_FAILED": "خطا در بارگذاری دسته‌بندی."
+  },
+  "HOUSES_PAGE": {
+    "TITLE": "املاک",
+    "SEARCH_PLACEHOLDER": "جستجو بر اساس نام، شهر، نوع یا کشور",
+    "NEW_HOUSE": "ملک جدید",
+    "DELETE_CONFIRMATION": "این ملک حذف شود؟"
+  },
+  "HOUSES": {
+    "NEW": "ملک جدید",
+    "CREATE_TITLE": "ایجاد ملک",
+    "EDIT_TITLE": "ویرایش ملک",
+    "NAME": "نام",
+    "DESCRIPTION": "توضیحات",
+    "TYPE": "نوع",
+    "SELECT_TYPE": "انتخاب نوع",
+    "ADDRESS_LINE_1": "آدرس ۱",
+    "ADDRESS_LINE_2": "آدرس ۲",
+    "CITY": "شهر",
+    "REGION": "استان / منطقه",
+    "COUNTRY": "کشور",
+    "SELECT_COUNTRY": "کشور را انتخاب کنید",
+    "POSTAL_CODE": "کد پستی",
+    "LOADING_TYPES": "در حال بارگذاری انواع...",
+    "LOADING_COUNTRIES": "در حال بارگذاری کشورها...",
+    "PHOTOS": "عکس‌ها",
+    "REMOVE_PHOTO": "حذف",
+    "NO_PHOTOS": "هنوز عکسی وجود ندارد.از بالا عکس بارگذاری کنید.",
+    "LISTING_TYPE": "نوع آگهی",
+    "LISTING_RENT": "رهن/اجاره",
+    "LISTING_BUY": "فروش",
+    "PRICE": "قیمت",
+    "CURRENCY": "واحد پول",
+    "SELECT_CURRENCY": "واحد پول را انتخاب کنید",
+    "CANCEL": "انصراف",
+    "SAVED": "ذخیره شد."
+  },
+  "HOUSE_TYPES_PAGE": {
+    "TITLE": "انواع املاک",
+    "SEARCH_PLACEHOLDER": "جستجو بر اساس نام",
+    "NEW_TYPE": "نوع جدید",
+    "NO_TYPES": "نوعی ثبت نشده است.",
+    "DELETE_CONFIRMATION": "این نوع ملک حذف شود؟"
+  },
+  "HOUSE_TYPES": {
+    "TITLE": "انواع املاک",
+    "NEW": "نوع جدید",
+    "SEARCH_PLACEHOLDER": "جستجو بر اساس نام",
+    "DELETE_CONFIRM": "این نوع ملک حذف شود؟",
+    "TABLE": {
+      "NAME": "نام"
+    }
+  },
+  "TYPE_DIALOG": {
+    "EDIT_TITLE": "ویرایش نوع ملک",
+    "CREATE_TITLE": "ایجاد نوع ملک",
+    "NAME": "نام",
+    "NAME_REQUIRED": "نام الزامی است.",
+    "CANCEL": "انصراف",
+    "SAVE": "ذخیره",
+    "SAVING": "در حال ذخیره...",
+    "SAVE_FAILED": "امکان ذخیره نوع ملک نیست.",
+    "LOAD_FAILED": "خطا در بارگذاری نوع ملک."
+  },
+  "USERS_PAGE": {
+    "TITLE": "کاربران",
+    "SUBTITLE": "کاربران پلتفرم",
+    "SEARCH_PLACEHOLDER": "جستجو در کاربران",
+    "NEW_USER": "کاربر جدید"
+  },
+  "TABLE": {
+    "ACTIONS": "اقدامات",
+    "NO_ITEMS": "موردی برای نمایش نیست.",
+    "EMPTY_TITLE": "چیزی برای نمایش نیست",
+    "EMPTY_DESCRIPTION": "فیلترها را گسترده‌تر کنید",
+    "PREVIOUS": "قبلی",
+    "NEXT": "بعدی",
+    "PAGE_X_OF_Y": "صفحه {{page}} از {{total}}"
+  },
+  "TABLE_HEADERS": {
+    "NAME": "نام",
+    "DESCRIPTION": "توضیحات",
+    "YEAR": "سال",
+    "TYPE": "نوع",
+    "CITY": "شهر",
+    "COUNTRY": "کشور",
+    "CODE": "کد",
+    "EMAIL": "ایمیل",
+    "FULL_NAME": "نام کامل",
+    "BASE": "پایه",
+    "QUOTE": "نرخ",
+    "RATE": "نرخ",
+    "CAPTURED_UTC": "ثبت‌شده (UTC)"
+  },
+  "TABLE_ACTIONS": {
+    "EDIT": "ویرایش",
+    "DELETE": "حذف"
+  },
+  "USERS": {
+    "NEW_USER": "کاربر جدید",
+    "EDIT_USER": "ویرایش کاربر",
+    "CREATE_USER": "ایجاد کاربر",
+    "RESET": "بازنشانی",
+    "UPDATE": "به‌روزرسانی",
+    "SAVED": "ذخیره شد."
+  },
+  "PERMISSIONS_PAGE": {
+    "TITLE": "دسترسی‌ها",
+    "SUBTITLE": "مدیریت دسترسی‌ها",
+    "NEW_PERMISSION": "دسترسی جدید",
+    "SEARCH_PLACEHOLDER": "جستجو در دسترسی‌ها"
+  },
+  "EXCHANGE_PAGE": {
+    "TITLE": "صرافی",
+    "SUBTITLE": "نرخ لحظه‌ای ارز",
+    "SEARCH_PLACEHOLDER": "جستجو بر اساس کد ارز"
+  },
+  "CATEGORIES": {
+    "NEW_CATEGORY": "دسته‌بندی جدید",
+    "NO_CATEGORIES": "هنوز دسته‌بندی ثبت نشده است."
+  },
+  "TYPES": {
+    "NEW_TYPE": "نوع جدید",
+    "NO_TYPES": "نوعی ثبت نشده است."
+  },
+  "SCHEDULES": {
+    "TITLE": "برنامه‌های تور",
+    "TOOLTIP": "این برنامه‌ها هنگام ذخیره تور ذخیره می‌شوند",
+    "PENDING": "در انتظار",
+    "CANCEL": "انصراف",
+    "ADD_SCHEDULE": "+ افزودن برنامه",
+    "SCHEDULE_ADDED": "برنامه اضافه شد! هنگام ذخیره تور ثبت می‌شود.",
+    "START_DATE_TIME": "تاریخ و ساعت شروع",
+    "END_DATE_TIME": "تاریخ و ساعت پایان",
+    "CAPACITY": "ظرفیت",
+    "ADD": "افزودن",
+    "NOT_YET_SAVED": "هنوز ذخیره نشده",
+    "START": "شروع:",
+    "END": "پایان:",
+    "REMOVE": "حذف",
+    "NO_SCHEDULES": "برنامه‌ای ثبت نشده است. از بالا اضافه کنید."
+  },
+  "CONFIRM_DIALOG": {
+    "TITLE": "تأیید",
+    "CANCEL": "انصراف",
+    "CONFIRM": "تأیید"
+  }
+}

@@ -1,9 +1,9 @@
 <section class="tours-page">
   <div class="tours-page__header">
-    <sf-page-header title="Tours" subtitle="">
+    <sf-page-header title="{{ 'TOURS_PAGE.TITLE' | translate }}">
       <div sfPageHeaderActions class="tours-page__filters tours-page__header-search">
         <sf-searchbar
-          placeholder="Search by name or category"
+          placeholder="{{ 'TOURS_PAGE.SEARCH_PLACEHOLDER' | translate }}"
           (valueChange)="setFilter($event)"
         ></sf-searchbar>
       </div>
@@ -14,7 +14,7 @@
       type="button"
       (click)="createTour()"
     >
-      New tour
+      {{ 'TOURS_PAGE.NEW_TOUR' | translate }}
     </sf-button>
   </div>
 

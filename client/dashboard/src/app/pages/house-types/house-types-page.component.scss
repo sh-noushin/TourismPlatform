@@ -31,6 +31,11 @@
   margin-left: auto;
 }
 
+:host-context([dir='rtl']) .house-types-page__header-button {
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .house-types-page__header sf-page-header ::ng-deep .actions {
   flex: 1;
   justify-content: flex-end;

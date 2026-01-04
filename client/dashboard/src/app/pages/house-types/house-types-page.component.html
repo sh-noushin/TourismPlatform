@@ -1,19 +1,29 @@
 <section class="house-types-page">
   <div class="house-types-page__header">
-    <sf-page-header title="House types">
+    <sf-page-header title="{{ 'HOUSE_TYPES_PAGE.TITLE' | translate }}">
       <div sfPageHeaderActions class="house-types-page__header-search">
-        <sf-searchbar placeholder="Search by name" (valueChange)="setFilter($event)"></sf-searchbar>
+        <sf-searchbar
+          placeholder="{{ 'HOUSE_TYPES_PAGE.SEARCH_PLACEHOLDER' | translate }}"
+          (valueChange)="setFilter($event)"
+        ></sf-searchbar>
       </div>
     </sf-page-header>
-    <sf-button class="house-types-page__header-button" variant="ghost" type="button" (click)="openDialog()">New type</sf-button>
+    <sf-button
+      class="house-types-page__header-button"
+      variant="ghost"
+      type="button"
+      (click)="openDialog()"
+    >
+      {{ 'HOUSE_TYPES_PAGE.NEW_TYPE' | translate }}
+    </sf-button>
   </div>
 
   <sf-card>
     <sf-table
-      [columns]="columns"
+      [columns]="columns()"
       [data]="displayedTypes()"
       [loading]="loadingSignal()"
-      [actions]="actions"
+      [actions]="actions()"
       (sortChange)="onSortChange($event)"
       (rowAction)="onRowAction($event)"
     ></sf-table>
@@ -22,7 +32,7 @@
       <p class="status status--error">{{ errorSignal() }}</p>
     }
     @if (!loadingSignal() && !errorSignal() && displayedTypes().length === 0) {
-      <p class="status">No house types yet.</p>
+      <p class="status">{{ 'HOUSE_TYPES_PAGE.NO_TYPES' | translate }}</p>
     }
   </sf-card>
 </section>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
@@ -9,6 +9,9 @@ import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { HouseTypesService, HouseTypeDto } from '../../features/houses/house-types.service';
 import { HouseTypeEditComponent } from './house-type-edit.component';
+import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -24,18 +27,26 @@ import { HouseTypeEditComponent } from './house-type-edit.component';
     SfTableComponent,
     SfButtonComponent,
     MatDialogModule,
-    HouseTypeEditComponent
+    TranslateModule
   ]
 })
-export class HouseTypesPageComponent {
+export class HouseTypesPageComponent implements OnDestroy {
   readonly filterSignal = signal('');
   readonly sortSignal = signal<SfTableSort | null>(null);
   readonly loadingSignal = computed(() => this.houseTypes.loading());
   readonly errorSignal = computed(() => this.houseTypes.error());
+  readonly lang = signal<'fa' | 'en'>('fa');
+  private readonly langSub: Subscription;
 
-  readonly columns: SfTableColumn[] = [{ key: 'name', header: 'Name', field: 'name', sortable: true }];
+  readonly columns = computed<SfTableColumn[]>(() => {
+    this.lang();
+    return [
+      { key: 'name', header: this.translate.instant('HOUSE_TYPES.TABLE.NAME'), field: 'name', sortable: true, align: 'start' }
+    ];
+  });
 
   readonly displayedTypes = computed(() => {
+    const locale = this.lang();
     const filter = this.filterSignal().toLowerCase();
     const items = filter
       ? this.houseTypes.houseTypes().filter((type) =>
@@ -49,22 +60,40 @@ export class HouseTypesPageComponent {
     if (!sort) return items;
 
     const key = sort.field as keyof HouseTypeDto;
+    const localeCode = locale === 'fa' ? 'fa' : 'en';
     return [...items].sort((a, b) => {
       const aValue = (a[key] ?? '').toString().toLowerCase();
       const bValue = (b[key] ?? '').toString().toLowerCase();
       return sort.direction === 'asc'
-        ? aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' })
-        : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
+        ? aValue.localeCompare(bValue, localeCode, { numeric: true, sensitivity: 'base' })
+        : bValue.localeCompare(aValue, localeCode, { numeric: true, sensitivity: 'base' });
     });
   });
 
-  readonly actions = [
-    { label: '', type: 'edit' },
-    { label: '', type: 'delete' }
-  ];
+  readonly actions = computed(() => {
+    this.lang();
+    return [
+      { label: this.translate.instant('COMMON.EDIT'), type: 'edit', icon: 'edit' },
+      { label: this.translate.instant('COMMON.DELETE'), type: 'delete', icon: 'delete' }
+    ];
+  });
 
-  constructor(private readonly houseTypes: HouseTypesService, private readonly dialog: MatDialog) {
+  constructor(
+    private readonly houseTypes: HouseTypesService,
+    private readonly dialog: MatDialog,
+    private readonly confirm: ConfirmService,
+    private readonly translate: TranslateService
+  ) {
+    const currentLang = (this.translate.currentLang as 'fa' | 'en') || (this.translate.getDefaultLang() as 'fa' | 'en') || 'fa';
+    this.lang.set(currentLang);
+    this.langSub = this.translate.onLangChange.subscribe(({ lang }) => {
+      this.lang.set(lang === 'en' ? 'en' : 'fa');
+    });
     void this.houseTypes.load();
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 
   setFilter(value: string) {
@@ -85,7 +114,13 @@ export class HouseTypesPageComponent {
   }
 
   private async delete(id: string) {
-    if (!confirm('Delete this house type?')) return;
+    const confirmed = await this.confirm.confirm({
+      title: this.translate.instant('CONFIRM_DIALOG.TITLE'),
+      message: this.translate.instant('HOUSE_TYPES_PAGE.DELETE_CONFIRMATION'),
+      confirmLabel: this.translate.instant('CONFIRM_DIALOG.CONFIRM'),
+      cancelLabel: this.translate.instant('CONFIRM_DIALOG.CANCEL')
+    });
+    if (!confirmed) return;
     try {
       await this.houseTypes.delete(id);
       await this.houseTypes.load({ force: true });

@@ -1,14 +1,21 @@
 <section class="houses-page">
   <div class="houses-page__header">
-    <sf-page-header title="Houses">
+    <sf-page-header title="{{ 'HOUSES_PAGE.TITLE' | translate }}">
       <div sfPageHeaderActions class="houses-page__header-search">
         <sf-searchbar
-          placeholder="Search by name, city, type, or country"
+          placeholder="{{ 'HOUSES_PAGE.SEARCH_PLACEHOLDER' | translate }}"
           (valueChange)="setFilter($event)"
         ></sf-searchbar>
       </div>
     </sf-page-header>
-    <sf-button class="houses-page__header-button" variant="ghost" type="button" (click)="openDialog()">New house</sf-button>
+    <sf-button
+      class="houses-page__header-button"
+      variant="ghost"
+      type="button"
+      (click)="openDialog()"
+    >
+      {{ 'HOUSES_PAGE.NEW_HOUSE' | translate }}
+    </sf-button>
   </div>
 
   <sf-card>

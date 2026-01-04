@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
+using Server.Modules.Properties.Domain.Houses;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Controllers;
@@ -19,9 +20,9 @@ public sealed class HousesController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<HouseSummaryDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetList(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetList([FromQuery] HouseListingType? listingType, CancellationToken cancellationToken)
     {
-        var dto = await _houseService.GetListAsync(cancellationToken);
+        var dto = await _houseService.GetListAsync(listingType, cancellationToken);
         return Ok(dto);
     }
 

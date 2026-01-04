@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { SfEmptyStateComponent } from '../sf-empty-state/sf-empty-state.component';
 import { SfSpinnerComponent } from '../sf-spinner/sf-spinner.component';
 import { SfActionComponent } from '../sf-action/sf-action.component';
@@ -15,7 +16,7 @@ import {
   selector: 'sf-table',
   templateUrl: './sf-table.component.html',
   styleUrls: ['./sf-table.component.scss'],
-  imports: [CommonModule, SfEmptyStateComponent, SfSpinnerComponent, SfActionComponent],
+  imports: [CommonModule, TranslateModule, SfEmptyStateComponent, SfSpinnerComponent, SfActionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SfTableComponent {
@@ -114,6 +115,15 @@ export class SfTableComponent {
 
   emitRowAction(action: SfTableRowAction, row: any) {
     this.rowAction.emit({ action, row });
+  }
+
+  colWidth(column: SfTableColumn) {
+    const provided = column?.width;
+    if (provided) return provided;
+    const columnsCount = (this.columnsSignal() ?? []).length;
+    if (!columnsCount) return 'auto';
+    const actionWidth = this.effectiveActions().length ? 140 : 0;
+    return `calc((100% - ${actionWidth}px) / ${columnsCount})`;
   }
 
   resolveValue(row: any, field?: keyof any | string) {

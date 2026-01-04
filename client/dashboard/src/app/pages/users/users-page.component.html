@@ -1,10 +1,18 @@
 <section class="users-page">
   <div class="users-page__header">
-    <sf-page-header title="Users" subtitle="Platform users">
-      <sf-button sfPageHeaderActions variant="ghost" type="button">New user</sf-button>
+    <sf-page-header
+      title="{{ 'USERS_PAGE.TITLE' | translate }}"
+      subtitle="{{ 'USERS_PAGE.SUBTITLE' | translate }}"
+    >
+      <sf-button sfPageHeaderActions variant="ghost" type="button">
+        {{ 'USERS_PAGE.NEW_USER' | translate }}
+      </sf-button>
     </sf-page-header>
     <div class="users-page__filters">
-      <sf-searchbar placeholder="Search users" (valueChange)="setFilter($event)"></sf-searchbar>
+      <sf-searchbar
+        placeholder="{{ 'USERS_PAGE.SEARCH_PLACEHOLDER' | translate }}"
+        (valueChange)="setFilter($event)"
+      ></sf-searchbar>
     </div>
   </div>
 

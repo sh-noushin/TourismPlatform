@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using Server.Modules.Exchange.Application.Services;
 using Server.Modules.Exchange.Contracts.Exchange.Dtos;
 using Server.Modules.Exchange.Domain.Currencies.Repositories;
@@ -30,7 +31,7 @@ public sealed class ExchangeService : IExchangeService
     public async Task<IReadOnlyCollection<CurrencyDto>> GetCurrenciesAsync(CancellationToken cancellationToken = default)
     {
         var currencies = await _currencyRepository.GetListAsync(cancellationToken);
-        return currencies.Select(c => new CurrencyDto(c.Id, c.Code)).ToList();
+        return currencies.Select(c => new CurrencyDto(c.Id, c.Code, c.Name)).ToList();
     }
 
     public async Task<IReadOnlyCollection<ExchangeRateDto>> GetLatestRatesAsync(CancellationToken cancellationToken = default)

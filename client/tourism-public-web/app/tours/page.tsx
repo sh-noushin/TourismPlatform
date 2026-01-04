@@ -11,7 +11,7 @@ type TourSummaryDto = components["schemas"]["TourSummaryDto"];
 type SearchParams = Record<string, string | string[] | undefined>;
 
 interface ToursPageProps {
-  searchParams: SearchParams;
+  searchParams: SearchParams | Promise<SearchParams>;
 }
 
 const filterTours = (tours: TourSummaryDto[], filters: TourFiltersShape) => {
@@ -52,7 +52,8 @@ const sortTours = (tours: TourSummaryDto[], sort: TourFiltersShape["sort"]) => {
 };
 
 export default async function ToursPage({ searchParams }: ToursPageProps) {
-  const filters = parseTourFilters(searchParams);
+  const resolvedSearchParams = (await Promise.resolve(searchParams)) ?? {};
+  const filters = parseTourFilters(resolvedSearchParams);
 
   const [tourCategories, tours] = await Promise.all([
     fetchTourCategories().catch((error) => {
@@ -88,7 +89,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
           page={currentPage}
           pageSize={filters.pageSize}
           totalCount={totalCount}
-          currentQuery={searchParams}
+          currentQuery={resolvedSearchParams}
         />
       </div>
     </div>

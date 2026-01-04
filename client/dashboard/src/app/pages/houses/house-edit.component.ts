@@ -4,11 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { API_BASE_URL, HouseCommitPhotoItem } from '../../api/client';
+import { API_BASE_URL, Client, CountryDto, HouseCommitPhotoItem } from '../../api/client';
 import { HousesFacade } from '../../features/houses/houses.facade';
 import { HouseTypesService } from '../../features/houses/house-types.service';
 import { SfDropdownComponent } from '../../shared/ui/sf-dropdown/sf-dropdown.component';
 import { SfFileuploadComponent } from '../../shared/ui/sf-fileupload/sf-fileupload.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 type ExistingPhotoVm = {
   kind: 'existing';
@@ -43,12 +44,41 @@ type HouseForm = {
   country: string;
   postalCode?: string;
   photos: HousePhotoVm[];
+  listingType: number;
+  price: number;
+  currency: string;
 };
+
+type ListingTypeOption = {
+  value: number;
+  labelKey: string;
+};
+
+type CurrencyOption = {
+  value: string;
+  label: string;
+};
+
+const LISTING_TYPE_OPTIONS: ListingTypeOption[] = [
+  { value: 1, labelKey: 'HOUSES.LISTING_RENT' },
+  { value: 2, labelKey: 'HOUSES.LISTING_BUY' }
+];
+
+const DEFAULT_LISTING_TYPE = LISTING_TYPE_OPTIONS[1].value;
+const DEFAULT_CURRENCY = 'USD';
+const DEFAULT_PRICE = 0;
+
+const CURRENCY_OPTIONS: CurrencyOption[] = [
+  { value: 'USD', label: 'USD' },
+  { value: 'EUR', label: 'EUR' },
+  { value: 'CAD', label: 'CAD' },
+  { value: 'GBP', label: 'GBP' }
+];
 
 @Component({
   standalone: true,
   selector: 'house-edit',
-  imports: [CommonModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent],
+  imports: [CommonModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent, TranslateModule],
   templateUrl: './house-edit.component.html',
   styleUrls: ['./house-edit.component.scss']
 })
@@ -70,11 +100,25 @@ export class HouseEditComponent implements OnDestroy {
     this.houseTypes.houseTypes().map((type) => ({ label: type.name, value: type.name }))
   );
 
+  readonly listingTypeOptions = LISTING_TYPE_OPTIONS;
+  readonly currencyOptions = computed(() => CURRENCY_OPTIONS);
+  readonly countryOptions = signal<{ label: string; value: string }[]>([]);
+  readonly loadingCountries = signal(false);
+  readonly countriesError = signal<string | null>(null);
+
+  parseNumber(value: unknown) {
+    const v = typeof value === 'string' ? value : String(value ?? '');
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  }
+
   constructor(
     private readonly facade: HousesFacade,
     private readonly http: HttpClient,
+    private readonly client: Client,
     @Inject(API_BASE_URL) private readonly apiBaseUrl: string,
     public readonly houseTypes: HouseTypesService,
+    private readonly translate: TranslateService,
     @Optional() private readonly route?: ActivatedRoute,
     @Optional() private readonly dialogRef?: MatDialogRef<HouseEditComponent, boolean>,
     @Optional() @Inject(MAT_DIALOG_DATA) private readonly data?: { id?: string | null }
@@ -82,6 +126,7 @@ export class HouseEditComponent implements OnDestroy {
     this.id = this.data?.id ?? this.route?.snapshot.paramMap.get('id') ?? null;
     void this.load();
     void this.houseTypes.load();
+    void this.loadCountries();
   }
 
   private normalizeUrl(url: string | undefined | null): string {
@@ -111,6 +156,9 @@ export class HouseEditComponent implements OnDestroy {
           region: '',
           country: '',
           postalCode: '',
+          listingType: DEFAULT_LISTING_TYPE,
+          price: DEFAULT_PRICE,
+          currency: DEFAULT_CURRENCY,
           photos: []
         });
         return;
@@ -151,10 +199,30 @@ export class HouseEditComponent implements OnDestroy {
         region: address?.region ?? res?.region ?? '',
         country: address?.country ?? res?.country ?? '',
         postalCode: address?.postalCode ?? res?.postalCode ?? '',
+        listingType: Number(res?.listingType ?? DEFAULT_LISTING_TYPE),
+        price: Number(res?.price ?? DEFAULT_PRICE),
+        currency: res?.currency ?? DEFAULT_CURRENCY,
         photos: existingPhotos
       });
     } catch (err: any) {
       this.error.set(err?.message ?? 'Failed loading');
+    }
+  }
+
+  private async loadCountries() {
+    this.loadingCountries.set(true);
+    this.countriesError.set(null);
+
+    try {
+      const countries = await firstValueFrom(this.client.toursCountries());
+      const options = (countries ?? [])
+        .map((country: CountryDto) => ({ label: country.name, value: country.code }))
+        .sort((left, right) => left.label.localeCompare(right.label));
+      this.countryOptions.set(options);
+    } catch (err: any) {
+      this.countriesError.set(err?.message ?? 'Failed loading countries');
+    } finally {
+      this.loadingCountries.set(false);
     }
   }
 
@@ -182,6 +250,9 @@ export class HouseEditComponent implements OnDestroy {
       const payload: any = {
         name: form.name,
         description: form.description || undefined,
+        listingType: form.listingType,
+        price: form.price,
+        currency: form.currency,
         houseTypeName: form.houseTypeName,
         address: {
           line1: form.line1,

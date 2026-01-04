@@ -17,3 +17,255 @@ body {
 	font-family: $font-body;
 	background-color: $bg;
 }
+
+/* ===========================================
+   Global Dialog LTR/RTL Support
+   =========================================== */
+
+/* LTR (English) - Dialog surfaces */
+html[dir='ltr'] .cdk-overlay-pane .mat-mdc-dialog-surface,
+html[dir='ltr'] .mat-mdc-dialog-surface {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .glass-panel,
+html[dir='ltr'] .mat-mdc-dialog-surface .dialog-shell,
+html[dir='ltr'] .mat-mdc-dialog-surface .edit-shell {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .header h2,
+html[dir='ltr'] .mat-mdc-dialog-surface .header h3,
+html[dir='ltr'] .mat-mdc-dialog-surface .tour-edit-header h2 {
+  text-align: left !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .eyebrow,
+html[dir='ltr'] .mat-mdc-dialog-surface .subtitle {
+  text-align: left !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface label,
+html[dir='ltr'] .mat-mdc-dialog-surface .field,
+html[dir='ltr'] .mat-mdc-dialog-surface .label-text {
+  text-align: left !important;
+  direction: ltr !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface input,
+html[dir='ltr'] .mat-mdc-dialog-surface textarea {
+  text-align: left !important;
+  direction: ltr !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .form-grid {
+  direction: ltr !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .actions {
+  flex-direction: row !important;
+  justify-content: flex-end !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .actions .btn.ghost {
+  order: 1 !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .actions .btn.primary {
+  order: 2 !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .schedule-header {
+  flex-direction: row !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .schedule-section {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .tour-schedule-section {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+html[dir='ltr'] .mat-mdc-dialog-surface .no-schedules,
+html[dir='ltr'] .mat-mdc-dialog-surface .mini-note,
+html[dir='ltr'] .mat-mdc-dialog-surface .no-photos {
+  text-align: left !important;
+}
+
+/* RTL (Farsi) - Dialog surfaces */
+html[dir='rtl'] .cdk-overlay-pane .mat-mdc-dialog-surface,
+html[dir='rtl'] .mat-mdc-dialog-surface {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .glass-panel,
+html[dir='rtl'] .mat-mdc-dialog-surface .dialog-shell,
+html[dir='rtl'] .mat-mdc-dialog-surface .edit-shell {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .header h2,
+html[dir='rtl'] .mat-mdc-dialog-surface .header h3,
+html[dir='rtl'] .mat-mdc-dialog-surface .tour-edit-header h2 {
+  text-align: right !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .eyebrow,
+html[dir='rtl'] .mat-mdc-dialog-surface .subtitle {
+  text-align: right !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface label,
+html[dir='rtl'] .mat-mdc-dialog-surface .field,
+html[dir='rtl'] .mat-mdc-dialog-surface .label-text {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .form-grid {
+  direction: rtl !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .actions {
+  flex-direction: row-reverse !important;
+  justify-content: flex-start !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .actions .btn.ghost {
+  order: 2 !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .actions .btn.primary {
+  order: 1 !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .schedule-header {
+  flex-direction: row-reverse !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .schedule-section {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .tour-schedule-section {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir='rtl'] .mat-mdc-dialog-surface .no-schedules,
+html[dir='rtl'] .mat-mdc-dialog-surface .mini-note,
+html[dir='rtl'] .mat-mdc-dialog-surface .no-photos {
+  text-align: right !important;
+}
+
+/* Force Nazanin on all elements when page is Farsi/RTL so components inherit it.
+   Exclude Material icon elements so ligature icons continue to use the Material Icons font. */
+html[lang='fa'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
+html[dir='rtl'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
+body[lang='fa'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
+body[dir='rtl'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined) {
+  font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', Tahoma, $font-body !important;
+}
+
+/* ===========================================
+   Global sf-dropdown LTR/RTL alignment
+   - LTR: text left, chevron right
+   - RTL: text right, chevron left
+   =========================================== */
+
+html[dir='ltr'] sf-dropdown .sf-dropdown-trigger,
+body[dir='ltr'] sf-dropdown .sf-dropdown-trigger {
+  direction: ltr;
+  flex-direction: row;
+  text-align: left !important;
+}
+
+html[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+body[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label {
+  display: block;
+  width: 100%;
+  text-align: left !important;
+  order: 1;
+}
+
+html[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+body[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon {
+  margin-left: auto;
+  margin-right: 0;
+  order: 2;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown,
+body[dir='rtl'] sf-dropdown .sf-dropdown {
+  direction: rtl;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-trigger,
+body[dir='rtl'] sf-dropdown .sf-dropdown-trigger {
+  direction: rtl;
+  flex-direction: row-reverse !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+body[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label {
+  display: block;
+  width: 100%;
+  text-align: right !important;
+  order: 1;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+body[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon {
+  margin-left: 0;
+  margin-right: auto;
+  order: 0;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-menu,
+body[dir='rtl'] sf-dropdown .sf-dropdown-menu {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-menu li,
+body[dir='rtl'] sf-dropdown .sf-dropdown-menu li {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+/* Ensure English dropdowns stay LTR even when other contexts still carry RTL attributes */
+[lang='en'] sf-dropdown .sf-dropdown-trigger,
+html[lang='en'] sf-dropdown .sf-dropdown-trigger,
+body[lang='en'] sf-dropdown .sf-dropdown-trigger {
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+html[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+body[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label {
+  order: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+html[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+body[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon {
+  order: 2 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}

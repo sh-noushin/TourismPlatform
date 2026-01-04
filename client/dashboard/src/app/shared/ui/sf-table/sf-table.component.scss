@@ -17,15 +17,36 @@
 table {
   width: 100%;
   border-collapse: collapse;
+  direction: inherit;
+  font-family: inherit;
+  table-layout: fixed;
 }
 
 th,
  td {
   padding: spacing(sm);
   border-bottom: 1px solid $border;
+  text-align: inherit;
+  vertical-align: middle;
+  font-family: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Normalize font sizing so headers and cells match visually */
+th,
+td,
+.header-button,
+.header-button *,
+.actions-cell,
+.actions-cell * {
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 th {
+  text-align: inherit;
   background: linear-gradient(180deg, $tableHeaderBg 0%, color.adjust($tableHeaderBg, $lightness: -2%) 100%);
   color: color.adjust($text, $lightness: -30%);
   border-bottom: 1px solid $tableHeaderBorder;
@@ -50,14 +71,20 @@ thead {
   width: 100%;
   background: none;
   border: none;
-  text-align: left;
+  text-align: inherit;
   font-weight: $font-weight-medium;
   color: $text;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: spacing(xs);
   cursor: pointer;
+}
+
+.header-button .indicator {
+  margin-inline-start: spacing(xs);
+  margin-inline-end: 0;
+  flex-shrink: 0;
 }
 
 .align-end .header-button {
@@ -112,4 +139,86 @@ thead {
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.85);
+}
+
+/* RTL alignment */
+:host {
+  display: block;
+  direction: inherit;
+}
+
+:host-context([dir='rtl']) table,
+:host-context([lang='fa']) table,
+:host-context(:lang(fa)) table {
+  direction: rtl;
+  table-layout: fixed !important;
+}
+
+:host-context([dir='rtl']) th,
+:host-context([lang='fa']) th,
+:host-context(:lang(fa)) th,
+:host-context([dir='rtl']) td,
+:host-context([lang='fa']) td,
+:host-context(:lang(fa)) td {
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host-context([dir='rtl']) th,
+:host-context([lang='fa']) th,
+:host-context(:lang(fa)) th {
+  padding-inline-start: spacing(sm); 
+  padding-inline-end: spacing(sm);
+}
+
+:host-context([dir='rtl']) .header-button,
+:host-context([lang='fa']) .header-button,
+:host-context(:lang(fa)) .header-button {
+  flex-direction: row; 
+  justify-content: flex-start; 
+  text-align: right;
+  direction: rtl;
+}
+
+/* Ensure the indicator appears after the header text by using logical margin. */
+:host-context([dir='rtl']) .header-button .indicator,
+:host-context([lang='fa']) .header-button .indicator,
+:host-context(:lang(fa)) .header-button .indicator {
+  margin-inline-start: spacing(xs); /* places indicator snug after the label in RTL */
+  margin-inline-end: 0;
+  /* keep the indicator glyph LTR so triangle points correctly and stays adjacent */
+  direction: ltr;
+}
+
+/* Force consistent font in RTL tables */
+:host-context([dir='rtl']) table,
+:host-context([lang='fa']) table,
+:host-context(:lang(fa)) table,
+:host-context([dir='rtl']) th,
+:host-context([lang='fa']) th,
+:host-context(:lang(fa)) th,
+:host-context([dir='rtl']) td,
+:host-context([lang='fa']) td,
+:host-context(:lang(fa)) td,
+:host-context([dir='rtl']) .header-button,
+:host-context([lang='fa']) .header-button,
+:host-context(:lang(fa)) .header-button,
+:host-context([dir='rtl']) .header-button * ,
+:host-context([lang='fa']) .header-button * ,
+:host-context(:lang(fa)) .header-button * ,
+:host-context([dir='rtl']) .actions-cell,
+:host-context([lang='fa']) .actions-cell,
+:host-context(:lang(fa)) .actions-cell,
+:host-context([dir='rtl']) .actions-cell * ,
+:host-context([lang='fa']) .actions-cell * ,
+:host-context(:lang(fa)) .actions-cell * {
+  font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+}
+
+/* Ensure component host and children prefer Nazanin when page is Farsi */
+:host-context([lang='fa']),
+:host-context(:lang(fa)) {
+  font-family: 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
 }

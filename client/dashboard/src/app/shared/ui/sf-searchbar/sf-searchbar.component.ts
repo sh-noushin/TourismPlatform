@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'sf-searchbar',
   templateUrl: './sf-searchbar.component.html',
   styleUrls: ['./sf-searchbar.component.scss'],
-  imports: [MatIconModule],
+  imports: [MatIconModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SfSearchbarComponent implements OnDestroy {

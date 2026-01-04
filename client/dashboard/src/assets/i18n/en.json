@@ -1,0 +1,285 @@
+{
+  "BRAND": {
+    "TITLE": "Tourism Platform"
+  },
+  "LANG": {
+    "FARSI": "FARSI",
+    "ENGLISH": "ENGLISH"
+  },
+  "MENU": {
+    "HOUSE_MANAGEMENT": "House management",
+    "HOUSES": "Houses",
+    "HOUSE_TYPES": "House types",
+    "TOURS_MANAGEMENT": "Tours management",
+    "TOUR_CATEGORIES": "Categories",
+    "TOURS": "Tours",
+    "EXCHANGE": "Exchange",
+    "PERMISSIONS": "Permissions",
+    "ROLES": "Roles",
+    "USERS": "Users"
+  },
+  "USER": {
+    "CHANGE_PASSWORD": "Change password",
+    "LOGOUT": "Logout"
+  },
+  "LOGIN_PAGE": {
+    "USERNAME_PLACEHOLDER": "Username",
+    "PASSWORD_PLACEHOLDER": "Password",
+    "FORGOT_PASSWORD": "Forgot Password?",
+    "SUBMIT": "Log in",
+    "ERROR_INVALID": "Please provide a valid email and password (min 6 chars).",
+    "ERROR_LOGIN_FAILED": "Login failed",
+    "ERROR_CONTACT_SUPPORT": "Please contact support to reset your password."
+  },
+  "TABS": {
+    "NEW_HOUSE": "New house",
+    "DEFAULT_TAB": "Tab"
+  },
+  "ARIA": {
+    "TOGGLE_MENU": "Toggle menu",
+    "SEARCH": "Search",
+    "CLEAR": "Clear",
+    "UPLOAD_FILE": "Upload file"
+  },
+  "CHANGE_PASSWORD_PAGE": {
+    "TITLE": "Change password",
+    "SUBTITLE": "Keep your account safe: the new password must be at least 6 characters and include an uppercase letter, a number, and a special symbol.",
+    "CURRENT_PASSWORD": "Current password",
+    "NEW_PASSWORD": "New password",
+    "CONFIRM_PASSWORD": "Confirm new password",
+    "SUBMIT": "Update password",
+    "CANCEL": "Cancel",
+    "SUCCESS": "Your password has been updated.",
+    "ERROR_MISMATCH": "The confirmation password does not match.",
+    "ERROR_PATTERN": "Password must include an uppercase letter, a number, and a special character.",
+    "ERROR_MIN_LENGTH": "Password must be at least 6 characters long."
+  },
+  "COMMON": {
+    "SAVE": "Save",
+    "SAVING": "Saving...",
+    "CANCEL": "Cancel",
+    "CREATE": "Save",
+    "UPDATE": "Update",
+    "NEW": "New",
+    "REMOVE": "Remove",
+    "LOADING": "Loading...",
+    "NO_DATA": "No data available yet.",
+    "NO_PHOTOS": "No photos yet. Upload one above.",
+    "UPLOADING": "Uploading files...",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next",
+    "PAGE_INFO": "Page {{current}} of {{total}}",
+    "PAGE_X_OF_Y": "Page {{page}} of {{total}}",
+    "ACTIONS": "Actions",
+    "SAVED": "Saved.",
+    "ADD": "Add",
+    "CONFIRM": "Confirm",
+    "NOTHING_TO_SHOW": "Nothing to show",
+    "TRY_WIDENING_FILTERS": "Try widening the filters",
+    "SELECT": "Select"
+  },
+  "TOURS_PAGE": {
+    "TITLE": "Tours",
+    "SEARCH_PLACEHOLDER": "Search by name or category",
+    "NEW_TOUR": "New tour",
+    "DELETE_CONFIRMATION": "Delete {{name}}?"
+  },
+  "TOUR_EDIT": {
+    "EYEBROW_TOUR": "Tour",
+    "EYEBROW_NEW": "",
+    "NEW_TITLE": "Create tour",
+    "EDIT_TITLE": "Edit tour",
+    "SUBTITLE_EDIT": "Update the details and media for this experience.",
+    "SUBTITLE_CREATE": "",
+    "NAME": "Name",
+    "NAME_PLACEHOLDER": "Grand Desert Escape",
+    "CATEGORY": "Category",
+    "SELECT_CATEGORY": "Select category",
+    "COUNTRY": "Country",
+    "SELECT_COUNTRY": "Select country",
+    "DESCRIPTION": "Description",
+    "DESCRIPTION_PLACEHOLDER": "Share what makes this tour special",
+    "LOADING_COUNTRIES": "Loading countries...",
+    "TOUR_SCHEDULES": "Tour Schedules",
+    "SCHEDULE_NOTE": "Schedules become editable after the tour is created.",
+    "LOADING_CATEGORIES": "Loading categories...",
+    "LOADING_TOUR": "Loading tour details...",
+    "PHOTOS": "Photos",
+    "UPLOADING_FILES": "Uploading files...",
+    "REMOVE_PHOTO": "Remove",
+    "NO_PHOTOS": "No photos yet. Upload one above.",
+    "CANCEL": "Cancel",
+    "SAVE_TOUR": "Save",
+    "SAVED": "Saved."
+  },
+  "TOUR_CATEGORIES_PAGE": {
+    "TITLE": "Tour categories",
+    "SUBTITLE": "",
+    "SEARCH_PLACEHOLDER": "Search categories",
+    "NEW_CATEGORY": "New category",
+    "NO_CATEGORIES": "No tour categories yet.",
+    "DELETE_CONFIRMATION": "Delete this tour category?"
+  },
+  "CATEGORY_DIALOG": {
+    "NAME": "Name",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "SAVING": "Saving..."
+  },
+  "HOUSES_PAGE": {
+    "TITLE": "Houses",
+    "SEARCH_PLACEHOLDER": "Search by name, city, type, or country",
+    "NEW_HOUSE": "New house",
+    "DELETE_CONFIRMATION": "Delete {{name}}?"
+  },
+  "HOUSES": {
+    "NEW": "New house",
+    "CREATE_TITLE": "Create house",
+    "EDIT_TITLE": "Edit house",
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "TYPE": "Type",
+    "SELECT_TYPE": "Select type",
+    "ADDRESS_LINE_1": "Address line 1",
+    "ADDRESS_LINE_2": "Address line 2",
+    "CITY": "City",
+    "REGION": "Region",
+    "COUNTRY": "Country",
+    "SELECT_COUNTRY": "Select country",
+    "POSTAL_CODE": "Postal code",
+    "LOADING_TYPES": "Loading types...",
+    "LOADING_COUNTRIES": "Loading countries...",
+    "PHOTOS": "Photos",
+    "REMOVE_PHOTO": "Remove",
+    "NO_PHOTOS": "No photos yet. Upload one above.",
+    "LISTING_TYPE": "Listing type",
+    "LISTING_RENT": "Rent",
+    "LISTING_BUY": "Buy",
+    "PRICE": "Price",
+    "CURRENCY": "Currency",
+    "SELECT_CURRENCY": "Select currency",
+    "CANCEL": "Cancel",
+    "SAVED": "Saved."
+  },
+  "HOUSE_TYPES": {
+    "TITLE": "House types",
+    "NEW": "New type",
+    "SEARCH_PLACEHOLDER": "Search by name",
+    "DELETE_CONFIRM": "Delete this house type?",
+    "TABLE": {
+      "NAME": "Name"
+    }
+  },
+  "HOUSE_TYPES_PAGE": {
+    "TITLE": "House types",
+    "SEARCH_PLACEHOLDER": "Search by name",
+    "NEW_TYPE": "New type",
+    "NO_TYPES": "No house types yet.",
+    "DELETE_CONFIRMATION": "Delete this house type?"
+  },
+  "TYPE_DIALOG": {
+    "EDIT_TITLE": "Edit house type",
+    "CREATE_TITLE": "Create house type",
+    "NAME": "Name",
+    "NAME_REQUIRED": "Name is required.",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "SAVING": "Saving...",
+    "SAVE_FAILED": "Unable to save house type.",
+    "LOAD_FAILED": "Failed to load house type."
+  },
+  "CATEGORY_DIALOG": {
+    "EDIT_TITLE": "Edit tour category",
+    "CREATE_TITLE": "Create tour category",
+    "NAME": "Name",
+    "NAME_REQUIRED": "Name is required.",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "SAVING": "Saving...",
+    "SAVE_FAILED": "Unable to save tour category.",
+    "LOAD_FAILED": "Failed to load tour category."
+  },
+  "USERS_PAGE": {
+    "TITLE": "Users",
+    "SUBTITLE": "Platform users",
+    "SEARCH_PLACEHOLDER": "Search users",
+    "NEW_USER": "New user"
+  },
+  "TABLE": {
+    "ACTIONS": "Actions",
+    "NO_ITEMS": "No items to display.",
+    "EMPTY_TITLE": "Nothing to show",
+    "EMPTY_DESCRIPTION": "Try widening the filters",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next",
+    "PAGE_X_OF_Y": "Page {{page}} of {{total}}"
+  },
+  "TABLE_HEADERS": {
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "YEAR": "Year",
+    "TYPE": "Type",
+    "CITY": "City",
+    "COUNTRY": "Country",
+    "CODE": "Code",
+    "EMAIL": "Email",
+    "FULL_NAME": "Full name",
+    "BASE": "Base",
+    "QUOTE": "Quote",
+    "RATE": "Rate",
+    "CAPTURED_UTC": "Captured (UTC)"
+  },
+  "TABLE_ACTIONS": {
+    "EDIT": "Edit",
+    "DELETE": "Delete"
+  },
+  "USERS": {
+    "NEW_USER": "New user",
+    "EDIT_USER": "Edit user",
+    "CREATE_USER": "Create user",
+    "RESET": "Reset",
+    "UPDATE": "Update",
+    "SAVED": "Saved."
+  },
+  "PERMISSIONS_PAGE": {
+    "TITLE": "Permissions",
+    "SUBTITLE": "Manage permissions",
+    "NEW_PERMISSION": "New permission",
+    "SEARCH_PLACEHOLDER": "Search permissions"
+  },
+  "EXCHANGE_PAGE": {
+    "TITLE": "Exchange",
+    "SUBTITLE": "Live currency rates",
+    "SEARCH_PLACEHOLDER": "Search currency code"
+  },
+  "CATEGORIES": {
+    "NEW_CATEGORY": "New category",
+    "NO_CATEGORIES": "No tour categories yet."
+  },
+  "TYPES": {
+    "NEW_TYPE": "New type",
+    "NO_TYPES": "No house types yet."
+  },
+  "SCHEDULES": {
+    "TITLE": "Tour Schedules",
+    "TOOLTIP": "These schedules will be saved when you save the tour",
+    "PENDING": "pending",
+    "CANCEL": "Cancel",
+    "ADD_SCHEDULE": "+ Add schedule",
+    "SCHEDULE_ADDED": "✓ Schedule added! It will be saved when you save the tour.",
+    "START_DATE_TIME": "Start date & time",
+    "END_DATE_TIME": "End date & time",
+    "CAPACITY": "Capacity",
+    "ADD": "Add",
+    "NOT_YET_SAVED": "Not yet saved",
+    "START": "Start:",
+    "END": "End:",
+    "REMOVE": "Remove",
+    "NO_SCHEDULES": "No schedules yet. Add one above."
+  },
+  "CONFIRM_DIALOG": {
+    "TITLE": "Confirm",
+    "CANCEL": "Cancel",
+    "CONFIRM": "Confirm"
+  }
+}

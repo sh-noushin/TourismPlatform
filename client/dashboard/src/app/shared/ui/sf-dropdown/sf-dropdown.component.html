@@ -9,14 +9,13 @@
     [disabled]="disabled()"
     (click)="toggle($event)"
   >
-      <span class="sf-dropdown-label">
-        @if (hasSelection) {
-          <ng-container>{{ selectedLabel }}</ng-container>
-        } @else {
-          <ng-template>{{ placeholder() }}</ng-template>
-        }
-      </span>
-
+    <span class="sf-dropdown-label">
+      @if (hasSelection) {
+        <ng-container>{{ selectedLabel }}</ng-container>
+      } @else {
+        <ng-template>{{ placeholder() }}</ng-template>
+      }
+    </span>
     <span class="sf-dropdown-icon" aria-hidden="true"></span>
   </button>
 
@@ -26,18 +25,19 @@
       role="listbox"
       (click)="$event.stopPropagation()"
     >
-      <li
-        role="option"
-        *ngFor="let item of items(); trackBy: trackItem"
-        [attr.aria-selected]="item.value === value()"
-        [class.selected]="item.value === value()"
-        (click)="select(item, $event)"
-      >
-        <span>{{ item.label }}</span>
-        @if (item.hint) {
-          <span class="sf-dropdown-hint">{{ item.hint }}</span>
-        }
-      </li>
+      @for (item of items(); track trackItem($index, item)) {
+        <li
+          role="option"
+          [attr.aria-selected]="item.value === value()"
+          [class.selected]="item.value === value()"
+          (click)="select(item, $event)"
+        >
+          <span>{{ item.label }}</span>
+          @if (item.hint) {
+            <span class="sf-dropdown-hint">{{ item.hint }}</span>
+          }
+        </li>
+      }
     </ul>
   }
 </div>

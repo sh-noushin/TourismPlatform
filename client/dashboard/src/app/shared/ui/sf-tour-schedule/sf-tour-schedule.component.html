@@ -2,8 +2,8 @@
   <header class="schedule-header">
     <span class="label-text">{{ label() }}</span>
     @if (pendingCount() > 0) {
-      <span class="pending-badge" title="These schedules will be saved when you save the tour">
-        {{ pendingCount() }} pending
+      <span class="pending-badge" title="{{ 'SCHEDULES.TOOLTIP' | translate }}">
+        {{ pendingCount() }} {{ 'SCHEDULES.PENDING' | translate }}
       </span>
     }
     <button
@@ -12,21 +12,19 @@
       [disabled]="disabled() || disableAddButton()"
       (click)="toggleAddForm()"
     >
-      {{ showAddForm() ? 'Cancel' : '+ Add schedule' }}
+      {{ showAddForm() ? ('COMMON.CANCEL' | translate) : ('SCHEDULES.ADD_SCHEDULE' | translate) }}
     </button>
   </header>
 
   @if (showAddedMessage()) {
-    <div class="success-message">
-      ✓ Schedule added! It will be saved when you save the tour.
-    </div>
+    <div class="success-message">{{ 'SCHEDULES.SCHEDULE_ADDED' | translate }}</div>
   }
 
   @if (showAddForm()) {
     <div class="add-form">
       <div class="form-row">
-        <label class="form-field">
-          <span class="field-label">Start date & time</span>
+          <label class="form-field">
+            <span class="field-label">{{ 'SCHEDULES.START_DATE_TIME' | translate }}</span>
           <input
             type="datetime-local"
             [ngModel]="newSchedule().startAtUtc"
@@ -34,8 +32,8 @@
             [disabled]="disabled()"
           />
         </label>
-        <label class="form-field">
-          <span class="field-label">End date & time</span>
+          <label class="form-field">
+            <span class="field-label">{{ 'SCHEDULES.END_DATE_TIME' | translate }}</span>
           <input
             type="datetime-local"
             [ngModel]="newSchedule().endAtUtc"
@@ -43,8 +41,8 @@
             [disabled]="disabled()"
           />
         </label>
-        <label class="form-field capacity">
-          <span class="field-label">Capacity</span>
+          <label class="form-field capacity">
+            <span class="field-label">{{ 'SCHEDULES.CAPACITY' | translate }}</span>
           <input
             type="number"
             min="1"
@@ -61,7 +59,7 @@
           [disabled]="disabled() || disableAddButton()"
           (click)="addSchedule()"
         >
-          Add
+          {{ 'SCHEDULES.ADD' | translate }}
         </button>
       </div>
     </div>
@@ -73,18 +71,18 @@
         <article class="schedule-item" [class.new]="schedule.isNew" [class.pending]="schedule.isNew">
           <div class="schedule-info">
             @if (schedule.isNew) {
-              <span class="pending-indicator" title="Not yet saved">●</span>
+              <span class="pending-indicator" title="{{ 'SCHEDULES.NOT_YET_SAVED' | translate }}">●</span>
             }
             <div class="schedule-time">
-              <span class="time-label">Start:</span>
+              <span class="time-label">{{ 'SCHEDULES.START' | translate }}</span>
               <span class="time-value">{{ formatDateTime(schedule.startAtUtc) }}</span>
             </div>
             <div class="schedule-time">
-              <span class="time-label">End:</span>
+              <span class="time-label">{{ 'SCHEDULES.END' | translate }}</span>
               <span class="time-value">{{ formatDateTime(schedule.endAtUtc) }}</span>
             </div>
             <div class="schedule-capacity">
-              <span class="capacity-label">Capacity:</span>
+              <span class="capacity-label">{{ 'SCHEDULES.CAPACITY' | translate }}</span>
               <span class="capacity-value">{{ schedule.capacity }}</span>
             </div>
           </div>
@@ -94,12 +92,12 @@
             [disabled]="disabled()"
             (click)="removeSchedule(i)"
           >
-            Remove
+            {{ 'SCHEDULES.REMOVE' | translate }}
           </button>
         </article>
       }
     </div>
   } @else if (!showAddForm()) {
-    <p class="no-schedules">No schedules yet. Add one above.</p>
+    <p class="no-schedules">{{ 'SCHEDULES.NO_SCHEDULES' | translate }}</p>
   }
 </section>

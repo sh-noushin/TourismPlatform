@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Tours.Application.Services;
 using Server.Modules.Tours.Contracts.Tours.Dtos;
+using SharedCountryDto = Server.SharedKernel.ReferenceData.CountryDto;
+using Server.Modules.Properties.Application.Services;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Controllers;
@@ -11,10 +13,12 @@ namespace Server.Api.Controllers;
 public sealed class ToursController : ControllerBase
 {
     private readonly ITourService _tourService;
+    private readonly ICountryService _countryService;
 
-    public ToursController(ITourService tourService)
+    public ToursController(ITourService tourService, ICountryService countryService)
     {
         _tourService = tourService;
+        _countryService = countryService;
     }
 
     [HttpGet]
@@ -32,6 +36,14 @@ public sealed class ToursController : ControllerBase
     {
         var dto = await _tourService.GetDetailAsync(id, cancellationToken);
         return dto == null ? NotFound() : Ok(dto);
+    }
+
+    [HttpGet("countries")]
+    [ProducesResponseType(typeof(IEnumerable<SharedCountryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCountries(CancellationToken cancellationToken)
+    {
+        var countries = await _countryService.GetCountriesAsync(cancellationToken);
+        return Ok(countries);
     }
 
     [HttpPost]

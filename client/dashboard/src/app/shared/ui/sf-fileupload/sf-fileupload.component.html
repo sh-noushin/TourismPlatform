@@ -11,7 +11,7 @@
 <button
   type="button"
   class="sf-fileupload__trigger"
-  aria-label="Upload file"
+  [attr.aria-label]="label() ?? ('ARIA.UPLOAD_FILE' | translate)"
   [disabled]="disabled()"
   (click)="openPicker(fileInput)"
 >

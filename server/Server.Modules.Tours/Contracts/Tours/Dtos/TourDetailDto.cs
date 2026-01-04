@@ -5,5 +5,8 @@ public sealed record TourDetailDto(
     string Name,
     string? Description,
     string TourCategoryName,
+    decimal Price,
+    string Currency,
+    string CountryCode,
     IReadOnlyCollection<TourScheduleDto> Schedules,
     IReadOnlyCollection<TourPhotoDto> Photos);

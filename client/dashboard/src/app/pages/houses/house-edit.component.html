@@ -1,14 +1,16 @@
 <div class="edit-shell" (click)="$event.stopPropagation()">
   <div class="glass-panel">
     <header class="header">
-      <h3>{{ id ? 'Edit house' : 'Create house' }}</h3>
+      <h3>
+        {{ id ? ('HOUSES.EDIT_TITLE' | translate) : ('HOUSES.CREATE_TITLE' | translate) }}
+      </h3>
     </header>
 
     @if (form()) {
       <form class="form" (submit)="save($event)">
         <section class="form-grid top">
           <label>
-            <span class="label-text">Name</span>
+            <span class="label-text">{{ 'HOUSES.NAME' | translate }}</span>
             <input
               type="text"
               name="name"
@@ -20,7 +22,7 @@
           </label>
 
           <label class="description">
-            <span class="label-text">Description</span>
+            <span class="label-text">{{ 'HOUSES.DESCRIPTION' | translate }}</span>
             <textarea
               name="description"
               rows="3"
@@ -30,17 +32,17 @@
           </label>
 
           <label class="combobox">
-            <span class="label-text">Type</span>
+            <span class="label-text">{{ 'HOUSES.TYPE' | translate }}</span>
             <sf-dropdown
               [items]="houseTypeOptions()"
               [value]="form()?.houseTypeName ?? ''"
               (selectionChange)="updateField('houseTypeName', $event)"
-              placeholder="Select type"
+              placeholder="{{ 'HOUSES.SELECT_TYPE' | translate }}"
               name="houseTypeName"
             ></sf-dropdown>
 
             @if (houseTypes.loading()) {
-              <p class="mini-note">Loading types…</p>
+              <p class="mini-note">{{ 'HOUSES.LOADING_TYPES' | translate }}</p>
             }
             @if (houseTypes.error()) {
               <p class="status error">{{ houseTypes.error() }}</p>
@@ -48,9 +50,53 @@
           </label>
         </section>
 
+        <section class="form-grid listing">
+          <div class="listing-type" role="radiogroup" aria-label="{{ 'HOUSES.LISTING_TYPE' | translate }}">
+            <span class="label-text">{{ 'HOUSES.LISTING_TYPE' | translate }}</span>
+            <div class="listing-options">
+              @for (option of listingTypeOptions; track option.value) {
+                <label class="listing-option">
+                  <input
+                    type="radio"
+                    name="listingType"
+                    [checked]="form()?.listingType === option.value"
+                    (change)="updateField('listingType', option.value)"
+                  />
+                  <span>{{ option.labelKey | translate }}</span>
+                </label>
+              }
+            </div>
+          </div>
+
+          <label>
+            <span class="label-text">{{ 'HOUSES.PRICE' | translate }}</span>
+            <input
+              type="number"
+              inputmode="decimal"
+              step="0.01"
+              min="0"
+              name="price"
+              [value]="form()?.price ?? 0"
+              (input)="updateField('price', parseNumber($any($event.target).value))"
+              required
+            />
+          </label>
+
+          <label class="combobox">
+            <span class="label-text">{{ 'HOUSES.CURRENCY' | translate }}</span>
+            <sf-dropdown
+              [items]="currencyOptions()"
+              [value]="form()?.currency ?? ''"
+              (selectionChange)="updateField('currency', $event)"
+              placeholder="{{ 'HOUSES.SELECT_CURRENCY' | translate }}"
+              name="currency"
+            ></sf-dropdown>
+          </label>
+        </section>
+
         <section class="form-grid address">
           <label>
-            <span class="label-text">Address line 1</span>
+            <span class="label-text">{{ 'HOUSES.ADDRESS_LINE_1' | translate }}</span>
             <input
               type="text"
               name="line1"
@@ -62,7 +108,7 @@
           </label>
 
           <label>
-            <span class="label-text">Address line 2</span>
+            <span class="label-text">{{ 'HOUSES.ADDRESS_LINE_2' | translate }}</span>
             <input
               type="text"
               name="line2"
@@ -73,7 +119,7 @@
           </label>
 
           <label>
-            <span class="label-text">City</span>
+            <span class="label-text">{{ 'HOUSES.CITY' | translate }}</span>
             <input
               type="text"
               name="city"
@@ -85,7 +131,7 @@
           </label>
 
           <label>
-            <span class="label-text">Region</span>
+            <span class="label-text">{{ 'HOUSES.REGION' | translate }}</span>
             <input
               type="text"
               name="region"
@@ -95,20 +141,26 @@
             />
           </label>
 
-          <label>
-            <span class="label-text">Country</span>
-            <input
-              type="text"
+          <label class="combobox">
+            <span class="label-text">{{ 'HOUSES.COUNTRY' | translate }}</span>
+            <sf-dropdown
+              [items]="countryOptions()"
+              [value]="form()?.country ?? ''"
+              (selectionChange)="updateField('country', $event)"
+              placeholder="{{ 'HOUSES.SELECT_COUNTRY' | translate }}"
               name="country"
-              autocomplete="off"
-              [value]="form()?.country"
-              (input)="updateField('country', $any($event.target).value)"
-              required
-            />
+            ></sf-dropdown>
+
+            @if (loadingCountries()) {
+              <p class="mini-note">{{ 'HOUSES.LOADING_COUNTRIES' | translate }}</p>
+            }
+            @if (countriesError()) {
+              <p class="mini-note status error">{{ countriesError() }}</p>
+            }
           </label>
 
           <label>
-            <span class="label-text">Postal code</span>
+            <span class="label-text">{{ 'HOUSES.POSTAL_CODE' | translate }}</span>
             <input
               type="text"
               name="postalCode"
@@ -121,7 +173,7 @@
 
         <div class="fileupload-row">
           <sf-fileupload
-            label="Photos"
+            label="{{ 'HOUSES.PHOTOS' | translate }}"
             accept="image/*"
             [multiple]="true"
             [disabled]="uploading() || saving()"
@@ -144,17 +196,28 @@
                   <div class="photo-info">
                     <strong>{{ photo.label }}</strong>
                   </div>
-                  <button class="text-button" type="button" (click)="removePhoto(i)">Remove</button>
+                  <button class="text-button" type="button" (click)="removePhoto(i)">
+                    {{ 'HOUSES.REMOVE_PHOTO' | translate }}
+                  </button>
                 </div>
               }
             </div>
           </section>
         }
+        @else {
+          <p class="no-photos">{{ 'HOUSES.NO_PHOTOS' | translate }}</p>
+        }
 
         <section class="actions">
-          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">Cancel</button>
+          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
           <button type="submit" class="btn primary" [disabled]="saving()">
-            {{ saving() ? 'Saving...' : (id ? 'Update' : 'Create') }}
+            {{
+              saving()
+                ? ('COMMON.SAVING' | translate)
+                : (id ? ('COMMON.UPDATE' | translate) : ('COMMON.CREATE' | translate))
+            }}
           </button>
         </section>
       </form>
@@ -165,7 +228,7 @@
         <span class="status error">{{ error() }}</span>
       }
       @if (saved()) {
-        <span class="status success">Saved.</span>
+        <span class="status success">{{ 'HOUSES.SAVED' | translate }}</span>
       }
     </div>
   </div>

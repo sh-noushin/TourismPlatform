@@ -10,6 +10,7 @@ import { SfTableColumn, SfTableRowAction, SfTableSort } from '../../shared/model
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TourEditComponent } from './tour-edit.component';
 
 type TourRow = TourSummaryDto & { photoCount: number };
@@ -19,7 +20,7 @@ type TourRow = TourSummaryDto & { photoCount: number };
   selector: 'tours-page',
   templateUrl: './tours-page.component.html',
   styleUrls: ['./tours-page.component.scss'],
-  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent, MatDialogModule],
+  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent, MatDialogModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToursPageComponent {
@@ -28,9 +29,9 @@ export class ToursPageComponent {
   readonly loadingSignal = computed(() => this.tours.loading());
 
   readonly columns: SfTableColumn[] = [
-    { key: 'name', header: 'Name', field: 'name', sortable: true },
-    { key: 'description', header: 'Description', field: 'description', sortable: true },
-    { key: 'year', header: 'Year', field: 'year', align: 'end', sortable: true }
+    { key: 'name', header: 'Name', headerKey: 'TABLE_HEADERS.NAME', field: 'name', sortable: true },
+    { key: 'description', header: 'Description', headerKey: 'TABLE_HEADERS.DESCRIPTION', field: 'description', sortable: true },
+    { key: 'year', header: 'Year', headerKey: 'TABLE_HEADERS.YEAR', field: 'year', sortable: true }
   ];
 
   readonly displayedTours = computed(() => {
@@ -62,14 +63,15 @@ export class ToursPageComponent {
   });
 
   readonly actions: SfTableRowAction[] = [
-    { label: 'Edit', type: 'edit', icon: 'edit' },
-    { label: 'Delete', type: 'delete', icon: 'delete', color: 'warn' }
+    { label: 'Edit', labelKey: 'TABLE_ACTIONS.EDIT', type: 'edit', icon: 'edit' },
+    { label: 'Delete', labelKey: 'TABLE_ACTIONS.DELETE', type: 'delete', icon: 'delete', color: 'warn' }
   ];
 
   constructor(
     public readonly tours: ToursFacade,
     private readonly dialog: MatDialog,
-    private readonly confirm: ConfirmService
+    private readonly confirm: ConfirmService,
+    private readonly translate: TranslateService
   ) {
     this.tours.load();
   }
@@ -91,10 +93,10 @@ export class ToursPageComponent {
 
   private async confirmDelete(row: TourRow) {
     const confirmed = await this.confirm.confirm({
-      title: 'Delete tour',
-      message: `Delete ${row.name}?`,
-      confirmLabel: 'Delete',
-      cancelLabel: 'Cancel'
+      title: this.translate.instant('CONFIRM_DIALOG.TITLE'),
+      message: this.translate.instant('TOURS_PAGE.DELETE_CONFIRMATION', { name: row.name ?? '' }),
+      confirmLabel: this.translate.instant('CONFIRM_DIALOG.CONFIRM'),
+      cancelLabel: this.translate.instant('CONFIRM_DIALOG.CANCEL')
     });
     if (!confirmed) return;
     try {

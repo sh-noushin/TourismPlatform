@@ -9,6 +9,7 @@ import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
 import { PermissionsFacade } from '../../features/permissions/permissions.facade';
 import { TabService } from '../../core/tab/tab.service';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -16,11 +17,11 @@ import { Router } from '@angular/router';
   template: `
   <section class="permissions-page">
     <div class="permissions-page__header">
-      <sf-page-header title="Permissions" subtitle="Manage permissions">
-        <sf-button sfPageHeaderActions variant="ghost" type="button" (click)="createNew()">New permission</sf-button>
+      <sf-page-header title="{{ 'PERMISSIONS_PAGE.TITLE' | translate }}" subtitle="{{ 'PERMISSIONS_PAGE.SUBTITLE' | translate }}">
+        <sf-button sfPageHeaderActions variant="ghost" type="button" (click)="createNew()">{{ 'PERMISSIONS_PAGE.NEW_PERMISSION' | translate }}</sf-button>
       </sf-page-header>
       <div class="permissions-page__filters">
-        <sf-searchbar placeholder="Search permissions" (valueChange)="setFilter($event)"></sf-searchbar>
+        <sf-searchbar placeholder="{{ 'PERMISSIONS_PAGE.SEARCH_PLACEHOLDER' | translate }}" (valueChange)="setFilter($event)"></sf-searchbar>
       </div>
     </div>
 
@@ -29,7 +30,7 @@ import { Router } from '@angular/router';
     </sf-card>
   </section>
   `,
-  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent],
+  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, SfButtonComponent, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PermissionsPageComponent {
@@ -39,8 +40,8 @@ export class PermissionsPageComponent {
   readonly loadingSignal = computed(() => this.facade.loading());
 
   readonly columns: SfTableColumn[] = [
-    { key: 'code', header: 'Code', field: 'code', sortable: true },
-    { key: 'description', header: 'Description', field: 'description' }
+    { key: 'code', header: 'Code', headerKey: 'TABLE_HEADERS.CODE', field: 'code', sortable: true },
+    { key: 'description', header: 'Description', headerKey: 'TABLE_HEADERS.DESCRIPTION', field: 'description' }
   ];
 
   readonly displayed = computed(() => {
@@ -56,7 +57,7 @@ export class PermissionsPageComponent {
     });
   });
 
-  readonly actions = [{ label: 'Edit', type: 'edit', icon: 'edit' }];
+  readonly actions = [{ label: 'Edit', labelKey: 'TABLE_ACTIONS.EDIT', type: 'edit', icon: 'edit' }];
 
   constructor(private readonly facade: PermissionsFacade, private readonly tabs: TabService, private readonly router: Router) {
     this.facade.load();

@@ -1,76 +1,76 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  Inject,
+  OnDestroy,
+  ViewChild,
+  computed,
+  signal
+} from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import { AuthFacade } from '../core/auth/auth.facade';
 import { TabService, TabItem } from '../core/tab/tab.service';
+import { ChangePasswordPageComponent } from '../pages/change-password/change-password-page.component';
 
-type SubMenuItem = {
-  label: string;
-  path: string;
-};
-
-type MenuItem = {
-  label: string;
-  basePath: string; // used as group id for expand/collapse
-  icon: string;
-  subItems?: SubMenuItem[];
-};
+type SubMenuItem = { label: string; path: string };
+type MenuItem = { label: string; basePath: string; icon: string; subItems?: SubMenuItem[] };
 
 @Component({
   standalone: true,
   selector: 'dashboard-shell',
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, MatDialogModule, TranslateModule],
   templateUrl: './dashboard-shell.component.html',
   styleUrls: ['./dashboard-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardShellComponent {
+export class DashboardShellComponent implements OnDestroy {
+  @ViewChild('userMenuBtn', { read: ElementRef }) userMenuBtnRef!: ElementRef<HTMLElement>;
+  @ViewChild('userMenu', { read: ElementRef }) userMenuRef!: ElementRef<HTMLElement>;
+
   readonly sidebarCollapsed = signal(false);
   readonly userMenuOpen = signal(false);
+  readonly langMenuOpen = signal(false);
   readonly expandedMenu = signal<string | null>(null);
 
-  readonly menuItems: MenuItem[] = [
-    {
-      label: 'مدیریت املاک',
-      basePath: '/admin/house-management',
-      icon: '🏠',
-      subItems: [
-        { label: 'املاک', path: '/admin/houses' },
-        { label: 'انواع املاک', path: '/admin/house-types' }
-      ]
-    },
-    {
-      label: 'مدیریت تورها',
-      basePath: '/admin/tours-management',
-      icon: '🧳',
-      subItems: [
-        { label: 'دسته‌بندی‌ها', path: '/admin/tour-categories' },
-        { label: 'تورها', path: '/admin/tours' }
-      ]
-    },
-    { label: 'صرافی', basePath: '/admin/exchange', icon: '💱' },
-    {
-      label: 'مدیریت دسترسی‌ها',
-      basePath: '/admin/permissions',
-      icon: '🔐',
-      subItems: [
-        { label: 'نقش‌ها', path: '/admin/roles' },
-        { label: 'کاربران', path: '/admin/users' },
-        { label: 'دسترسی‌ها', path: '/admin/permissions' }
-      ]
-    },
-  ];
+  // Language source of truth
+  readonly lang = signal<'en' | 'fa'>('fa');
+
+  // Host dir so CSS can use :host([dir="rtl"])
+  @HostBinding('attr.dir')
+  get dirAttr(): 'rtl' | 'ltr' {
+    return this.lang() === 'fa' ? 'rtl' : 'ltr';
+  }
+
+  @HostBinding('attr.lang')
+  get langAttr(): string {
+    return this.lang();
+  }
+
+  readonly menuItems = computed<MenuItem[]>(() => {
+    this.lang();
+    return this.buildMenuItems();
+  });
+
+  private readonly langSub: Subscription;
 
   readonly displayName = computed(() => {
+    this.lang();
     const name = (this.auth.userName?.() ?? '').trim();
     if (name) return name;
 
     const email = (this.auth.userEmail?.() ?? '').trim();
     if (email) return this.prettyNameFromEmail(email);
 
-    if (this.auth.isSuperUser?.()) return 'Super Admin';
-    return 'User';
+    if (this.auth.isSuperUser?.()) return this.translate.instant('USER.SUPER_ADMIN');
+    return this.translate.instant('USER.DEFAULT_NAME');
   });
 
   readonly initials = computed(() => {
@@ -84,35 +84,80 @@ export class DashboardShellComponent {
   constructor(
     public readonly auth: AuthFacade,
     public readonly tabs: TabService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly dialog: MatDialog,
+    private readonly translate: TranslateService,
+    @Inject(DOCUMENT) private readonly document: Document
   ) {
+    this.updateSidebarWidthVar(this.sidebarCollapsed());
+
+    const currentLang =
+      (this.translate.currentLang as 'fa' | 'en') ||
+      (this.translate.getDefaultLang() as 'fa' | 'en') ||
+      'fa';
+
+    this.lang.set(currentLang === 'en' ? 'en' : 'fa');
+    this.applyDocumentDir();
+
     if (this.tabs.tabs().length === 0) {
-      const t = this.tabs.openNewTab('/admin/houses', 'املاک', true);
+      const t = this.tabs.openNewTab('/admin/houses', this.translate.instant('MENU.HOUSES'), true);
       void this.router.navigateByUrl(t.path);
     }
+    this.relabelTabs(); // ensure titles match current lang on load
 
     const active = this.activeTabPath();
-    const houseGroup = this.menuItems.find(m => m.basePath === '/admin/house-management');
+
+    const houseGroup = this.menuItems().find(m => m.basePath === '/admin/house-management');
     if (houseGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
       this.expandedMenu.set(houseGroup.basePath);
     }
 
-    const tourGroup = this.menuItems.find(m => m.basePath === '/admin/tours-management');
+    const tourGroup = this.menuItems().find(m => m.basePath === '/admin/tours-management');
     if (tourGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
       this.expandedMenu.set(tourGroup.basePath);
     }
+
+    this.langSub = this.translate.onLangChange.subscribe(({ lang }) => {
+      const next = (lang === 'en' ? 'en' : 'fa') as 'en' | 'fa';
+      this.lang.set(next);
+      this.applyDocumentDir();
+      this.relabelTabs();
+    });
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
+  }
+
+  private applyDocumentDir(): void {
+    const dir = this.lang() === 'fa' ? 'rtl' : 'ltr';
+    this.document.documentElement.setAttribute('dir', dir);
+    this.document.documentElement.setAttribute('lang', this.lang());
+    this.document.body?.setAttribute('dir', dir);
+    this.document.body?.setAttribute('lang', this.lang());
   }
 
   toggleSidebar() {
-    this.sidebarCollapsed.update(v => !v);
+    this.sidebarCollapsed.update(v => {
+      const next = !v;
+      this.updateSidebarWidthVar(next);
+      return next;
+    });
   }
 
   openMenu(item: MenuItem) {
     if (item.subItems?.length) {
-      this.expandedMenu.update((current) => (current === item.basePath ? null : item.basePath));
+      // When the sidebar is collapsed, clicking a parent should open its first sub-item directly
+      if (this.sidebarCollapsed() && item.subItems.length) {
+        const first = item.subItems[0];
+        this.expandedMenu.set(item.basePath);
+        this.openTab(first.path, first.label);
+        return;
+      }
+
+      this.expandedMenu.update(current => (current === item.basePath ? null : item.basePath));
       return;
     }
-
     this.openTab(item.basePath, item.label);
   }
 
@@ -141,29 +186,86 @@ export class DashboardShellComponent {
     void this.router.navigateByUrl(activeTab.path);
   }
 
-  toggleUserMenu(event: MouseEvent) {
-  event.stopPropagation();
-  this.userMenuOpen.set(!this.userMenuOpen());
-}
+  toggleUserMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    this.userMenuOpen.update(v => !v);
+  }
 
-closeUserMenu() {
-  this.userMenuOpen.set(false);
-}
+  toggleLangMenu(event: Event): void {
+    event.stopPropagation();
+    this.langMenuOpen.set(!this.langMenuOpen());
+  }
 
+  closeUserMenu(): void {
+    this.userMenuOpen.set(false);
+  }
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentMouseDown(event: MouseEvent) {
+    const path = (event.composedPath && event.composedPath()) || [];
+
+    if (this.userMenuOpen()) {
+      const btn = this.userMenuBtnRef?.nativeElement;
+      const menu = this.userMenuRef?.nativeElement;
+      if (!(btn && path.includes(btn)) && !(menu && path.includes(menu))) {
+        this.closeUserMenu();
+      } else {
+        return;
+      }
+    }
+
+    if (this.langMenuOpen()) {
+      const target = event.target as HTMLElement;
+      if (!target || !target.closest || !target.closest('.lang-selector')) {
+        this.langMenuOpen.set(false);
+      } else {
+        return;
+      }
+    }
+  }
+
+  setLang(lang: 'en' | 'fa') {
+    this.translate.use(lang);
+    this.lang.set(lang);
+    this.applyDocumentDir();
+    this.relabelTabs();
+    this.langMenuOpen.set(false);
+  }
 
   changePassword() {
     this.closeUserMenu();
-    const tab = this.tabs.openNewTab('/admin/change-password', 'Change password', false);
-    void this.router.navigateByUrl(tab.path);
+
+    this.dialog.open(ChangePasswordPageComponent, {
+      panelClass: 'change-password-dialog',
+      backdropClass: 'change-password-backdrop',
+      autoFocus: false,
+      maxWidth: 'min(520px, calc(100vw - 32px))',
+      width: 'min(520px, 100%)'
+    });
   }
 
-  async logout() {
+  async logout(event?: MouseEvent) {
+    event?.stopPropagation();
+    event?.preventDefault();
+
     this.closeUserMenu();
-    try {
-      await this.auth.logout();
-    } catch {}
-    this.tabs.closeAll();
-    await this.router.navigateByUrl('/login');
+
+    try { await this.auth.logout(); } catch {}
+    try { this.tabs.closeAll(); } catch {}
+
+    window.location.replace('/login');
+  }
+
+  isMenuActive(item: MenuItem) {
+    const active = this.activeTabPath();
+    if (item.subItems?.length) {
+      return item.subItems.some(sub => this.normalize(sub.path) === active);
+    }
+    return this.normalize(item.basePath) === active;
+  }
+
+  isSubMenuItemActive(sub: SubMenuItem) {
+    return this.normalize(sub.path) === this.activeTabPath();
   }
 
   private nextTitle(base: string) {
@@ -171,7 +273,6 @@ closeUserMenu() {
       .tabs()
       .filter((t: TabItem) => (t.title ?? '').startsWith(base))
       .length;
-
     return count ? `${base} (${count + 1})` : base;
   }
 
@@ -179,18 +280,6 @@ closeUserMenu() {
     const title = this.nextTitle(label);
     const tab = this.tabs.openNewTab(path, title, false);
     void this.router.navigateByUrl(tab.path);
-  }
-
-  isMenuActive(item: MenuItem) {
-    const active = this.activeTabPath();
-    if (item.subItems?.length) {
-      return item.subItems.some((sub) => this.normalize(sub.path) === active);
-    }
-    return this.normalize(item.basePath) === active;
-  }
-
-  isSubMenuItemActive(sub: SubMenuItem) {
-    return this.normalize(sub.path) === this.activeTabPath();
   }
 
   private activeTabPath() {
@@ -209,6 +298,72 @@ closeUserMenu() {
       .split(' ')
       .filter(Boolean)
       .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
-    return words.join(' ') || 'User';
+    return words.join(' ') || this.translate.instant('USER.DEFAULT_NAME');
+  }
+
+  private buildMenuItems(): MenuItem[] {
+    return [
+      {
+        label: this.translate.instant('MENU.HOUSE_MANAGEMENT'),
+        basePath: '/admin/house-management',
+        icon: '🏠',
+        subItems: [
+          { label: this.translate.instant('MENU.HOUSES'), path: '/admin/houses' },
+          { label: this.translate.instant('MENU.HOUSE_TYPES'), path: '/admin/house-types' }
+        ]
+      },
+      {
+        label: this.translate.instant('MENU.TOURS_MANAGEMENT'),
+        basePath: '/admin/tours-management',
+        icon: '🧭',
+        subItems: [
+          { label: this.translate.instant('MENU.TOUR_CATEGORIES'), path: '/admin/tour-categories' },
+          { label: this.translate.instant('MENU.TOURS'), path: '/admin/tours' }
+        ]
+      },
+      { label: this.translate.instant('MENU.EXCHANGE'), basePath: '/admin/exchange', icon: '💱' },
+      {
+        label: this.translate.instant('MENU.PERMISSIONS'),
+        basePath: '/admin/permissions',
+        icon: '🔒',
+        subItems: [
+          { label: this.translate.instant('MENU.ROLES'), path: '/admin/roles' },
+          { label: this.translate.instant('MENU.USERS'), path: '/admin/users' },
+          { label: this.translate.instant('MENU.PERMISSIONS'), path: '/admin/permissions' }
+        ]
+      },
+    ];
+  }
+
+  private relabelTabs(): void {
+    const labelMap = new Map<string, string>();
+    const menus = this.buildMenuItems();
+
+    for (const m of menus) {
+      labelMap.set(this.normalize(m.basePath), m.label);
+      m.subItems?.forEach(s => labelMap.set(this.normalize(s.path), s.label));
+    }
+
+    const tabs = this.tabs.tabs();
+    const labelCounters = new Map<string, number>();
+
+    tabs.forEach(tab => {
+      const key = this.normalize(tab.path);
+      const baseLabel = labelMap.get(key);
+      if (!baseLabel) return;
+
+      const count = (labelCounters.get(baseLabel) ?? 0) + 1;
+      labelCounters.set(baseLabel, count);
+
+      const newTitle = count > 1 ? `${baseLabel} (${count})` : baseLabel;
+      if (tab.title !== newTitle) {
+        this.tabs.updateTitle(tab.id, newTitle);
+      }
+    });
+  }
+
+  private updateSidebarWidthVar(collapsed: boolean): void {
+    const width = collapsed ? 72 : 220;
+    this.document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
   }
 }

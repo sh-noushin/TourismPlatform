@@ -1,6 +1,7 @@
 using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Middleware;
+using Server.Api.Services;
 
 namespace Server.Api.Extensions;
 
@@ -40,6 +41,13 @@ public static class WebApplicationExtensions
     {
         using var scope = app.Services.CreateScope();
         var seeder = scope.ServiceProvider.GetRequiredService<IdentitySeeder>();
+        await seeder.SeedAsync();
+    }
+
+    public static async Task SeedReferenceDataAsync(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<ReferenceDataSeeder>();
         await seeder.SeedAsync();
     }
 }
