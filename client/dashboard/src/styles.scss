@@ -174,3 +174,98 @@ body[lang='fa'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.materia
 body[dir='rtl'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined) {
   font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', Tahoma, $font-body !important;
 }
+
+/* ===========================================
+   Global sf-dropdown LTR/RTL alignment
+   - LTR: text left, chevron right
+   - RTL: text right, chevron left
+   =========================================== */
+
+html[dir='ltr'] sf-dropdown .sf-dropdown-trigger,
+body[dir='ltr'] sf-dropdown .sf-dropdown-trigger {
+  direction: ltr;
+  flex-direction: row;
+  text-align: left !important;
+}
+
+html[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+body[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label {
+  display: block;
+  width: 100%;
+  text-align: left !important;
+  order: 1;
+}
+
+html[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+body[dir='ltr'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon {
+  margin-left: auto;
+  margin-right: 0;
+  order: 2;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown,
+body[dir='rtl'] sf-dropdown .sf-dropdown {
+  direction: rtl;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-trigger,
+body[dir='rtl'] sf-dropdown .sf-dropdown-trigger {
+  direction: rtl;
+  flex-direction: row-reverse !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+body[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label {
+  display: block;
+  width: 100%;
+  text-align: right !important;
+  order: 1;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+body[dir='rtl'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon {
+  margin-left: 0;
+  margin-right: auto;
+  order: 0;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-menu,
+body[dir='rtl'] sf-dropdown .sf-dropdown-menu {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir='rtl'] sf-dropdown .sf-dropdown-menu li,
+body[dir='rtl'] sf-dropdown .sf-dropdown-menu li {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+/* Ensure English dropdowns stay LTR even when other contexts still carry RTL attributes */
+[lang='en'] sf-dropdown .sf-dropdown-trigger,
+html[lang='en'] sf-dropdown .sf-dropdown-trigger,
+body[lang='en'] sf-dropdown .sf-dropdown-trigger {
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+html[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label,
+body[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-label {
+  order: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+html[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon,
+body[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon {
+  order: 2 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}

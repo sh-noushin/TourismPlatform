@@ -12,7 +12,7 @@
 .sf-dropdown,
 .sf-dropdown-trigger,
 .sf-dropdown-menu {
-  direction: ltr;
+  direction: inherit;
 }
 
 .sf-dropdown-trigger {
@@ -32,6 +32,7 @@
   flex-direction: row;
   gap: 8px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
 }
 
 .sf-dropdown.open .sf-dropdown-trigger {
@@ -47,6 +48,8 @@
 
 .sf-dropdown-trigger .sf-dropdown-label {
   flex: 1;
+  display: block;
+  width: 100%;
   text-align: left;
   font-size: 0.85rem;
   font-weight: 500;
@@ -118,11 +121,14 @@
 :host-context([dir='rtl']) .sf-dropdown-trigger,
 :host([dir='rtl']) .sf-dropdown-trigger {
   flex-direction: row-reverse;
+  justify-content: flex-end;
+  text-align: right;
 }
 
 :host-context([dir='rtl']) .sf-dropdown-trigger .sf-dropdown-label,
 :host([dir='rtl']) .sf-dropdown-trigger .sf-dropdown-label {
   text-align: right;
+  order: 1;
 }
 
 :host-context([dir='rtl']) .sf-dropdown-icon,

@@ -134,6 +134,7 @@ export class DashboardShellComponent implements OnDestroy {
     this.document.documentElement.setAttribute('dir', dir);
     this.document.documentElement.setAttribute('lang', this.lang());
     this.document.body?.setAttribute('dir', dir);
+    this.document.body?.setAttribute('lang', this.lang());
   }
 
   toggleSidebar() {
