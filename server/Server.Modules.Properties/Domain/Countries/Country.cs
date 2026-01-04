@@ -1,6 +1,6 @@
-namespace Server.Modules.Exchange.Domain.Currencies;
+namespace Server.Modules.Properties.Domain.Countries;
 
-public sealed class Currency
+public sealed class Country
 {
     public Guid Id { get; set; }
 

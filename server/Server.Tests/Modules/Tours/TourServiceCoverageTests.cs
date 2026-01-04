@@ -135,6 +135,7 @@ public sealed class TourServiceCoverageTests
                 TourCategoryName: "  Adventure ",
                 Price: 123.45m,
                 Currency: "USD",
+                CountryCode: "US",
                 Photos: new[] { new TourCommitPhotoItem(stagedUploadId, "L", 1) }),
             currentUserId: Guid.NewGuid());
 
@@ -164,7 +165,7 @@ public sealed class TourServiceCoverageTests
 
         var ok = await service.UpdateAsync(
             Guid.NewGuid(),
-            new UpdateTourRequest("N", "d", "C", 1m, "USD", Photos: null),
+            new UpdateTourRequest("N", "d", "C", 1m, "USD", "US", Photos: null),
             currentUserId: null);
 
         Assert.False(ok);
@@ -194,7 +195,7 @@ public sealed class TourServiceCoverageTests
 
         var ok = await service.UpdateAsync(
             tourId,
-            new UpdateTourRequest("  New ", "d2", "  C2 ", 20.5m, "EUR", Photos: Array.Empty<TourCommitPhotoItem>()),
+            new UpdateTourRequest("  New ", "d2", "  C2 ", 20.5m, "EUR", "US", Photos: Array.Empty<TourCommitPhotoItem>()),
             currentUserId: Guid.NewGuid());
 
         Assert.True(ok);

@@ -8,6 +8,7 @@ public sealed class Tour
     public string? Description { get; set; }
     public decimal Price { get; set; }
     public string Currency { get; set; } = "USD";
+    public string CountryCode { get; set; } = "US";
 
     public Guid TourCategoryId { get; set; }
     public TourCategory TourCategory { get; set; } = null!;

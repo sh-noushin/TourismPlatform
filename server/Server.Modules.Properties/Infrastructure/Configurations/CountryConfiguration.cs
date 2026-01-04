@@ -1,23 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Server.Modules.Exchange.Domain.Currencies;
+using Server.Modules.Properties.Domain.Countries;
 
-namespace Server.Modules.Exchange.Infrastructure.Configurations;
+namespace Server.Modules.Properties.Infrastructure.Configurations;
 
-public sealed class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
+public sealed class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
-    public void Configure(EntityTypeBuilder<Currency> builder)
+    public void Configure(EntityTypeBuilder<Country> builder)
     {
-        builder.ToTable("Currencies");
+        builder.ToTable("Countries");
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
-            .HasColumnName("CurrencyId")
+            .HasColumnName("CountryId")
             .ValueGeneratedNever();
 
         builder.Property(x => x.Code)
             .IsRequired()
-            .HasMaxLength(3);
+            .HasMaxLength(2)
+            .HasColumnType("nvarchar(2)");
 
         builder.Property(x => x.Name)
             .IsRequired()

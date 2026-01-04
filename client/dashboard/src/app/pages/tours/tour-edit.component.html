@@ -55,6 +55,24 @@
               <p class="status error">{{ tourCategories.error() }}</p>
             }
           </label>
+
+          <label class="combobox">
+            <span class="label-text">{{ 'TOUR_EDIT.COUNTRY' | translate }}</span>
+            <sf-dropdown
+              [items]="countryOptions()"
+              [value]="currentForm.countryCode"
+              (selectionChange)="updateField('countryCode', $event)"
+              placeholder="{{ 'TOUR_EDIT.SELECT_COUNTRY' | translate }}"
+              name="countryCode"
+            ></sf-dropdown>
+
+            @if (loadingCountries()) {
+              <p class="mini-note">{{ 'TOUR_EDIT.LOADING_COUNTRIES' | translate }}</p>
+            }
+            @if (countriesError()) {
+              <p class="mini-note status error">{{ countriesError() }}</p>
+            }
+          </label>
         </section>
 
         <section class="form-grid description">

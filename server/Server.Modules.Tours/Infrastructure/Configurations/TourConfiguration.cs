@@ -34,6 +34,12 @@ public sealed class TourConfiguration : IEntityTypeConfiguration<Tour>
             .HasColumnType("nvarchar(3)")
             .HasDefaultValue("USD");
 
+        builder.Property(x => x.CountryCode)
+            .IsRequired()
+            .HasMaxLength(2)
+            .HasColumnType("nvarchar(2)")
+            .HasDefaultValue("US");
+
         builder.Property(x => x.CreatedAtUtc).IsRequired();
         builder.Property(x => x.UpdatedAtUtc);
         builder.Property(x => x.CreatedByUserId);

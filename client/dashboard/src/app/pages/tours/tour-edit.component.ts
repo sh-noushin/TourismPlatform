@@ -7,6 +7,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { firstValueFrom } from 'rxjs';
 import {
   API_BASE_URL,
+  Client,
   CreateTourRequest,
   CreateTourScheduleRequest,
   TourCommitPhotoItem,
@@ -43,6 +44,9 @@ type TourForm = {
   name: string;
   description: string;
   tourCategoryName: string;
+  price: number;
+  currency: string;
+  countryCode: string;
   photos: TourPhotoVm[];
   schedules: TourScheduleItem[];
 };
@@ -69,6 +73,10 @@ export class TourEditComponent implements OnDestroy {
     this.tourCategories.tourCategories().map((cat) => ({ label: cat.name, value: cat.name }))
   );
 
+  readonly countryOptions = signal<{ label: string; value: string }[]>([]);
+  readonly loadingCountries = signal(false);
+  readonly countriesError = signal<string | null>(null);
+
   readonly id: string | null;
 
   private cleanupScheduled = false;
@@ -77,6 +85,7 @@ export class TourEditComponent implements OnDestroy {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly facade: ToursFacade,
+    private readonly client: Client,
     public readonly tourCategories: TourCategoriesService,
     private readonly http: HttpClient,
     @Inject(API_BASE_URL) private readonly apiBaseUrl: string,
@@ -86,6 +95,7 @@ export class TourEditComponent implements OnDestroy {
     this.id = this.data?.id ?? this.route.snapshot.paramMap.get('id');
     void this.load();
     void this.tourCategories.load();
+    void this.loadCountries();
   }
 
   ngOnDestroy(): void {
@@ -235,6 +245,9 @@ export class TourEditComponent implements OnDestroy {
         name: detail.name ?? '',
         description: detail.description ?? '',
         tourCategoryName: detail.tourCategoryName ?? '',
+        price: detail.price ?? 0,
+        currency: detail.currency ?? 'USD',
+        countryCode: detail.countryCode ?? 'US',
         photos: this.mapExistingPhotos(detail),
         schedules: this.mapExistingSchedules(detail)
       });
@@ -245,11 +258,31 @@ export class TourEditComponent implements OnDestroy {
     }
   }
 
+  private async loadCountries() {
+    this.loadingCountries.set(true);
+    this.countriesError.set(null);
+
+    try {
+      const countries = await firstValueFrom(this.client.toursCountries());
+      const options = (countries ?? [])
+        .map((country) => ({ label: country.name, value: country.code }))
+        .sort((left, right) => left.label.localeCompare(right.label));
+      this.countryOptions.set(options);
+    } catch (err: any) {
+      this.countriesError.set(err?.message ?? 'Failed loading countries');
+    } finally {
+      this.loadingCountries.set(false);
+    }
+  }
+
   private createEmptyForm(): TourForm {
     return {
       name: '',
       description: '',
       tourCategoryName: '',
+      price: 0,
+      currency: 'USD',
+      countryCode: 'US',
       photos: [],
       schedules: []
     };
@@ -297,36 +330,34 @@ export class TourEditComponent implements OnDestroy {
       return item;
     });
 
-    if (this.id) {
-      // Update request
-      const payload = new UpdateTourRequest();
-      payload.name = form.name.trim();
-      payload.description = form.description.trim() || undefined;
-      payload.tourCategoryName = form.tourCategoryName.trim();
-      payload.photos = commitItems.length > 0 ? commitItems : undefined;
+    const descriptionValue = form.description.trim();
+    const categoryName = form.tourCategoryName.trim();
+    const currencyCode = form.currency.trim() || 'USD';
 
-      // Build schedule update items
-      const scheduleItems = form.schedules.map((s) => {
-        const schedule = new TourScheduleUpdateItem();
-        schedule.id = s.isNew ? undefined : s.id;
-        schedule.startAtUtc = new Date(s.startAtUtc);
-        schedule.endAtUtc = new Date(s.endAtUtc);
-        schedule.capacity = s.capacity;
-        return schedule;
-      });
-      payload.schedules = scheduleItems.length > 0 ? scheduleItems : undefined;
-      payload.deletedScheduleIds = this.deletedScheduleIds().length > 0 ? [...this.deletedScheduleIds()] : undefined;
+    const scheduleUpdateItems = form.schedules.map((s) => {
+      const schedule = new TourScheduleUpdateItem();
+      schedule.id = s.isNew ? undefined : s.id;
+      schedule.startAtUtc = new Date(s.startAtUtc);
+      schedule.endAtUtc = new Date(s.endAtUtc);
+      schedule.capacity = s.capacity;
+      return schedule;
+    });
+
+    if (this.id) {
+      const payload = new UpdateTourRequest(
+        form.name.trim(),
+        descriptionValue || undefined,
+        categoryName,
+        form.price,
+        currencyCode,
+        form.countryCode,
+        commitItems.length > 0 ? commitItems : undefined,
+        scheduleUpdateItems.length > 0 ? scheduleUpdateItems : undefined,
+        this.deletedScheduleIds().length > 0 ? [...this.deletedScheduleIds()] : undefined
+      );
 
       return payload;
     } else {
-      // Create request
-      const payload = new CreateTourRequest();
-      payload.name = form.name.trim();
-      payload.description = form.description.trim() || undefined;
-      payload.tourCategoryName = form.tourCategoryName.trim();
-      payload.photos = commitItems.length > 0 ? commitItems : undefined;
-
-      // Build schedule create items (new schedules only)
       const newSchedules = form.schedules.map((s) => {
         const schedule = new CreateTourScheduleRequest();
         schedule.startAtUtc = new Date(s.startAtUtc);
@@ -334,7 +365,17 @@ export class TourEditComponent implements OnDestroy {
         schedule.capacity = s.capacity;
         return schedule;
       });
-      payload.schedules = newSchedules.length > 0 ? newSchedules : undefined;
+
+      const payload = new CreateTourRequest(
+        form.name.trim(),
+        descriptionValue || undefined,
+        categoryName,
+        form.price,
+        currencyCode,
+        form.countryCode,
+        commitItems.length > 0 ? commitItems : undefined,
+        newSchedules.length > 0 ? newSchedules : undefined
+      );
 
       return payload;
     }

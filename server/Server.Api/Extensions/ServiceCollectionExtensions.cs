@@ -24,6 +24,8 @@ using Server.Modules.Media.Contracts.Uploads.Services;
 using Server.Modules.Media.Infrastructure;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Services;
+using Server.Modules.Properties.Contracts.ReferenceData.Services;
+using Server.Modules.Properties.Domain.Countries.Repositories;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 using Server.Modules.Properties.Infrastructure.Repositories;
 using Server.Modules.Tours.Application.Services;
@@ -173,8 +175,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHouseRepository, HouseRepository>();
         services.AddScoped<IHouseReferenceDataRepository, HouseReferenceDataRepository>();
         services.AddScoped<IHousePhotoRepository, HousePhotoRepository>();
+        services.AddScoped<ICountryRepository, CountryRepository>();
         services.AddScoped<IHouseService, HouseService>();
         services.AddScoped<IHouseTypeService, HouseTypeService>();
+        services.AddScoped<ICountryService, CountryService>();
+        services.AddScoped<ReferenceDataSeeder>();
         return services;
     }
 

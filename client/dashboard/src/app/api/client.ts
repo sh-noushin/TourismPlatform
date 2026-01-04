@@ -2719,6 +2719,64 @@ export class Client {
     }
 
     /**
+     * @return OK
+     */
+    toursCountries(): Observable<CountryDto[]> {
+        let url_ = this.baseUrl + "/api/tours/countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processToursCountries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processToursCountries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CountryDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CountryDto[]>;
+        }));
+    }
+
+    protected processToursCountries(response: HttpResponseBase): Observable<CountryDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CountryDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @return No Content
      */
     toursPUT(id: string, body: UpdateTourRequest): Observable<void> {
@@ -3734,6 +3792,9 @@ export class CreateTourRequest implements ICreateTourRequest {
     name!: string;
     description!: string | undefined;
     tourCategoryName!: string;
+    price!: number;
+    currency!: string;
+    countryCode!: string;
     photos?: TourCommitPhotoItem[] | undefined;
     schedules?: CreateTourScheduleRequest[] | undefined;
 
@@ -3757,6 +3818,9 @@ export class CreateTourRequest implements ICreateTourRequest {
             this.name = _data["name"];
             this.description = _data["description"];
             this.tourCategoryName = _data["tourCategoryName"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
+            this.countryCode = _data["countryCode"];
             if (Array.isArray(_data["photos"])) {
                 this.photos = [] as any;
                 for (let item of _data["photos"])
@@ -3786,6 +3850,9 @@ export class CreateTourRequest implements ICreateTourRequest {
         data["name"] = this.name;
         data["description"] = this.description;
         data["tourCategoryName"] = this.tourCategoryName;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
+        data["countryCode"] = this.countryCode;
         if (Array.isArray(this.photos)) {
             data["photos"] = [];
             for (let item of this.photos)
@@ -3804,6 +3871,9 @@ export interface ICreateTourRequest {
     name: string;
     description: string | undefined;
     tourCategoryName: string;
+    price: number;
+    currency: string;
+    countryCode: string;
     photos?: TourCommitPhotoItem[] | undefined;
     schedules?: CreateTourScheduleRequest[] | undefined;
 
@@ -4917,6 +4987,9 @@ export class TourDetailDto implements ITourDetailDto {
     name!: string;
     description!: string | undefined;
     tourCategoryName!: string;
+    price!: number;
+    currency!: string;
+    countryCode!: string;
     schedules!: TourScheduleDto[];
     photos!: TourPhotoDto[];
 
@@ -4945,6 +5018,9 @@ export class TourDetailDto implements ITourDetailDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.tourCategoryName = _data["tourCategoryName"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
+            this.countryCode = _data["countryCode"];
             if (Array.isArray(_data["schedules"])) {
                 this.schedules = [] as any;
                 for (let item of _data["schedules"])
@@ -4975,6 +5051,9 @@ export class TourDetailDto implements ITourDetailDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["tourCategoryName"] = this.tourCategoryName;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
+        data["countryCode"] = this.countryCode;
         if (Array.isArray(this.schedules)) {
             data["schedules"] = [];
             for (let item of this.schedules)
@@ -4994,8 +5073,63 @@ export interface ITourDetailDto {
     name: string;
     description: string | undefined;
     tourCategoryName: string;
+    price: number;
+    currency: string;
+    countryCode: string;
     schedules: TourScheduleDto[];
     photos: TourPhotoDto[];
+
+    [key: string]: any;
+}
+
+export class CountryDto implements ICountryDto {
+    code!: string;
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ICountryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.code = _data["code"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CountryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CountryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["code"] = this.code;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICountryDto {
+    code: string;
+    name: string;
 
     [key: string]: any;
 }
@@ -5558,6 +5692,9 @@ export class UpdateTourRequest implements IUpdateTourRequest {
     name!: string;
     description!: string | undefined;
     tourCategoryName!: string;
+    price!: number;
+    currency!: string;
+    countryCode!: string;
     photos?: TourCommitPhotoItem[] | undefined;
     schedules?: TourScheduleUpdateItem[] | undefined;
     deletedScheduleIds?: string[] | undefined;
@@ -5582,6 +5719,9 @@ export class UpdateTourRequest implements IUpdateTourRequest {
             this.name = _data["name"];
             this.description = _data["description"];
             this.tourCategoryName = _data["tourCategoryName"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
+            this.countryCode = _data["countryCode"];
             if (Array.isArray(_data["photos"])) {
                 this.photos = [] as any;
                 for (let item of _data["photos"])
@@ -5616,6 +5756,9 @@ export class UpdateTourRequest implements IUpdateTourRequest {
         data["name"] = this.name;
         data["description"] = this.description;
         data["tourCategoryName"] = this.tourCategoryName;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
+        data["countryCode"] = this.countryCode;
         if (Array.isArray(this.photos)) {
             data["photos"] = [];
             for (let item of this.photos)
@@ -5639,6 +5782,9 @@ export interface IUpdateTourRequest {
     name: string;
     description: string | undefined;
     tourCategoryName: string;
+    price: number;
+    currency: string;
+    countryCode: string;
     photos?: TourCommitPhotoItem[] | undefined;
     schedules?: TourScheduleUpdateItem[] | undefined;
     deletedScheduleIds?: string[] | undefined;

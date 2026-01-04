@@ -80,6 +80,7 @@ public sealed class TourService : ITourService
             tour.TourCategory.Name,
             tour.Price,
             tour.Currency,
+            tour.CountryCode,
             scheduleDtos,
             photos);
     }
@@ -100,6 +101,7 @@ public sealed class TourService : ITourService
             TourCategoryId = category.Id,
             Price = request.Price,
             Currency = request.Currency.Trim(),
+            CountryCode = request.CountryCode.Trim(),
             CreatedAtUtc = now,
             CreatedByUserId = currentUserId
         };
@@ -130,6 +132,7 @@ public sealed class TourService : ITourService
         tour.TourCategoryId = category.Id;
         tour.Price = request.Price;
         tour.Currency = request.Currency.Trim();
+        tour.CountryCode = request.CountryCode.Trim();
         tour.UpdatedAtUtc = now;
         tour.UpdatedByUserId = currentUserId;
 
