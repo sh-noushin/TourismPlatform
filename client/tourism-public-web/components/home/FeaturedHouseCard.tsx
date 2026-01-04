@@ -5,6 +5,11 @@ import { imageUrl } from "@/lib/utils/imageUrl";
 import type { components } from "@/lib/openapi/types";
 
 type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
+type ExtendedHouseSummaryDto = HouseSummaryDto & {
+  price?: number;
+  currency?: string;
+  listingType?: string | number;
+};
 
 interface FeaturedHouseCardProps {
   house: HouseSummaryDto;
@@ -14,10 +19,23 @@ interface FeaturedHouseCardProps {
 export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCardProps) {
   const primaryPhoto = house.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
+  const extended = house as ExtendedHouseSummaryDto;
   const name = house.name?.trim() || "Untitled stay";
   const type = house.houseTypeName?.trim() || "Featured house";
+  const listingTypeLabel =
+    extended.listingType === 1 || extended.listingType === "Rent"
+      ? "For rent"
+      : extended.listingType === 2 || extended.listingType === "Buy"
+        ? "For sale"
+        : "Featured listing";
   const location = [house.city?.trim(), house.country?.trim()].filter(Boolean).join(", ");
   const locationText = location || "Location coming soon";
+  const contextCopy = location
+    ? `${listingTypeLabel} in ${location}. Thoughtful comforts and a welcoming host.`
+    : `${listingTypeLabel}. Thoughtful comforts and a welcoming host.`;
+  const priceLabel = Number.isFinite(extended.price)
+    ? `${new Intl.NumberFormat("en-US").format(Number(extended.price))} ${extended.currency ?? ""}`.trim()
+    : "Pricing coming soon";
   const hasImage = Boolean(src);
   const initial = name.charAt(0).toUpperCase();
 
@@ -59,9 +77,13 @@ export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCa
             </p>
             <h3 className="line-clamp-2 text-lg font-semibold text-slate-900">{name}</h3>
             <p className="line-clamp-1 text-sm text-slate-700">{locationText}</p>
+            <p className="line-clamp-2 text-sm text-slate-700">{contextCopy}</p>
           </div>
-          <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-800/80">
-            See more details
+          <div className="flex items-center justify-between text-sm text-slate-700">
+            <span className="font-semibold text-slate-900">{priceLabel}</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-800/80">
+              See more details
+            </span>
           </div>
         </div>
       </div>
