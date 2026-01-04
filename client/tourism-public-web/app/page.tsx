@@ -24,7 +24,7 @@ export default async function Home({ searchParams }: HomeProps) {
     <main className="min-h-screen bg-[#f6fbff]">
       <Hero />
 
-      <FeaturedTours page={toursPage} pageSize={6} />
+      <FeaturedTours page={toursPage} pageSize={4} />
 
       <section className="bg-white py-16">
         <div className="mx-auto max-w-6xl px-6">

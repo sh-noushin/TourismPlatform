@@ -2,7 +2,7 @@ import { getFeaturedHouses } from "@/lib/api/featured";
 import { FeaturedHouseCard } from "./FeaturedHouseCard";
 
 export async function FeaturedHouses() {
-  const houses = await getFeaturedHouses(6).catch((error) => {
+  const houses = await getFeaturedHouses(4).catch((error) => {
     console.error("Failed to load featured houses", error);
     return [];
   });

@@ -13,7 +13,7 @@ const buildPageHref = (page: number) => {
   return `/?${params.toString()}`;
 };
 
-export async function FeaturedTours({ page = 1, pageSize = 6 }: FeaturedToursProps) {
+export async function FeaturedTours({ page = 1, pageSize = 4 }: FeaturedToursProps) {
   const data = await getFeaturedTours().catch((error) => {
     console.error("Failed to load featured tours", error);
     return [];
