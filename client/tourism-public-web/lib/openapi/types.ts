@@ -2343,6 +2343,9 @@ export interface components {
             name: string;
             description: null | string;
             tourCategoryName: string;
+            price: number;
+            currency: string;
+            countryCode: string;
             schedules: components["schemas"]["TourScheduleDto"][];
             photos: components["schemas"]["TourPhotoDto"][];
         };
@@ -2368,7 +2371,11 @@ export interface components {
             /** Format: uuid */
             tourId: string;
             name: string;
+            description: null | string;
             tourCategoryName: string;
+            price: number;
+            currency: string;
+            year: number;
             photos: components["schemas"]["TourPhotoDto"][];
         };
         UpdateExchangeOrderStatusRequest: {

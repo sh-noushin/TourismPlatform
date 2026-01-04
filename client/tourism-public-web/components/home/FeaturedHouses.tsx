@@ -2,8 +2,10 @@ import { getFeaturedHouses } from "@/lib/api/featured";
 import { FeaturedHouseCard } from "./FeaturedHouseCard";
 
 export async function FeaturedHouses() {
-  const data = await getFeaturedHouses(6);
-  const houses = data.items || [];
+  const houses = await getFeaturedHouses(6).catch((error) => {
+    console.error("Failed to load featured houses", error);
+    return [];
+  });
 
   if (!houses.length) {
     return (
@@ -15,12 +17,8 @@ export async function FeaturedHouses() {
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {houses.map((house, index) => (
-        <FeaturedHouseCard 
-          key={house.houseId} 
-          house={house} 
-          featured={index === 0} 
-        />
+      {houses.map((house) => (
+        <FeaturedHouseCard key={house.houseId} house={house} />
       ))}
     </div>
   );

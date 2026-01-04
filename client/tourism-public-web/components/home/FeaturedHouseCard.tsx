@@ -8,82 +8,43 @@ type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
 
 interface FeaturedHouseCardProps {
   house: HouseSummaryDto;
-  featured?: boolean;
 }
 
-export function FeaturedHouseCard({ house, featured = false }: FeaturedHouseCardProps) {
+export function FeaturedHouseCard({ house }: FeaturedHouseCardProps) {
   const primaryPhoto = house.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
+  const location = [house.city, house.country].filter(Boolean).join(", ");
 
   return (
     <Link
       href={`/houses/${house.houseId}`}
-      className="group relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
+      className="group flex h-full overflow-hidden rounded-xl border border-white/70 bg-white/80 shadow-md ring-1 ring-sky-200/50 backdrop-blur transition hover:-translate-y-1 hover:shadow-xl"
     >
-      {/* Image */}
-      <div className="relative h-80 w-full bg-border/10">
-        {src ? (
-          <Image
-            src={src}
-            alt={house.name}
-            fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 text-sm text-muted">
-            No photo yet
-          </div>
-        )}
-        
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-        
-        {/* Badge */}
-        {featured && (
-          <div className="absolute left-4 top-4 rounded-full bg-blue-500 px-4 py-1.5 text-xs font-bold uppercase text-white shadow-md">
-            Featured
-          </div>
-        )}
-
-        {/* Price Tag */}
-        {house.price != null && (
-          <div className="absolute right-4 top-4 rounded-lg bg-white/95 px-3 py-2 text-sm font-bold text-text shadow-md backdrop-blur-sm">
-            ${house.price}/night
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-        <div className="mb-2 flex items-center gap-2 text-xs">
-          {house.houseTypeName && (
-            <>
-              <span className="opacity-90">🏠 {house.houseTypeName}</span>
-              <span className="opacity-60">•</span>
-            </>
-          )}
-          <span className="opacity-90">📍 {house.countryCode || 'Location'}</span>
+      <div className="grid grid-cols-1 sm:grid-cols-[150px_1fr]">
+        <div className="relative h-40 bg-slate-200/60 sm:h-full">
+          {src ? (
+            <Image
+              src={src}
+              alt={house.name}
+              fill
+              sizes="(min-width: 640px) 150px, 100vw"
+              className="object-cover transition duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : null}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/25 to-transparent" />
         </div>
-        
-        <h3 className="mb-3 text-2xl font-bold leading-tight">{house.name}</h3>
-        
-        <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-1">
-            <span className="opacity-90">👥</span>
-            <span className="opacity-90">{house.capacity || 2} guests</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-yellow-400">★★★★★</span>
-            <span className="font-semibold opacity-90">4.7/5</span>
+
+        <div className="flex flex-col gap-3 p-5 text-left text-slate-900">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
+            {house.houseTypeName ?? "Featured house"}
+          </p>
+          <h3 className="line-clamp-2 text-lg font-semibold text-slate-900">{house.name}</h3>
+          {location ? <p className="line-clamp-1 text-sm text-slate-700">{location}</p> : null}
+          <div className="mt-auto text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-800/80">
+            See details
           </div>
         </div>
-      </div>
-
-      {/* View Details Button - appears on hover */}
-      <div className="absolute inset-x-0 bottom-0 translate-y-full bg-primary/95 px-6 py-4 text-center font-semibold text-white backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0">
-        More Information →
       </div>
     </Link>
   );

@@ -1,3 +1,4 @@
+import { Agent } from "undici";
 import { ensureOk } from "./errors";
 
 export type QueryParams = Record<string, string | number | boolean | undefined>;
@@ -20,6 +21,22 @@ const buildProxyPath = (path: string) => {
   return normalized ? `/${normalized}` : "";
 };
 
+const insecureLocalAgent = new Agent({
+  connect: {
+    // Allow self-signed certs for local development hosts
+    rejectUnauthorized: false,
+  },
+});
+
+const allowInsecureTls = (url: string) => {
+  try {
+    const { hostname } = new URL(url);
+    return hostname === "localhost" || hostname === "127.0.0.1";
+  } catch {
+    return false;
+  }
+};
+
 export async function getJson<T = unknown>(path: string, params?: QueryParams): Promise<T> {
   const search = serializeParams(params);
   const proxyPath = buildProxyPath(path);
@@ -32,6 +49,7 @@ export async function getJson<T = unknown>(path: string, params?: QueryParams): 
     const url = `${base.replace(/\/$/, "")}${proxyPath}${search}`;
     const response = await fetch(url, {
       headers: { Accept: "application/json" },
+      ...(allowInsecureTls(url) ? { dispatcher: insecureLocalAgent } : {}),
     });
     return ensureOk<T>(response);
   }

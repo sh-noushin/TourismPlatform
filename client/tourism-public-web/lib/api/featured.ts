@@ -1,34 +1,15 @@
-import { getJson, type QueryParams } from "./client";
+import { getJson } from "./client";
 import { apiEndpoints } from "./endpoints";
 import type { components } from "@/lib/openapi/types";
 
-type PagedResultOfTourSummaryDto = components["schemas"]["PagedResultOfTourSummaryDto"];
-type PagedResultOfHouseSummaryDto = components["schemas"]["PagedResultOfHouseSummaryDto"];
+type TourSummaryDto = components["schemas"]["TourSummaryDto"];
+type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
 
-export async function getToursPage(params?: QueryParams): Promise<PagedResultOfTourSummaryDto> {
-  return getJson<PagedResultOfTourSummaryDto>(apiEndpoints.tours.list, params);
+export async function getFeaturedTours(): Promise<TourSummaryDto[]> {
+  return getJson<TourSummaryDto[]>(apiEndpoints.tours.list);
 }
 
-export async function getHousesPage(params?: QueryParams): Promise<PagedResultOfHouseSummaryDto> {
-  return getJson<PagedResultOfHouseSummaryDto>(apiEndpoints.houses.list, params);
-}
-
-/** Fetch newest tours from the current year (2026) */
-export async function getFeaturedTours(limit: number = 6): Promise<PagedResultOfTourSummaryDto> {
-  const currentYear = new Date().getFullYear();
-  return getToursPage({
-    pageSize: limit,
-    pageNumber: 1,
-    // You can add additional filters here if the API supports them
-    // For example: year: currentYear, sortBy: 'createdAt', sortOrder: 'desc'
-  });
-}
-
-/** Fetch newest houses from the current year (2026) */
-export async function getFeaturedHouses(limit: number = 6): Promise<PagedResultOfHouseSummaryDto> {
-  return getHousesPage({
-    pageSize: limit,
-    pageNumber: 1,
-    // You can add additional filters here if the API supports them
-  });
+export async function getFeaturedHouses(limit: number = 6): Promise<HouseSummaryDto[]> {
+  const houses = await getJson<HouseSummaryDto[]>(apiEndpoints.houses.list);
+  return houses.slice(0, limit);
 }
