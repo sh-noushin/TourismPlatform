@@ -16,10 +16,12 @@ export async function FeaturedHouses() {
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {houses.map((house) => (
-        <FeaturedHouseCard key={house.houseId} house={house} />
-      ))}
+    <div className="grid gap-6 sm:grid-cols-2 sm:auto-rows-fr">
+      {houses.map((house, index) => {
+        const rowIndex = Math.floor(index / 2);
+        const imageSide = rowIndex % 2 === 0 ? "left" : "right";
+        return <FeaturedHouseCard key={house.houseId} house={house} imageSide={imageSide} />;
+      })}
     </div>
   );
 }

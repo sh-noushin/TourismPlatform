@@ -53,10 +53,12 @@ export async function FeaturedTours({ page = 1, pageSize = 6 }: FeaturedToursPro
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {tours.map((tour) => (
-            <FeaturedTourCard key={tour.tourId} tour={tour} />
-          ))}
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 sm:auto-rows-fr">
+          {tours.map((tour, index) => {
+            const rowIndex = Math.floor(index / 2);
+            const imageSide = rowIndex % 2 === 0 ? "left" : "right";
+            return <FeaturedTourCard key={tour.tourId} tour={tour} imageSide={imageSide} />;
+          })}
         </div>
 
         <div className="mt-12 flex flex-col items-center gap-4">

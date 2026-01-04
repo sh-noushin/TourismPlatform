@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Agent } from "undici";
 
 const API_BASE_URL = process.env.API_BASE_URL;
+
+const insecureLocalAgent = new Agent({
+  connect: {
+    rejectUnauthorized: false,
+  },
+});
+
+const allowInsecureTls = (url: string) => {
+  try {
+    const { hostname } = new URL(url);
+    return hostname === "localhost" || hostname === "127.0.0.1";
+  } catch {
+    return false;
+  }
+};
 
 const getBackendUrl = (segments: string[] = [], search: string) => {
   if (!API_BASE_URL) {
@@ -38,9 +54,11 @@ export async function GET(request: NextRequest, context: any) {
     return NextResponse.json({ message }, { status: 500 });
   }
 
-  const response = await fetch(targetUrl.toString(), {
+  const targetUrlString = targetUrl.toString();
+  const response = await fetch(targetUrlString, {
     method: "GET",
     headers: buildHeaders(request),
+    ...(allowInsecureTls(targetUrlString) ? { dispatcher: insecureLocalAgent } : {}),
   });
 
   const responseHeaders = new Headers(response.headers);

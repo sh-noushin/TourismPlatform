@@ -1,20 +1,39 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils/cn";
 
 export function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
-        <Link href="/" className="text-lg font-semibold text-text">
+    <header
+      className={cn(
+        "z-40",
+        isHome
+          ? "absolute inset-x-0 top-0"
+          : "sticky top-0 border-b border-border bg-surface/90 backdrop-blur"
+      )}
+    >
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5">
+        <Link
+          href="/"
+          className={cn(
+            "text-base font-semibold",
+            isHome ? "text-white" : "text-text"
+          )}
+        >
           Tourism Platform
         </Link>
-        <nav className="flex items-center gap-4 text-sm font-medium text-muted">
+        <nav className={cn("flex items-center gap-6 text-sm font-medium", isHome ? "text-white/90" : "text-muted")}>
           <Link
             href="/houses"
             className={cn(
-              "rounded-full px-4 py-2 transition hover:bg-surface/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-              "border border-transparent text-text"
+              "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+              isHome ? "text-white" : "text-text"
             )}
           >
             Houses
@@ -22,8 +41,8 @@ export function Header() {
           <Link
             href="/tours"
             className={cn(
-              "rounded-full px-4 py-2 transition hover:bg-surface/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-              "border border-transparent text-text"
+              "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+              isHome ? "text-white" : "text-text"
             )}
           >
             Tours
