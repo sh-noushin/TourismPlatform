@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Hero } from "@/components/home/Hero";
 import { FeaturedTours } from "@/components/home/FeaturedTours";
 import { FeaturedHouses } from "@/components/home/FeaturedHouses";
@@ -39,6 +40,15 @@ export default async function Home({ searchParams }: HomeProps) {
 
           <div className="mt-10">
             <FeaturedHouses />
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <Link
+              href="/houses"
+              className="rounded-full border border-slate-900 px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-900 transition hover:border-slate-900/60 hover:bg-slate-900 hover:text-white"
+            >
+              All houses
+            </Link>
           </div>
         </div>
       </section>
