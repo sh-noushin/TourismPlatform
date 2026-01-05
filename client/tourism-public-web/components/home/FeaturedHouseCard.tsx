@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { imageUrl } from "@/lib/utils/imageUrl";
 import type { components } from "@/lib/openapi/types";
+import { i18n } from "@/lib/i18n";
 
 type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
 type ExtendedHouseSummaryDto = HouseSummaryDto & {
@@ -14,9 +15,10 @@ type ExtendedHouseSummaryDto = HouseSummaryDto & {
 interface FeaturedHouseCardProps {
   house: HouseSummaryDto;
   imageSide?: "left" | "right";
+  locale?: string;
 }
 
-export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCardProps) {
+export function FeaturedHouseCard({ house, imageSide = "left", locale }: FeaturedHouseCardProps) {
   const primaryPhoto = house.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
   const extended = house as ExtendedHouseSummaryDto;
@@ -38,11 +40,12 @@ export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCa
     : "Pricing coming soon";
   const hasImage = Boolean(src);
   const initial = name.charAt(0).toUpperCase();
+  const t = i18n(locale);
 
   return (
     <Link
       href={`/houses/${house.houseId}`}
-      className="group flex h-full w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)] sm:w-[calc(100%-20px)] sm:min-h-[14rem]"
+      className="group flex h-[14rem] w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)] sm:w-[calc(100%-20px)] sm:h-[14rem]"
     >
       <div className="grid h-full grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
         <div
@@ -82,7 +85,7 @@ export function FeaturedHouseCard({ house, imageSide = "left" }: FeaturedHouseCa
           <div className="flex items-center justify-between text-xs text-slate-700 md:text-sm">
             <span className="font-semibold text-slate-900 text-sm md:text-base">{priceLabel}</span>
             <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-800/80 md:text-[11px]">
-              See more details
+              {t.seeDetails}
             </span>
           </div>
         </div>

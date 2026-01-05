@@ -3,15 +3,17 @@ import Link from "next/link";
 
 import { imageUrl } from "@/lib/utils/imageUrl";
 import type { components } from "@/lib/openapi/types";
+import { i18n } from "@/lib/i18n";
 
 type TourSummaryDto = components["schemas"]["TourSummaryDto"];
 
 interface FeaturedTourCardProps {
   tour: TourSummaryDto;
   imageSide?: "left" | "right";
+  locale?: string;
 }
 
-export function FeaturedTourCard({ tour, imageSide = "left" }: FeaturedTourCardProps) {
+export function FeaturedTourCard({ tour, imageSide = "left", locale }: FeaturedTourCardProps) {
   const primaryPhoto = tour.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
   const name = tour.name?.trim() || "Untitled tour";
@@ -22,11 +24,12 @@ export function FeaturedTourCard({ tour, imageSide = "left" }: FeaturedTourCardP
     : "Pricing coming soon";
   const hasImage = Boolean(src);
   const initial = name.charAt(0).toUpperCase();
+  const t = i18n(locale);
 
   return (
     <Link
       href={`/tours/${tour.tourId}`}
-      className="group flex h-full w-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)] sm:w-[calc(100%-20px)] sm:min-h-[14rem]"
+      className="group flex h-[14rem] w-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)] sm:w-[calc(100%-20px)] sm:h-[14rem]"
     >
       <div className="grid h-full grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
         <div
@@ -65,7 +68,7 @@ export function FeaturedTourCard({ tour, imageSide = "left" }: FeaturedTourCardP
           <div className="flex items-center justify-between text-xs text-slate-700 md:text-sm">
             <span className="font-semibold text-slate-900 text-sm md:text-base">{priceLabel}</span>
             <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-800/80 md:text-[11px]">
-              See more details
+              {t.seeDetails}
             </span>
           </div>
         </div>

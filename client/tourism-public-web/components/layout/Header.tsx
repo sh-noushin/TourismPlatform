@@ -4,10 +4,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils/cn";
+import { useEffect, useState } from "react";
 
-export function Header() {
+interface HeaderProps {
+  initialLocale?: string;
+}
+
+export function Header({ initialLocale = "en" }: HeaderProps) {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const [locale, setLocale] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("NEXT_LOCALE") ?? initialLocale;
+    }
+    return initialLocale;
+  });
+
+  useEffect(() => {
+    setLocale(initialLocale);
+  }, [initialLocale]);
 
   return (
     <header
@@ -47,6 +62,27 @@ export function Header() {
           >
             Tours
           </Link>
+          <div className="ml-2 flex items-center">
+            <label htmlFor="locale-select" className={cn("sr-only")}>Language</label>
+            <select
+              id="locale-select"
+              value={locale}
+              onChange={(e) => {
+                const val = e.target.value;
+                setLocale(val);
+                document.cookie = `NEXT_LOCALE=${val}; Path=/; Max-Age=${60 * 60 * 24 * 365}`;
+                localStorage.setItem("NEXT_LOCALE", val);
+                location.reload();
+              }}
+              className={cn(
+                "rounded border bg-transparent px-2 py-1 text-sm text-current focus:outline-none",
+                isHome ? "text-white/90" : "text-text"
+              )}
+            >
+              <option value="en">EN</option>
+              <option value="fa">FA</option>
+            </select>
+          </div>
         </nav>
       </div>
     </header>
