@@ -30,17 +30,17 @@ export default async function Home({ searchParams }: HomeProps) {
   const t = i18n(locale);
 
   return (
-    <main className="min-h-screen bg-[#f6fbff]">
+    <main className="min-h-screen bg-gradient-to-b from-[#0d111a] via-[#0b1018] to-[#0a0d14] text-slate-100">
       <Hero />
 
       <FeaturedTours page={toursPage} pageSize={4} locale={locale} />
 
-      <section className="bg-white py-12">
+      <section className="bg-gradient-to-b from-[#0f1624] via-[#0b111a] to-[#0a0d14] py-12">
         <div className="mx-auto max-w-5xl px-5">
-          <div className="text-center text-slate-800">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">{t.stayInspired}</p>
-            <h2 className="mt-2 font-serif text-3xl font-semibold text-slate-900 md:text-[32px]">{t.headingHouses}</h2>
-            <p className="mx-auto mt-2 max-w-3xl text-sm text-slate-700 md:text-base">{t.housesDescription}</p>
+          <div className="text-center text-slate-100">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">{t.stayInspired}</p>
+            <h2 className="mt-2 font-serif text-3xl font-semibold text-white md:text-[32px]">{t.headingHouses}</h2>
+            <p className="mx-auto mt-2 max-w-3xl text-sm text-slate-200/90 md:text-base">{t.housesDescription}</p>
           </div>
 
           <div className="mt-8">
@@ -50,7 +50,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <div className="mt-8 flex justify-center">
             <Link
               href="/houses"
-              className="rounded-full border border-slate-900 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-900 transition hover:border-slate-900/60 hover:bg-slate-900 hover:text-white"
+              className="rounded-full border border-sky-400 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100 transition hover:bg-sky-500 hover:text-[#0a0d14]"
             >
               {t.allHouses}
             </Link>

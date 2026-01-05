@@ -39,19 +39,19 @@ export async function FeaturedTours({ page = 1, pageSize = 4, locale }: Featured
 
   if (!tours.length) {
     return (
-      <section className="bg-gradient-to-b from-[#f0f7fb] via-white to-[#f6fbff] py-16 text-center">
-        <p className="text-lg text-slate-700">{t.noTours}</p>
+      <section className="bg-gradient-to-b from-[#0f1624] via-[#0b111a] to-[#0a0d14] py-16 text-center text-slate-100">
+        <p className="text-lg text-slate-200">{t.noTours}</p>
       </section>
     );
   }
 
   return (
-    <section className="relative -mt-6 bg-gradient-to-b from-[#f0f7fb] via-white to-[#f6fbff] pb-12 pt-18 lang-balanced-section">
+    <section className="relative -mt-6 bg-gradient-to-b from-[#0f1624] via-[#0b111a] to-[#0a0d14] pb-12 pt-18 lang-balanced-section">
       <div className="mx-auto max-w-5xl px-5">
-        <div className="text-center text-slate-800">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">{t.discover}</p>
-          <h2 className="mt-3 font-serif text-3xl font-semibold text-slate-900 md:text-4xl">{t.headingTours}</h2>
-          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-slate-700 md:text-base">{t.toursDescription}</p>
+        <div className="text-center text-slate-100">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">{t.discover}</p>
+          <h2 className="mt-3 font-serif text-3xl font-semibold text-white md:text-4xl">{t.headingTours}</h2>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-slate-200 md:text-base">{t.toursDescription}</p>
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 sm:auto-rows-fr">
@@ -65,32 +65,32 @@ export async function FeaturedTours({ page = 1, pageSize = 4, locale }: Featured
         <div className="mt-12 flex flex-col items-center gap-4">
           <Link
             href="/tours"
-            className="rounded-full border border-slate-900 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-900 transition hover:bg-slate-900 hover:text-white"
+            className="rounded-full border border-sky-400 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100 transition hover:bg-sky-500 hover:text-[#0a0d14]"
           >
             {t.allTrips}
           </Link>
 
           {maxPage > 1 ? (
-            <div className="flex items-center justify-center gap-3 text-xs text-slate-700">
+            <div className="flex items-center justify-center gap-3 text-xs text-slate-200">
                 <Link
                 aria-disabled={currentPage <= 1}
                 href={buildPageHref(Math.max(1, currentPage - 1))}
-                className={`rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`rounded-md border border-slate-600 px-3 py-1.5 text-xs font-medium transition-colors ${
                   currentPage <= 1
                     ? "pointer-events-none opacity-50"
-                    : "bg-white/80 text-slate-900 hover:bg-white"
+                    : "bg-white/10 text-slate-100 hover:bg-white/20"
                 }`}
               >
                 {t.previous}
               </Link>
-              <span className="text-xs text-slate-700">{t.pageOf(currentPage, maxPage)}</span>
+              <span className="text-xs text-slate-200">{t.pageOf(currentPage, maxPage)}</span>
                 <Link
                 aria-disabled={currentPage >= maxPage}
                 href={buildPageHref(Math.min(maxPage, currentPage + 1))}
-                className={`rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`rounded-md border border-slate-600 px-3 py-1.5 text-xs font-medium transition-colors ${
                   currentPage >= maxPage
                     ? "pointer-events-none opacity-50"
-                    : "bg-white/80 text-slate-900 hover:bg-white"
+                    : "bg-white/10 text-slate-100 hover:bg-white/20"
                 }`}
               >
                 {t.next}
