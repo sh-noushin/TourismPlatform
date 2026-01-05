@@ -49,7 +49,7 @@ export function FeaturedHouseCard({ house, imageSide = "left", locale }: Feature
     >
       <div className="grid h-full grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
         <div
-          className={`relative h-32 bg-slate-200/60 sm:h-full ${
+          className={`relative h-32 overflow-hidden bg-slate-200/60 sm:h-full ${
             imageSide === "right" ? "sm:order-2" : ""
           }`}
         >
@@ -59,7 +59,7 @@ export function FeaturedHouseCard({ house, imageSide = "left", locale }: Feature
               alt={primaryPhoto?.label ?? name}
               fill
               sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-              className="object-cover object-center"
+              className="absolute inset-0 h-full w-full object-fill"
               loading="lazy"
             />
           ) : (
