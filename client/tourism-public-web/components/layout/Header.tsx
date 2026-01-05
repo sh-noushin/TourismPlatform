@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils/cn";
 import { useEffect, useState } from "react";
@@ -23,6 +24,18 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
   useEffect(() => {
     setLocale(initialLocale);
   }, [initialLocale]);
+
+  const languages = [
+    { code: "en", label: "English", flag: "/flags/en.svg" },
+    { code: "fa", label: "فارسی", flag: "/flags/fa.svg" },
+  ];
+
+  const handleLocaleChange = (val: string) => {
+    setLocale(val);
+    document.cookie = `NEXT_LOCALE=${val}; Path=/; Max-Age=${60 * 60 * 24 * 365}`;
+    localStorage.setItem("NEXT_LOCALE", val);
+    location.reload();
+  };
 
   return (
     <header
@@ -50,9 +63,9 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
               "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
               isHome ? "text-white" : "text-text"
             )}
-          >
-            Houses
-          </Link>
+        >
+          Houses
+        </Link>
           <Link
             href="/tours"
             className={cn(
@@ -62,26 +75,26 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
           >
             Tours
           </Link>
-          <div className="ml-2 flex items-center">
-            <label htmlFor="locale-select" className={cn("sr-only")}>Language</label>
-            <select
-              id="locale-select"
-              value={locale}
-              onChange={(e) => {
-                const val = e.target.value;
-                setLocale(val);
-                document.cookie = `NEXT_LOCALE=${val}; Path=/; Max-Age=${60 * 60 * 24 * 365}`;
-                localStorage.setItem("NEXT_LOCALE", val);
-                location.reload();
-              }}
-              className={cn(
-                "rounded border bg-transparent px-2 py-1 text-sm text-current focus:outline-none",
-                isHome ? "text-white/90" : "text-text"
-              )}
-            >
-              <option value="en">EN</option>
-              <option value="fa">FA</option>
-            </select>
+          <div className="ml-2 flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-2 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)] backdrop-blur md:px-3">
+            {languages.map((lang) => {
+              const active = locale === lang.code;
+              return (
+                <button
+                  key={lang.code}
+                  type="button"
+                  onClick={() => handleLocaleChange(lang.code)}
+                  className={cn(
+                    "flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold uppercase transition",
+                    active
+                      ? "bg-white/25 text-white shadow-[0_8px_18px_rgba(0,0,0,0.18)]"
+                      : "text-white/80 hover:bg-white/15"
+                  )}
+                >
+                  <Image src={lang.flag} alt={lang.label} width={18} height={12} className="rounded-sm ring-1 ring-white/50" />
+                  <span>{lang.code.toUpperCase()}</span>
+                </button>
+              );
+            })}
           </div>
         </nav>
       </div>
