@@ -159,6 +159,59 @@ html[lang='fa'] [class*=" sf-"] {
   line-height: inherit !important;
 }
 
+/* Keep hero/section headings consistent across locales */
+.lang-balanced-section {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+@media (min-width: 768px) {
+  .lang-balanced-section {
+    font-size: 17px !important;
+  }
+}
+.lang-balanced-section,
+.lang-balanced-section * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+html[lang='fa'] .lang-balanced-section,
+:lang(fa) .lang-balanced-section,
+html[dir='rtl'] .lang-balanced-section {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+@media (min-width: 768px) {
+  html[lang='fa'] .lang-balanced-section,
+  :lang(fa) .lang-balanced-section,
+  html[dir='rtl'] .lang-balanced-section {
+    font-size: 17px !important;
+  }
+}
+html[lang='fa'] .lang-balanced-section *,
+:lang(fa) .lang-balanced-section *,
+html[dir='rtl'] .lang-balanced-section * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* Keep header typography consistent across locales */
+.lang-balanced-header {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+.lang-balanced-header *,
+html[lang='fa'] .lang-balanced-header *,
+:lang(fa) .lang-balanced-header *,
+html[dir='rtl'] .lang-balanced-header * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+html[lang='fa'] .lang-balanced-header,
+:lang(fa) .lang-balanced-header,
+html[dir='rtl'] .lang-balanced-header {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
 @font-face {
   font-family: 'Nazanin';
   src: url('/fonts/NAZANIN.TTF') format('truetype');

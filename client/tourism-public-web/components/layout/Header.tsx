@@ -27,7 +27,7 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
   return (
     <header
       className={cn(
-        "z-40",
+        "z-40 lang-balanced-header",
         isHome
           ? "absolute inset-x-0 top-0 bg-gradient-to-b from-black/90 via-slate-900/80 to-transparent shadow-[0_40px_80px_-60px_rgba(0,0,0,0.8)]"
           : "sticky top-0 border-b border-border bg-surface/90 backdrop-blur"

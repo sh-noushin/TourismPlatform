@@ -46,7 +46,7 @@ export async function FeaturedTours({ page = 1, pageSize = 4, locale }: Featured
   }
 
   return (
-    <section className="relative -mt-6 bg-gradient-to-b from-[#f0f7fb] via-white to-[#f6fbff] pb-12 pt-18">
+    <section className="relative -mt-6 bg-gradient-to-b from-[#f0f7fb] via-white to-[#f6fbff] pb-12 pt-18 lang-balanced-section">
       <div className="mx-auto max-w-5xl px-5">
         <div className="text-center text-slate-800">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">{t.discover}</p>
