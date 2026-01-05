@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --text: #0f172a;
-  --muted: #475569;
-  --border: #e2e8f0;
-  --primary: #2563eb;
-  --primary-foreground: #ffffff;
+  --bg: #010101;
+  --surface: #020202;
+  --text: #f8fafc;
+  --muted: #9ca6b5;
+  --border: #1a1a1a;
+  --primary: #fbbf24;
+  --primary-foreground: #010101;
   --radius: 0.75rem;
 }
 
@@ -69,31 +69,6 @@ body {
 
 * {
   box-sizing: border-box;
-}@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Farsi / RTL override: prefer Nazanin where available for menus, tables, and components */

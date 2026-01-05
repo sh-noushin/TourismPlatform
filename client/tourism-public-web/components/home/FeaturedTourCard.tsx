@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { imageUrl } from "@/lib/utils/imageUrl";
 import type { components } from "@/lib/openapi/types";
-import { i18n } from "@/lib/i18n";
 
 type TourSummaryDto = components["schemas"]["TourSummaryDto"];
 
@@ -13,7 +12,7 @@ interface FeaturedTourCardProps {
   locale?: string;
 }
 
-export function FeaturedTourCard({ tour, imageSide = "left", locale }: FeaturedTourCardProps) {
+export function FeaturedTourCard({ tour }: FeaturedTourCardProps) {
   const primaryPhoto = tour.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
   const name = tour.name?.trim() || "Untitled tour";
@@ -24,53 +23,43 @@ export function FeaturedTourCard({ tour, imageSide = "left", locale }: FeaturedT
     : "Pricing coming soon";
   const hasImage = Boolean(src);
   const initial = name.charAt(0).toUpperCase();
-  const t = i18n(locale);
 
   return (
     <Link
       href={`/tours/${tour.tourId}`}
-      className="group lang-balanced-card flex min-h-[240px] w-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)]"
+      className="group lang-balanced-card flex min-h-[210px] w-full max-w-[356px] flex-col overflow-hidden rounded-[18px] border border-yellow-300 bg-black text-white shadow-[0_18px_32px_rgba(0,0,0,0.65)] transition hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.75)]"
     >
-      <div className="grid h-full grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
-        <div
-          className={`relative h-32 overflow-hidden bg-slate-200/60 sm:h-full ${
-            imageSide === "right" ? "sm:order-2" : ""
-          }`}
-        >
-          {hasImage ? (
-            <Image
-              src={src}
-              alt={primaryPhoto?.label ?? name}
-              fill
-              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-              className="absolute inset-0 h-full w-full object-fill"
-              loading="lazy"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-4xl font-semibold text-slate-400">
-              {initial || "T"}
-            </div>
-          )}
+      <div className="relative h-36 w-full overflow-hidden rounded-t-[18px] bg-slate-900">
+        {hasImage ? (
+          <Image
+            src={src}
+            alt={primaryPhoto?.label ?? name}
+            fill
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+            className="object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-900 to-slate-700 text-4xl font-semibold text-white">
+            {initial || "T"}
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70" />
+      </div>
+      <div className="flex flex-1 flex-col justify-between gap-2 p-4">
+        <div className="space-y-1">
+          <h3 className="text-lg font-semibold uppercase tracking-[0.35em] text-yellow-300">{category}</h3>
+          <p className="text-2xl font-bold tracking-tight text-white">{name}</p>
+          <p className="text-sm text-slate-300">{description}</p>
         </div>
-
-        <div
-          className={`flex flex-1 flex-col justify-between bg-gradient-to-br from-white to-slate-50 p-4 text-left text-slate-900 ${
-            imageSide === "right" ? "sm:order-1" : ""
-          }`}
-        >
-          <div className="w-full space-y-2 sm:min-h-[110px]">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-800">
-              {category}
-            </p>
-            <h3 className="line-clamp-2 text-base font-semibold text-slate-900 md:text-lg">{name}</h3>
-            <p className="line-clamp-3 text-xs text-slate-700 md:text-sm">{description}</p>
-          </div>
-          <div className="flex items-center justify-between text-xs text-slate-700 md:text-sm">
-            <span className="font-semibold text-slate-900 text-sm md:text-base">{priceLabel}</span>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-800/80 md:text-[11px]">
-              {t.seeDetails}
-            </span>
-          </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm uppercase tracking-[0.18em] text-slate-400">{priceLabel}</span>
+          <button
+            type="button"
+            className="rounded-full border border-white/40 bg-black/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-white hover:bg-white/10"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </Link>
