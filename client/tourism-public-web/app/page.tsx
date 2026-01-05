@@ -33,7 +33,7 @@ export default async function Home({ searchParams }: HomeProps) {
     <main className="min-h-screen bg-gradient-to-b from-[#0d111a] via-[#0b1018] to-[#0a0d14] text-slate-100">
       <Hero />
 
-      <FeaturedTours page={toursPage} pageSize={4} locale={locale} />
+      <FeaturedTours page={toursPage} pageSize={6} locale={locale} />
 
       <section className="bg-gradient-to-b from-[#0f1624] via-[#0b111a] to-[#0a0d14] py-12">
         <div className="mx-auto max-w-5xl px-5">

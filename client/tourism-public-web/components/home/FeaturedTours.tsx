@@ -54,9 +54,9 @@ export async function FeaturedTours({ page = 1, pageSize = 4, locale }: Featured
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-slate-200 md:text-base">{t.toursDescription}</p>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 sm:auto-rows-fr">
+        <div className="mt-10 grid gap-4 sm:grid-cols-3">
           {tours.map((tour, index) => {
-            const rowIndex = Math.floor(index / 2);
+            const rowIndex = Math.floor(index / 3);
             const imageSide = rowIndex % 2 === 0 ? "left" : "right";
             return <FeaturedTourCard key={tour.tourId} tour={tour} imageSide={imageSide} locale={locale} />;
           })}
