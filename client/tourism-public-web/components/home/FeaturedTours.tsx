@@ -45,11 +45,11 @@ export async function FeaturedTours({ page = 1, pageSize = 4 }: FeaturedToursPro
     <section className="relative -mt-6 bg-gradient-to-b from-[#f0f7fb] via-white to-[#f6fbff] pb-12 pt-18">
       <div className="mx-auto max-w-5xl px-5">
         <div className="text-center text-slate-800">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">Your best adventure</p>
-          <h2 className="mt-3 font-serif text-3xl font-semibold text-slate-900 md:text-4xl">Find the trip you love</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">Discover</p>
+          <h2 className="mt-3 font-serif text-3xl font-semibold text-slate-900 md:text-4xl">Find your perfect getaway</h2>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-slate-700 md:text-base">
-            There are many variations of passages of lorem ipsum available, but the majority have suffered alteration
-            in some form, by injected humour, or randomised words which don&apos;t look even slightly believable.
+            Handpicked journeys designed to inspire — from peaceful escapes to action-packed adventures. Explore
+            curated tours that match your travel style and make memories that last a lifetime.
           </p>
         </div>
 

@@ -29,12 +29,13 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="bg-white py-12">
         <div className="mx-auto max-w-5xl px-5">
           <div className="text-center text-slate-800">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">Stays you will love</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-800">Stay inspired</p>
             <h2 className="mt-2 font-serif text-3xl font-semibold text-slate-900 md:text-[32px]">
-              Featured houses
+              Homes for every getaway
             </h2>
             <p className="mx-auto mt-2 max-w-3xl text-sm text-slate-700 md:text-base">
-              Browse comfortable stays that pair perfectly with your adventure.
+              Comfortable, handpicked homes — from cozy city apartments to peaceful countryside retreats. Choose a stay that
+              fits your trip and feels like home.
             </p>
           </div>
 
