@@ -1,19 +1,12 @@
 import { SortDropdown } from "../shared/SortDropdown.client";
+import type { SortOption } from "../shared/SortDropdown.client";
 import { TourCard } from "./TourCard";
+import { cookies } from "next/headers";
+import { i18n } from "@/lib/i18n";
+import type { TourSort } from "@/lib/filters/tours";
+import { tourSortValues } from "@/lib/filters/tours";
 
 type QueryValue = string | string[] | undefined;
-
-export type SortOption = {
-  value: string;
-  label: string;
-};
-
-const tourSortOptions = [
-  { value: "nameAsc", label: "Name (A → Z)" },
-  { value: "nameDesc", label: "Name (Z → A)" },
-  { value: "categoryAsc", label: "Category (A → Z)" },
-  { value: "categoryDesc", label: "Category (Z → A)" },
-] as const;
 
 export interface TourResultsProps {
   tours: Array<{ id?: string | number; [key: string]: unknown }>;
@@ -31,31 +24,40 @@ function firstQueryValue(v: QueryValue): string | undefined {
   return undefined;
 }
 
-export function TourResults({
+export async function TourResults({
   tours,
   currentQuery,
   basePath = "/tours",
   title,
 }: TourResultsProps) {
-  const count = tours?.length ?? 0;
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const t = i18n(locale);
 
-  const defaultSort = tourSortOptions[0]?.value ?? "nameAsc";
-  const sortValue = firstQueryValue(currentQuery.sort) ?? defaultSort;
+  const count = tours?.length ?? 0;
+  const defaultSort = (tourSortValues[0] ?? ("nameAsc" as TourSort)) as TourSort;
+  const requestedSort = firstQueryValue(currentQuery.sort);
+  const sortValue =
+    requestedSort && tourSortValues.includes(requestedSort as TourSort)
+      ? (requestedSort as TourSort)
+      : defaultSort;
+  const sortOptions: SortOption[] = tourSortValues.map((value) => ({
+    value,
+    label: t.sort.tours[value],
+  }));
 
   return (
     <section className="space-y-6">
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-2xl font-bold">
-            {title ?? `${count} ${count === 1 ? "Tour" : "Tours"} Found`}
-          </h2>
+          <h2 className="text-2xl font-bold">{title ?? t.results.toursHeader(count)}</h2>
         </div>
 
         <div className="shrink-0">
           <SortDropdown
-            label="Sort"
+            label={t.sort.label}
             value={sortValue}
-            options={[...tourSortOptions] as SortOption[]}
+            options={sortOptions}
             basePath={basePath}
             currentQuery={currentQuery}
           />
@@ -64,7 +66,7 @@ export function TourResults({
 
       {count === 0 ? (
         <div className="rounded-lg border border-dashed p-8 text-center">
-          <p className="text-gray-500">No tours found matching your criteria.</p>
+          <p className="text-gray-500">{t.results.toursEmpty}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

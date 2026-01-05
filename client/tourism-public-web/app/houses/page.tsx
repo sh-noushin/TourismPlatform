@@ -5,7 +5,10 @@ import { HouseResults } from "@/components/houses/HouseResults.server";
 import { fetchHouseTypes, CategoryDto } from "@/lib/api/categories";
 import { getJson } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/api/endpoints";
-import { parseHouseFilters, toHouseQuery, HouseFilters as HouseFiltersShape } from "@/lib/filters/houses";
+import { houseSortValues, parseHouseFilters, toHouseQuery, HouseFilters as HouseFiltersShape } from "@/lib/filters/houses";
+import { cookies } from "next/headers";
+import { i18n } from "@/lib/i18n";
+import type { SortOption } from "@/components/shared/SortDropdown.client";
 
 type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
 
@@ -50,6 +53,13 @@ const sortHouses = (houses: HouseSummaryDto[], sort: HouseFiltersShape["sort"]) 
 export default async function HousesPage({ searchParams }: HousesPageProps) {
   const resolvedSearchParams = (await Promise.resolve(searchParams)) ?? {};
   const filters = parseHouseFilters(resolvedSearchParams);
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const translations = i18n(locale);
+  const sortOptions: SortOption[] = houseSortValues.map((value) => ({
+    value,
+    label: translations.sort.houses[value],
+  }));
 
   const [houseTypes, houses] = await Promise.all([
     fetchHouseTypes().catch((error) => {
@@ -75,7 +85,13 @@ export default async function HousesPage({ searchParams }: HousesPageProps) {
     <div className="mx-auto max-w-6xl px-6 py-10">
       <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
         <div className="lg:sticky lg:top-8">
-          <HouseFilters initialFilters={filters} houseTypes={houseTypes} />
+          <HouseFilters
+            initialFilters={filters}
+            houseTypes={houseTypes}
+            filtersTranslation={translations.filters}
+            sortLabel={translations.sort.label}
+            sortOptions={sortOptions}
+          />
         </div>
 
         <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">

@@ -1,15 +1,10 @@
-const tourSortOptions = [
-  { value: "nameAsc", label: "Name (A → Z)" },
-  { value: "nameDesc", label: "Name (Z → A)" },
-  { value: "categoryAsc", label: "Category (A → Z)" },
-  { value: "categoryDesc", label: "Category (Z → A)" },
-] as const;
+const TOUR_SORT_VALUES = ["nameAsc", "nameDesc", "categoryAsc", "categoryDesc"] as const;
 
-export type TourSort = (typeof tourSortOptions)[number]["value"];
+export type TourSort = (typeof TOUR_SORT_VALUES)[number];
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 12;
-const DEFAULT_SORT: TourSort = tourSortOptions[0].value;
+const DEFAULT_SORT: TourSort = TOUR_SORT_VALUES[0];
 
 export interface TourFilters {
   destination?: string;
@@ -46,9 +41,7 @@ export const parseTourFilters = (
   params: Record<string, string | string[] | undefined>
 ): TourFilters => {
   const sortValue = cleanString(params.sort);
-  const sort = tourSortOptions.some((option) => option.value === sortValue)
-    ? (sortValue as TourSort)
-    : DEFAULT_SORT;
+  const sort = TOUR_SORT_VALUES.includes(sortValue as TourSort) ? (sortValue as TourSort) : DEFAULT_SORT;
 
   return {
     destination: cleanString(params.destination),
@@ -84,4 +77,4 @@ export const toTourQuery = (filters: TourFilters) => {
   return query;
 };
 
-export { tourSortOptions };
+export const tourSortValues = TOUR_SORT_VALUES;

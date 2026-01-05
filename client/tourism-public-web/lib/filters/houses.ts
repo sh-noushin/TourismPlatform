@@ -1,13 +1,10 @@
-export const houseSortOptions = [
-  { value: "nameAsc", label: "Name (A → Z)" },
-  { value: "nameDesc", label: "Name (Z → A)" },
-] as const;
+const HOUSE_SORT_VALUES = ["nameAsc", "nameDesc"] as const;
 
-export type HouseSort = (typeof houseSortOptions)[number]["value"];
+export type HouseSort = (typeof HOUSE_SORT_VALUES)[number];
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 12;
-const DEFAULT_SORT: HouseSort = houseSortOptions[0].value;
+const DEFAULT_SORT: HouseSort = HOUSE_SORT_VALUES[0];
 
 export interface HouseFilters {
   location?: string;
@@ -17,6 +14,7 @@ export interface HouseFilters {
   areaMin?: number;
   type?: string;
   sort: HouseSort;
+  country?: string;
   page: number;
   pageSize: number;
 }
@@ -41,9 +39,7 @@ export const parseHouseFilters = (
   params: Record<string, string | string[] | undefined>
 ): HouseFilters => {
   const sortValue = cleanString(params.sort);
-  const sort = houseSortOptions.some((option) => option.value === sortValue)
-    ? (sortValue as HouseSort)
-    : DEFAULT_SORT;
+  const sort = HOUSE_SORT_VALUES.includes(sortValue as HouseSort) ? (sortValue as HouseSort) : DEFAULT_SORT;
 
   return {
     location: cleanString(params.location),
@@ -52,6 +48,7 @@ export const parseHouseFilters = (
     roomsMin: parseNumber(params.roomsMin),
     areaMin: parseNumber(params.areaMin),
     type: cleanString(params.type),
+    country: cleanString(params.country),
     sort,
     page: Math.max(DEFAULT_PAGE, parseNumber(params.page) ?? DEFAULT_PAGE),
     pageSize: Math.max(DEFAULT_PAGE_SIZE, parseNumber(params.pageSize) ?? DEFAULT_PAGE_SIZE),
@@ -71,6 +68,9 @@ export const toHouseQuery = (filters: HouseFilters) => {
   if (filters.roomsMin !== undefined) query.roomsMin = String(filters.roomsMin);
   if (filters.areaMin !== undefined) query.areaMin = String(filters.areaMin);
   if (filters.type) query.type = filters.type;
+  if (filters.country) query.country = filters.country;
 
   return query;
 };
+
+export const houseSortValues = HOUSE_SORT_VALUES;

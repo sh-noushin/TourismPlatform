@@ -5,7 +5,10 @@ import { TourResults } from "@/components/tours/TourResults.server";
 import { fetchTourCategories, CategoryDto } from "@/lib/api/categories";
 import { getJson } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/api/endpoints";
-import { parseTourFilters, toTourQuery, TourFilters as TourFiltersShape } from "@/lib/filters/tours";
+import { parseTourFilters, toTourQuery, TourFilters as TourFiltersShape, tourSortValues } from "@/lib/filters/tours";
+import { cookies } from "next/headers";
+import { i18n } from "@/lib/i18n";
+import type { SortOption } from "@/components/shared/SortDropdown.client";
 
 type TourSummaryDto = components["schemas"]["TourSummaryDto"];
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -54,6 +57,13 @@ const sortTours = (tours: TourSummaryDto[], sort: TourFiltersShape["sort"]) => {
 export default async function ToursPage({ searchParams }: ToursPageProps) {
   const resolvedSearchParams = (await Promise.resolve(searchParams)) ?? {};
   const filters = parseTourFilters(resolvedSearchParams);
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const translations = i18n(locale);
+  const sortOptions: SortOption[] = tourSortValues.map((value) => ({
+    value,
+    label: translations.sort.tours[value],
+  }));
 
   const [tourCategories, tours] = await Promise.all([
     fetchTourCategories().catch((error) => {
@@ -79,7 +89,13 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
     <div className="mx-auto max-w-6xl px-6 py-10">
       <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
         <div className="lg:sticky lg:top-8">
-          <TourFilters initialFilters={filters} tourCategories={tourCategories} />
+              <TourFilters
+                initialFilters={filters}
+                tourCategories={tourCategories}
+                filtersTranslation={translations.filters}
+                sortLabel={translations.sort.label}
+                sortOptions={sortOptions}
+              />
         </div>
 
         <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">
@@ -89,6 +105,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
             pageSize={filters.pageSize}
             totalCount={totalCount}
             currentQuery={resolvedSearchParams}
+                title={translations.results.toursHeader(totalCount)}
           />
         </div>
       </div>

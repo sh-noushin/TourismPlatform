@@ -1,4 +1,79 @@
-type Translations = {
+import type { TourSort } from "@/lib/filters/tours";
+import type { HouseSort } from "@/lib/filters/houses";
+
+type SortLabels<T extends string> = Record<T, string>;
+
+type FiltersTranslationDefinition = {
+  title: string;
+  toursSubtitle: string;
+  housesSubtitle: string;
+  buttonLabel: string;
+  drawerTitle: string;
+  applyButton: string;
+  resetButton: string;
+  destination: {
+    label: string;
+    helper: string;
+    placeholder: string;
+  };
+  dateFromLabel: string;
+  dateToLabel: string;
+  location: {
+    label: string;
+    helper: string;
+    placeholder: string;
+  };
+  country: {
+    label: string;
+    allLabel: string;
+  };
+  price: {
+    minLabel: string;
+    maxLabel: string;
+    anyLabel: string;
+  };
+  duration: {
+    minLabel: string;
+    maxLabel: string;
+    minPlaceholder: string;
+    maxPlaceholder: string;
+  };
+  roomsMinLabel: string;
+  areaMinLabel: string;
+  tourCategory: {
+    label: string;
+    allLabel: string;
+  };
+  houseType: {
+    label: string;
+    allLabel: string;
+  };
+};
+
+export type FiltersTranslation = FiltersTranslationDefinition;
+
+type SortTranslation = {
+  label: string;
+  tours: SortLabels<TourSort>;
+  houses: SortLabels<HouseSort>;
+};
+
+type ResultsTranslation = {
+  toursHeader: (count: number) => string;
+  toursEmpty: string;
+  housesResultsLabel: (count: number) => string;
+  housesRangeLabel: (start: number, end: number, total: number) => string;
+  housesEmptyTitle: string;
+  housesEmptyDescription: string;
+};
+
+type CardTranslation = {
+  photos: (count: number) => string;
+  noPhoto: string;
+  viewSchedules: string;
+};
+
+export type Translations = {
   discover: string;
   headingTours: string;
   toursDescription: string;
@@ -17,6 +92,10 @@ type Translations = {
   siteTitle: string;
   seeDetails: string;
   copyright: string;
+  filters: FiltersTranslationDefinition;
+  sort: SortTranslation;
+  results: ResultsTranslation;
+  cards: CardTranslation;
 };
 
 const EN: Translations = {
@@ -40,6 +119,78 @@ const EN: Translations = {
   siteTitle: "Tourism Platform",
   seeDetails: "See more details",
   copyright: "© 2024 Tourism Platform. All rights reserved.",
+  filters: {
+    title: "Filters",
+    toursSubtitle: "Refine your journey",
+    housesSubtitle: "Refine your search",
+    buttonLabel: "Filters",
+    drawerTitle: "Filters",
+    applyButton: "Apply filters",
+    resetButton: "Reset",
+    destination: {
+      label: "Destination",
+      helper: "City, region, or tour name",
+      placeholder: "Anywhere",
+    },
+    dateFromLabel: "From",
+    dateToLabel: "To",
+    location: {
+      label: "Location",
+      helper: "City, region, or country",
+      placeholder: "Anywhere",
+    },
+    country: {
+      label: "Country",
+      allLabel: "All countries",
+    },
+    price: {
+      minLabel: "Price min",
+      maxLabel: "Price max",
+      anyLabel: "Any",
+    },
+    duration: {
+      minLabel: "Duration min (days)",
+      maxLabel: "Duration max (days)",
+      minPlaceholder: "1",
+      maxPlaceholder: "Any",
+    },
+    roomsMinLabel: "Rooms min",
+    areaMinLabel: "Area min (m²)",
+    tourCategory: {
+      label: "Tour category",
+      allLabel: "All categories",
+    },
+    houseType: {
+      label: "House type",
+      allLabel: "All types",
+    },
+  },
+  sort: {
+    label: "Sort",
+    tours: {
+      nameAsc: "Name (A → Z)",
+      nameDesc: "Name (Z → A)",
+      categoryAsc: "Category (A → Z)",
+      categoryDesc: "Category (Z → A)",
+    },
+    houses: {
+      nameAsc: "Name (A → Z)",
+      nameDesc: "Name (Z → A)",
+    },
+  },
+  results: {
+    toursHeader: (count) => `${count} ${count === 1 ? "Tour" : "Tours"} Found`,
+    toursEmpty: "No tours found matching your criteria.",
+    housesResultsLabel: (count) => `${count} results`,
+    housesRangeLabel: (start, end, total) => `Showing ${start}-${end} of ${total} homes`,
+    housesEmptyTitle: "No homes found",
+    housesEmptyDescription: "Adjust your filters to discover more accommodations.",
+  },
+  cards: {
+    photos: (count) => `${count} photos`,
+    noPhoto: "No photo yet",
+    viewSchedules: "View schedules",
+  },
 };
 
 const FA: Translations = {
@@ -63,6 +214,79 @@ const FA: Translations = {
   siteTitle: "پلتفرم گردشگری",
   seeDetails: "مشاهده جزئیات بیشتر",
   copyright: "© 2024 Tourism Platform. تمامی حقوق محفوظ است.",
+  filters: {
+    title: "فیلترها",
+    toursSubtitle: "سفر خود را دقیق‌تر تنظیم کنید",
+    housesSubtitle: "جستجوی خود را دقیق‌تر تنظیم کنید",
+    buttonLabel: "فیلترها",
+    drawerTitle: "فیلترها",
+    applyButton: "اعمال فیلترها",
+    resetButton: "بازنشانی",
+    destination: {
+      label: "مقصد",
+      helper: "شهر، منطقه یا نام تور",
+      placeholder: "هر جا",
+    },
+    dateFromLabel: "از",
+    dateToLabel: "تا",
+    location: {
+      label: "مکان",
+      helper: "شهر، منطقه یا کشور",
+      placeholder: "هر جا",
+    },
+    country: {
+      label: "کشور",
+      allLabel: "همه کشورها",
+    },
+    price: {
+      minLabel: "حداقل قیمت",
+      maxLabel: "حداکثر قیمت",
+      anyLabel: "هر مبلغ",
+    },
+    duration: {
+      minLabel: "حداقل مدت (روز)",
+      maxLabel: "حداکثر مدت (روز)",
+      minPlaceholder: "1",
+      maxPlaceholder: "هر مقدار",
+    },
+    roomsMinLabel: "حداقل اتاق",
+    areaMinLabel: "حداقل مساحت (متر مربع)",
+    tourCategory: {
+      label: "دسته‌بندی تور",
+      allLabel: "همه دسته‌بندی‌ها",
+    },
+    houseType: {
+      label: "نوع خانه",
+      allLabel: "همه انواع",
+    },
+  },
+  sort: {
+    label: "مرتب‌سازی",
+    tours: {
+      nameAsc: "نام (الف → ی)",
+      nameDesc: "نام (ی → الف)",
+      categoryAsc: "دسته‌بندی (الف → ی)",
+      categoryDesc: "دسته‌بندی (ی → الف)",
+    },
+    houses: {
+      nameAsc: "نام (الف → ی)",
+      nameDesc: "نام (ی → الف)",
+    },
+  },
+  results: {
+    toursHeader: (count) =>
+      count === 1 ? "یک تور یافت شد" : `${count} تور یافت شد`,
+    toursEmpty: "هیچ تور مطابق با معیارهای شما یافت نشد.",
+    housesResultsLabel: (count) => `${count} نتیجه`,
+    housesRangeLabel: (start, end, total) => `${start}-${end} از ${total} خانه نمایش داده شده`,
+    housesEmptyTitle: "خانه‌ای یافت نشد",
+    housesEmptyDescription: "فیلترها را تنظیم کنید تا گزینه‌های بیشتری ببینید.",
+  },
+  cards: {
+    photos: (count) => `${count} عکس`,
+    noPhoto: "هنوز عکسی اضافه نشده",
+    viewSchedules: "مشاهده برنامه‌ها",
+  },
 };
 
 export function i18n(locale?: string): Translations {

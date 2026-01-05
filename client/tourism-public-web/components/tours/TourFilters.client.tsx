@@ -6,11 +6,15 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { CategoryDto } from "@/lib/api/categories";
 import type { TourFilters } from "@/lib/filters/tours";
-import { tourSortOptions } from "@/lib/filters/tours";
+import type { SortOption } from "@/components/shared/SortDropdown.client";
+import type { FiltersTranslation } from "@/lib/i18n";
 
 interface TourFiltersProps {
   initialFilters: TourFilters;
   tourCategories: CategoryDto[];
+  filtersTranslation: FiltersTranslation;
+  sortLabel: string;
+  sortOptions: SortOption[];
 }
 
 interface FormState {
@@ -37,20 +41,26 @@ const createFormState = (filters: TourFilters): FormState => ({
   sort: filters.sort,
 });
 
-export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps) {
+export function TourFilters({
+  initialFilters,
+  tourCategories,
+  filtersTranslation,
+  sortLabel,
+  sortOptions,
+}: TourFiltersProps) {
   const [formState, setFormState] = useState<FormState>(() => createFormState(initialFilters));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
-  const formFields = useMemo(
-    () => (
+  const formFields = useMemo(() => {
+    return (
       <div className="space-y-4">
         <div className="space-y-1">
-          <p className="text-sm font-semibold text-text">Destination</p>
-          <p className="text-xs text-muted">City, region, or tour name</p>
+          <p className="text-sm font-semibold text-text">{filtersTranslation.destination.label}</p>
+          <p className="text-xs text-muted">{filtersTranslation.destination.helper}</p>
           <Input
-            placeholder="Anywhere"
+            placeholder={filtersTranslation.destination.placeholder}
             value={formState.destination}
             onChange={(event) => setFormState((prev) => ({ ...prev, destination: event.target.value }))}
           />
@@ -58,7 +68,7 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
 
         <div className="grid gap-4 md:grid-cols-2">
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">From</span>
+            <span className="text-sm font-semibold text-text">{filtersTranslation.dateFromLabel}</span>
             <Input
               type="date"
               value={formState.dateFrom}
@@ -66,7 +76,7 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
             />
           </label>
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">To</span>
+            <span className="text-sm font-semibold text-text">{filtersTranslation.dateToLabel}</span>
             <Input
               type="date"
               value={formState.dateTo}
@@ -77,7 +87,7 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
 
         <div className="grid gap-3 md:grid-cols-2">
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">Price min</span>
+            <span className="text-sm font-semibold text-text">{filtersTranslation.price.minLabel}</span>
             <Input
               type="number"
               min={0}
@@ -87,11 +97,11 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
             />
           </label>
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">Price max</span>
+            <span className="text-sm font-semibold text-text">{filtersTranslation.price.maxLabel}</span>
             <Input
               type="number"
               min={0}
-              placeholder="Any"
+              placeholder={filtersTranslation.price.anyLabel}
               value={formState.priceMax}
               onChange={(event) => setFormState((prev) => ({ ...prev, priceMax: event.target.value }))}
             />
@@ -100,21 +110,21 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
 
         <div className="grid gap-3 md:grid-cols-2">
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">Duration min (days)</span>
+            <span className="text-sm font-semibold text-text">{filtersTranslation.duration.minLabel}</span>
             <Input
               type="number"
               min={0}
-              placeholder="1"
+              placeholder={filtersTranslation.duration.minPlaceholder}
               value={formState.durationMin}
               onChange={(event) => setFormState((prev) => ({ ...prev, durationMin: event.target.value }))}
             />
           </label>
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">Duration max (days)</span>
+            <span className="text-sm font-semibold text-text">{filtersTranslation.duration.maxLabel}</span>
             <Input
               type="number"
               min={0}
-              placeholder="Any"
+              placeholder={filtersTranslation.duration.maxPlaceholder}
               value={formState.durationMax}
               onChange={(event) => setFormState((prev) => ({ ...prev, durationMax: event.target.value }))}
             />
@@ -123,12 +133,12 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
 
         <div className="grid gap-3 md:grid-cols-2">
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">Tour category</span>
+            <span className="text-sm font-semibold text-text">{filtersTranslation.tourCategory.label}</span>
             <Select
               value={formState.category}
               onChange={(event) => setFormState((prev) => ({ ...prev, category: event.target.value }))}
             >
-              <option value="">All categories</option>
+              <option value="">{filtersTranslation.tourCategory.allLabel}</option>
               {tourCategories.map((category) => (
                 <option key={category.id} value={category.name}>
                   {category.name}
@@ -137,12 +147,12 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
             </Select>
           </label>
           <label className="space-y-1">
-            <span className="text-sm font-semibold text-text">Sort</span>
+            <span className="text-sm font-semibold text-text">{sortLabel}</span>
             <Select
               value={formState.sort}
               onChange={(event) => setFormState((prev) => ({ ...prev, sort: event.target.value as TourFilters["sort"] }))}
             >
-              {tourSortOptions.map((option) => (
+              {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -151,9 +161,8 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
           </label>
         </div>
       </div>
-    ),
-    [formState, tourCategories]
-  );
+    );
+  }, [formState, tourCategories, sortLabel, sortOptions, filtersTranslation]);
 
   const buildQuery = () => {
     const params = new URLSearchParams();
@@ -194,10 +203,10 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
   const actions = (
     <div className="flex flex-wrap gap-2">
       <Button type="submit" variant="primary">
-        Apply filters
+        {filtersTranslation.applyButton}
       </Button>
       <Button type="button" variant="ghost" onClick={handleReset}>
-        Reset
+        {filtersTranslation.resetButton}
       </Button>
     </div>
   );
@@ -214,8 +223,12 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
       <div className="hidden lg:block">
         <Card className="space-y-6 p-6 rounded-[28px] border border-white/10 bg-gradient-to-br from-slate-900/70 to-slate-900/60 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-muted">Filters</p>
-            <p className="text-lg font-semibold text-text">Refine your journey</p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-muted">
+              {filtersTranslation.title}
+            </p>
+            <p className="text-lg font-semibold text-text">
+              {filtersTranslation.toursSubtitle}
+            </p>
           </div>
           {form}
         </Card>
@@ -223,13 +236,17 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
 
       <div className="lg:hidden">
         <Button variant="outline" onClick={() => setIsDrawerOpen(true)}>
-          Filters
+          {filtersTranslation.buttonLabel}
         </Button>
-        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Filters">
+        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title={filtersTranslation.drawerTitle}>
           <div className="space-y-6">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-muted">Filters</p>
-              <p className="text-lg font-semibold text-text">Refine your journey</p>
+              <p className="text-sm font-semibold uppercase tracking-wide text-muted">
+                {filtersTranslation.title}
+              </p>
+              <p className="text-lg font-semibold text-text">
+                {filtersTranslation.toursSubtitle}
+              </p>
             </div>
             {form}
           </div>

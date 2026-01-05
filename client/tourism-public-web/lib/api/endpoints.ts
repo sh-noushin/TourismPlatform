@@ -14,8 +14,14 @@ const tourEndpoints = {
   detail: (id: string) => `/api/tours/${id}`,
 };
 
+const referenceEndpoints = {
+  countries: "/api/reference/countries",
+  currencies: "/api/reference/currencies",
+};
+
 export const apiEndpoints = {
   categories: categoryEndpoints,
   houses: houseEndpoints,
   tours: tourEndpoints,
+  reference: referenceEndpoints,
 } as const;
