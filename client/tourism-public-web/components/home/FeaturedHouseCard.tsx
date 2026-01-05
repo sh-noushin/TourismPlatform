@@ -42,9 +42,9 @@ export function FeaturedHouseCard({ house }: FeaturedHouseCardProps) {
   return (
     <Link
       href={`/houses/${house.houseId}`}
-      className="group lang-balanced-card flex min-h-[210px] w-full max-w-[356px] flex-col overflow-hidden rounded-[18px] border border-yellow-300 bg-black text-white shadow-[0_18px_32px_rgba(0,0,0,0.65)] transition hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.75)]"
+      className="group lang-balanced-card flex min-h-[380px] w-[260px] flex-col overflow-hidden rounded-[18px] border border-yellow-300 bg-black text-white shadow-[0_18px_32px_rgba(0,0,0,0.65)] transition hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.75)]"
     >
-      <div className="relative h-36 w-full overflow-hidden rounded-t-[18px] bg-slate-900">
+      <div className="relative h-48 w-full overflow-hidden rounded-t-[18px] bg-slate-900">
         {hasImage ? (
           <Image
             src={src}
