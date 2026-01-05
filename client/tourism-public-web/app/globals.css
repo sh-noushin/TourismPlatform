@@ -143,6 +143,22 @@ html[lang='fa'] [class*=" sf-"] {
   font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', system-ui, -apple-system, sans-serif;
 }
 
+/* Keep cards the same size across locales by neutralizing global font bumps inside .lang-balanced-card */
+.lang-balanced-card {
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+}
+@media (min-width: 768px) {
+  .lang-balanced-card {
+    font-size: 16px !important;
+  }
+}
+.lang-balanced-card,
+.lang-balanced-card * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
 @font-face {
   font-family: 'Nazanin';
   src: url('/fonts/NAZANIN.TTF') format('truetype');
@@ -192,4 +208,25 @@ html[dir='rtl'] .sidebar .nav__item,
 html[dir='rtl'] .sidebar .nav__submenu-item {
   font-family: 'Nazanin', 'NazaninLocal', 'B Nazanin', system-ui, -apple-system, sans-serif !important;
   font-size: 24px !important;
+}
+
+/* Force balanced sizing inside cards even under Farsi font bumps */
+html[lang='fa'] .lang-balanced-card,
+:lang(fa) .lang-balanced-card,
+html[dir='rtl'] .lang-balanced-card {
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+}
+@media (min-width: 768px) {
+  html[lang='fa'] .lang-balanced-card,
+  :lang(fa) .lang-balanced-card,
+  html[dir='rtl'] .lang-balanced-card {
+    font-size: 16px !important;
+  }
+}
+html[lang='fa'] .lang-balanced-card *,
+:lang(fa) .lang-balanced-card *,
+html[dir='rtl'] .lang-balanced-card * {
+  font-size: inherit !important;
+  line-height: inherit !important;
 }
