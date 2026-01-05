@@ -270,3 +270,15 @@ html[dir='rtl'] .lang-balanced-card * {
   font-size: inherit !important;
   line-height: inherit !important;
 }
+
+select {
+  background-color: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+  font-family: inherit;
+}
+
+select option {
+  background-color: var(--surface);
+  color: var(--text);
+}
