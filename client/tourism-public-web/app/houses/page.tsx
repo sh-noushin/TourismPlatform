@@ -72,21 +72,23 @@ export default async function HousesPage({ searchParams }: HousesPageProps) {
   const paged = sorted.slice(startIndex, startIndex + filters.pageSize);
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[320px_1fr]">
-      <div className="w-full">
-        <div className="lg:sticky lg:top-8">
-          <HouseFilters initialFilters={filters} houseTypes={houseTypes} />
+    <div className="mx-auto max-w-6xl px-6 py-10">
+      <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
+        <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">
+          <div className="lg:sticky lg:top-8">
+            <HouseFilters initialFilters={filters} houseTypes={houseTypes} />
+          </div>
         </div>
-      </div>
 
-      <div className="space-y-6">
-        <HouseResults
-          houses={paged}
-          page={currentPage}
-          pageSize={filters.pageSize}
-          totalCount={totalCount}
-          currentQuery={resolvedSearchParams}
-        />
+        <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">
+          <HouseResults
+            houses={paged}
+            page={currentPage}
+            pageSize={filters.pageSize}
+            totalCount={totalCount}
+            currentQuery={resolvedSearchParams}
+          />
+        </div>
       </div>
     </div>
   );

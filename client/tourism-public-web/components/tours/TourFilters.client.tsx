@@ -212,7 +212,7 @@ export function TourFilters({ initialFilters, tourCategories }: TourFiltersProps
   return (
     <div className="space-y-4">
       <div className="hidden lg:block">
-        <Card className="space-y-6 p-6 shadow-sm">
+        <Card className="space-y-6 p-6 rounded-[28px] border border-white/10 bg-gradient-to-br from-slate-900/70 to-slate-900/60 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-muted">Filters</p>
             <p className="text-lg font-semibold text-text">Refine your journey</p>

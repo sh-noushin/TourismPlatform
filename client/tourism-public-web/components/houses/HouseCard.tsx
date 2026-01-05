@@ -17,9 +17,9 @@ export function HouseCard({ house }: HouseCardProps) {
   const hasLocation = Boolean(house.city || house.country);
 
   return (
-    <Card className="overflow-hidden p-0">
+    <Card className="overflow-hidden p-0 bg-gradient-to-b from-slate-900/70 to-slate-950/40 border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
       <Link href={`/houses/${house.houseId}`} className="flex h-full flex-col">
-        <div className="relative h-48 w-full bg-border/10">
+        <div className="relative h-48 w-full bg-slate-900/30">
           {src ? (
             <Image
               src={src}
