@@ -29,7 +29,7 @@ export function FeaturedTourCard({ tour, imageSide = "left", locale }: FeaturedT
   return (
     <Link
       href={`/tours/${tour.tourId}`}
-      className="group lang-balanced-card flex min-h-[240px] w-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)] sm:w-[calc(100%-20px)] sm:min-h-[240px]"
+      className="group lang-balanced-card flex min-h-[240px] w-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_14px_24px_rgba(15,23,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(15,23,42,0.16)]"
     >
       <div className="grid h-full grid-cols-1 sm:grid-cols-[1.1fr_1fr] sm:items-stretch">
         <div

@@ -194,6 +194,18 @@ html[dir='rtl'] .lang-balanced-section * {
   line-height: inherit !important;
 }
 
+/* Clamp root font size for consistent layout widths across locales */
+html.lang-balanced-root {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+html.lang-balanced-root:lang(fa),
+html.lang-balanced-root[lang='fa'],
+html.lang-balanced-root[dir='rtl'] {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+
 /* Keep header typography consistent across locales */
 .lang-balanced-header {
   font-size: 16px !important;

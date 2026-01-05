@@ -33,7 +33,7 @@ export default async function RootLayout({
   const dir = locale === "fa" ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} className="lang-balanced-root">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-bg text-text`}
       >
