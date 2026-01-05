@@ -74,10 +74,8 @@ export default async function HousesPage({ searchParams }: HousesPageProps) {
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
       <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
-        <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">
-          <div className="lg:sticky lg:top-8">
-            <HouseFilters initialFilters={filters} houseTypes={houseTypes} />
-          </div>
+        <div className="lg:sticky lg:top-8">
+          <HouseFilters initialFilters={filters} houseTypes={houseTypes} />
         </div>
 
         <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">
