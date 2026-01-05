@@ -7,7 +7,7 @@ export async function Footer() {
   const t = i18n(locale);
 
   return (
-    <footer className="relative overflow-hidden border-t border-slate-200">
+    <footer className="relative overflow-hidden border-t border-transparent">
       <div className="absolute inset-0 bg-[url('/images/hero-mountains.jpg')] bg-cover bg-bottom" />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/35 to-transparent" />
 

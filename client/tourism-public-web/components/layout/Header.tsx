@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils/cn";
-import { useEffect, useState } from "react";
+import { i18n } from "@/lib/i18n";
+import { useEffect, useMemo, useState } from "react";
 
 interface HeaderProps {
   initialLocale?: string;
@@ -24,6 +25,8 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
   useEffect(() => {
     setLocale(initialLocale);
   }, [initialLocale]);
+
+  const translations = useMemo(() => i18n(locale), [locale]);
 
   const languages = [
     { code: "en", label: "English", flag: "/flags/en.svg" },
@@ -46,36 +49,34 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
           : "sticky top-0 border-b border-border bg-surface/90 backdrop-blur"
       )}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-3 md:py-4 md:min-h-[64px]">
-        <Link
-          href="/"
+      <div className="relative mx-auto w-full max-w-6xl px-5 py-3 md:py-4 md:min-h-[64px]">
+        <nav
           className={cn(
-            "text-base font-semibold",
-            isHome ? "text-white" : "text-text"
+            "relative z-10 flex w-full items-center justify-between gap-6 text-sm font-medium",
+            isHome ? "text-white/90" : "text-muted"
           )}
         >
-          Tourism Platform
-        </Link>
-        <nav className={cn("flex items-center gap-6 text-sm font-medium", isHome ? "text-white/90" : "text-muted")}>
-          <Link
-            href="/houses"
-            className={cn(
-              "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
-              isHome ? "text-white" : "text-text"
-            )}
-        >
-          Houses
-        </Link>
-          <Link
-            href="/tours"
-            className={cn(
-              "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
-              isHome ? "text-white" : "text-text"
-            )}
-          >
-            Tours
-          </Link>
-          <div className="ml-2 flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-2 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)] backdrop-blur md:px-3">
+          <div className="flex items-center gap-6">
+            <Link
+              href="/houses"
+              className={cn(
+                "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+                isHome ? "text-white" : "text-text"
+              )}
+            >
+              {translations.navHouses}
+            </Link>
+            <Link
+              href="/tours"
+              className={cn(
+                "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+                isHome ? "text-white" : "text-text"
+              )}
+            >
+              {translations.navTours}
+            </Link>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-2 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)] backdrop-blur md:px-3">
             {languages.map((lang) => {
               const active = locale === lang.code;
               return (
@@ -97,6 +98,15 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
             })}
           </div>
         </nav>
+        <Link
+          href="/"
+          className={cn(
+            "pointer-events-auto absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-base font-semibold",
+            isHome ? "text-white" : "text-text"
+          )}
+        >
+          {translations.siteTitle}
+        </Link>
       </div>
     </header>
   );

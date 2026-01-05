@@ -12,6 +12,9 @@ type Translations = {
   housesDescription: string;
   noHouses: string;
   allHouses: string;
+  navHouses: string;
+  navTours: string;
+  siteTitle: string;
   seeDetails: string;
   copyright: string;
 };
@@ -32,6 +35,9 @@ const EN: Translations = {
     "Comfortable, handpicked homes — from cozy city apartments to peaceful countryside retreats. Choose a stay that fits your trip and feels like home.",
   noHouses: "No houses available at the moment.",
   allHouses: "All houses",
+  navHouses: "Houses",
+  navTours: "Tours",
+  siteTitle: "Tourism Platform",
   seeDetails: "See more details",
   copyright: "© 2024 Tourism Platform. All rights reserved.",
 };
@@ -52,6 +58,9 @@ const FA: Translations = {
     "خانه‌های راحت و دستچین‌شده — از آپارتمان‌های دنج شهری تا پناهگاه‌های آرام در طبیعت. اقامتی متناسب با سفر خود انتخاب کنید که احساس خانه را بدهد.",
   noHouses: "در حال حاضر خانه‌ای موجود نیست.",
   allHouses: "همه خانه‌ها",
+  navHouses: "خانه‌ها",
+  navTours: "تورها",
+  siteTitle: "پلتفرم گردشگری",
   seeDetails: "مشاهده جزئیات بیشتر",
   copyright: "© 2024 Tourism Platform. تمامی حقوق محفوظ است.",
 };
