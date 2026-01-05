@@ -14,11 +14,11 @@ export function Header() {
       className={cn(
         "z-40",
         isHome
-          ? "absolute inset-x-0 top-0"
+          ? "absolute inset-x-0 top-0 bg-gradient-to-b from-black/90 via-slate-900/80 to-transparent shadow-[0_40px_80px_-60px_rgba(0,0,0,0.8)]"
           : "sticky top-0 border-b border-border bg-surface/90 backdrop-blur"
       )}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-3 md:py-4 md:min-h-[64px]">
         <Link
           href="/"
           className={cn(
