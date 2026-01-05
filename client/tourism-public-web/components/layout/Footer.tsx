@@ -6,7 +6,6 @@ export function Footer() {
 
       <div className="relative mx-auto flex max-w-6xl flex-col gap-2 px-6 py-5 text-center text-sm text-white/85 sm:flex-row sm:items-center sm:justify-between sm:text-left">
         <p>Copyright {new Date().getFullYear()} Tourism Platform. All Rights Reserved.</p>
-        <p>Made with Next.js</p>
       </div>
     </footer>
   );
