@@ -117,7 +117,7 @@ const EN: Translations = {
   navHouses: "Houses",
   navTours: "Tours",
   siteTitle: "Tourism Platform",
-  seeDetails: "See more details",
+  seeDetails: "Details",
   copyright: "© 2024 Tourism Platform. All rights reserved.",
   filters: {
     title: "Filters",
@@ -212,7 +212,7 @@ const FA: Translations = {
   navHouses: "خانه‌ها",
   navTours: "تورها",
   siteTitle: "پلتفرم گردشگری",
-  seeDetails: "مشاهده جزئیات بیشتر",
+  seeDetails: "جزییات",
   copyright: "© 2024 Tourism Platform. تمامی حقوق محفوظ است.",
   filters: {
     title: "فیلترها",

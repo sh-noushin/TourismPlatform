@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { imageUrl } from "@/lib/utils/imageUrl";
+import { i18n } from "@/lib/i18n";
 import type { components } from "@/lib/openapi/types";
 
 type TourSummaryDto = components["schemas"]["TourSummaryDto"];
@@ -12,12 +13,13 @@ interface FeaturedTourCardProps {
   locale?: string;
 }
 
-export function FeaturedTourCard({ tour }: FeaturedTourCardProps) {
+export function FeaturedTourCard({ tour, locale }: FeaturedTourCardProps) {
   const primaryPhoto = tour.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
   const name = tour.name?.trim() || "Untitled tour";
   const category = tour.tourCategoryName?.trim() || "Featured tour";
   const description = tour.description?.trim() || "Description coming soon.";
+  const translations = i18n(locale);
   const priceLabel = Number.isFinite(tour.price)
     ? `${new Intl.NumberFormat("en-US").format(Number(tour.price))} ${tour.currency}`
     : "Pricing coming soon";
@@ -58,7 +60,7 @@ export function FeaturedTourCard({ tour }: FeaturedTourCardProps) {
             type="button"
             className="rounded-full border border-white/40 bg-black/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-white hover:bg-white/10"
           >
-            Submit
+            {translations.seeDetails}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { imageUrl } from "@/lib/utils/imageUrl";
+import { i18n } from "@/lib/i18n";
 import type { components } from "@/lib/openapi/types";
 
 type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
@@ -17,10 +18,11 @@ interface FeaturedHouseCardProps {
   locale?: string;
 }
 
-export function FeaturedHouseCard({ house }: FeaturedHouseCardProps) {
+export function FeaturedHouseCard({ house, locale }: FeaturedHouseCardProps) {
   const primaryPhoto = house.photos?.[0];
   const src = imageUrl(primaryPhoto?.permanentRelativePath);
   const extended = house as ExtendedHouseSummaryDto;
+  const translations = i18n(locale);
   const name = house.name?.trim() || "Untitled stay";
   const type = house.houseTypeName?.trim() || "Featured house";
   const listingTypeLabel =
@@ -74,7 +76,7 @@ export function FeaturedHouseCard({ house }: FeaturedHouseCardProps) {
             type="button"
             className="rounded-full border border-white/40 bg-black/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-white hover:bg-white/10"
           >
-            Submit
+            {translations.seeDetails}
           </button>
         </div>
       </div>
