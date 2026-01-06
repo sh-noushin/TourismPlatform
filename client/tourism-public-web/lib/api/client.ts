@@ -1,4 +1,4 @@
-import { Agent } from "undici";
+import type { Agent, Dispatcher } from "undici";
 import { ensureOk } from "./errors";
 
 export type QueryParams = Record<string, string | number | boolean | undefined>;
@@ -21,12 +21,7 @@ const buildProxyPath = (path: string) => {
   return normalized ? `/${normalized}` : "";
 };
 
-const insecureLocalAgent = new Agent({
-  connect: {
-    // Allow self-signed certs for local development hosts
-    rejectUnauthorized: false,
-  },
-});
+let insecureLocalAgent: Agent | null = null;
 
 const allowInsecureTls = (url: string) => {
   try {
@@ -35,6 +30,28 @@ const allowInsecureTls = (url: string) => {
   } catch {
     return false;
   }
+};
+
+const getServerDispatcher = async (url: string): Promise<Dispatcher | undefined> => {
+  if (typeof window !== "undefined") {
+    return undefined;
+  }
+
+  if (!allowInsecureTls(url)) {
+    return undefined;
+  }
+
+  if (!insecureLocalAgent) {
+    const { Agent } = await import("undici");
+    insecureLocalAgent = new Agent({
+      connect: {
+        // Allow self-signed certs for local development hosts
+        rejectUnauthorized: false,
+      },
+    });
+  }
+
+  return insecureLocalAgent;
 };
 
 export async function getJson<T = unknown>(path: string, params?: QueryParams): Promise<T> {
@@ -47,9 +64,10 @@ export async function getJson<T = unknown>(path: string, params?: QueryParams): 
     }
 
     const url = `${base.replace(/\/$/, "")}${proxyPath}${search}`;
+    const dispatcher = await getServerDispatcher(url);
     const response = await fetch(url, {
       headers: { Accept: "application/json" },
-      ...(allowInsecureTls(url) ? { dispatcher: insecureLocalAgent } : {}),
+      ...(dispatcher ? { dispatcher } : {}),
     });
     return ensureOk<T>(response);
   }

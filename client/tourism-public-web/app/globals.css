@@ -12,23 +12,19 @@
   --font-fa: 'B Nazanin', 'NazaninLocal', 'Nazanin', system-ui, -apple-system, sans-serif;
 }
 
-/* Nazanin local font bundle (place woff/woff2 in public/fonts/)
-   Files expected:
-     - public/fonts/nazanin.woff2
-     - public/fonts/nazanin-700.woff2
-*/
+/* Nazanin local font bundle (TTF placed in public/fonts/NAZANIN.TTF) */
 @font-face {
   font-family: 'NazaninLocal';
-  src: url('/fonts/nazanin.woff2') format('woff2');
+  src: url('/fonts/NAZANIN.TTF') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'NazaninLocal';
-  src: url('/fonts/nazanin-700.woff2') format('woff2');
+  src: url('/fonts/NAZANIN.TTF') format('truetype');
   font-weight: 700;
-  font-style: bold;
+  font-style: normal;
   font-display: swap;
 }
 
