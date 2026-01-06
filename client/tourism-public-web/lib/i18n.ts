@@ -73,6 +73,69 @@ type CardTranslation = {
   viewSchedules: string;
 };
 
+type DetailTranslation = {
+  backToHouses: string;
+  backToTours: string;
+  house: {
+    quickFactsTitle: string;
+    addressTitle: string;
+    postalCodeLabel: string;
+    typeLabel: string;
+    locationLabel: string;
+    photosLabel: string;
+    descriptionFallback: string;
+    exploreTitle: string;
+    exploreCopy: string;
+    continueBrowsing: string;
+    locationFallback: string;
+    loadErrorTitle: string;
+    loadErrorCopy: string;
+    propertyListTitle: string;
+    propertyLabels: {
+      houseId: string;
+      name: string;
+      description: string;
+      houseTypeName: string;
+      line1: string;
+      line2: string;
+      city: string;
+      region: string;
+      country: string;
+      postalCode: string;
+      photos: string;
+    };
+  };
+  tour: {
+    detailsTitle: string;
+    schedulesTitle: string;
+    noSchedules: string;
+    descriptionFallback: string;
+    quickFactsTitle: string;
+    categoryLabel: string;
+    priceLabel: string;
+    nextStartLabel: string;
+    planAheadTitle: string;
+    planAheadCopy: string;
+    backCta: string;
+    scheduleRange: (start: string, end: string) => string;
+    capacity: (capacity: number | string) => string;
+    loadErrorTitle: string;
+    loadErrorCopy: string;
+    propertyListTitle: string;
+    propertyLabels: {
+      tourId: string;
+      name: string;
+      description: string;
+      tourCategoryName: string;
+      price: string;
+      currency: string;
+      countryCode: string;
+      schedules: string;
+      photos: string;
+    };
+  };
+};
+
 export type Translations = {
   discover: string;
   headingTours: string;
@@ -96,6 +159,7 @@ export type Translations = {
   sort: SortTranslation;
   results: ResultsTranslation;
   cards: CardTranslation;
+  detail: DetailTranslation;
 };
 
 const EN: Translations = {
@@ -190,6 +254,68 @@ const EN: Translations = {
     photos: (count) => `${count} photos`,
     noPhoto: "No photo yet",
     viewSchedules: "View schedules",
+  },
+  detail: {
+    backToHouses: "Back to houses",
+    backToTours: "Back to tours",
+    house: {
+      quickFactsTitle: "Quick facts",
+      addressTitle: "Address",
+      postalCodeLabel: "Postal code",
+      typeLabel: "House type",
+      locationLabel: "Location",
+      photosLabel: "Photos",
+      descriptionFallback: "A curated home without a description yet.",
+      exploreTitle: "Explore",
+      exploreCopy: "Discover similar homes, save favorites, and plan your visit.",
+      continueBrowsing: "Continue browsing",
+      locationFallback: "Location coming soon",
+      loadErrorTitle: "House details unavailable",
+      loadErrorCopy: "We couldn’t reach the listing yet; please try again later or browse other homes.",
+      propertyListTitle: "All properties",
+      propertyLabels: {
+        houseId: "House ID",
+        name: "Name",
+        description: "Description",
+        houseTypeName: "House type",
+        line1: "Address line 1",
+        line2: "Address line 2",
+        city: "City",
+        region: "Region",
+        country: "Country",
+        postalCode: "Postal code",
+        photos: "Photos",
+      },
+    },
+    tour: {
+      detailsTitle: "Tour details",
+      schedulesTitle: "Schedules",
+      noSchedules: "No schedules published yet.",
+      descriptionFallback: "Explore a guided tour with curated itineraries and schedules.",
+      quickFactsTitle: "Quick facts",
+      categoryLabel: "Category",
+      priceLabel: "Price",
+      nextStartLabel: "Next start",
+      planAheadTitle: "Plan ahead",
+      planAheadCopy: "Save this experience or explore more journeys from our collection.",
+      backCta: "Back to tours",
+      scheduleRange: (start, end) => `${start} – ${end}`,
+      capacity: (capacity) => `Capacity: ${capacity}`,
+      loadErrorTitle: "Tour unavailable",
+      loadErrorCopy: "We couldn’t load the itinerary right now; try again later or explore other tours.",
+      propertyListTitle: "All properties",
+      propertyLabels: {
+        tourId: "Tour ID",
+        name: "Name",
+        description: "Description",
+        tourCategoryName: "Tour category",
+        price: "Price",
+        currency: "Currency",
+        countryCode: "Country code",
+        schedules: "Schedules",
+        photos: "Photos",
+      },
+    },
   },
 };
 
@@ -286,6 +412,68 @@ const FA: Translations = {
     photos: (count) => `${count} عکس`,
     noPhoto: "هنوز عکسی اضافه نشده",
     viewSchedules: "مشاهده برنامه‌ها",
+  },
+  detail: {
+    backToHouses: "بازگشت به خانه‌ها",
+    backToTours: "بازگشت به تورها",
+    house: {
+      quickFactsTitle: "اطلاعات کلیدی",
+      addressTitle: "آدرس",
+      postalCodeLabel: "کد پستی",
+      typeLabel: "نوع خانه",
+      locationLabel: "مکان",
+      photosLabel: "تعداد عکس",
+      descriptionFallback: "برای این اقامت هنوز توضیحی ثبت نشده است.",
+      exploreTitle: "بیشتر ببینید",
+      exploreCopy: "خانه‌های مشابه را ببینید، موارد دلخواه را ذخیره کنید و برای بازدید برنامه‌ریزی کنید.",
+      continueBrowsing: "ادامه جستجو",
+      locationFallback: "مکان به‌زودی اضافه می‌شود",
+      loadErrorTitle: "جزئیات خانه در دسترس نیست",
+      loadErrorCopy: "فعلاً نمی‌توانیم اطلاعات این اقامت را بارگذاری کنیم؛ بعداً امتحان کنید یا خانه‌های دیگر را ببینید.",
+      propertyListTitle: "تمام ویژگی‌ها",
+      propertyLabels: {
+        houseId: "شناسه خانه",
+        name: "نام",
+        description: "توضیحات",
+        houseTypeName: "نوع خانه",
+        line1: "خط اول آدرس",
+        line2: "خط دوم آدرس",
+        city: "شهر",
+        region: "منطقه",
+        country: "کشور",
+        postalCode: "کد پستی",
+        photos: "عکس‌ها",
+      },
+    },
+    tour: {
+      detailsTitle: "جزئیات تور",
+      schedulesTitle: "برنامه‌ها",
+      noSchedules: "هنوز برنامه‌ای منتشر نشده است.",
+      descriptionFallback: "برای این تور هنوز توضیحی ثبت نشده است.",
+      quickFactsTitle: "اطلاعات کلیدی",
+      categoryLabel: "دسته‌بندی",
+      priceLabel: "قیمت",
+      nextStartLabel: "نوبت بعدی",
+      planAheadTitle: "برنامه‌ریزی",
+      planAheadCopy: "این تجربه را ذخیره کنید یا تورهای دیگر را بررسی کنید.",
+      backCta: "بازگشت به تورها",
+      scheduleRange: (start, end) => `از ${start} تا ${end}`,
+      capacity: (capacity) => `ظرفیت: ${capacity}`,
+      loadErrorTitle: "تور در دسترس نیست",
+      loadErrorCopy: "فعلاً نمی‌توانیم برنامه این سفر را بارگذاری کنیم؛ بعداً امتحان کنید یا تورهای دیگر را بررسی کنید.",
+      propertyListTitle: "تمام ویژگی‌ها",
+      propertyLabels: {
+        tourId: "شناسه تور",
+        name: "نام",
+        description: "توضیحات",
+        tourCategoryName: "دسته‌بندی تور",
+        price: "قیمت",
+        currency: "واحد پول",
+        countryCode: "کد کشور",
+        schedules: "برنامه‌ها",
+        photos: "عکس‌ها",
+      },
+    },
   },
 };
 

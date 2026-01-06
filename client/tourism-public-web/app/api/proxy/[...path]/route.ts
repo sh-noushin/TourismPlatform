@@ -46,6 +46,8 @@ const buildHeaders = (req: NextRequest) => {
 export async function GET(request: NextRequest, context: any) {
   const params = await (context?.params ?? {});
   let targetUrl: URL;
+  const debug = process.env.PROXY_DEBUG === "1";
+  const startedAt = debug ? Date.now() : 0;
 
   try {
     targetUrl = getBackendUrl(params?.path ?? [], request.nextUrl.search);
@@ -55,11 +57,21 @@ export async function GET(request: NextRequest, context: any) {
   }
 
   const targetUrlString = targetUrl.toString();
+
+  if (debug) {
+    console.info("[proxy] GET", targetUrlString);
+  }
+
   const response = await fetch(targetUrlString, {
     method: "GET",
     headers: buildHeaders(request),
     ...(allowInsecureTls(targetUrlString) ? { dispatcher: insecureLocalAgent } : {}),
   });
+
+  if (debug) {
+    const elapsedMs = Date.now() - startedAt;
+    console.info("[proxy] <-", response.status, `${elapsedMs}ms`);
+  }
 
   const responseHeaders = new Headers(response.headers);
   return new NextResponse(response.body, {

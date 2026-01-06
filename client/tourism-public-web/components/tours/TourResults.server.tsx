@@ -71,7 +71,7 @@ export async function TourResults({
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {tours.map((tour, idx) => (
-            <TourCard key={(tour.id ?? idx) as any} tour={tour as any} />
+            <TourCard key={(tour.id ?? idx) as any} tour={tour as any} locale={locale} />
           ))}
         </div>
       )}

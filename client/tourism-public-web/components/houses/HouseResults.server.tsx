@@ -72,7 +72,7 @@ export async function HouseResults({ houses, page, pageSize, totalCount, current
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {houses.map((house) => (
-            <HouseCard key={house.houseId} house={house} />
+            <HouseCard key={house.houseId} house={house} locale={locale} />
           ))}
         </div>
       )}
