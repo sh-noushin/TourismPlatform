@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 
-import { Badge, Card } from "@/components/ui";
+import { Card } from "@/components/ui";
 import { Gallery } from "@/components/shared/Gallery";
 import { DetailProperties } from "@/components/shared/DetailProperties";
 import { getJson } from "@/lib/api/client";
@@ -100,7 +99,6 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
     loadError = "No tour data returned.";
   }
 
-  const isFallback = !tour;
   const resolvedTour: TourDetailDto =
     tour ?? {
       tourId: requestedId,
@@ -165,47 +163,6 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
-      <div className="overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-r from-slate-900/80 via-slate-900/60 to-slate-950/70 p-6 shadow-[0_40px_90px_rgba(0,0,0,0.6)]">
-        <Link href="/tours" className="text-sm font-semibold text-primary transition hover:text-primary/80">
-          {t.detail.backToTours}
-        </Link>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          {resolvedTour.tourCategoryName && <Badge variant="solid">{resolvedTour.tourCategoryName}</Badge>}
-          <h1 className="text-3xl font-bold text-text">{resolvedTour.name}</h1>
-          {priceLabel && <Badge variant="subtle">{priceLabel}</Badge>}
-          {isFallback && <Badge variant="outline">{t.detail.tour.loadErrorTitle}</Badge>}
-        </div>
-        <p className="mt-3 text-sm text-muted">{description}</p>
-        {loadError && (
-          <p className="mt-3 rounded-2xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-            {loadError}
-          </p>
-        )}
-        {isFallback && (
-          <p className="mt-3 rounded-2xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-            {t.detail.tour.loadErrorCopy}
-          </p>
-        )}
-        <div className="mt-4 flex flex-wrap gap-3 text-xs uppercase text-muted">
-          {resolvedTour.tourCategoryName && (
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-              {resolvedTour.tourCategoryName}
-            </span>
-          )}
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-            {t.cards.photos(resolvedTour.photos.length)}
-          </span>
-          {upcoming && (
-            <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-primary">
-              {t.detail.tour.scheduleRange(
-                formatDateTime(upcoming.startAtUtc, locale),
-                formatDateTime(upcoming.endAtUtc, locale)
-              )}
-            </span>
-          )}
-        </div>
-      </div>
-
       <Card className="mx-auto w-full max-w-4xl overflow-hidden border border-white/10 bg-slate-950/50 p-0 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
         <Gallery photos={resolvedTour.photos} alt={`${resolvedTour.name} gallery`} />
       </Card>
