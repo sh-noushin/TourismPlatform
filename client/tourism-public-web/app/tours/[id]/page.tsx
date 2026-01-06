@@ -173,7 +173,6 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
     );
 
   const propertyItems = [
-    { label: t.detail.tour.propertyLabels.tourId, value: resolvedTour.tourId },
     { label: t.detail.tour.propertyLabels.name, value: resolvedTour.name },
     { label: t.detail.tour.propertyLabels.description, value: description },
     { label: t.detail.tour.propertyLabels.tourCategoryName, value: resolvedTour.tourCategoryName },
