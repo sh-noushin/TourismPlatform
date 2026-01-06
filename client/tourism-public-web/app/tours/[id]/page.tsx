@@ -149,20 +149,6 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
       </ul>
     );
 
-  const photoDetails =
-    resolvedTour.photos.length === 0 ? (
-      <span className="text-muted">{t.cards.photos(0)}</span>
-    ) : (
-      <ul className="space-y-2 text-xs text-muted">
-        {resolvedTour.photos.map((photo) => (
-          <li key={photo.photoId}>
-            <p className="font-semibold text-text">{photo.label ?? photo.photoId}</p>
-            <p className="text-[11px] uppercase text-muted">{photo.permanentRelativePath}</p>
-          </li>
-        ))}
-      </ul>
-    );
-
   const propertyItems = [
     { label: t.detail.tour.propertyLabels.name, value: resolvedTour.name },
     { label: t.detail.tour.propertyLabels.description, value: description },
@@ -175,7 +161,6 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
       value: upcoming ? formatDateTime(upcoming.startAtUtc, locale) : t.detail.tour.noSchedules,
     },
     { label: t.detail.tour.propertyLabels.schedules, value: scheduleList },
-    { label: t.detail.tour.propertyLabels.photos, value: photoDetails },
   ];
 
   return (
@@ -221,7 +206,7 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
         </div>
       </div>
 
-      <Card className="overflow-hidden border border-white/10 bg-slate-950/50 p-0 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
+      <Card className="mx-auto w-full max-w-4xl overflow-hidden border border-white/10 bg-slate-950/50 p-0 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
         <Gallery photos={resolvedTour.photos} alt={`${resolvedTour.name} gallery`} />
       </Card>
 

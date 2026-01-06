@@ -138,20 +138,6 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
     { label: t.detail.house.photosLabel, value: photosLabel },
   ].filter((fact) => Boolean(fact.value));
 
-  const photoList =
-    resolvedHouse.photos.length === 0 ? (
-      <span className="text-muted">{t.cards.photos(0)}</span>
-    ) : (
-      <ul className="space-y-2 text-xs text-muted">
-        {resolvedHouse.photos.map((photo) => (
-          <li key={photo.photoId}>
-            <p className="font-semibold text-text">{photo.label ?? photo.photoId}</p>
-            <p className="text-[11px] text-muted">{photo.permanentRelativePath}</p>
-          </li>
-        ))}
-      </ul>
-    );
-
   const propertyItems = [
     { label: t.detail.house.propertyLabels.houseId, value: resolvedHouse.houseId },
     { label: t.detail.house.propertyLabels.name, value: resolvedHouse.name },
@@ -163,7 +149,6 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
     { label: t.detail.house.propertyLabels.region, value: resolvedHouse.region },
     { label: t.detail.house.propertyLabels.country, value: resolvedHouse.country },
     { label: t.detail.house.propertyLabels.postalCode, value: resolvedHouse.postalCode },
-    { label: t.detail.house.propertyLabels.photos, value: photoList },
   ];
 
   return (
@@ -194,7 +179,7 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
         </div>
       </div>
 
-      <Card className="overflow-hidden border border-white/10 bg-slate-950/50 p-0 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
+      <Card className="mx-auto w-full max-w-4xl overflow-hidden border border-white/10 bg-slate-950/50 p-0 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
         <Gallery photos={resolvedHouse.photos} alt={`${resolvedHouse.name} gallery`} />
       </Card>
 
