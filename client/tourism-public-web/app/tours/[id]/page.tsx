@@ -124,15 +124,6 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
       ? `${Number(resolvedTour.price).toLocaleString(locale === "fa" ? "fa-IR" : "en-US")} ${resolvedTour.currency}`
       : undefined;
 
-  const quickFacts = [
-    { label: t.detail.tour.categoryLabel, value: resolvedTour.tourCategoryName },
-    { label: t.detail.tour.priceLabel, value: priceLabel },
-    {
-      label: t.detail.tour.nextStartLabel,
-      value: upcoming ? formatDateTime(upcoming.startAtUtc, locale) : t.detail.tour.noSchedules,
-    },
-  ].filter((fact) => Boolean(fact.value));
-
   const formattedPriceValue =
     priceLabel ??
     (Number.isFinite(resolvedTour.price)
@@ -166,7 +157,7 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
         {resolvedTour.photos.map((photo) => (
           <li key={photo.photoId}>
             <p className="font-semibold text-text">{photo.label ?? photo.photoId}</p>
-            <p className="text-[11px] text-muted">{photo.permanentRelativePath}</p>
+            <p className="text-[11px] uppercase text-muted">{photo.permanentRelativePath}</p>
           </li>
         ))}
       </ul>
@@ -179,6 +170,10 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
     { label: t.detail.tour.propertyLabels.price, value: formattedPriceValue },
     { label: t.detail.tour.propertyLabels.currency, value: resolvedTour.currency },
     { label: t.detail.tour.propertyLabels.countryCode, value: resolvedTour.countryCode },
+    {
+      label: t.detail.tour.nextStartLabel,
+      value: upcoming ? formatDateTime(upcoming.startAtUtc, locale) : t.detail.tour.noSchedules,
+    },
     { label: t.detail.tour.propertyLabels.schedules, value: scheduleList },
     { label: t.detail.tour.propertyLabels.photos, value: photoDetails },
   ];
@@ -230,72 +225,12 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
         <Gallery photos={resolvedTour.photos} alt={`${resolvedTour.name} gallery`} />
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,320px)]">
-        <div className="space-y-6">
-          <Card className="space-y-4 border border-white/10 bg-slate-900/60 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-text">{t.detail.tour.detailsTitle}</h2>
-              <Badge variant="subtle">{resolvedTour.tourCategoryName}</Badge>
-            </div>
-            <p className="text-sm text-muted">{description}</p>
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">
-                {t.detail.tour.schedulesTitle}
-              </h3>
-              {schedules.length === 0 ? (
-                <p className="text-sm text-muted">{t.detail.tour.noSchedules}</p>
-              ) : (
-                <div className="grid gap-3 md:grid-cols-2">
-                  {schedules.map((schedule) => (
-                    <div
-                      key={schedule.tourScheduleId}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
-                    >
-                      <p className="text-sm font-semibold text-text">
-                        {t.detail.tour.scheduleRange(
-                          formatDateTime(schedule.startAtUtc, locale),
-                          formatDateTime(schedule.endAtUtc, locale)
-                        )}
-                      </p>
-                      <p className="text-xs text-muted">{t.detail.tour.capacity(schedule.capacity)}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Card>
+      <DetailProperties
+        title={t.detail.tour.propertyListTitle}
+        items={propertyItems}
+        className="space-y-4 border border-white/10 bg-slate-900/60 p-6"
+      />
 
-          <Card className="space-y-4 border border-white/10 bg-slate-900/60 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-text">{t.detail.tour.quickFactsTitle}</h2>
-              <span className="text-xs uppercase text-muted">{t.seeDetails}</span>
-            </div>
-            <dl className="grid gap-4 md:grid-cols-2">
-              {quickFacts.map((fact) => (
-                <div key={fact.label} className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                  <dt className="text-xs uppercase text-muted">{fact.label}</dt>
-                  <dd className="text-sm font-semibold text-text">{fact.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </Card>
-
-          <DetailProperties title={t.detail.tour.propertyListTitle} items={propertyItems} />
-        </div>
-
-        <aside className="space-y-4">
-          <Card className="space-y-3 border border-white/10 bg-gradient-to-b from-slate-900/70 to-slate-950/70 p-6">
-            <h2 className="text-lg font-semibold text-text">{t.detail.tour.planAheadTitle}</h2>
-            <p className="text-sm text-muted">{t.detail.tour.planAheadCopy}</p>
-            <Link
-              href="/tours"
-              className="inline-flex items-center justify-center rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/20"
-            >
-              {t.detail.tour.backCta}
-            </Link>
-          </Card>
-        </aside>
-      </div>
     </div>
   );
 }
