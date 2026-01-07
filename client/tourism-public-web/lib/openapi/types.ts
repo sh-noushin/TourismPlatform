@@ -2253,6 +2253,9 @@ export interface components {
             houseId: string;
             name: string;
             description: null | string;
+            /** Format: double */
+            price?: number | string;
+            currency?: string;
             houseTypeName: null | string;
             line1: null | string;
             line2: null | string;

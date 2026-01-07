@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-import { Badge, Card } from "@/components/ui";
+import { Card } from "@/components/ui";
 import { Gallery } from "@/components/shared/Gallery";
 import { DetailProperties } from "@/components/shared/DetailProperties";
 
@@ -56,25 +56,23 @@ const fetchHouseDetail = async (id: string): Promise<HouseDetailDto | null> => {
   }
 };
 
-const formatAddress = (data: HouseDetailDto, postalLabel: string, locationFallback: string) => {
-  const lines = [data.line1, data.line2].filter((part): part is string => Boolean(part));
-  const cityRegion = [data.city, data.region].filter((part): part is string => Boolean(part));
-  const hasAny = lines.length > 0 || cityRegion.length > 0 || data.country || data.postalCode;
-
-  if (!hasAny) {
-    return <p className="text-sm text-muted">{locationFallback}</p>;
+const formatPriceValue = (
+  value: number | string | null | undefined,
+  locale: string,
+): string | null => {
+  if (value === null || value === undefined) {
+    return null;
   }
 
-  return (
-    <div className="space-y-1 text-sm text-muted">
-      {lines.map((line, index) => (
-        <p key={`${line}-${index}`}>{line}</p>
-      ))}
-      {cityRegion.length > 0 && <p>{cityRegion.join(", ")}</p>}
-      {data.country && <p>{data.country}</p>}
-      {data.postalCode && <p>{`${postalLabel}: ${data.postalCode}`}</p>}
-    </div>
-  );
+  const numeric = typeof value === "string" ? Number(value) : value;
+  if (!Number.isFinite(numeric)) {
+    return null;
+  }
+
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  }).format(numeric);
 };
 
 type HouseDetailParams = { params: { id?: string | string[] } | Promise<{ id?: string | string[] }> };
@@ -110,7 +108,6 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
     loadError = "No house data returned.";
   }
 
-  const isFallback = !house;
   const resolvedHouse: HouseDetailDto =
     house ?? {
       houseId: requestedId,
@@ -127,14 +124,13 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
     };
 
   const description = resolvedHouse.description?.trim() || t.detail.house.descriptionFallback;
-  const location =
-    [resolvedHouse.city, resolvedHouse.region, resolvedHouse.country].filter(Boolean).join(", ") ||
-    t.detail.house.locationFallback;
-  const photosLabel = t.cards.photos(resolvedHouse.photos.length);
+  const formattedPrice = formatPriceValue(resolvedHouse.price, locale);
+  const combinedPriceValue = [formattedPrice, resolvedHouse.currency].filter(Boolean).join(" ") || null;
   const propertyItems = [
     { label: t.detail.house.propertyLabels.houseId, value: resolvedHouse.houseId },
     { label: t.detail.house.propertyLabels.name, value: resolvedHouse.name },
     { label: t.detail.house.propertyLabels.description, value: description },
+    { label: t.detail.house.propertyLabels.price, value: combinedPriceValue },
     { label: t.detail.house.propertyLabels.houseTypeName, value: resolvedHouse.houseTypeName },
     { label: t.detail.house.propertyLabels.line1, value: resolvedHouse.line1 },
     { label: t.detail.house.propertyLabels.line2, value: resolvedHouse.line2 },
