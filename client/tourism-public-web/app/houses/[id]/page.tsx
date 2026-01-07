@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { Badge, Card } from "@/components/ui";
 import { Gallery } from "@/components/shared/Gallery";
 import { DetailProperties } from "@/components/shared/DetailProperties";
+
 import { getJson } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/api/endpoints";
 import { i18n } from "@/lib/i18n";
@@ -131,13 +132,6 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
     [resolvedHouse.city, resolvedHouse.region, resolvedHouse.country].filter(Boolean).join(", ") ||
     t.detail.house.locationFallback;
   const photosLabel = t.cards.photos(resolvedHouse.photos.length);
-  const quickFacts = [
-    { label: t.detail.house.typeLabel, value: resolvedHouse.houseTypeName },
-    { label: t.detail.house.locationLabel, value: location },
-    { label: t.detail.house.postalCodeLabel, value: resolvedHouse.postalCode },
-    { label: t.detail.house.photosLabel, value: photosLabel },
-  ].filter((fact) => Boolean(fact.value));
-
   const propertyItems = [
     { label: t.detail.house.propertyLabels.houseId, value: resolvedHouse.houseId },
     { label: t.detail.house.propertyLabels.name, value: resolvedHouse.name },
@@ -153,76 +147,12 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
-      <div className="overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-r from-slate-900/80 via-slate-900/60 to-slate-950/70 p-6 shadow-[0_40px_90px_rgba(0,0,0,0.6)]">
-        <Link href="/houses" className="text-sm font-semibold text-primary transition hover:text-primary/80">
-          {t.detail.backToHouses}
-        </Link>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          {resolvedHouse.houseTypeName && <Badge variant="solid">{resolvedHouse.houseTypeName}</Badge>}
-          <h1 className="text-3xl font-bold text-text">{resolvedHouse.name}</h1>
-          {isFallback && <Badge variant="outline">{t.detail.house.loadErrorTitle}</Badge>}
-        </div>
-        <p className="mt-3 text-sm text-muted">{description}</p>
-        {loadError && (
-          <p className="mt-3 rounded-2xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-            {loadError}
-          </p>
-        )}
-        {isFallback && (
-          <p className="mt-3 rounded-2xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-            {t.detail.house.loadErrorCopy}
-          </p>
-        )}
-        <div className="mt-4 flex flex-wrap gap-3 text-xs uppercase text-muted">
-          {location && <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{location}</span>}
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{photosLabel}</span>
-        </div>
-      </div>
-
       <Card className="mx-auto w-full max-w-4xl overflow-hidden border border-white/10 bg-slate-950/50 p-0 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
         <Gallery photos={resolvedHouse.photos} alt={`${resolvedHouse.name} gallery`} />
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,320px)]">
-        <div className="space-y-6">
-          <Card className="space-y-4 border border-white/10 bg-slate-900/60 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-text">{t.detail.house.addressTitle}</h2>
-              <Badge variant="subtle">{resolvedHouse.country || location}</Badge>
-            </div>
-            {formatAddress(resolvedHouse, t.detail.house.postalCodeLabel, t.detail.house.locationFallback)}
-          </Card>
-
-          <Card className="space-y-4 border border-white/10 bg-slate-900/60 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-text">{t.detail.house.quickFactsTitle}</h2>
-              <span className="text-xs uppercase text-muted">{t.seeDetails}</span>
-            </div>
-            <dl className="grid gap-4 md:grid-cols-2">
-              {quickFacts.map((fact) => (
-                <div key={fact.label} className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                  <dt className="text-xs uppercase text-muted">{fact.label}</dt>
-                  <dd className="text-sm font-semibold text-text">{fact.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </Card>
-
-          <DetailProperties title={t.detail.house.propertyListTitle} items={propertyItems} />
-        </div>
-
-        <aside className="space-y-4">
-          <Card className="space-y-3 border border-white/10 bg-gradient-to-b from-slate-900/70 to-slate-950/70 p-6">
-            <h2 className="text-lg font-semibold text-text">{t.detail.house.exploreTitle}</h2>
-            <p className="text-sm text-muted">{t.detail.house.exploreCopy}</p>
-            <Link
-              href="/houses"
-              className="inline-flex items-center justify-center rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/20"
-            >
-              {t.detail.house.continueBrowsing}
-            </Link>
-          </Card>
-        </aside>
+      <div className="space-y-6">
+        <DetailProperties title={t.detail.house.propertyListTitle} items={propertyItems} />
       </div>
     </div>
   );
