@@ -36,6 +36,7 @@ export function FeaturedHouseCard({ house, locale }: FeaturedHouseCardProps) {
   const contextCopy = location
     ? `${listingTypeLabel} in ${location}. Thoughtful comforts and a welcoming host.`
     : `${listingTypeLabel}. Thoughtful comforts and a welcoming host.`;
+  const descriptionText = house.description?.trim();
   const priceLabel = Number.isFinite(extended.price)
     ? `${new Intl.NumberFormat("en-US").format(Number(extended.price))} ${extended.currency ?? ""}`.trim()
     : "Pricing coming soon";
@@ -65,7 +66,7 @@ export function FeaturedHouseCard({ house, locale }: FeaturedHouseCardProps) {
           <h3 className="text-lg font-semibold uppercase tracking-[0.35em] text-yellow-300">{type}</h3>
           <p className="text-2xl font-bold tracking-tight text-white">{name}</p>
           <p className="text-sm text-slate-300">{locationText}</p>
-          <p className="text-sm text-slate-300">{contextCopy}</p>
+          <p className="text-sm text-slate-300">{descriptionText || contextCopy}</p>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm uppercase tracking-[0.18em] text-slate-400">{priceLabel}</span>

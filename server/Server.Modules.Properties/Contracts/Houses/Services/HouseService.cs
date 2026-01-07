@@ -44,21 +44,52 @@ public sealed class HouseService : IHouseService
         CancellationToken cancellationToken = default)
     {
         var houses = await _houseRepository.GetListAsync(listingType, cancellationToken);
+        var missingDescriptionIds = houses
+            .Where(h => string.IsNullOrWhiteSpace(h.Description))
+            .Select(h => h.Id)
+            .ToArray();
+
+        Dictionary<Guid, string>? descriptionLookup = null;
+        if (missingDescriptionIds.Length > 0)
+        {
+            // In some datasets descriptions may not be hydrated by the list query; reload just the text to keep cards accurate.
+            var descriptions = await _houseRepository.Query()
+                .AsNoTracking()
+                .Where(h => missingDescriptionIds.Contains(h.Id))
+                .Select(h => new { h.Id, h.Description })
+                .ToListAsync(cancellationToken);
+
+            descriptionLookup = descriptions
+                .Where(x => !string.IsNullOrWhiteSpace(x.Description))
+                .ToDictionary(x => x.Id, x => x.Description!);
+        }
+
         var houseIds = houses.Select(h => h.Id).ToArray();
         var photosByHouse = await _housePhotoRepository.GetPhotosByHouseIdsAsync(houseIds, cancellationToken);
 
         return houses
-            .Select(h => new HouseSummaryDto(
-                h.Id,
-                h.Name,
-                h.Description,
-                h.ListingType,
-                h.Price,
-                h.Currency,
-                h.HouseType.Name,
-                h.Address.Location.City,
-                h.Address.Location.Country,
-                photosByHouse.TryGetValue(h.Id, out var ph) ? ph : Array.Empty<HousePhotoDto>()))
+            .Select(h =>
+            {
+                var description = h.Description;
+                if (string.IsNullOrWhiteSpace(description)
+                    && descriptionLookup is not null
+                    && descriptionLookup.TryGetValue(h.Id, out var hydratedDescription))
+                {
+                    description = hydratedDescription;
+                }
+
+                return new HouseSummaryDto(
+                    h.Id,
+                    h.Name,
+                    description,
+                    h.ListingType,
+                    h.Price,
+                    h.Currency,
+                    h.HouseType.Name,
+                    h.Address.Location.City,
+                    h.Address.Location.Country,
+                    photosByHouse.TryGetValue(h.Id, out var ph) ? ph : Array.Empty<HousePhotoDto>());
+            })
             .ToList();
     }
 
