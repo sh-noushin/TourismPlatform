@@ -42,10 +42,7 @@ export function FeaturedHouseCard({ house, locale }: FeaturedHouseCardProps) {
   const hasImage = Boolean(src);
   const initial = name.charAt(0).toUpperCase();
   return (
-    <Link
-      href={`/houses/${house.houseId}`}
-      className="group lang-balanced-card flex min-h-[380px] w-[260px] flex-col overflow-hidden rounded-[18px] border border-yellow-300 bg-black text-white shadow-[0_18px_32px_rgba(0,0,0,0.65)] transition hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.75)]"
-    >
+    <article className="group lang-balanced-card flex min-h-[380px] w-[260px] flex-col overflow-hidden rounded-[18px] border border-yellow-300 bg-black text-white shadow-[0_18px_32px_rgba(0,0,0,0.65)] transition hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.75)]">
       <div className="relative h-48 w-full overflow-hidden rounded-t-[18px] bg-slate-900">
         {hasImage ? (
           <Image
@@ -72,14 +69,14 @@ export function FeaturedHouseCard({ house, locale }: FeaturedHouseCardProps) {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm uppercase tracking-[0.18em] text-slate-400">{priceLabel}</span>
-          <button
-            type="button"
+          <Link
+            href={`/houses/${house.houseId}`}
             className="rounded-full border border-white/40 bg-black/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-white hover:bg-white/10"
           >
             {translations.seeDetails}
-          </button>
+          </Link>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

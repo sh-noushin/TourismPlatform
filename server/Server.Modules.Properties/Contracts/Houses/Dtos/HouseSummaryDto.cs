@@ -5,6 +5,7 @@ using Server.Modules.Properties.Domain.Houses;
 public sealed record HouseSummaryDto(
     Guid HouseId,
     string Name,
+    string? Description,
     HouseListingType ListingType,
     decimal Price,
     string Currency,

@@ -2274,6 +2274,10 @@ export interface components {
             /** Format: uuid */
             houseId: string;
             name: string;
+            description?: null | string;
+            listingType?: any;
+            price?: number | string;
+            currency?: string;
             houseTypeName: null | string;
             city: null | string;
             country: null | string;

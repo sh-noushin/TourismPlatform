@@ -51,6 +51,7 @@ public sealed class HouseService : IHouseService
             .Select(h => new HouseSummaryDto(
                 h.Id,
                 h.Name,
+                h.Description,
                 h.ListingType,
                 h.Price,
                 h.Currency,
