@@ -66,6 +66,21 @@ const formatDateTime = (value: string, locale: string) => {
   }
 };
 
+const formatCountryName = (countryCode: string, locale: string) => {
+  const normalizedCode = countryCode.trim().toUpperCase();
+  if (!normalizedCode) {
+    return "";
+  }
+
+  try {
+    const displayLocale = locale === "fa" ? "fa-IR" : locale;
+    const displayNames = new Intl.DisplayNames([displayLocale], { type: "region" });
+    return displayNames.of(normalizedCode) ?? normalizedCode;
+  } catch {
+    return normalizedCode;
+  }
+};
+
 type TourDetailParams = { params: { id?: string | string[] } | Promise<{ id?: string | string[] }> };
 
 export default async function TourDetailPage({ params }: TourDetailParams) {
@@ -152,8 +167,7 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
     { label: t.detail.tour.propertyLabels.description, value: description },
     { label: t.detail.tour.propertyLabels.tourCategoryName, value: resolvedTour.tourCategoryName },
     { label: t.detail.tour.propertyLabels.price, value: formattedPriceValue },
-    { label: t.detail.tour.propertyLabels.currency, value: resolvedTour.currency },
-    { label: t.detail.tour.propertyLabels.countryCode, value: resolvedTour.countryCode },
+    { label: t.detail.tour.propertyLabels.countryCode, value: formatCountryName(resolvedTour.countryCode, locale) },
     {
       label: t.detail.tour.nextStartLabel,
       value: upcoming ? formatDateTime(upcoming.startAtUtc, locale) : t.detail.tour.noSchedules,
@@ -170,7 +184,6 @@ export default async function TourDetailPage({ params }: TourDetailParams) {
       <DetailProperties
         title={t.detail.tour.propertyListTitle}
         items={propertyItems}
-        className="space-y-4 border border-white/10 bg-slate-900/60 p-6"
       />
 
     </div>
