@@ -97,6 +97,8 @@ const HouseCard = ({
   const src = imageUrl(image ?? undefined);
   const priceLabel = formatPrice(price, currency);
   const location = [city, country].filter(Boolean).join(", ");
+  const yearLabel = new Date().getFullYear();
+  const statusLabel = "Available";
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
@@ -108,10 +110,9 @@ const HouseCard = ({
             {name.slice(0, 1)}
           </div>
         )}
-        <div className="absolute inset-x-0 top-0 flex items-center justify-between px-3 py-2 text-[11px] font-semibold text-white">
-          <span className="rounded-full bg-sky-600 px-3 py-1 shadow">2026</span>
-          <span className="rounded-full bg-sky-800 px-3 py-1 shadow">Available</span>
-        </div>
+      </div>
+      <div className="bg-[#0d97d6] px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-white shadow-sm">
+        {yearLabel} · {statusLabel}
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 py-4">
         <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{location || "Featured stay"}</div>
