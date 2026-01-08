@@ -33,45 +33,46 @@ const TourCard = ({
   currency?: string;
   year?: number;
   image?: string | null;
-}) => {
-  const src = imageUrl(image ?? undefined);
-  const priceLabel = formatPrice(price, currency);
-  return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-      <div className="relative h-52 w-full">
-        {src ? (
-          <Image src={src} alt={name} fill className="object-cover" sizes="(min-width:1024px) 25vw, 90vw" priority />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-slate-100 text-lg font-semibold text-slate-500">
-            {name.slice(0, 1)}
-          </div>
-        )}
-        <div className="absolute inset-x-0 top-0 flex items-center justify-between px-3 py-2 text-[11px] font-semibold text-white">
-          <span className="rounded-full bg-sky-600 px-3 py-1 shadow">7 DAYS</span>
-          <span className="rounded-full bg-sky-800 px-3 py-1 shadow">{year ?? "Upcoming"}</span>
+  }) => {
+    const src = imageUrl(image ?? undefined);
+    const priceLabel = formatPrice(price, currency);
+    const daysLabel = "9 DAYS";
+    const yearLabel = year ?? "2026";
+    return (
+      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+        <div className="relative h-52 w-full">
+          {src ? (
+            <Image src={src} alt={name} fill className="object-cover" sizes="(min-width:1024px) 25vw, 90vw" priority />
+          ) : (
+            <div className="flex h-full items-center justify-center bg-slate-100 text-lg font-semibold text-slate-500">
+              {name.slice(0, 1)}
+            </div>
+          )}
         </div>
-      </div>
-      <div className="flex flex-1 flex-col gap-3 px-4 py-4">
-        <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{category}</div>
-        <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
-        <p className="text-sm text-slate-600 line-clamp-2">{description || "An unforgettable journey awaits."}</p>
-        <div className="mt-auto flex items-center justify-between">
-          <div className="flex items-center gap-1 text-sm font-semibold text-slate-800">
-            <span className="text-amber-500">★</span>
-            <span>4.8</span>
-            <span className="text-slate-400">·</span>
-            <span>{priceLabel || "Pricing soon"}</span>
-          </div>
-          <Link
-            href={`/tours/${id}`}
-            className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-sky-500"
-          >
-            View Details
-          </Link>
+        <div className="bg-[#0d97d6] px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-white shadow-sm">
+          {daysLabel} · {yearLabel}
         </div>
-      </div>
-    </article>
-  );
+        <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
+          <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{category}</div>
+          <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
+          <p className="text-sm text-slate-600 line-clamp-2">{description || "An unforgettable journey awaits."}</p>
+          <div className="mt-auto flex items-center justify-between">
+            <div className="flex items-center gap-1 text-sm font-semibold text-slate-800">
+              <span className="text-amber-500">★</span>
+              <span>4.8</span>
+              <span className="text-slate-400">·</span>
+              <span>{priceLabel || "Pricing soon"}</span>
+            </div>
+            <Link
+              href={`/tours/${id}`}
+              className="flex items-center gap-2 rounded-md bg-[#1273b5] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-[#0f5f95]"
+            >
+              View Details <span aria-hidden="true">›</span>
+            </Link>
+          </div>
+        </div>
+      </article>
+    );
 };
 
 const HouseCard = ({
