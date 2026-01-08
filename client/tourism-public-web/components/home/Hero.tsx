@@ -13,23 +13,8 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-900/70 to-slate-950/90" />
 
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10 md:py-14">
-        <header className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10 text-lg font-semibold">
-              P
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-sky-200">Parker</p>
-              <p className="text-sm text-white/80">Tour &amp; Travel</p>
-            </div>
-          </div>
+        <header className="flex items-center justify-end">
           <nav className="hidden items-center gap-6 text-sm font-semibold uppercase tracking-[0.18em] text-white/80 md:flex">
-            <Link href="/tours" className="hover:text-white">
-              Tours
-            </Link>
-            <Link href="/houses" className="hover:text-white">
-              Houses
-            </Link>
             <Link href="#about" className="hover:text-white">
               About
             </Link>

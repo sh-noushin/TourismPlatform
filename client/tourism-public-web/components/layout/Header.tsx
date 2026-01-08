@@ -56,28 +56,7 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
             isHome ? "text-white/90" : "text-muted"
           )}
         >
-          {isHome ? <div /> : (
-            <div className="flex items-center gap-6">
-              <Link
-                href="/houses"
-                className={cn(
-                  "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
-                  isHome ? "text-white" : "text-text"
-                )}
-              >
-                {translations.navHouses}
-              </Link>
-              <Link
-                href="/tours"
-                className={cn(
-                  "transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
-                  isHome ? "text-white" : "text-text"
-                )}
-              >
-                {translations.navTours}
-              </Link>
-            </div>
-          )}
+          <div />
           <div className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-2 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)] backdrop-blur md:px-3">
             {languages.map((lang) => {
               const active = locale === lang.code;

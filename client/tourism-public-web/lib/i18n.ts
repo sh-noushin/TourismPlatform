@@ -93,6 +93,7 @@ type DetailTranslation = {
     loadErrorCopy: string;
     propertyListTitle: string;
     listingTypeLabel: string;
+    listingTypePrefix: string;
     listingTypeValues: {
       rent: string;
       buy: string;
@@ -102,6 +103,8 @@ type DetailTranslation = {
       name: string;
       description: string;
       listingType: string;
+      price: string;
+      currency: string;
       houseTypeName: string;
       line1: string;
       line2: string;
@@ -207,6 +210,7 @@ const EN: Translations = {
     dateToLabel: "To",
     location: {
       label: "Location",
+      listingTypePrefix: "For",
       helper: "City, region, or country",
       placeholder: "Anywhere",
     },
@@ -373,6 +377,7 @@ const FA: Translations = {
     dateToLabel: "تا",
     location: {
       label: "مکان",
+      listingTypePrefix: "برای",
       helper: "شهر، منطقه یا کشور",
       placeholder: "هر جا",
     },
