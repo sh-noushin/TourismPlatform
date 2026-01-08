@@ -72,6 +72,10 @@ type CardTranslation = {
   photos: (count: number) => string;
   noPhoto: string;
   viewSchedules: string;
+  availableStatus: string;
+  tourDescriptionFallback: string;
+  houseDescriptionFallback: string;
+  houseLocationFallback: string;
 };
 
 type DetailTranslation = {
@@ -165,6 +169,13 @@ export type Translations = {
   siteTitle: string;
   seeDetails: string;
   copyright: string;
+  about: {
+    tagline: string;
+    heading: string;
+    description: string;
+    learnMore: string;
+    contact: string;
+  };
   filters: FiltersTranslationDefinition;
   sort: SortTranslation;
   results: ResultsTranslation;
@@ -193,6 +204,14 @@ const EN: Translations = {
   siteTitle: "Tourism Platform",
   seeDetails: "Details",
   copyright: "© 2024 Tourism Platform. All rights reserved.",
+  about: {
+    tagline: "Travel the World",
+    heading: "Plan with our travel agency",
+    description:
+      "Discover tailored itineraries, curated homes, and seamless journeys. Our team handles the details so you can focus on the experience.",
+    learnMore: "Learn More",
+    contact: "Contact Us",
+  },
   filters: {
     title: "Filters",
     toursSubtitle: "Refine your journey",
@@ -265,6 +284,10 @@ const EN: Translations = {
     photos: (count) => `${count} photos`,
     noPhoto: "No photo yet",
     viewSchedules: "View schedules",
+    availableStatus: "Available",
+    tourDescriptionFallback: "An unforgettable journey awaits.",
+    houseDescriptionFallback: "A curated home for your next escape.",
+    houseLocationFallback: "Featured stay",
   },
   detail: {
     backToHouses: "Back to houses",
@@ -360,6 +383,14 @@ const FA: Translations = {
   siteTitle: "پلتفرم گردشگری",
   seeDetails: "جزییات",
   copyright: "© 2024 Tourism Platform. تمامی حقوق محفوظ است.",
+  about: {
+    tagline: "سفر به دور دنیا",
+    heading: "با آژانس ما برنامه‌ریزی کنید",
+    description:
+      "برنامه‌های سفر سفارشی، خانه‌های منتخب و سفرهای بدون دردسر را کشف کنید. تیم ما جزئیات را مدیریت می‌کند تا شما روی تجربه تمرکز کنید.",
+    learnMore: "بیشتر بدانید",
+    contact: "تماس بگیرید",
+  },
   filters: {
     title: "فیلترها",
     toursSubtitle: "سفر خود را دقیق‌تر تنظیم کنید",
@@ -433,6 +464,10 @@ const FA: Translations = {
     photos: (count) => `${count} عکس`,
     noPhoto: "هنوز عکسی اضافه نشده",
     viewSchedules: "مشاهده برنامه‌ها",
+    availableStatus: "در دسترس",
+    tourDescriptionFallback: "سفری فراموش‌نشدنی در انتظار شماست.",
+    houseDescriptionFallback: "خانه‌ای طراحی‌شده برای فراغت شما.",
+    houseLocationFallback: "اقامت منتخب",
   },
   detail: {
     backToHouses: "بازگشت به خانه‌ها",
