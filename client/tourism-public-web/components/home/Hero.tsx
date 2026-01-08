@@ -13,7 +13,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-900/70 to-slate-950/90" />
 
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10 md:py-14">
-        <header className="flex items-center justify-end">
+        <header className="flex items-center justify-start">
           <nav className="hidden items-center gap-6 text-sm font-semibold uppercase tracking-[0.18em] text-white/80 md:flex">
             <Link href="#about" className="hover:text-white">
               About
