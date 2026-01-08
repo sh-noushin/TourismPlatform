@@ -20,6 +20,7 @@ type FiltersTranslationDefinition = {
   dateToLabel: string;
   location: {
     label: string;
+    listingTypePrefix: string;
     helper: string;
     placeholder: string;
   };
@@ -91,10 +92,16 @@ type DetailTranslation = {
     loadErrorTitle: string;
     loadErrorCopy: string;
     propertyListTitle: string;
+    listingTypeLabel: string;
+    listingTypeValues: {
+      rent: string;
+      buy: string;
+    };
     propertyLabels: {
       houseId: string;
       name: string;
       description: string;
+      listingType: string;
       houseTypeName: string;
       line1: string;
       line2: string;
@@ -273,9 +280,16 @@ const EN: Translations = {
       loadErrorTitle: "House details unavailable",
       loadErrorCopy: "We couldn’t reach the listing yet; please try again later or browse other homes.",
       propertyListTitle: "All properties",
+      listingTypeLabel: "Listing type",
+      listingTypeValues: {
+        rent: "Rent",
+        buy: "Buy",
+      },
+      listingTypePrefix: "For",
       propertyLabels: {
         houseId: "House ID",
         name: "Name",
+        listingType: "Listing type",
         description: "Description",
         price: "Price",
         currency: "Currency",
@@ -433,9 +447,16 @@ const FA: Translations = {
       loadErrorTitle: "جزئیات خانه در دسترس نیست",
       loadErrorCopy: "فعلاً نمی‌توانیم اطلاعات این اقامت را بارگذاری کنیم؛ بعداً امتحان کنید یا خانه‌های دیگر را ببینید.",
       propertyListTitle: "تمام ویژگی‌ها",
+      listingTypeLabel: "نوع فهرست",
+      listingTypeValues: {
+        rent: "اجاره",
+        buy: "خرید",
+      },
+      listingTypePrefix: "برای",
       propertyLabels: {
         houseId: "شناسه خانه",
         name: "نام",
+        listingType: "نوع فهرست",
         description: "توضیحات",
         price: "قیمت",
         currency: "واحد پول",

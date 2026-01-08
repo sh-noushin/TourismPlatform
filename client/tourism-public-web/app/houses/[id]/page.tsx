@@ -75,6 +75,41 @@ const formatPriceValue = (
   }).format(numeric);
 };
 
+const formatListingType = (
+  value: number | string | null | undefined,
+  translations: { rent: string; buy: string },
+  prefix: string,
+): string | null => {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  const numeric = typeof value === "string" ? Number(value) : value;
+  if (Number.isFinite(numeric)) {
+    if (numeric === 1) {
+      return `${prefix} ${translations.rent}`;
+    }
+    if (numeric === 2) {
+      return `${prefix} ${translations.buy}`;
+    }
+  }
+
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "rent") {
+      return `${prefix} ${translations.rent}`;
+    }
+    if (normalized === "buy") {
+      return `${prefix} ${translations.buy}`;
+    }
+    if (normalized.length > 0) {
+      return `${prefix} ${value}`;
+    }
+  }
+
+  return `${prefix} ${value}`;
+};
+
 type HouseDetailParams = { params: { id?: string | string[] } | Promise<{ id?: string | string[] }> };
 
 export default async function HouseDetailPage({ params }: HouseDetailParams) {
@@ -114,6 +149,9 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
       name: t.detail.house.loadErrorTitle,
       description: t.detail.house.loadErrorCopy,
       houseTypeName: null,
+      listingType: null,
+      price: null,
+      currency: null,
       line1: null,
       line2: null,
       city: null,
@@ -126,10 +164,16 @@ export default async function HouseDetailPage({ params }: HouseDetailParams) {
   const description = resolvedHouse.description?.trim() || t.detail.house.descriptionFallback;
   const formattedPrice = formatPriceValue(resolvedHouse.price, locale);
   const combinedPriceValue = [formattedPrice, resolvedHouse.currency].filter(Boolean).join(" ") || null;
+  const listingTypeDisplay = formatListingType(
+    resolvedHouse.listingType,
+    t.detail.house.listingTypeValues,
+    t.detail.house.listingTypePrefix,
+  );
   const propertyItems = [
     { label: t.detail.house.propertyLabels.houseId, value: resolvedHouse.houseId },
     { label: t.detail.house.propertyLabels.name, value: resolvedHouse.name },
     { label: t.detail.house.propertyLabels.description, value: description },
+    { label: t.detail.house.propertyLabels.listingType, value: listingTypeDisplay },
     { label: t.detail.house.propertyLabels.price, value: combinedPriceValue },
     { label: t.detail.house.propertyLabels.houseTypeName, value: resolvedHouse.houseTypeName },
     { label: t.detail.house.propertyLabels.line1, value: resolvedHouse.line1 },
