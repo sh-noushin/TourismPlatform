@@ -1,6 +1,10 @@
 import type { TourSort } from "@/lib/filters/tours";
 import type { HouseSort } from "@/lib/filters/houses";
 
+const farsiNumberFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0, useGrouping: false });
+
+export const formatFarsiNumber = (value: number) => farsiNumberFormatter.format(value);
+
 type SortLabels<T extends string> = Record<T, string>;
 
 type FiltersTranslationDefinition = {
@@ -76,6 +80,7 @@ type CardTranslation = {
   tourDescriptionFallback: string;
   houseDescriptionFallback: string;
   houseLocationFallback: string;
+  tourDurationLabel: (days: number) => string;
 };
 
 type DetailTranslation = {
@@ -288,6 +293,7 @@ const EN: Translations = {
     tourDescriptionFallback: "An unforgettable journey awaits.",
     houseDescriptionFallback: "A curated home for your next escape.",
     houseLocationFallback: "Featured stay",
+    tourDurationLabel: (days) => `${days} DAYS`,
   },
   detail: {
     backToHouses: "Back to houses",
@@ -468,6 +474,7 @@ const FA: Translations = {
     tourDescriptionFallback: "سفری فراموش‌نشدنی در انتظار شماست.",
     houseDescriptionFallback: "خانه‌ای طراحی‌شده برای فراغت شما.",
     houseLocationFallback: "اقامت منتخب",
+    tourDurationLabel: (days) => `${formatFarsiNumber(days)} روز`,
   },
   detail: {
     backToHouses: "بازگشت به خانه‌ها",

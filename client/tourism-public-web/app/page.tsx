@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Hero } from "@/components/home/Hero";
 import { getFeaturedTours, getFeaturedHouses } from "@/lib/api/featured";
 import { imageUrl } from "@/lib/utils/imageUrl";
-import { i18n, type Translations } from "@/lib/i18n";
+import { i18n, type Translations, formatFarsiNumber } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +13,31 @@ const formatPrice = (value: number | string | undefined, currency: string | unde
   if (value === undefined || value === null || !Number.isFinite(Number(value))) return "";
   const formatted = new Intl.NumberFormat("en-US").format(Number(value));
   return currency ? `${formatted} ${currency}` : formatted;
+};
+
+const getBadgeClassName = (isFarsi: boolean) =>
+  [
+    "bg-[#0d97d6]",
+    "flex",
+    "w-full",
+    "items-center",
+    "justify-between",
+    "rounded-none",
+    "px-4",
+    "py-2",
+    "text-[11px]",
+    "font-semibold",
+    "leading-none",
+    "text-white",
+    "shadow-sm",
+    isFarsi ? "tracking-[0.08em]" : "tracking-[0.22em] uppercase",
+  ].join(" ");
+
+const formatYearForLocale = (value: number | string | undefined, isFarsi: boolean) => {
+  const fallbackYear = new Date().getFullYear();
+  const parsedYear = typeof value === "number" ? value : Number(value ?? fallbackYear);
+  const safeYear = Number.isFinite(parsedYear) ? parsedYear : fallbackYear;
+  return isFarsi ? formatFarsiNumber(safeYear) : String(safeYear);
 };
 
 const TourCard = ({
@@ -25,6 +50,7 @@ const TourCard = ({
   year,
   image,
   translations,
+  isFarsi,
 }: {
   id: string;
   name: string;
@@ -35,47 +61,53 @@ const TourCard = ({
   year?: number;
   image?: string | null;
   translations: Translations;
-  }) => {
-    const src = imageUrl(image ?? undefined);
-    const priceLabel = formatPrice(price, currency);
-    const daysLabel = "9 DAYS";
-    const yearLabel = year ?? "2026";
-    const descriptionText = description || translations.cards.tourDescriptionFallback;
-    return (
-      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-        <div className="relative h-52 w-full">
-          {src ? (
-            <Image src={src} alt={name} fill className="object-cover" sizes="(min-width:1024px) 25vw, 90vw" priority />
-          ) : (
-            <div className="flex h-full items-center justify-center bg-slate-100 text-lg font-semibold text-slate-500">
-              {name.slice(0, 1)}
-            </div>
-          )}
-        </div>
-        <div className="bg-[#0d97d6] px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-white shadow-sm">
-          {daysLabel} - {yearLabel}
-        </div>
-          <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
-            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{category}</div>
-            <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
-            <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
-          <div className="mt-auto flex items-center justify-between">
-            <div className="flex items-center gap-1 text-sm font-semibold text-slate-800">
-              <span className="text-amber-500">★</span>
-              <span>4.8</span>
-              <span className="text-slate-400">·</span>
-              <span>{priceLabel || "Pricing soon"}</span>
-            </div>
-            <Link
-              href={`/tours/${id}`}
-              className="flex items-center gap-2 rounded-md bg-[#1273b5] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-[#0f5f95]"
-            >
-              {translations.seeDetails} <span aria-hidden="true">›</span>
-            </Link>
+  isFarsi: boolean;
+}) => {
+  const src = imageUrl(image ?? undefined);
+  const priceLabel = formatPrice(price, currency);
+  const daysLabel = translations.cards.tourDurationLabel(9);
+  const yearLabel = formatYearForLocale(year, isFarsi);
+  const descriptionText = description || translations.cards.tourDescriptionFallback;
+  const badgeClassName = getBadgeClassName(isFarsi);
+  return (
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+      <div className="relative h-52 w-full">
+        {src ? (
+          <Image src={src} alt={name} fill className="object-cover" sizes="(min-width:1024px) 25vw, 90vw" priority />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-slate-100 text-lg font-semibold text-slate-500">
+            {name.slice(0, 1)}
           </div>
+        )}
+      </div>
+      <div className={badgeClassName}>
+        <span className="flex items-center gap-1">
+          <span>{daysLabel}</span>
+          <span aria-hidden="true">:</span>
+        </span>
+        <span>{yearLabel}</span>
+      </div>
+      <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
+        <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{category}</div>
+        <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
+        <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
+        <div className="mt-auto flex items-center justify-between">
+          <div className="flex items-center gap-1 text-sm font-semibold text-slate-800">
+            <span className="text-amber-500">★</span>
+            <span>4.8</span>
+            <span className="text-slate-400">·</span>
+            <span>{priceLabel || "Pricing soon"}</span>
+          </div>
+          <Link
+            href={`/tours/${id}`}
+            className="flex items-center gap-2 rounded-md bg-[#1273b5] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-[#0f5f95]"
+          >
+            {translations.seeDetails} <span aria-hidden="true">›</span>
+          </Link>
         </div>
-      </article>
-    );
+      </div>
+    </article>
+  );
 };
 
 const HouseCard = ({
@@ -88,6 +120,7 @@ const HouseCard = ({
   currency,
   image,
   translations,
+  isFarsi,
 }: {
   id: string;
   name: string;
@@ -98,14 +131,16 @@ const HouseCard = ({
   currency?: string;
   image?: string | null;
   translations: Translations;
+  isFarsi: boolean;
 }) => {
   const src = imageUrl(image ?? undefined);
   const priceLabel = formatPrice(price, currency);
   const location = [city, country].filter(Boolean).join(", ");
-  const yearLabel = new Date().getFullYear();
+  const yearLabel = formatYearForLocale(undefined, isFarsi);
   const statusLabel = translations.cards.availableStatus;
   const locationText = location || translations.cards.houseLocationFallback;
   const descriptionText = description || translations.cards.houseDescriptionFallback;
+  const badgeClassName = getBadgeClassName(isFarsi);
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
@@ -118,8 +153,12 @@ const HouseCard = ({
           </div>
         )}
       </div>
-      <div className="bg-[#0d97d6] px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-white shadow-sm">
-        {yearLabel} - {statusLabel}
+      <div className={badgeClassName}>
+        <span className="flex items-center gap-1">
+          <span>{yearLabel}</span>
+          <span aria-hidden="true">:</span>
+        </span>
+        <span>{statusLabel}</span>
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 py-4">
         <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{locationText}</div>
@@ -150,6 +189,7 @@ export default async function Home() {
 
   const t = i18n(locale);
   const [tours, houses] = await Promise.all([getFeaturedTours(locale), getFeaturedHouses(6, locale)]);
+  const isFarsi = locale === "fa";
   const topTours = tours.slice(0, 3);
   const topHouses = houses.slice(0, 3);
 
@@ -184,6 +224,7 @@ export default async function Home() {
                 year={tour.year}
                 image={tour.photos?.[0]?.permanentRelativePath}
                 translations={t}
+                isFarsi={isFarsi}
               />
             ))}
           </div>
@@ -220,6 +261,7 @@ export default async function Home() {
                 currency={house.currency}
                 image={house.photos?.[0]?.permanentRelativePath}
                 translations={t}
+                isFarsi={isFarsi}
               />
             ))}
           </div>
