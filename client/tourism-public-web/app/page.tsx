@@ -53,7 +53,7 @@ const TourCard = ({
           )}
         </div>
         <div className="bg-[#0d97d6] px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-white shadow-sm">
-          {daysLabel} · {yearLabel}
+          {daysLabel} - {yearLabel}
         </div>
           <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
             <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{category}</div>
@@ -119,7 +119,7 @@ const HouseCard = ({
         )}
       </div>
       <div className="bg-[#0d97d6] px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-white shadow-sm">
-        {yearLabel} · {statusLabel}
+        {yearLabel} - {statusLabel}
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 py-4">
         <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{locationText}</div>
