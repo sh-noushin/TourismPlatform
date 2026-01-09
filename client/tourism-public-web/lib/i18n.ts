@@ -81,6 +81,7 @@ type CardTranslation = {
   houseDescriptionFallback: string;
   houseLocationFallback: string;
   tourDurationLabel: (days: number) => string;
+  pricingSoon: string;
 };
 
 type DetailTranslation = {
@@ -174,6 +175,7 @@ export type Translations = {
   siteTitle: string;
   seeDetails: string;
   copyright: string;
+  priceLabel: string;
   about: {
     tagline: string;
     heading: string;
@@ -209,6 +211,7 @@ const EN: Translations = {
   siteTitle: "Tourism Platform",
   seeDetails: "Details",
   copyright: "© 2024 Tourism Platform. All rights reserved.",
+  priceLabel: "Price",
   about: {
     tagline: "Travel the World",
     heading: "Plan with our travel agency",
@@ -294,6 +297,7 @@ const EN: Translations = {
     houseDescriptionFallback: "A curated home for your next escape.",
     houseLocationFallback: "Featured stay",
     tourDurationLabel: (days) => `${days} DAYS`,
+    pricingSoon: "Pricing soon",
   },
   detail: {
     backToHouses: "Back to houses",
@@ -389,6 +393,7 @@ const FA: Translations = {
   siteTitle: "پلتفرم گردشگری",
   seeDetails: "جزییات",
   copyright: "© 2024 Tourism Platform. تمامی حقوق محفوظ است.",
+  priceLabel: "قیمت",
   about: {
     tagline: "سفر به دور دنیا",
     heading: "با آژانس ما برنامه‌ریزی کنید",
@@ -475,6 +480,7 @@ const FA: Translations = {
     houseDescriptionFallback: "خانه‌ای طراحی‌شده برای فراغت شما.",
     houseLocationFallback: "اقامت منتخب",
     tourDurationLabel: (days) => `${formatFarsiNumber(days)} روز`,
+    pricingSoon: "قیمت به‌زودی اعلام می‌شود",
   },
   detail: {
     backToHouses: "بازگشت به خانه‌ها",

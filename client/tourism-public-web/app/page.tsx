@@ -64,11 +64,12 @@ const TourCard = ({
   isFarsi: boolean;
 }) => {
   const src = imageUrl(image ?? undefined);
-  const priceLabel = formatPrice(price, currency);
+  const priceValue = formatPrice(price, currency);
   const daysLabel = translations.cards.tourDurationLabel(9);
   const yearLabel = formatYearForLocale(year, isFarsi);
   const descriptionText = description || translations.cards.tourDescriptionFallback;
   const badgeClassName = getBadgeClassName(isFarsi);
+  const priceText = priceValue ? `${translations.priceLabel}: ${priceValue}` : translations.cards.pricingSoon;
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
       <div className="relative h-52 w-full">
@@ -89,7 +90,7 @@ const TourCard = ({
         <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
         <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-sm font-semibold text-slate-800">{priceLabel || "Pricing soon"}</span>
+          <span className="text-sm font-semibold text-slate-800">{priceText}</span>
           <Link
             href={`/tours/${id}`}
             className="flex items-center gap-2 rounded-md bg-[#1273b5] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-[#0f5f95]"
@@ -126,13 +127,14 @@ const HouseCard = ({
   isFarsi: boolean;
 }) => {
   const src = imageUrl(image ?? undefined);
-  const priceLabel = formatPrice(price, currency);
+  const priceValue = formatPrice(price, currency);
   const location = [city, country].filter(Boolean).join(", ");
   const yearLabel = formatYearForLocale(undefined, isFarsi);
   const statusLabel = translations.cards.availableStatus;
   const locationText = location || translations.cards.houseLocationFallback;
   const descriptionText = description || translations.cards.houseDescriptionFallback;
   const badgeClassName = getBadgeClassName(isFarsi);
+  const priceText = priceValue ? `${translations.priceLabel}: ${priceValue}` : translations.cards.pricingSoon;
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
@@ -154,7 +156,7 @@ const HouseCard = ({
         <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
         <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-sm font-semibold text-slate-800">{priceLabel ? `from ${priceLabel}` : "Pricing soon"}</span>
+          <span className="text-sm font-semibold text-slate-800">{priceText}</span>
           <Link
             href={`/houses/${id}`}
             className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-sky-500"
