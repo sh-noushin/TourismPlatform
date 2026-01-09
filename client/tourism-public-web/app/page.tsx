@@ -81,10 +81,7 @@ const TourCard = ({
         )}
       </div>
       <div className={badgeClassName}>
-        <span className="flex items-center gap-1">
-          <span>{daysLabel}</span>
-          <span aria-hidden="true">:</span>
-        </span>
+        <span>{daysLabel}</span>
         <span>{yearLabel}</span>
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
@@ -92,12 +89,7 @@ const TourCard = ({
         <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
         <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
         <div className="mt-auto flex items-center justify-between">
-          <div className="flex items-center gap-1 text-sm font-semibold text-slate-800">
-            <span className="text-amber-500">★</span>
-            <span>4.8</span>
-            <span className="text-slate-400">·</span>
-            <span>{priceLabel || "Pricing soon"}</span>
-          </div>
+          <span className="text-sm font-semibold text-slate-800">{priceLabel || "Pricing soon"}</span>
           <Link
             href={`/tours/${id}`}
             className="flex items-center gap-2 rounded-md bg-[#1273b5] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-[#0f5f95]"
@@ -154,10 +146,7 @@ const HouseCard = ({
         )}
       </div>
       <div className={badgeClassName}>
-        <span className="flex items-center gap-1">
-          <span>{yearLabel}</span>
-          <span aria-hidden="true">:</span>
-        </span>
+        <span>{yearLabel}</span>
         <span>{statusLabel}</span>
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 py-4">
@@ -165,12 +154,7 @@ const HouseCard = ({
         <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
         <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
         <div className="mt-auto flex items-center justify-between">
-          <div className="flex items-center gap-1 text-sm font-semibold text-slate-800">
-            <span className="text-amber-500">★</span>
-            <span>4.8</span>
-            <span className="text-slate-400">·</span>
-            <span>{priceLabel ? `from ${priceLabel}` : "Pricing soon"}</span>
-          </div>
+          <span className="text-sm font-semibold text-slate-800">{priceLabel ? `from ${priceLabel}` : "Pricing soon"}</span>
           <Link
             href={`/houses/${id}`}
             className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-sky-500"
