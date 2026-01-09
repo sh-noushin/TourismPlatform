@@ -322,6 +322,7 @@ export class DashboardShellComponent implements OnDestroy {
         ]
       },
       { label: this.translate.instant('MENU.EXCHANGE'), basePath: '/admin/exchange', icon: '💱' },
+      { label: this.translate.instant('MENU.PUBLIC_WEB'), basePath: '/admin/public-web', icon: '🌐' },
       {
         label: this.translate.instant('MENU.PERMISSIONS'),
         basePath: '/admin/permissions',

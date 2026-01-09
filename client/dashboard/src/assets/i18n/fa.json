@@ -16,7 +16,8 @@
     "EXCHANGE": "صرافی",
     "PERMISSIONS": "دسترسی‌ها",
     "ROLES": "نقش‌ها",
-    "USERS": "کاربران"
+    "USERS": "کاربران",
+    "PUBLIC_WEB": "مدیریت صفحه عمومی"
   },
   "USER": {
     "CHANGE_PASSWORD": "تغییر رمز عبور",

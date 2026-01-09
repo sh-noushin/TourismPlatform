@@ -214,10 +214,10 @@ export class HouseEditComponent implements OnDestroy {
     this.countriesError.set(null);
 
     try {
-      const countries = await firstValueFrom(this.client.toursCountries());
+      const countries = await firstValueFrom(this.client.countries());
       const options = (countries ?? [])
         .map((country: CountryDto) => ({ label: country.name, value: country.code }))
-        .sort((left, right) => left.label.localeCompare(right.label));
+        .sort((left: { label: string }, right: { label: string }) => left.label.localeCompare(right.label));
       this.countryOptions.set(options);
     } catch (err: any) {
       this.countriesError.set(err?.message ?? 'Failed loading countries');

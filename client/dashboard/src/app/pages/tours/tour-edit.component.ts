@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   API_BASE_URL,
   Client,
+  CountryDto,
   CreateTourRequest,
   CreateTourScheduleRequest,
   TourCommitPhotoItem,
@@ -263,10 +264,10 @@ export class TourEditComponent implements OnDestroy {
     this.countriesError.set(null);
 
     try {
-      const countries = await firstValueFrom(this.client.toursCountries());
+      const countries = await firstValueFrom(this.client.countries());
       const options = (countries ?? [])
-        .map((country) => ({ label: country.name, value: country.code }))
-        .sort((left, right) => left.label.localeCompare(right.label));
+        .map((country: CountryDto) => ({ label: country.name, value: country.code }))
+        .sort((left: { label: string }, right: { label: string }) => left.label.localeCompare(right.label));
       this.countryOptions.set(options);
     } catch (err: any) {
       this.countriesError.set(err?.message ?? 'Failed loading countries');

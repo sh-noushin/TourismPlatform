@@ -16,7 +16,8 @@
     "EXCHANGE": "Exchange",
     "PERMISSIONS": "Permissions",
     "ROLES": "Roles",
-    "USERS": "Users"
+    "USERS": "Users",
+    "PUBLIC_WEB": "Manage public page"
   },
   "USER": {
     "CHANGE_PASSWORD": "Change password",
