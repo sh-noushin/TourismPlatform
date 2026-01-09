@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Identity.Domain.Roles;
 using Server.Modules.Identity.Domain.Users;
+using Server.Modules.PublicWeb.Domain;
 
 namespace Server.Api.Infrastructure.Persistence;
 
@@ -23,5 +24,6 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Ap
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Server.Modules.Tours.Domain._ModuleAnchor).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Server.Modules.Exchange.Domain._ModuleAnchor).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Server.Modules.Media.Domain._ModuleAnchor).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Server.Modules.PublicWeb.Domain._ModuleAnchor).Assembly);
     }
 }

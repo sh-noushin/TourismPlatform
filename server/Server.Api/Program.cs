@@ -51,6 +51,7 @@ if (app.Environment.IsDevelopment())
 
 await app.SeedIdentityAsync();
 await app.SeedReferenceDataAsync();
+await app.SeedPublicWebAsync();
 
 app.UseApiDocumentation();
 

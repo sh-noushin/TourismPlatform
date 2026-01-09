@@ -2,6 +2,7 @@ using Scalar.AspNetCore;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Middleware;
 using Server.Api.Services;
+using Server.Modules.PublicWeb.Infrastructure;
 
 namespace Server.Api.Extensions;
 
@@ -48,6 +49,13 @@ public static class WebApplicationExtensions
     {
         using var scope = app.Services.CreateScope();
         var seeder = scope.ServiceProvider.GetRequiredService<ReferenceDataSeeder>();
+        await seeder.SeedAsync();
+    }
+
+    public static async Task SeedPublicWebAsync(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<PublicWebSeeder>();
         await seeder.SeedAsync();
     }
 }

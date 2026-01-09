@@ -1,58 +1,49 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Dtos;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Requests;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Services;
 using Server.Modules.PublicWeb.Domain;
-using Server.Modules.PublicWeb.Infrastructure.Storage;
+using Server.Modules.PublicWeb.Infrastructure.Repositories;
 
 namespace Server.Modules.PublicWeb.Application.Services;
 
 public sealed class PublicSectionService : IPublicSectionService
 {
-    private readonly ISectionStore _store;
+    private readonly IPublicSectionRepository _repository;
 
-    public PublicSectionService(ISectionStore store)
+    public PublicSectionService(IPublicSectionRepository repository)
     {
-        _store = store;
+        _repository = repository;
     }
 
     public async Task<IReadOnlyCollection<PublicSectionDto>> GetSectionsAsync(string locale, CancellationToken cancellationToken = default)
     {
-        var sections = await _store.GetAsync(cancellationToken);
+        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
+        var sections = await _repository.ListByLocaleAsync(normalizedLocale, cancellationToken);
         return sections
-            .Where(s => s.IsActive && string.Equals(s.Locale, locale, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(s => s.SortOrder)
             .Select(ToDto)
             .ToList();
     }
 
     public async Task<PublicSectionDto?> GetSectionAsync(string locale, string id, CancellationToken cancellationToken = default)
     {
-        var sections = await _store.GetAsync(cancellationToken);
-        var section = sections.FirstOrDefault(s =>
-            string.Equals(s.Locale, locale, StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(s.Id, id, StringComparison.OrdinalIgnoreCase));
-
+        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
+        var section = await _repository.GetAsync(normalizedLocale, id, cancellationToken);
         return section is null ? null : ToDto(section);
     }
 
     public async Task<PublicSectionDto> UpsertSectionAsync(string locale, string id, UpsertPublicSectionRequest request, CancellationToken cancellationToken = default)
     {
-        var sections = (await _store.GetAsync(cancellationToken)).ToList();
-        var section = sections.FirstOrDefault(s =>
-            string.Equals(s.Locale, locale, StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(s.Id, id, StringComparison.OrdinalIgnoreCase));
+        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
+        var section = await _repository.GetAsync(normalizedLocale, id, cancellationToken);
 
         if (section is null)
         {
-            section = new PublicSection
-            {
-                Id = id,
-                Locale = locale,
-            };
-            sections.Add(section);
+            section = new PublicSection(normalizedLocale, id);
+            await _repository.CreateAsync(section, cancellationToken);
         }
 
         section.Tagline = request.Tagline;
@@ -66,7 +57,7 @@ public sealed class PublicSectionService : IPublicSectionService
         section.SortOrder = request.Order;
         section.IsActive = request.IsActive;
 
-        await _store.SaveAsync(sections, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
 
         return ToDto(section);
     }

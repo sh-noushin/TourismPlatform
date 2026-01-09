@@ -1,25 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Dtos;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Requests;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Services;
 using Server.Modules.PublicWeb.Domain;
-using Server.Modules.PublicWeb.Infrastructure.Storage;
+using Server.Modules.PublicWeb.Infrastructure.Repositories;
 
 namespace Server.Modules.PublicWeb.Application.Services;
 
 public sealed class PublicCallToActionService : IPublicCallToActionService
 {
-    private readonly ICallToActionStore _store;
+    private readonly IPublicCallToActionRepository _repository;
 
-    public PublicCallToActionService(ICallToActionStore store)
+    public PublicCallToActionService(IPublicCallToActionRepository repository)
     {
-        _store = store;
+        _repository = repository;
     }
 
     public async Task<IReadOnlyCollection<PublicCallToActionDto>> GetCallToActionsAsync(string locale, CancellationToken cancellationToken = default)
     {
-        var actions = await _store.GetAsync(cancellationToken);
+        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
+        var actions = await _repository.ListByLocaleAsync(normalizedLocale, cancellationToken);
         return actions
-            .Where(a => a.IsActive && string.Equals(a.Locale, locale, StringComparison.OrdinalIgnoreCase))
+            .Where(a => a.IsActive && string.Equals(a.Locale, normalizedLocale, StringComparison.OrdinalIgnoreCase))
             .OrderBy(a => a.SortOrder)
             .Select(ToDto)
             .ToList();
@@ -27,19 +32,13 @@ public sealed class PublicCallToActionService : IPublicCallToActionService
 
     public async Task<PublicCallToActionDto> UpsertCallToActionAsync(string locale, string id, UpsertPublicCallToActionRequest request, CancellationToken cancellationToken = default)
     {
-        var actions = (await _store.GetAsync(cancellationToken)).ToList();
-        var action = actions.FirstOrDefault(a =>
-            string.Equals(a.Locale, locale, StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(a.Id, id, StringComparison.OrdinalIgnoreCase));
+        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
+        var action = await _repository.GetAsync(normalizedLocale, id, cancellationToken);
 
         if (action is null)
         {
-            action = new PublicCallToAction
-            {
-                Id = id,
-                Locale = locale,
-            };
-            actions.Add(action);
+            action = new PublicCallToAction(normalizedLocale, id);
+            await _repository.CreateAsync(action, cancellationToken);
         }
 
         action.Text = request.Text;
@@ -47,7 +46,7 @@ public sealed class PublicCallToActionService : IPublicCallToActionService
         action.SortOrder = request.Order;
         action.IsActive = request.IsActive;
 
-        await _store.SaveAsync(actions, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
 
         return ToDto(action);
     }

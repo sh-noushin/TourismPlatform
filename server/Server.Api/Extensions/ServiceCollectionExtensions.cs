@@ -34,7 +34,7 @@ using Server.Modules.Properties.Infrastructure.Repositories;
 using Server.Modules.PublicWeb.Application.Services;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Services;
 using Server.Modules.PublicWeb.Infrastructure;
-using Server.Modules.PublicWeb.Infrastructure.Storage;
+using Server.Modules.PublicWeb.Infrastructure.Repositories;
 using Server.Modules.Tours.Application.Services;
 using Server.Modules.Tours.Contracts.Tours.Services;
 using Server.Modules.Tours.Domain.Tours.Repositories;
@@ -58,11 +58,15 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddPublicWeb(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<PublicWebOptions>(configuration.GetSection("PublicWeb"));
-        services.AddSingleton<ISectionStore, JsonSectionStore>();
+        services.AddScoped<IPublicSectionRepository, PublicSectionRepository>();
         services.AddScoped<IPublicSectionService, PublicSectionService>();
-        services.AddSingleton<ICallToActionStore, JsonCallToActionStore>();
+        services.AddScoped<IPublicCallToActionRepository, PublicCallToActionRepository>();
         services.AddScoped<IPublicCallToActionService, PublicCallToActionService>();
+        services.AddScoped<IPublicContactInfoRepository, PublicContactInfoRepository>();
+        services.AddScoped<IPublicContactInfoService, PublicContactInfoService>();
+        services.AddScoped<IPublicLearnMorePageRepository, PublicLearnMorePageRepository>();
+        services.AddScoped<IPublicLearnMorePageService, PublicLearnMorePageService>();
+        services.AddScoped<PublicWebSeeder>();
         return services;
     }
 

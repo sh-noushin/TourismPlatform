@@ -1,11 +1,25 @@
+using System;
+
 namespace Server.Modules.PublicWeb.Domain;
 
 public sealed class PublicCallToAction
 {
-    public string Id { get; set; } = default!;
-    public string Locale { get; set; } = default!;
-    public string Text { get; set; } = default!;
-    public string Url { get; set; } = default!;
+    private PublicCallToAction()
+    {
+    }
+
+    public PublicCallToAction(string locale, string id)
+    {
+        Locale = locale;
+        Id = id;
+        EntityId = Guid.NewGuid();
+    }
+
+    public Guid EntityId { get; private set; }
+    public string Id { get; private set; } = string.Empty;
+    public string Locale { get; private set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
+    public string Url { get; set; } = string.Empty;
     public int SortOrder { get; set; }
     public bool IsActive { get; set; }
 }
