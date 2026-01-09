@@ -1533,6 +1533,749 @@ export class Client {
     }
 
     /**
+     * @param lang (optional) 
+     * @return OK
+     */
+    sectionsAll(lang: string | undefined): Observable<PublicSectionDto[]> {
+        let url_ = this.baseUrl + "/api/public-page/sections?";
+        if (lang === null)
+            throw new globalThis.Error("The parameter 'lang' cannot be null.");
+        else if (lang !== undefined)
+            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSectionsAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSectionsAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicSectionDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicSectionDto[]>;
+        }));
+    }
+
+    protected processSectionsAll(response: HttpResponseBase): Observable<PublicSectionDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(PublicSectionDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param lang (optional) 
+     * @return Created
+     */
+    sectionsPOST(lang: string | undefined, body: CreatePublicSectionRequest): Observable<PublicSectionDto> {
+        let url_ = this.baseUrl + "/api/public-page/sections?";
+        if (lang === null)
+            throw new globalThis.Error("The parameter 'lang' cannot be null.");
+        else if (lang !== undefined)
+            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSectionsPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSectionsPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicSectionDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicSectionDto>;
+        }));
+    }
+
+    protected processSectionsPOST(response: HttpResponseBase): Observable<PublicSectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = PublicSectionDto.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ProblemDetails.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    sectionsPUT(locale: string, id: string, body: UpsertPublicSectionRequest): Observable<PublicSectionDto> {
+        let url_ = this.baseUrl + "/api/public-page/sections/{locale}/{id}";
+        if (locale === undefined || locale === null)
+            throw new globalThis.Error("The parameter 'locale' must be defined.");
+        url_ = url_.replace("{locale}", encodeURIComponent("" + locale));
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSectionsPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSectionsPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicSectionDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicSectionDto>;
+        }));
+    }
+
+    protected processSectionsPUT(response: HttpResponseBase): Observable<PublicSectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PublicSectionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param lang (optional) 
+     * @return OK
+     */
+    ctasAll(lang: string | undefined): Observable<PublicCallToActionDto[]> {
+        let url_ = this.baseUrl + "/api/public-page/ctas?";
+        if (lang === null)
+            throw new globalThis.Error("The parameter 'lang' cannot be null.");
+        else if (lang !== undefined)
+            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCtasAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCtasAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicCallToActionDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicCallToActionDto[]>;
+        }));
+    }
+
+    protected processCtasAll(response: HttpResponseBase): Observable<PublicCallToActionDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(PublicCallToActionDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    ctas(locale: string, id: string, body: UpsertPublicCallToActionRequest): Observable<PublicCallToActionDto> {
+        let url_ = this.baseUrl + "/api/public-page/ctas/{locale}/{id}";
+        if (locale === undefined || locale === null)
+            throw new globalThis.Error("The parameter 'locale' must be defined.");
+        url_ = url_.replace("{locale}", encodeURIComponent("" + locale));
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCtas(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCtas(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicCallToActionDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicCallToActionDto>;
+        }));
+    }
+
+    protected processCtas(response: HttpResponseBase): Observable<PublicCallToActionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PublicCallToActionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param lang (optional) 
+     * @return OK
+     */
+    contactInfoGET(lang: string | undefined): Observable<PublicContactInfoDto> {
+        let url_ = this.baseUrl + "/api/public-page/contact-info?";
+        if (lang === null)
+            throw new globalThis.Error("The parameter 'lang' cannot be null.");
+        else if (lang !== undefined)
+            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processContactInfoGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processContactInfoGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicContactInfoDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicContactInfoDto>;
+        }));
+    }
+
+    protected processContactInfoGET(response: HttpResponseBase): Observable<PublicContactInfoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PublicContactInfoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    contactInfoPUT(locale: string, body: UpsertPublicContactInfoRequest): Observable<PublicContactInfoDto> {
+        let url_ = this.baseUrl + "/api/public-page/contact-info/{locale}";
+        if (locale === undefined || locale === null)
+            throw new globalThis.Error("The parameter 'locale' must be defined.");
+        url_ = url_.replace("{locale}", encodeURIComponent("" + locale));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processContactInfoPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processContactInfoPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicContactInfoDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicContactInfoDto>;
+        }));
+    }
+
+    protected processContactInfoPUT(response: HttpResponseBase): Observable<PublicContactInfoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PublicContactInfoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param lang (optional) 
+     * @return OK
+     */
+    learnMoreGET(lang: string | undefined): Observable<PublicLearnMorePageDto> {
+        let url_ = this.baseUrl + "/api/public-page/learn-more?";
+        if (lang === null)
+            throw new globalThis.Error("The parameter 'lang' cannot be null.");
+        else if (lang !== undefined)
+            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLearnMoreGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLearnMoreGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicLearnMorePageDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicLearnMorePageDto>;
+        }));
+    }
+
+    protected processLearnMoreGET(response: HttpResponseBase): Observable<PublicLearnMorePageDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PublicLearnMorePageDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    learnMorePUT(locale: string, body: UpsertPublicLearnMorePageRequest): Observable<PublicLearnMorePageDto> {
+        let url_ = this.baseUrl + "/api/public-page/learn-more/{locale}";
+        if (locale === undefined || locale === null)
+            throw new globalThis.Error("The parameter 'locale' must be defined.");
+        url_ = url_.replace("{locale}", encodeURIComponent("" + locale));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLearnMorePUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLearnMorePUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PublicLearnMorePageDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PublicLearnMorePageDto>;
+        }));
+    }
+
+    protected processLearnMorePUT(response: HttpResponseBase): Observable<PublicLearnMorePageDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PublicLearnMorePageDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    countries(): Observable<CountryDto[]> {
+        let url_ = this.baseUrl + "/api/reference/countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCountries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCountries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CountryDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CountryDto[]>;
+        }));
+    }
+
+    protected processCountries(response: HttpResponseBase): Observable<CountryDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CountryDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    currencies2(): Observable<CurrencyDto[]> {
+        let url_ = this.baseUrl + "/api/reference/currencies";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCurrencies2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCurrencies2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CurrencyDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CurrencyDto[]>;
+        }));
+    }
+
+    protected processCurrencies2(response: HttpResponseBase): Observable<CurrencyDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CurrencyDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @return OK
      */
     permissionDefinitionsAll(): Observable<PermissionDefinitionDto[]> {
@@ -2719,64 +3462,6 @@ export class Client {
     }
 
     /**
-     * @return OK
-     */
-    toursCountries(): Observable<CountryDto[]> {
-        let url_ = this.baseUrl + "/api/tours/countries";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processToursCountries(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processToursCountries(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<CountryDto[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<CountryDto[]>;
-        }));
-    }
-
-    protected processToursCountries(response: HttpResponseBase): Observable<CountryDto[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CountryDto.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
      * @return No Content
      */
     toursPUT(id: string, body: UpdateTourRequest): Observable<void> {
@@ -2913,6 +3598,64 @@ export class Client {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    countries2(): Observable<CountryDto[]> {
+        let url_ = this.baseUrl + "/api/tours/countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCountries2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCountries2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CountryDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CountryDto[]>;
+        }));
+    }
+
+    protected processCountries2(response: HttpResponseBase): Observable<CountryDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CountryDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3441,6 +4184,62 @@ export interface ICleanupStageUploadsRequest {
     [key: string]: any;
 }
 
+export class CountryDto implements ICountryDto {
+    id!: string;
+    code!: string;
+    name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ICountryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CountryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CountryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICountryDto {
+    id: string;
+    code: string;
+    name: string;
+
+    [key: string]: any;
+}
+
 export class CreateBookingRequest implements ICreateBookingRequest {
     tourScheduleId!: string;
     seats!: number;
@@ -3740,6 +4539,86 @@ export interface ICreatePermissionDefinitionRequest {
     [key: string]: any;
 }
 
+export class CreatePublicSectionRequest implements ICreatePublicSectionRequest {
+    id?: string | undefined;
+    tagline?: string | undefined;
+    heading?: string;
+    body?: string;
+    imageUrl?: string | undefined;
+    primaryCta?: PublicSectionCtaRequest | undefined;
+    secondaryCta?: PublicSectionCtaRequest | undefined;
+    order?: number;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: ICreatePublicSectionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.tagline = _data["tagline"];
+            this.heading = _data["heading"];
+            this.body = _data["body"];
+            this.imageUrl = _data["imageUrl"];
+            this.primaryCta = _data["primaryCta"] ? PublicSectionCtaRequest.fromJS(_data["primaryCta"]) : undefined as any;
+            this.secondaryCta = _data["secondaryCta"] ? PublicSectionCtaRequest.fromJS(_data["secondaryCta"]) : undefined as any;
+            this.order = _data["order"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): CreatePublicSectionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePublicSectionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["tagline"] = this.tagline;
+        data["heading"] = this.heading;
+        data["body"] = this.body;
+        data["imageUrl"] = this.imageUrl;
+        data["primaryCta"] = this.primaryCta ? this.primaryCta.toJSON() : undefined as any;
+        data["secondaryCta"] = this.secondaryCta ? this.secondaryCta.toJSON() : undefined as any;
+        data["order"] = this.order;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface ICreatePublicSectionRequest {
+    id?: string | undefined;
+    tagline?: string | undefined;
+    heading?: string;
+    body?: string;
+    imageUrl?: string | undefined;
+    primaryCta?: PublicSectionCtaRequest | undefined;
+    secondaryCta?: PublicSectionCtaRequest | undefined;
+    order?: number;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
 export class CreateTourCategoryRequest implements ICreateTourCategoryRequest {
     name!: string;
 
@@ -3939,6 +4818,7 @@ export interface ICreateTourScheduleRequest {
 export class CurrencyDto implements ICurrencyDto {
     id!: string;
     code!: string;
+    name!: string;
 
     [key: string]: any;
 
@@ -3959,6 +4839,7 @@ export class CurrencyDto implements ICurrencyDto {
             }
             this.id = _data["id"];
             this.code = _data["code"];
+            this.name = _data["name"];
         }
     }
 
@@ -3977,6 +4858,7 @@ export class CurrencyDto implements ICurrencyDto {
         }
         data["id"] = this.id;
         data["code"] = this.code;
+        data["name"] = this.name;
         return data;
     }
 }
@@ -3984,6 +4866,7 @@ export class CurrencyDto implements ICurrencyDto {
 export interface ICurrencyDto {
     id: string;
     code: string;
+    name: string;
 
     [key: string]: any;
 }
@@ -4278,6 +5161,7 @@ export interface IHousePhotoDto {
 export class HouseSummaryDto implements IHouseSummaryDto {
     houseId!: string;
     name!: string;
+    description!: string | undefined;
     listingType!: number;
     price!: number;
     currency!: string;
@@ -4308,6 +5192,7 @@ export class HouseSummaryDto implements IHouseSummaryDto {
             }
             this.houseId = _data["houseId"];
             this.name = _data["name"];
+            this.description = _data["description"];
             this.listingType = _data["listingType"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -4337,6 +5222,7 @@ export class HouseSummaryDto implements IHouseSummaryDto {
         }
         data["houseId"] = this.houseId;
         data["name"] = this.name;
+        data["description"] = this.description;
         data["listingType"] = this.listingType;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -4355,6 +5241,7 @@ export class HouseSummaryDto implements IHouseSummaryDto {
 export interface IHouseSummaryDto {
     houseId: string;
     name: string;
+    description: string | undefined;
     listingType: number;
     price: number;
     currency: string;
@@ -4690,6 +5577,410 @@ export interface IProblemDetails {
     status?: number | undefined;
     detail?: string | undefined;
     instance?: string | undefined;
+
+    [key: string]: any;
+}
+
+export class PublicCallToActionDto implements IPublicCallToActionDto {
+    id!: string;
+    locale!: string;
+    text!: string;
+    url!: string;
+    sortOrder!: number;
+    isActive!: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IPublicCallToActionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.locale = _data["locale"];
+            this.text = _data["text"];
+            this.url = _data["url"];
+            this.sortOrder = _data["sortOrder"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): PublicCallToActionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicCallToActionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["locale"] = this.locale;
+        data["text"] = this.text;
+        data["url"] = this.url;
+        data["sortOrder"] = this.sortOrder;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IPublicCallToActionDto {
+    id: string;
+    locale: string;
+    text: string;
+    url: string;
+    sortOrder: number;
+    isActive: boolean;
+
+    [key: string]: any;
+}
+
+export class PublicContactInfoDto implements IPublicContactInfoDto {
+    locale!: string;
+    title!: string;
+    description!: string;
+    email!: string | undefined;
+    phone!: string | undefined;
+    address!: string | undefined;
+    isActive!: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IPublicContactInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.locale = _data["locale"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.email = _data["email"];
+            this.phone = _data["phone"];
+            this.address = _data["address"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): PublicContactInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicContactInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["locale"] = this.locale;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["email"] = this.email;
+        data["phone"] = this.phone;
+        data["address"] = this.address;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IPublicContactInfoDto {
+    locale: string;
+    title: string;
+    description: string;
+    email: string | undefined;
+    phone: string | undefined;
+    address: string | undefined;
+    isActive: boolean;
+
+    [key: string]: any;
+}
+
+export class PublicLearnMorePageDto implements IPublicLearnMorePageDto {
+    locale!: string;
+    title!: string;
+    heading!: string;
+    body!: string;
+    imageUrl!: string | undefined;
+    primaryButtonText!: string | undefined;
+    primaryButtonUrl!: string | undefined;
+    isActive!: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IPublicLearnMorePageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.locale = _data["locale"];
+            this.title = _data["title"];
+            this.heading = _data["heading"];
+            this.body = _data["body"];
+            this.imageUrl = _data["imageUrl"];
+            this.primaryButtonText = _data["primaryButtonText"];
+            this.primaryButtonUrl = _data["primaryButtonUrl"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): PublicLearnMorePageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicLearnMorePageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["locale"] = this.locale;
+        data["title"] = this.title;
+        data["heading"] = this.heading;
+        data["body"] = this.body;
+        data["imageUrl"] = this.imageUrl;
+        data["primaryButtonText"] = this.primaryButtonText;
+        data["primaryButtonUrl"] = this.primaryButtonUrl;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IPublicLearnMorePageDto {
+    locale: string;
+    title: string;
+    heading: string;
+    body: string;
+    imageUrl: string | undefined;
+    primaryButtonText: string | undefined;
+    primaryButtonUrl: string | undefined;
+    isActive: boolean;
+
+    [key: string]: any;
+}
+
+export class PublicSectionCtaDto implements IPublicSectionCtaDto {
+    text!: string;
+    url!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IPublicSectionCtaDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.text = _data["text"];
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): PublicSectionCtaDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicSectionCtaDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["text"] = this.text;
+        data["url"] = this.url;
+        return data;
+    }
+}
+
+export interface IPublicSectionCtaDto {
+    text: string;
+    url: string;
+
+    [key: string]: any;
+}
+
+export class PublicSectionCtaRequest implements IPublicSectionCtaRequest {
+    text!: string;
+    url!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IPublicSectionCtaRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.text = _data["text"];
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): PublicSectionCtaRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicSectionCtaRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["text"] = this.text;
+        data["url"] = this.url;
+        return data;
+    }
+}
+
+export interface IPublicSectionCtaRequest {
+    text: string;
+    url: string;
+
+    [key: string]: any;
+}
+
+export class PublicSectionDto implements IPublicSectionDto {
+    id!: string;
+    locale!: string;
+    tagline!: string | undefined;
+    heading!: string;
+    body!: string;
+    imageUrl!: string | undefined;
+    primaryCta!: PublicSectionCtaDto | undefined;
+    secondaryCta!: PublicSectionCtaDto | undefined;
+    order!: number;
+    isActive!: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IPublicSectionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.locale = _data["locale"];
+            this.tagline = _data["tagline"];
+            this.heading = _data["heading"];
+            this.body = _data["body"];
+            this.imageUrl = _data["imageUrl"];
+            this.primaryCta = _data["primaryCta"] ? PublicSectionCtaDto.fromJS(_data["primaryCta"]) : undefined as any;
+            this.secondaryCta = _data["secondaryCta"] ? PublicSectionCtaDto.fromJS(_data["secondaryCta"]) : undefined as any;
+            this.order = _data["order"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): PublicSectionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicSectionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["locale"] = this.locale;
+        data["tagline"] = this.tagline;
+        data["heading"] = this.heading;
+        data["body"] = this.body;
+        data["imageUrl"] = this.imageUrl;
+        data["primaryCta"] = this.primaryCta ? this.primaryCta.toJSON() : undefined as any;
+        data["secondaryCta"] = this.secondaryCta ? this.secondaryCta.toJSON() : undefined as any;
+        data["order"] = this.order;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IPublicSectionDto {
+    id: string;
+    locale: string;
+    tagline: string | undefined;
+    heading: string;
+    body: string;
+    imageUrl: string | undefined;
+    primaryCta: PublicSectionCtaDto | undefined;
+    secondaryCta: PublicSectionCtaDto | undefined;
+    order: number;
+    isActive: boolean;
 
     [key: string]: any;
 }
@@ -5082,58 +6373,6 @@ export interface ITourDetailDto {
     [key: string]: any;
 }
 
-export class CountryDto implements ICountryDto {
-    code!: string;
-    name!: string;
-
-    [key: string]: any;
-
-    constructor(data?: ICountryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.code = _data["code"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): CountryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CountryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["code"] = this.code;
-        data["name"] = this.name;
-        return data;
-    }
-}
-
-export interface ICountryDto {
-    code: string;
-    name: string;
-
-    [key: string]: any;
-}
-
 export class TourPhotoDto implements ITourPhotoDto {
     photoId!: string;
     label!: string;
@@ -5319,6 +6558,8 @@ export class TourSummaryDto implements ITourSummaryDto {
     name!: string;
     description!: string | undefined;
     tourCategoryName!: string;
+    price!: number;
+    currency!: string;
     year!: number;
     photos!: TourPhotoDto[];
 
@@ -5346,6 +6587,8 @@ export class TourSummaryDto implements ITourSummaryDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.tourCategoryName = _data["tourCategoryName"];
+            this.price = _data["price"];
+            this.currency = _data["currency"];
             this.year = _data["year"];
             if (Array.isArray(_data["photos"])) {
                 this.photos = [] as any;
@@ -5372,6 +6615,8 @@ export class TourSummaryDto implements ITourSummaryDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["tourCategoryName"] = this.tourCategoryName;
+        data["price"] = this.price;
+        data["currency"] = this.currency;
         data["year"] = this.year;
         if (Array.isArray(this.photos)) {
             data["photos"] = [];
@@ -5387,6 +6632,8 @@ export interface ITourSummaryDto {
     name: string;
     description: string | undefined;
     tourCategoryName: string;
+    price: number;
+    currency: string;
     year: number;
     photos: TourPhotoDto[];
 
@@ -5844,6 +7091,282 @@ export interface IUpdateTourScheduleRequest {
     startAtUtc: Date;
     endAtUtc: Date;
     capacity: number;
+
+    [key: string]: any;
+}
+
+export class UpsertPublicCallToActionRequest implements IUpsertPublicCallToActionRequest {
+    text?: string;
+    url?: string;
+    order?: number;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IUpsertPublicCallToActionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.text = _data["text"];
+            this.url = _data["url"];
+            this.order = _data["order"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpsertPublicCallToActionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpsertPublicCallToActionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["text"] = this.text;
+        data["url"] = this.url;
+        data["order"] = this.order;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IUpsertPublicCallToActionRequest {
+    text?: string;
+    url?: string;
+    order?: number;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
+export class UpsertPublicContactInfoRequest implements IUpsertPublicContactInfoRequest {
+    title?: string;
+    description?: string;
+    email?: string | undefined;
+    phone?: string | undefined;
+    address?: string | undefined;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IUpsertPublicContactInfoRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.email = _data["email"];
+            this.phone = _data["phone"];
+            this.address = _data["address"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpsertPublicContactInfoRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpsertPublicContactInfoRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["email"] = this.email;
+        data["phone"] = this.phone;
+        data["address"] = this.address;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IUpsertPublicContactInfoRequest {
+    title?: string;
+    description?: string;
+    email?: string | undefined;
+    phone?: string | undefined;
+    address?: string | undefined;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
+export class UpsertPublicLearnMorePageRequest implements IUpsertPublicLearnMorePageRequest {
+    title?: string;
+    heading?: string;
+    body?: string;
+    imageUrl?: string | undefined;
+    primaryButtonText?: string | undefined;
+    primaryButtonUrl?: string | undefined;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IUpsertPublicLearnMorePageRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.title = _data["title"];
+            this.heading = _data["heading"];
+            this.body = _data["body"];
+            this.imageUrl = _data["imageUrl"];
+            this.primaryButtonText = _data["primaryButtonText"];
+            this.primaryButtonUrl = _data["primaryButtonUrl"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpsertPublicLearnMorePageRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpsertPublicLearnMorePageRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["title"] = this.title;
+        data["heading"] = this.heading;
+        data["body"] = this.body;
+        data["imageUrl"] = this.imageUrl;
+        data["primaryButtonText"] = this.primaryButtonText;
+        data["primaryButtonUrl"] = this.primaryButtonUrl;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IUpsertPublicLearnMorePageRequest {
+    title?: string;
+    heading?: string;
+    body?: string;
+    imageUrl?: string | undefined;
+    primaryButtonText?: string | undefined;
+    primaryButtonUrl?: string | undefined;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
+export class UpsertPublicSectionRequest implements IUpsertPublicSectionRequest {
+    tagline?: string | undefined;
+    heading?: string;
+    body?: string;
+    imageUrl?: string | undefined;
+    primaryCta?: PublicSectionCtaRequest | undefined;
+    secondaryCta?: PublicSectionCtaRequest | undefined;
+    order?: number;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IUpsertPublicSectionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.tagline = _data["tagline"];
+            this.heading = _data["heading"];
+            this.body = _data["body"];
+            this.imageUrl = _data["imageUrl"];
+            this.primaryCta = _data["primaryCta"] ? PublicSectionCtaRequest.fromJS(_data["primaryCta"]) : undefined as any;
+            this.secondaryCta = _data["secondaryCta"] ? PublicSectionCtaRequest.fromJS(_data["secondaryCta"]) : undefined as any;
+            this.order = _data["order"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpsertPublicSectionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpsertPublicSectionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["tagline"] = this.tagline;
+        data["heading"] = this.heading;
+        data["body"] = this.body;
+        data["imageUrl"] = this.imageUrl;
+        data["primaryCta"] = this.primaryCta ? this.primaryCta.toJSON() : undefined as any;
+        data["secondaryCta"] = this.secondaryCta ? this.secondaryCta.toJSON() : undefined as any;
+        data["order"] = this.order;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IUpsertPublicSectionRequest {
+    tagline?: string | undefined;
+    heading?: string;
+    body?: string;
+    imageUrl?: string | undefined;
+    primaryCta?: PublicSectionCtaRequest | undefined;
+    secondaryCta?: PublicSectionCtaRequest | undefined;
+    order?: number;
+    isActive?: boolean;
 
     [key: string]: any;
 }
