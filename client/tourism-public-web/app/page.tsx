@@ -9,10 +9,18 @@ import { i18n, type Translations, formatFarsiNumber } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
-const formatPrice = (value: number | string | undefined, currency: string | undefined) => {
-  if (value === undefined || value === null || !Number.isFinite(Number(value))) return "";
-  const formatted = new Intl.NumberFormat("en-US").format(Number(value));
-  return currency ? `${formatted} ${currency}` : formatted;
+const formatPrice = (
+  value: number | string | undefined,
+  currency: string | undefined,
+  isFarsi: boolean,
+) => {
+  if (value === undefined || value === null || !Number.isFinite(Number(value))) return null;
+  const numeric = Number(value);
+  const formatted = isFarsi ? formatFarsiNumber(numeric) : new Intl.NumberFormat("en-US").format(numeric);
+  return {
+    amount: formatted,
+    currency,
+  };
 };
 
 const getBadgeClassName = (isFarsi: boolean) =>
@@ -64,12 +72,22 @@ const TourCard = ({
   isFarsi: boolean;
 }) => {
   const src = imageUrl(image ?? undefined);
-  const priceValue = formatPrice(price, currency);
+  const priceValue = formatPrice(price, currency, isFarsi);
   const daysLabel = translations.cards.tourDurationLabel(9);
   const yearLabel = formatYearForLocale(year, isFarsi);
   const descriptionText = description || translations.cards.tourDescriptionFallback;
   const badgeClassName = getBadgeClassName(isFarsi);
-  const priceText = priceValue ? `${translations.priceLabel}: ${priceValue}` : translations.cards.pricingSoon;
+  const priceText = priceValue ? (
+    <>
+      <span>{translations.priceLabel}:</span>
+      <span className="flex items-center gap-1" dir={isFarsi ? "ltr" : "ltr"}>
+        <span>{priceValue.amount}</span>
+        {priceValue.currency && <span>{priceValue.currency}</span>}
+      </span>
+    </>
+  ) : (
+    translations.cards.pricingSoon
+  );
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
       <div className="relative h-52 w-full">
@@ -127,14 +145,24 @@ const HouseCard = ({
   isFarsi: boolean;
 }) => {
   const src = imageUrl(image ?? undefined);
-  const priceValue = formatPrice(price, currency);
+  const priceValue = formatPrice(price, currency, isFarsi);
   const location = [city, country].filter(Boolean).join(", ");
   const yearLabel = formatYearForLocale(undefined, isFarsi);
   const statusLabel = translations.cards.availableStatus;
   const locationText = location || translations.cards.houseLocationFallback;
   const descriptionText = description || translations.cards.houseDescriptionFallback;
   const badgeClassName = getBadgeClassName(isFarsi);
-  const priceText = priceValue ? `${translations.priceLabel}: ${priceValue}` : translations.cards.pricingSoon;
+  const priceText = priceValue ? (
+    <>
+      <span>{translations.priceLabel}:</span>
+      <span className="flex items-center gap-1" dir={isFarsi ? "ltr" : "ltr"}>
+        <span>{priceValue.amount}</span>
+        {priceValue.currency && <span>{priceValue.currency}</span>}
+      </span>
+    </>
+  ) : (
+    translations.cards.pricingSoon
+  );
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
