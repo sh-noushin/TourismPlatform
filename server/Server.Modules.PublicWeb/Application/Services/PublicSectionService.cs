@@ -35,6 +35,25 @@ public sealed class PublicSectionService : IPublicSectionService
         return section is null ? null : ToDto(section);
     }
 
+    public async Task<PublicSectionDto> CreateSectionAsync(string locale, CreatePublicSectionRequest request, CancellationToken cancellationToken = default)
+    {
+        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
+        var sectionId = NormalizeSectionId(request.Id);
+
+        if (await _repository.GetAsync(normalizedLocale, sectionId, cancellationToken) is not null)
+        {
+            throw new InvalidOperationException($"A section with id '{sectionId}' already exists for locale '{normalizedLocale}'.");
+        }
+
+        var section = new PublicSection(normalizedLocale, sectionId);
+        ApplySectionFields(section, request.Tagline, request.Heading, request.Body, request.ImageUrl, request.PrimaryCta, request.SecondaryCta, request.Order, request.IsActive);
+
+        await _repository.CreateAsync(section, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
+
+        return ToDto(section);
+    }
+
     public async Task<PublicSectionDto> UpsertSectionAsync(string locale, string id, UpsertPublicSectionRequest request, CancellationToken cancellationToken = default)
     {
         var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
@@ -46,17 +65,7 @@ public sealed class PublicSectionService : IPublicSectionService
             await _repository.CreateAsync(section, cancellationToken);
         }
 
-        section.Tagline = request.Tagline;
-        section.Heading = request.Heading;
-        section.Body = request.Body;
-        section.ImageUrl = request.ImageUrl;
-        section.PrimaryCtaText = request.PrimaryCta?.Text;
-        section.PrimaryCtaUrl = request.PrimaryCta?.Url;
-        section.SecondaryCtaText = request.SecondaryCta?.Text;
-        section.SecondaryCtaUrl = request.SecondaryCta?.Url;
-        section.SortOrder = request.Order;
-        section.IsActive = request.IsActive;
-
+        ApplySectionFields(section, request.Tagline, request.Heading, request.Body, request.ImageUrl, request.PrimaryCta, request.SecondaryCta, request.Order, request.IsActive);
         await _repository.SaveChangesAsync(cancellationToken);
 
         return ToDto(section);
@@ -85,5 +94,25 @@ public sealed class PublicSectionService : IPublicSectionService
         }
 
         return new PublicSectionCtaDto(text, url);
+    }
+
+    private static void ApplySectionFields(PublicSection section, string? tagline, string heading, string body, string? imageUrl, PublicSectionCtaRequest? primaryCta, PublicSectionCtaRequest? secondaryCta, int order, bool isActive)
+    {
+        section.Tagline = tagline;
+        section.Heading = heading;
+        section.Body = body;
+        section.ImageUrl = imageUrl;
+        section.PrimaryCtaText = primaryCta?.Text;
+        section.PrimaryCtaUrl = primaryCta?.Url;
+        section.SecondaryCtaText = secondaryCta?.Text;
+        section.SecondaryCtaUrl = secondaryCta?.Url;
+        section.SortOrder = order;
+        section.IsActive = isActive;
+    }
+
+    private static string NormalizeSectionId(string? requestedId)
+    {
+        var trimmedId = requestedId?.Trim();
+        return string.IsNullOrWhiteSpace(trimmedId) ? Guid.NewGuid().ToString("N") : trimmedId!;
     }
 }

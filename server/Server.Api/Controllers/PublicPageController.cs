@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.PublicWeb.Contracts.PublicWeb.Dtos;
@@ -35,6 +36,28 @@ public sealed class PublicPageController : ControllerBase
         var normalized = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
         var sections = await _sectionService.GetSectionsAsync(normalized);
         return Ok(sections);
+    }
+
+    [HttpPost("sections")]
+    [ProducesResponseType(typeof(PublicSectionDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [Authorize(PolicyNames.SuperUserOnly)]
+    public async Task<IActionResult> CreateSection([FromQuery(Name = "lang")] string? locale, [FromBody] CreatePublicSectionRequest request)
+    {
+        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
+
+        try
+        {
+            var section = await _sectionService.CreateSectionAsync(normalizedLocale, request);
+            var location = Url.Action(nameof(GetSections), new { lang = normalizedLocale }) ?? string.Empty;
+            return Created(location, section);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
     }
 
     [HttpPut("sections/{locale}/{id}")]
