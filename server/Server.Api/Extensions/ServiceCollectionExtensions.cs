@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +9,9 @@ using Microsoft.OpenApi;
 using Server.Api.Infrastructure.Identity;
 using Server.Api.Infrastructure.Persistence;
 using Server.Api.Infrastructure.Security;
+using Server.SharedKernel.Auth;
 using Server.Api.Services;
+using Server.SharedKernel.Media;
 using Server.Modules.Exchange.Application.Services;
 using Server.Modules.Exchange.Contracts.Exchange.Services;
 using Server.Modules.Exchange.Domain.Currencies.Repositories;
@@ -28,14 +31,14 @@ using Server.Modules.Properties.Contracts.ReferenceData.Services;
 using Server.Modules.Properties.Domain.Countries.Repositories;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 using Server.Modules.Properties.Infrastructure.Repositories;
+using Server.Modules.PublicWeb.Application.Services;
+using Server.Modules.PublicWeb.Contracts.PublicWeb.Services;
+using Server.Modules.PublicWeb.Infrastructure;
+using Server.Modules.PublicWeb.Infrastructure.Storage;
 using Server.Modules.Tours.Application.Services;
 using Server.Modules.Tours.Contracts.Tours.Services;
 using Server.Modules.Tours.Domain.Tours.Repositories;
 using Server.Modules.Tours.Infrastructure.Repositories;
-using Server.SharedKernel.Auth;
-using Server.SharedKernel.Media;
-using System.Text;
-
 namespace Server.Api.Extensions;
 
 public static class ServiceCollectionExtensions
@@ -50,6 +53,16 @@ public static class ServiceCollectionExtensions
                       .AllowAnyMethod());
         });
 
+        return services;
+    }
+
+    public static IServiceCollection AddPublicWeb(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<PublicWebOptions>(configuration.GetSection("PublicWeb"));
+        services.AddSingleton<ISectionStore, JsonSectionStore>();
+        services.AddScoped<IPublicSectionService, PublicSectionService>();
+        services.AddSingleton<ICallToActionStore, JsonCallToActionStore>();
+        services.AddScoped<IPublicCallToActionService, PublicCallToActionService>();
         return services;
     }
 

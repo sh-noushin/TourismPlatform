@@ -5,6 +5,7 @@
   <Project Path="Server.Modules.Media/Server.Modules.Media.csproj" Id="2cff463f-8bc2-4657-b1d8-dc04c4157457" />
   <Project Path="Server.Modules.Properties/Server.Modules.Properties.csproj" Id="10852ba4-554e-4a50-8bea-fac257558399" />
   <Project Path="Server.Modules.Tours/Server.Modules.Tours.csproj" Id="1a1075ed-b670-4654-be56-476967fb1677" />
+  <Project Path="Server.Modules.PublicWeb/Server.Modules.PublicWeb.csproj" Id="a1b2c3d4-e5f6-7890-1234-56789abcdef0" />
   <Project Path="Server.SharedKernel/Server.SharedKernel.csproj" Id="c4d6af0b-2d38-4fbc-8ec4-d07e5177388b" />
   <Project Path="Server.Tests/Server.Tests.csproj" Id="054a3a6d-4102-4ac1-928b-91813c9b5448" />
 </Solution>

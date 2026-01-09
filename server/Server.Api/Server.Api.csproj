@@ -27,6 +27,7 @@
     <ProjectReference Include="..\Server.Modules.Media\Server.Modules.Media.csproj" />
     <ProjectReference Include="..\Server.Modules.Properties\Server.Modules.Properties.csproj" />
     <ProjectReference Include="..\Server.Modules.Tours\Server.Modules.Tours.csproj" />
+    <ProjectReference Include="..\Server.Modules.PublicWeb\Server.Modules.PublicWeb.csproj" />
     <ProjectReference Include="..\Server.SharedKernel\Server.SharedKernel.csproj" />
   </ItemGroup>
 

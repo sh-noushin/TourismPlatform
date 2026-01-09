@@ -24,6 +24,7 @@ builder.Services.AddMediaServices();
 builder.Services.AddPropertiesServices();
 builder.Services.AddToursServices();
 builder.Services.AddExchangeServices();
+builder.Services.AddPublicWeb(builder.Configuration);
 
 var app = builder.Build();
 
