@@ -313,7 +313,6 @@ export default async function Home() {
               />
             </div>
             <div className="flex flex-col justify-center gap-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-600">{t.about.tagline}</p>
               <h3 className="text-3xl font-semibold text-slate-900">{t.about.heading}</h3>
               <p className="text-base text-slate-700">{t.about.description}</p>
               <div className="flex flex-wrap gap-3">
