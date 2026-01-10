@@ -211,12 +211,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <Hero
-        heading={t.headingTours}
-        body={t.toursDescription}
-        toursCta={t.allTrips}
-        housesCta={t.allHouses}
-      />
+      <Hero />
 
       <section className="bg-white py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
