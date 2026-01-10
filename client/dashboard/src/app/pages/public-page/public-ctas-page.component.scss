@@ -1,12 +1,36 @@
-.public-page {
-  display: grid;
-  gap: 16px;
+@use '../../styles/index' as *;
+
+.public-ctas-page {
+  display: flex;
+  flex-direction: column;
+  gap: spacing(lg);
 }
 
-.public-page__actions {
+.public-ctas-page__header {
   display: flex;
-  gap: 8px;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: spacing(md);
+}
+
+.public-ctas-page__header-button {
+  margin-left: auto;
+}
+
+:host-context([dir='rtl']) .public-ctas-page__header-button {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .public-ctas-page__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .public-ctas-page__header-button {
+    margin-left: 0;
+  }
 }
 
 .status {

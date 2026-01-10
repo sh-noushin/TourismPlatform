@@ -1,16 +1,16 @@
-<section class="public-page">
-  <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_CTAS' | translate }}">
-    <div sfPageHeaderActions class="public-page__actions">
-      <button type="button" class="btn ghost" (click)="load(true)" [disabled]="loading()">
-        {{ 'COMMON.REFRESH' | translate }}
-      </button>
-      @if (!loading() && ctas().length === 0) {
-        <button type="button" class="btn primary" (click)="openCreate()">
-          {{ 'COMMON.ADD' | translate }}
-        </button>
-      }
-    </div>
-  </sf-page-header>
+<section class="public-ctas-page">
+  <div class="public-ctas-page__header">
+    <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_CTAS' | translate }}"></sf-page-header>
+
+    <sf-button
+      class="public-ctas-page__header-button"
+      variant="ghost"
+      type="button"
+      (click)="openCreate()"
+    >
+      {{ 'PUBLIC_PAGE_CTAS_PAGE.NEW_CALL' | translate }}
+    </sf-button>
+  </div>
 
   <sf-card>
     <sf-table

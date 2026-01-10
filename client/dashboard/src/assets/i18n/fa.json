@@ -84,6 +84,12 @@
     "SELECT": "انتخاب کنید",
     "REFRESH": "بروزرسانی"
   },
+  "PUBLIC_PAGE_SECTIONS_PAGE": {
+    "NEW_SECTION": "بخش جدید"
+  },
+  "PUBLIC_PAGE_CTAS_PAGE": {
+    "NEW_CALL": "فراخوان جدید"
+  },
   "TOURS_PAGE": {
     "TITLE": "تورها",
     "SEARCH_PLACEHOLDER": "جستجو بر اساس نام یا دسته‌بندی",

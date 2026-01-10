@@ -1,16 +1,17 @@
-<section class="public-page">
-  <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_SECTIONS' | translate }}">
-    <div sfPageHeaderActions class="public-page__actions">
-      <button type="button" class="btn ghost" (click)="load(true)" [disabled]="loading()">
-        {{ 'COMMON.REFRESH' | translate }}
-      </button>
-      @if (!loading() && sections().length === 0) {
-        <button type="button" class="btn primary" (click)="openCreate()">
-          {{ 'COMMON.ADD' | translate }}
-        </button>
-      }
-    </div>
-  </sf-page-header>
+<section class="public-sections-page">
+  <div class="public-sections-page__header">
+    <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_SECTIONS' | translate }}">
+    </sf-page-header>
+
+    <sf-button
+      class="public-sections-page__header-button"
+      variant="ghost"
+      type="button"
+      (click)="openCreate()"
+    >
+      {{ 'PUBLIC_PAGE_SECTIONS_PAGE.NEW_SECTION' | translate }}
+    </sf-button>
+  </div>
 
   <sf-card>
     <sf-table
