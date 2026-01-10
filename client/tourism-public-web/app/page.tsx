@@ -219,7 +219,13 @@ export default async function Home() {
       <section className="bg-white py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
           <div className="text-center">
-            <h2 className="mt-2 text-3xl font-semibold text-slate-900">{t.headingTours}</h2>
+            <h2
+              className={`mt-2 text-sky-600 ${
+                isFarsi ? "!text-3xl !font-black md:!text-4xl" : "text-3xl font-semibold"
+              }`}
+            >
+              {t.headingTours}
+            </h2>
             <p className="mt-1 text-sm text-slate-600 md:text-base">{t.toursDescription}</p>
           </div>
 
@@ -255,7 +261,13 @@ export default async function Home() {
       <section className="bg-slate-50 py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
           <div className="text-center">
-            <h2 className="mt-2 text-3xl font-semibold text-slate-900">{t.headingHouses}</h2>
+            <h2
+              className={`mt-2 text-sky-600 ${
+                isFarsi ? "!text-3xl !font-black md:!text-4xl" : "text-3xl font-semibold"
+              }`}
+            >
+              {t.headingHouses}
+            </h2>
             <p className="mt-1 text-sm text-slate-600 md:text-base">{t.housesDescription}</p>
           </div>
 
