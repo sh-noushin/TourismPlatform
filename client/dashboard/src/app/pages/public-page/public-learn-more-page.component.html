@@ -1,16 +1,17 @@
-<section class="public-page">
-  <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_LEARN_MORE' | translate }}">
-    <div sfPageHeaderActions class="public-page__actions">
-      <button type="button" class="btn ghost" (click)="load(true)" [disabled]="loading()">
-        {{ 'COMMON.REFRESH' | translate }}
-      </button>
-      @if (!loading() && rows().length === 0) {
-        <button type="button" class="btn primary" (click)="openCreateOrEdit()">
-          {{ 'COMMON.ADD' | translate }}
-        </button>
-      }
-    </div>
-  </sf-page-header>
+<section class="public-learn-more-page">
+  <div class="public-learn-more-page__header">
+    <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_LEARN_MORE' | translate }}"></sf-page-header>
+
+    <sf-button
+      class="public-learn-more-page__header-button"
+      variant="ghost"
+      type="button"
+      [disabled]="loading()"
+      (click)="openCreateOrEdit()"
+    >
+      {{ 'COMMON.ADD' | translate }}
+    </sf-button>
+  </div>
 
   <sf-card>
     <sf-table

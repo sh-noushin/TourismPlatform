@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription, firstValueFrom } from 'rxjs';
 
 import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
+import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn } from '../../shared/models/table.models';
@@ -18,7 +19,7 @@ import { PublicLearnMoreEditComponent } from './public-learn-more-edit.component
   templateUrl: './public-learn-more-page.component.html',
   styleUrls: ['./public-learn-more-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatDialogModule, TranslateModule, SfCardComponent, SfPageHeaderComponent, SfTableComponent]
+  imports: [CommonModule, MatDialogModule, TranslateModule, SfCardComponent, SfPageHeaderComponent, SfTableComponent, SfButtonComponent]
 })
 export class PublicLearnMorePageComponent implements OnDestroy {
   readonly lang = signal<'fa' | 'en'>('fa');

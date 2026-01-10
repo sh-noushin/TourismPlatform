@@ -23,9 +23,6 @@
     "PUBLIC_PAGE_CONTACT_INFO": "Contact info",
     "PUBLIC_PAGE_LEARN_MORE": "Learn more page"
   },
-    "PUBLIC_PAGE_CTAS_PAGE": {
-      "NEW_CALL": "New call"
-    },
   "USER": {
     "CHANGE_PASSWORD": "Change password",
     "LOGOUT": "Logout"
@@ -54,9 +51,6 @@
     "SUBTITLE": "Keep your account safe: the new password must be at least 6 characters and include an uppercase letter, a number, and a special symbol.",
     "CURRENT_PASSWORD": "Current password",
     "NEW_PASSWORD": "New password",
-    "PUBLIC_PAGE_SECTIONS_PAGE": {
-      "NEW_SECTION": "New section"
-    },
     "CONFIRM_PASSWORD": "Confirm new password",
     "SUBMIT": "Update password",
     "CANCEL": "Cancel",
@@ -88,6 +82,12 @@
     "NOTHING_TO_SHOW": "Nothing to show",
     "TRY_WIDENING_FILTERS": "Try widening the filters",
     "SELECT": "Select"
+  },
+  "PUBLIC_PAGE_SECTIONS_PAGE": {
+    "NEW_SECTION": "New section"
+  },
+  "PUBLIC_PAGE_CTAS_PAGE": {
+    "NEW_CALL": "New call"
   },
   "TOURS_PAGE": {
     "TITLE": "Tours",
