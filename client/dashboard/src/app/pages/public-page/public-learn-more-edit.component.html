@@ -1,0 +1,57 @@
+<div class="edit-shell" (click)="$event.stopPropagation()">
+  <div class="glass-panel">
+    <header class="header">
+      <h3>{{ dialogTitle() }}</h3>
+    </header>
+
+    <form class="form" (submit)="save($event)">
+      <label>
+        <span class="label-text">Title</span>
+        <input type="text" name="title" [value]="title()" (input)="title.set($any($event.target).value)" required />
+      </label>
+
+      <label>
+        <span class="label-text">Heading</span>
+        <input type="text" name="heading" [value]="heading()" (input)="heading.set($any($event.target).value)" required />
+      </label>
+
+      <label>
+        <span class="label-text">Body</span>
+        <textarea name="body" rows="6" [value]="body()" (input)="body.set($any($event.target).value)" required></textarea>
+      </label>
+
+      <label>
+        <span class="label-text">Image URL</span>
+        <input type="text" name="imageUrl" [value]="imageUrl()" (input)="imageUrl.set($any($event.target).value)" />
+      </label>
+
+      <label>
+        <span class="label-text">Primary Button Text</span>
+        <input type="text" name="primaryButtonText" [value]="primaryButtonText()" (input)="primaryButtonText.set($any($event.target).value)" />
+      </label>
+
+      <label>
+        <span class="label-text">Primary Button URL</span>
+        <input type="text" name="primaryButtonUrl" [value]="primaryButtonUrl()" (input)="primaryButtonUrl.set($any($event.target).value)" />
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="isActive" [checked]="isActive()" (change)="isActive.set($any($event.target).checked)" />
+        <span class="label-text">Active</span>
+      </label>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn primary" [disabled]="saving()">
+          {{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
+        </button>
+      </div>
+
+      @if (error()) {
+        <p class="status error">{{ error() }}</p>
+      }
+    </form>
+  </div>
+</div>

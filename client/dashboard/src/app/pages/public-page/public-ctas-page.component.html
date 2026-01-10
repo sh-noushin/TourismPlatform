@@ -1,0 +1,31 @@
+<section class="public-page">
+  <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_CTAS' | translate }}">
+    <div sfPageHeaderActions class="public-page__actions">
+      <button type="button" class="btn ghost" (click)="load(true)" [disabled]="loading()">
+        {{ 'COMMON.REFRESH' | translate }}
+      </button>
+      @if (!loading() && ctas().length === 0) {
+        <button type="button" class="btn primary" (click)="openCreate()">
+          {{ 'COMMON.ADD' | translate }}
+        </button>
+      }
+    </div>
+  </sf-page-header>
+
+  <sf-card>
+    <sf-table
+      [columns]="columns()"
+      [data]="ctas()"
+      [loading]="loading()"
+      [actions]="ctas().length ? actions() : []"
+      (rowAction)="onRowAction($event)"
+    ></sf-table>
+
+    @if (error()) {
+      <p class="status status--error">{{ error() }}</p>
+    }
+    @if (!loading() && !error() && ctas().length === 0) {
+      <p class="status">{{ 'COMMON.NO_DATA' | translate }}</p>
+    }
+  </sf-card>
+</section>

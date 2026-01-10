@@ -117,6 +117,11 @@ export class DashboardShellComponent implements OnDestroy {
       this.expandedMenu.set(tourGroup.basePath);
     }
 
+    const publicPageGroup = this.menuItems().find(m => m.basePath === '/admin/public-page');
+    if (publicPageGroup?.subItems?.some(s => this.normalize(s.path) === active)) {
+      this.expandedMenu.set(publicPageGroup.basePath);
+    }
+
     this.langSub = this.translate.onLangChange.subscribe(({ lang }) => {
       const next = (lang === 'en' ? 'en' : 'fa') as 'en' | 'fa';
       this.lang.set(next);
@@ -322,7 +327,17 @@ export class DashboardShellComponent implements OnDestroy {
         ]
       },
       { label: this.translate.instant('MENU.EXCHANGE'), basePath: '/admin/exchange', icon: '💱' },
-      { label: this.translate.instant('MENU.PUBLIC_WEB'), basePath: '/admin/public-web', icon: '🌐' },
+      {
+        label: this.translate.instant('MENU.PUBLIC_WEB'),
+        basePath: '/admin/public-page',
+        icon: '🌐',
+        subItems: [
+          { label: this.translate.instant('MENU.PUBLIC_PAGE_SECTIONS'), path: '/admin/public-page/sections' },
+          { label: this.translate.instant('MENU.PUBLIC_PAGE_CTAS'), path: '/admin/public-page/ctas' },
+          { label: this.translate.instant('MENU.PUBLIC_PAGE_CONTACT_INFO'), path: '/admin/public-page/contact-info' },
+          { label: this.translate.instant('MENU.PUBLIC_PAGE_LEARN_MORE'), path: '/admin/public-page/learn-more' }
+        ]
+      },
       {
         label: this.translate.instant('MENU.PERMISSIONS'),
         basePath: '/admin/permissions',

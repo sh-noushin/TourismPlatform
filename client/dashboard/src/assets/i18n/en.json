@@ -17,7 +17,11 @@
     "PERMISSIONS": "Permissions",
     "ROLES": "Roles",
     "USERS": "Users",
-    "PUBLIC_WEB": "Manage public page"
+    "PUBLIC_WEB": "Manage public page",
+    "PUBLIC_PAGE_SECTIONS": "Sections",
+    "PUBLIC_PAGE_CTAS": "Call to actions",
+    "PUBLIC_PAGE_CONTACT_INFO": "Contact info",
+    "PUBLIC_PAGE_LEARN_MORE": "Learn more page"
   },
   "USER": {
     "CHANGE_PASSWORD": "Change password",

@@ -1,0 +1,84 @@
+<div class="edit-shell" (click)="$event.stopPropagation()">
+  <div class="glass-panel">
+    <header class="header">
+      <h3>{{ title() }}</h3>
+    </header>
+
+    <form class="form" (submit)="save($event)">
+      @if (mode === 'create') {
+        <label>
+          <span class="label-text">ID</span>
+          <input type="text" name="id" autocomplete="off" [value]="id()" (input)="id.set($any($event.target).value)" required />
+        </label>
+      } @else {
+        <label>
+          <span class="label-text">ID</span>
+          <input type="text" name="id" [value]="id()" disabled />
+        </label>
+      }
+
+      <label>
+        <span class="label-text">Heading</span>
+        <input type="text" name="heading" [value]="heading()" (input)="heading.set($any($event.target).value)" required />
+      </label>
+
+      <label>
+        <span class="label-text">Tagline</span>
+        <input type="text" name="tagline" [value]="tagline()" (input)="tagline.set($any($event.target).value)" />
+      </label>
+
+      <label>
+        <span class="label-text">Body</span>
+        <textarea name="body" rows="4" [value]="body()" (input)="body.set($any($event.target).value)" required></textarea>
+      </label>
+
+      <label>
+        <span class="label-text">Image URL</span>
+        <input type="text" name="imageUrl" [value]="imageUrl()" (input)="imageUrl.set($any($event.target).value)" />
+      </label>
+
+      <label>
+        <span class="label-text">Order</span>
+        <input type="number" name="order" [value]="order()" (input)="order.set($any($event.target).valueAsNumber)" />
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="isActive" [checked]="isActive()" (change)="isActive.set($any($event.target).checked)" />
+        <span class="label-text">Active</span>
+      </label>
+
+      <hr />
+
+      <label>
+        <span class="label-text">Primary CTA Text</span>
+        <input type="text" name="primaryCtaText" [value]="primaryCtaText()" (input)="primaryCtaText.set($any($event.target).value)" />
+      </label>
+      <label>
+        <span class="label-text">Primary CTA URL</span>
+        <input type="text" name="primaryCtaUrl" [value]="primaryCtaUrl()" (input)="primaryCtaUrl.set($any($event.target).value)" />
+      </label>
+
+      <label>
+        <span class="label-text">Secondary CTA Text</span>
+        <input type="text" name="secondaryCtaText" [value]="secondaryCtaText()" (input)="secondaryCtaText.set($any($event.target).value)" />
+      </label>
+      <label>
+        <span class="label-text">Secondary CTA URL</span>
+        <input type="text" name="secondaryCtaUrl" [value]="secondaryCtaUrl()" (input)="secondaryCtaUrl.set($any($event.target).value)" />
+      </label>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn primary" [disabled]="saving()">
+          {{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
+        </button>
+      </div>
+
+      @if (error()) {
+        <p class="status error">{{ error() }}</p>
+      }
+    </form>
+  </div>
+</div>

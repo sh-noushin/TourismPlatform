@@ -17,7 +17,11 @@
     "PERMISSIONS": "دسترسی‌ها",
     "ROLES": "نقش‌ها",
     "USERS": "کاربران",
-    "PUBLIC_WEB": "مدیریت صفحه عمومی"
+    "PUBLIC_WEB": "مدیریت صفحه عمومی",
+    "PUBLIC_PAGE_SECTIONS": "بخش‌ها",
+    "PUBLIC_PAGE_CTAS": "دعوت به اقدام",
+    "PUBLIC_PAGE_CONTACT_INFO": "اطلاعات تماس",
+    "PUBLIC_PAGE_LEARN_MORE": "صفحه بیشتر بدانید"
   },
   "USER": {
     "CHANGE_PASSWORD": "تغییر رمز عبور",
@@ -77,7 +81,8 @@
     "CONFIRM": "تأیید",
     "NOTHING_TO_SHOW": "چیزی برای نمایش نیست",
     "TRY_WIDENING_FILTERS": "فیلترها را گسترده‌تر کنید",
-    "SELECT": "انتخاب کنید"
+    "SELECT": "انتخاب کنید",
+    "REFRESH": "بروزرسانی"
   },
   "TOURS_PAGE": {
     "TITLE": "تورها",

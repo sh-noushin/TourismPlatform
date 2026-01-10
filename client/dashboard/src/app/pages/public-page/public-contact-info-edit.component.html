@@ -1,0 +1,52 @@
+<div class="edit-shell" (click)="$event.stopPropagation()">
+  <div class="glass-panel">
+    <header class="header">
+      <h3>{{ dialogTitle() }}</h3>
+    </header>
+
+    <form class="form" (submit)="save($event)">
+      <label>
+        <span class="label-text">Title</span>
+        <input type="text" name="title" [value]="title()" (input)="title.set($any($event.target).value)" required />
+      </label>
+
+      <label>
+        <span class="label-text">Description</span>
+        <textarea name="description" rows="4" [value]="description()" (input)="description.set($any($event.target).value)" required></textarea>
+      </label>
+
+      <label>
+        <span class="label-text">Email</span>
+        <input type="text" name="email" [value]="email()" (input)="email.set($any($event.target).value)" />
+      </label>
+
+      <label>
+        <span class="label-text">Phone</span>
+        <input type="text" name="phone" [value]="phone()" (input)="phone.set($any($event.target).value)" />
+      </label>
+
+      <label>
+        <span class="label-text">Address</span>
+        <input type="text" name="address" [value]="address()" (input)="address.set($any($event.target).value)" />
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="isActive" [checked]="isActive()" (change)="isActive.set($any($event.target).checked)" />
+        <span class="label-text">Active</span>
+      </label>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn primary" [disabled]="saving()">
+          {{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
+        </button>
+      </div>
+
+      @if (error()) {
+        <p class="status error">{{ error() }}</p>
+      }
+    </form>
+  </div>
+</div>
