@@ -209,12 +209,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <Hero
-        heading={t.headingTours}
-        body={t.toursDescription}
-        toursCta={t.allTrips}
-        housesCta={t.allHouses}
-      />
+      <Hero heading={t.headingTours} toursCta={t.allTrips} housesCta={t.allHouses} />
 
       <section className="bg-white py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
@@ -313,7 +308,15 @@ export default async function Home() {
               />
             </div>
             <div className="flex flex-col justify-center gap-4">
-              <h3 className="text-3xl font-semibold text-slate-900">{t.about.heading}</h3>
+              <h3
+                className={`${
+                  isFarsi
+                    ? "text-sky-600 !text-3xl !font-black md:!text-4xl"
+                    : "text-3xl font-semibold text-slate-900"
+                }`}
+              >
+                {t.about.heading}
+              </h3>
               <p className="text-base text-slate-700">{t.about.description}</p>
               <div className="flex flex-wrap gap-3">
                 <Link
