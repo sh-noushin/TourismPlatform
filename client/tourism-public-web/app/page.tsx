@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
+import headerImage from "@/app/assets/header.jpg";
+
 import { Hero } from "@/components/home/Hero";
 import { getFeaturedTours, getFeaturedHouses } from "@/lib/api/featured";
 import { imageUrl } from "@/lib/utils/imageUrl";
@@ -209,7 +211,12 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <Hero heading={t.headingTours} toursCta={t.allTrips} housesCta={t.allHouses} />
+      <Hero
+        heading={t.headingTours}
+        body={t.toursDescription}
+        toursCta={t.allTrips}
+        housesCta={t.allHouses}
+      />
 
       <section className="bg-white py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
@@ -299,7 +306,7 @@ export default async function Home() {
           <div className="mx-auto grid max-w-6xl gap-10 px-6 md:grid-cols-[1.1fr_0.9fr]">
             <div className="overflow-hidden rounded-3xl shadow-xl">
               <Image
-                src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=80"
+                src={headerImage}
                 alt={t.about.heading}
                 width={900}
                 height={600}
