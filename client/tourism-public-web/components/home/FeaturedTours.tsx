@@ -49,7 +49,6 @@ export async function FeaturedTours({ page = 1, pageSize = 4, locale }: Featured
     <section className="relative -mt-6 bg-gradient-to-b from-[#0f1624] via-[#0b111a] to-[#0a0d14] pb-12 pt-18 lang-balanced-section">
       <div className="mx-auto max-w-5xl px-5">
         <div className="text-center text-slate-100">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">{t.discover}</p>
           <h2 className="mt-3 font-serif text-3xl font-semibold text-white md:text-4xl">{t.headingTours}</h2>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-slate-200 md:text-base">{t.toursDescription}</p>
         </div>

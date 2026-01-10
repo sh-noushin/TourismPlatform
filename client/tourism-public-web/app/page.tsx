@@ -210,7 +210,6 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <Hero
-        discoverLabel={t.discover}
         heading={t.headingTours}
         body={t.toursDescription}
         toursCta={t.allTrips}
@@ -220,7 +219,6 @@ export default async function Home() {
       <section className="bg-white py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
           <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-600">{t.discover}</p>
             <h2 className="mt-2 text-3xl font-semibold text-slate-900">{t.headingTours}</h2>
             <p className="mt-1 text-sm text-slate-600 md:text-base">{t.toursDescription}</p>
           </div>
@@ -257,7 +255,6 @@ export default async function Home() {
       <section className="bg-slate-50 py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
           <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-600">{t.discover}</p>
             <h2 className="mt-2 text-3xl font-semibold text-slate-900">{t.headingHouses}</h2>
             <p className="mt-1 text-sm text-slate-600 md:text-base">{t.housesDescription}</p>
           </div>
