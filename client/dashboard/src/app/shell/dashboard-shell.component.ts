@@ -332,10 +332,7 @@ export class DashboardShellComponent implements OnDestroy {
         basePath: '/admin/public-page',
         icon: '🌐',
         subItems: [
-          { label: this.translate.instant('MENU.PUBLIC_PAGE_SECTIONS'), path: '/admin/public-page/sections' },
-          { label: this.translate.instant('MENU.PUBLIC_PAGE_CTAS'), path: '/admin/public-page/ctas' },
-          { label: this.translate.instant('MENU.PUBLIC_PAGE_CONTACT_INFO'), path: '/admin/public-page/contact-info' },
-          { label: this.translate.instant('MENU.PUBLIC_PAGE_LEARN_MORE'), path: '/admin/public-page/learn-more' }
+          { label: this.translate.instant('MENU.PUBLIC_PAGE_SECTIONS'), path: '/admin/public-page/sections' }
         ]
       },
       {
