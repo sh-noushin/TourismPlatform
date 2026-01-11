@@ -93,6 +93,13 @@
     "TYPE_HOUSES": "Houses",
     "TYPE_INFOS": "Infos"
   },
+  "PUBLIC_PAGE_SECTIONS_EDIT": {
+    "NEW_TITLE": "New section",
+    "EDIT_TITLE": "Edit section",
+    "SUBTITLE_CREATE": "Create the content for this section.",
+    "SUBTITLE_EDIT": "Update the content for this section.",
+    "SAVE": "Save section"
+  },
   "PUBLIC_PAGE_CTAS_PAGE": {
     "NEW_CALL": "New call"
   },

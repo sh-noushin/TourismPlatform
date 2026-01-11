@@ -1,28 +1,26 @@
-<div class="edit-shell" (click)="$event.stopPropagation()">
-  <div class="glass-panel">
-    <header class="header">
-      <h3>{{ title() }}</h3>
-    </header>
+<div class="glass-panel" (click)="$event.stopPropagation()">
+  <header class="section-edit-header">
+    <p class="eyebrow">{{ 'MENU.PUBLIC_PAGE_SECTIONS' | translate }}</p>
+    <h2>{{ mode === 'create' ? ('PUBLIC_PAGE_SECTIONS_EDIT.NEW_TITLE' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.EDIT_TITLE' | translate) }}</h2>
+    <p class="subtitle">
+      {{ mode === 'create' ? ('PUBLIC_PAGE_SECTIONS_EDIT.SUBTITLE_CREATE' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.SUBTITLE_EDIT' | translate) }}
+    </p>
+  </header>
 
-    <form class="form" (submit)="save($event)">
-      @if (mode === 'create') {
-        <label>
-          <span class="label-text">ID</span>
-          <input type="text" name="id" autocomplete="off" [value]="id()" (input)="id.set($any($event.target).value)" required />
-        </label>
-      } @else {
-        <label>
-          <span class="label-text">ID</span>
-          <input type="text" name="id" [value]="id()" disabled />
-        </label>
-      }
+  <div class="status-bar">
+    @if (error()) {
+      <span class="status error">{{ error() }}</span>
+    }
+  </div>
 
+  <form class="section-edit-form" (submit)="save($event)">
+    <section class="form-grid top">
       <label>
         <span class="label-text">{{ 'PUBLIC_PAGE_SECTIONS_PAGE.SECTION_TYPE' | translate }}</span>
         <select
           name="sectionType"
           [value]="sectionType()"
-          (change)="sectionType.set($any($event.target).value)"
+          (change)="onSectionTypeChange($any($event.target).value)"
           [disabled]="mode === 'edit'"
           required
         >
@@ -34,9 +32,17 @@
 
       <label>
         <span class="label-text">{{ 'PUBLIC_PAGE_SECTIONS_PAGE.HEADER' | translate }}</span>
-        <input type="text" name="header" [value]="header()" (input)="header.set($any($event.target).value)" required />
+        <input
+          type="text"
+          name="header"
+          [value]="header()"
+          (input)="header.set($any($event.target).value)"
+          required
+        />
       </label>
+    </section>
 
+    <section class="form-grid description">
       <label>
         <span class="label-text">{{ 'PUBLIC_PAGE_SECTIONS_PAGE.CONTENT' | translate }}</span>
         <textarea
@@ -47,19 +53,15 @@
           required
         ></textarea>
       </label>
+    </section>
 
-      <div class="actions">
-        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
-          {{ 'COMMON.CANCEL' | translate }}
-        </button>
-        <button type="submit" class="btn primary" [disabled]="saving()">
-          {{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
-        </button>
-      </div>
-
-      @if (error()) {
-        <p class="status error">{{ error() }}</p>
-      }
-    </form>
-  </div>
+    <section class="actions">
+      <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+        {{ 'COMMON.CANCEL' | translate }}
+      </button>
+      <button type="submit" class="btn primary" [disabled]="saving()">
+        {{ saving() ? ('COMMON.SAVING' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.SAVE' | translate) }}
+      </button>
+    </section>
+  </form>
 </div>

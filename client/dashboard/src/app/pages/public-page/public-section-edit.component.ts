@@ -12,6 +12,7 @@ import {
   SECTION_TYPE_LIST,
   SECTION_TYPE_VALUES,
   SectionType,
+  sectionTypeFromValue,
   UpsertPublicSectionRequest
 } from '../../api/client';
 
@@ -33,7 +34,6 @@ export class PublicSectionEditComponent {
 
   readonly mode: 'create' | 'edit';
   readonly locale: string;
-  readonly id = signal('');
   readonly availableTypes = signal<SectionType[]>(SECTION_TYPE_LIST.slice());
   readonly sectionType = signal<SectionType>(SECTION_TYPE_VALUES[0]);
   readonly header = signal('');
@@ -60,17 +60,15 @@ export class PublicSectionEditComponent {
       if (existing) {
         this.hydrate(existing);
       }
-      this.id.set(raw?.id ?? '');
       if (!existing) {
         this.sectionType.set(this.availableTypes()[0] ?? SECTION_TYPE_LIST[0]);
       }
     }
   }
 
-  title(): string {
-    return this.mode === 'create'
-      ? this.translate.instant('COMMON.NEW')
-      : this.translate.instant('COMMON.EDIT');
+  onSectionTypeChange(raw: unknown): void {
+    const next = sectionTypeFromValue(raw);
+    this.sectionType.set(next);
   }
 
   cancel(): void {
@@ -92,19 +90,15 @@ export class PublicSectionEditComponent {
       };
 
       if (this.mode === 'create') {
-        const newId = this.id().trim();
-        if (!newId) {
-          this.error.set('ID is required');
-          return;
-        }
-
+        const newId = this.sectionType().toLowerCase();
         const req = new CreatePublicSectionRequest({ id: newId, ...payload });
 
         await firstValueFrom(this.client.sectionsPOST(normalizedLocale, req));
       } else {
         const req = new UpsertPublicSectionRequest(payload);
 
-        await firstValueFrom(this.client.sectionsPUT(normalizedLocale, this.id(), req));
+        const id = (this.data as any)?.id as string | undefined;
+        await firstValueFrom(this.client.sectionsPUT(normalizedLocale, id ?? '', req));
       }
 
       this.dialogRef?.close(true);
@@ -116,7 +110,6 @@ export class PublicSectionEditComponent {
   }
 
   private hydrate(existing: PublicSectionDto): void {
-    this.id.set(existing.id);
     this.sectionType.set(existing.sectionType);
     this.header.set(existing.header ?? '');
     this.content.set(existing.content ?? '');

@@ -94,6 +94,13 @@
     "TYPE_HOUSES": "املاک",
     "TYPE_INFOS": "اطلاعات"
   },
+  "PUBLIC_PAGE_SECTIONS_EDIT": {
+    "NEW_TITLE": "بخش جدید",
+    "EDIT_TITLE": "ویرایش بخش",
+    "SUBTITLE_CREATE": "محتوای این بخش را ایجاد کنید.",
+    "SUBTITLE_EDIT": "محتوای این بخش را به‌روزرسانی کنید.",
+    "SAVE": "ذخیره بخش"
+  },
   "PUBLIC_PAGE_CTAS_PAGE": {
     "NEW_CALL": "فراخوان جدید"
   },
