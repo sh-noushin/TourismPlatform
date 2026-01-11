@@ -96,7 +96,7 @@ html[lang='fa'],
 html[dir='rtl'],
 :lang(fa) {
   font-family: var(--font-fa);
-  font-size: 18px !important;
+  font-size: 20px !important;
 }
 html[lang='fa'] body *,
 html[lang='fa'] nav,
@@ -196,6 +196,14 @@ html[dir='rtl'] .lang-balanced-header {
   font-size: 16px !important;
   line-height: 1.5 !important;
 }
+.lang-balanced-header nav a {
+  font-size: 16px;
+}
+html[lang='fa'] .lang-balanced-header nav a,
+:lang(fa) .lang-balanced-header nav a,
+html[dir='rtl'] .lang-balanced-header nav a {
+  font-size: 22px !important;
+}
 @font-face {
   font-family: 'Nazanin';
   src: url('/fonts/NAZANIN.TTF') format('truetype');
@@ -208,7 +216,7 @@ html[dir='rtl'] .lang-balanced-header {
 html[lang='fa'],
 html[dir='rtl'] {
   font-family: var(--font-fa) !important;
-  font-size: 25px !important;
+  font-size: 20px !important;
 }
 
 html[lang='fa'] body,
@@ -216,7 +224,7 @@ html[lang='fa'] body *,
 :lang(fa) body,
 :lang(fa) body * {
   font-family: var(--font-fa) !important;
-  font-size: 18px !important;
+  font-size: 20px !important;
 }
 
 /* Side menu: use B Nazanin at 35px when page is Farsi/RTL */

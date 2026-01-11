@@ -172,6 +172,10 @@ export type Translations = {
   allHouses: string;
   navHouses: string;
   navTours: string;
+  nav: {
+    about: string;
+    contact: string;
+  };
   siteTitle: string;
   seeDetails: string;
   copyright: string;
@@ -208,6 +212,10 @@ const EN: Translations = {
   allHouses: "All houses",
   navHouses: "Houses",
   navTours: "Tours",
+  nav: {
+    about: "About",
+    contact: "Call us",
+  },
   siteTitle: "Tourism Platform",
   seeDetails: "Details",
   copyright: "© 2024 Tourism Platform. All rights reserved.",
@@ -390,6 +398,10 @@ const FA: Translations = {
   allHouses: "همه خانه‌ها",
   navHouses: "خانه‌ها",
   navTours: "تورها",
+  nav: {
+    about: "درباره ما",
+    contact: "تماس با ما",
+  },
   siteTitle: "پلتفرم گردشگری",
   seeDetails: "جزییات",
   copyright: "© 2024 Tourism Platform. تمامی حقوق محفوظ است.",

@@ -27,6 +27,7 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
   }, [initialLocale]);
 
   const translations = useMemo(() => i18n(locale), [locale]);
+  const { nav } = translations;
 
   const languages = [
     { code: "en", label: "English", flag: "/flags/en.svg" },
@@ -78,10 +79,10 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
           <nav className="flex items-center justify-between gap-6 text-xs font-semibold uppercase tracking-[0.28em] text-white/90">
             <div className="flex items-center gap-6 text-[0.69rem] tracking-[0.28em]">
               <Link href="#about" className="hover:text-white">
-                About
+                {nav.about}
               </Link>
               <Link href="mailto:hello@parker.travel" className="hover:text-white">
-                Call us
+                {nav.contact}
               </Link>
             </div>
             {languagePills}
