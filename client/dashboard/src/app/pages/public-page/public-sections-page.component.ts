@@ -71,7 +71,7 @@ export class PublicSectionsPageComponent implements OnDestroy {
     this.error.set(null);
 
     try {
-      const data = await firstValueFrom(this.client.sectionsAll(this.lang()));
+      const data = await firstValueFrom(this.client.sectionsAll());
       const sorted = [...(data ?? [])].sort((a, b) => sectionTypeIndex(a.sectionType) - sectionTypeIndex(b.sectionType));
       this.sections.set(sorted);
     } catch (err: any) {
@@ -87,7 +87,7 @@ export class PublicSectionsPageComponent implements OnDestroy {
       autoFocus: false,
       maxWidth: 'none',
       width: 'min(720px, calc(100vw - 32px))',
-      data: { mode: 'edit', locale: row.locale, id: row.id, existing: row }
+      data: { mode: 'edit', id: row.id, existing: row }
     });
 
     ref.afterClosed().subscribe((saved) => {

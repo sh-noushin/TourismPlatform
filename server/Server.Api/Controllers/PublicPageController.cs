@@ -22,10 +22,9 @@ public sealed class PublicPageController : ControllerBase
 
     [HttpGet("sections")]
     [ProducesResponseType(typeof(IEnumerable<PublicSectionDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetSections([FromQuery(Name = "lang")] string? locale)
+    public async Task<IActionResult> GetSections([FromQuery(Name = "lang")] string? _)
     {
-        var normalized = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
-        var sections = await _sectionService.GetSectionsAsync(normalized);
+        var sections = await _sectionService.GetSectionsAsync();
         return Ok(sections);
     }
 
@@ -35,14 +34,12 @@ public sealed class PublicPageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [Authorize(PolicyNames.SuperUserOnly)]
-    public async Task<IActionResult> CreateSection([FromQuery(Name = "lang")] string? locale, [FromBody] CreatePublicSectionRequest request)
+    public async Task<IActionResult> CreateSection([FromBody] CreatePublicSectionRequest request)
     {
-        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
-
         try
         {
-            var section = await _sectionService.CreateSectionAsync(normalizedLocale, request);
-            var location = Url.Action(nameof(GetSections), new { lang = normalizedLocale }) ?? string.Empty;
+            var section = await _sectionService.CreateSectionAsync(request);
+            var location = Url.Action(nameof(GetSections)) ?? string.Empty;
             return Created(location, section);
         }
         catch (InvalidOperationException ex)
@@ -51,15 +48,14 @@ public sealed class PublicPageController : ControllerBase
         }
     }
 
-    [HttpPut("sections/{locale}/{id}")]
+    [HttpPut("sections/{id}")]
     [ProducesResponseType(typeof(PublicSectionDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Authorize(PolicyNames.SuperUserOnly)]
-    public async Task<IActionResult> UpsertSection(string locale, string id, [FromBody] UpsertPublicSectionRequest request)
+    public async Task<IActionResult> UpsertSection(string id, [FromBody] UpsertPublicSectionRequest request)
     {
-        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
-        var section = await _sectionService.UpsertSectionAsync(normalizedLocale, id, request);
+        var section = await _sectionService.UpsertSectionAsync(id, request);
         return Ok(section);
     }
 }

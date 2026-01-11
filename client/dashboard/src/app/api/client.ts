@@ -1533,16 +1533,10 @@ export class Client {
     }
 
     /**
-     * @param lang (optional) 
      * @return OK
      */
-    sectionsAll(lang: string | undefined): Observable<PublicSectionDto[]> {
-        let url_ = this.baseUrl + "/api/public-page/sections?";
-        if (lang === null)
-            throw new globalThis.Error("The parameter 'lang' cannot be null.");
-        else if (lang !== undefined)
-            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
-        url_ = url_.replace(/[?&]$/, "");
+    sectionsAll(): Observable<PublicSectionDto[]> {
+        let url_ = this.baseUrl + "/api/public-page/sections";
 
         let options_ : any = {
             observe: "response",
@@ -1596,16 +1590,10 @@ export class Client {
     }
 
     /**
-     * @param lang (optional) 
      * @return Created
      */
-    sectionsPOST(lang: string | undefined, body: CreatePublicSectionRequest): Observable<PublicSectionDto> {
-        let url_ = this.baseUrl + "/api/public-page/sections?";
-        if (lang === null)
-            throw new globalThis.Error("The parameter 'lang' cannot be null.");
-        else if (lang !== undefined)
-            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
-        url_ = url_.replace(/[?&]$/, "");
+    sectionsPOST(body: CreatePublicSectionRequest): Observable<PublicSectionDto> {
+        let url_ = this.baseUrl + "/api/public-page/sections";
 
         const content_ = JSON.stringify(body);
 
@@ -1679,11 +1667,8 @@ export class Client {
     /**
      * @return OK
      */
-    sectionsPUT(locale: string, id: string, body: UpsertPublicSectionRequest): Observable<PublicSectionDto> {
-        let url_ = this.baseUrl + "/api/public-page/sections/{locale}/{id}";
-        if (locale === undefined || locale === null)
-            throw new globalThis.Error("The parameter 'locale' must be defined.");
-        url_ = url_.replace("{locale}", encodeURIComponent("" + locale));
+    sectionsPUT(id: string, body: UpsertPublicSectionRequest): Observable<PublicSectionDto> {
+        let url_ = this.baseUrl + "/api/public-page/sections/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -5886,7 +5871,6 @@ export interface IPublicSectionCtaRequest {
 
 export class PublicSectionDto implements IPublicSectionDto {
     id!: string;
-    locale!: string;
     sectionType!: SectionType;
     header!: string;
     content!: string;
@@ -5913,7 +5897,6 @@ export class PublicSectionDto implements IPublicSectionDto {
                     this[property] = _data[property];
             }
             this.id = _data["id"];
-            this.locale = _data["locale"];
             this.sectionType = sectionTypeFromValue(_data["sectionType"]);
             this.header = _data["header"];
             this.content = _data["content"];
@@ -5934,7 +5917,6 @@ export class PublicSectionDto implements IPublicSectionDto {
                 data[property] = this[property];
         }
         data["id"] = this.id;
-        data["locale"] = this.locale;
         data["sectionType"] = sectionTypeToValue(this.sectionType);
         data["header"] = this.header;
         data["content"] = this.content;
@@ -5944,7 +5926,6 @@ export class PublicSectionDto implements IPublicSectionDto {
 
 export interface IPublicSectionDto {
     id: string;
-    locale: string;
     sectionType: SectionType;
     header: string;
     content: string;

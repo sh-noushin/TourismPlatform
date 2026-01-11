@@ -12,16 +12,15 @@ public sealed class PublicSectionRepository : BaseRepository<PublicSection>, IPu
     {
     }
 
-    public async Task<PublicSection?> GetAsync(string locale, string sectionId, CancellationToken cancellationToken = default)
+    public async Task<PublicSection?> GetAsync(string sectionId, CancellationToken cancellationToken = default)
     {
         return await Query()
-            .FirstOrDefaultAsync(s => s.Locale == locale && s.Id == sectionId, cancellationToken);
+            .FirstOrDefaultAsync(s => s.Id == sectionId, cancellationToken);
     }
 
-    public async Task<IReadOnlyCollection<PublicSection>> ListByLocaleAsync(string locale, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<PublicSection>> ListAsync(CancellationToken cancellationToken = default)
     {
         return await Query()
-            .Where(s => s.Locale == locale)
             .OrderBy(s => s.SectionType)
             .ToListAsync(cancellationToken);
     }

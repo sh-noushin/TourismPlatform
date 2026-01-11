@@ -26,7 +26,7 @@ public sealed class PublicWebSeeder
         var isDirty = false;
         foreach (var section in defaults)
         {
-            var existing = await _sectionRepository.GetAsync(section.Locale, section.Id, cancellationToken);
+            var existing = await _sectionRepository.GetAsync(section.Id, cancellationToken);
             if (existing is null)
             {
                 await _sectionRepository.CreateAsync(section, cancellationToken);

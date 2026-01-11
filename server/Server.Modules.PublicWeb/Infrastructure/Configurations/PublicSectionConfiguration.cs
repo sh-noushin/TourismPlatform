@@ -10,9 +10,9 @@ public sealed class PublicSectionConfiguration : IEntityTypeConfiguration<Public
     {
         builder.ToTable("PublicWebSections");
         builder.HasKey(s => s.EntityId);
-        builder.HasIndex(s => new { s.Locale, s.SectionType }).IsUnique();
+        builder.HasIndex(s => s.Id).IsUnique();
+        builder.HasIndex(s => s.SectionType).IsUnique();
         builder.Property(s => s.Id).HasMaxLength(256).IsRequired();
-        builder.Property(s => s.Locale).HasMaxLength(10).IsRequired();
         builder.Property(s => s.SectionType)
             .HasConversion<string>()
             .HasMaxLength(32)

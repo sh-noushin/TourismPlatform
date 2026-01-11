@@ -8,16 +8,14 @@ public sealed class PublicSection
     {
     }
 
-    public PublicSection(string locale, string id, PublicSectionType sectionType)
+    public PublicSection(string id, PublicSectionType sectionType)
     {
-        Locale = locale;
         Id = id;
         SectionType = sectionType;
         EntityId = Guid.NewGuid();
     }
 
     public Guid EntityId { get; private set; }
-    public string Locale { get; private set; } = string.Empty;
     public string Id { get; private set; } = string.Empty;
     public PublicSectionType SectionType { get; private set; }
     public string Header { get; set; } = string.Empty;

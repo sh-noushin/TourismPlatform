@@ -19,33 +19,36 @@ public sealed class PublicSectionService : IPublicSectionService
         _repository = repository;
     }
 
-    public async Task<IReadOnlyCollection<PublicSectionDto>> GetSectionsAsync(string locale, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<PublicSectionDto>> GetSectionsAsync(CancellationToken cancellationToken = default)
     {
-        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
-        var sections = await _repository.ListByLocaleAsync(normalizedLocale, cancellationToken);
+        var sections = await _repository.ListAsync(cancellationToken);
         return sections
             .Select(ToDto)
             .ToList();
     }
 
-    public async Task<PublicSectionDto?> GetSectionAsync(string locale, string id, CancellationToken cancellationToken = default)
+    public async Task<PublicSectionDto?> GetSectionAsync(string id, CancellationToken cancellationToken = default)
     {
-        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
-        var section = await _repository.GetAsync(normalizedLocale, id, cancellationToken);
+        var section = await _repository.GetAsync(id, cancellationToken);
         return section is null ? null : ToDto(section);
     }
 
-    public async Task<PublicSectionDto> CreateSectionAsync(string locale, CreatePublicSectionRequest request, CancellationToken cancellationToken = default)
+    public async Task<PublicSectionDto> CreateSectionAsync(CreatePublicSectionRequest request, CancellationToken cancellationToken = default)
     {
-        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
         var sectionId = NormalizeSectionId(request.Id);
 
-        if (await _repository.GetAsync(normalizedLocale, sectionId, cancellationToken) is not null)
+        if (await _repository.GetAsync(sectionId, cancellationToken) is not null)
         {
-            throw new InvalidOperationException($"A section with id '{sectionId}' already exists for locale '{normalizedLocale}'.");
+            throw new InvalidOperationException($"A section with id '{sectionId}' already exists.");
         }
 
-        var section = new PublicSection(normalizedLocale, sectionId, request.SectionType)
+        var existingTypes = await _repository.ListAsync(cancellationToken);
+        if (existingTypes.Any(s => s.SectionType == request.SectionType))
+        {
+            throw new InvalidOperationException($"A section with type '{request.SectionType}' already exists.");
+        }
+
+        var section = new PublicSection(sectionId, request.SectionType)
         {
             Header = request.Header,
             Content = request.Content
@@ -57,15 +60,14 @@ public sealed class PublicSectionService : IPublicSectionService
         return ToDto(section);
     }
 
-    public async Task<PublicSectionDto> UpsertSectionAsync(string locale, string id, UpsertPublicSectionRequest request, CancellationToken cancellationToken = default)
+    public async Task<PublicSectionDto> UpsertSectionAsync(string id, UpsertPublicSectionRequest request, CancellationToken cancellationToken = default)
     {
-        var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
         var normalizedId = id.Trim();
-        var section = await _repository.GetAsync(normalizedLocale, normalizedId, cancellationToken);
+        var section = await _repository.GetAsync(normalizedId, cancellationToken);
 
         if (section is null)
         {
-            section = new PublicSection(normalizedLocale, normalizedId, request.SectionType);
+            section = new PublicSection(normalizedId, request.SectionType);
             await _repository.CreateAsync(section, cancellationToken);
         }
 
@@ -80,7 +82,6 @@ public sealed class PublicSectionService : IPublicSectionService
     {
         return new PublicSectionDto(
             section.Id,
-            section.Locale,
             section.SectionType,
             section.Header,
             section.Content);

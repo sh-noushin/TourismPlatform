@@ -17,8 +17,8 @@ import {
 } from '../../api/client';
 
 type DialogData =
-  | { mode: 'create'; locale: 'fa' | 'en'; availableTypes: SectionType[] }
-  | { mode: 'edit'; locale: string; id: string; existing?: PublicSectionDto };
+  | { mode: 'create'; availableTypes: SectionType[] }
+  | { mode: 'edit'; id: string; existing?: PublicSectionDto };
 
 @Component({
   standalone: true,
@@ -33,7 +33,6 @@ export class PublicSectionEditComponent {
   readonly error = signal<string | null>(null);
 
   readonly mode: 'create' | 'edit';
-  readonly locale: string;
   readonly availableTypes = signal<SectionType[]>(SECTION_TYPE_LIST.slice());
   readonly sectionType = signal<SectionType>(SECTION_TYPE_VALUES[0]);
   readonly header = signal('');
@@ -46,7 +45,6 @@ export class PublicSectionEditComponent {
     @Optional() @Inject(MAT_DIALOG_DATA) private readonly data?: DialogData
   ) {
     this.mode = this.data?.mode ?? 'create';
-    this.locale = (this.data as any)?.locale ?? 'en';
     this.availableTypes.set(SECTION_TYPE_LIST.slice());
 
     const raw = this.data as any;
@@ -82,7 +80,6 @@ export class PublicSectionEditComponent {
     this.error.set(null);
 
     try {
-      const normalizedLocale = (this.locale || 'en').trim();
       const payload = {
         sectionType: this.sectionType(),
         header: this.header().trim(),
@@ -93,12 +90,12 @@ export class PublicSectionEditComponent {
         const newId = this.sectionType().toLowerCase();
         const req = new CreatePublicSectionRequest({ id: newId, ...payload });
 
-        await firstValueFrom(this.client.sectionsPOST(normalizedLocale, req));
+        await firstValueFrom(this.client.sectionsPOST(req));
       } else {
         const req = new UpsertPublicSectionRequest(payload);
 
         const id = (this.data as any)?.id as string | undefined;
-        await firstValueFrom(this.client.sectionsPUT(normalizedLocale, id ?? '', req));
+        await firstValueFrom(this.client.sectionsPUT(id ?? '', req));
       }
 
       this.dialogRef?.close(true);
