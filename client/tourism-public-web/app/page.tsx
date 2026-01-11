@@ -320,20 +320,6 @@ export default async function Home() {
                 {t.about.heading}
               </h3>
               <p className="text-base text-slate-700">{t.about.description}</p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/tours"
-                  className="rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow hover:bg-sky-500"
-                >
-                  {t.about.learnMore}
-                </Link>
-                <Link
-                  href="mailto:hello@parker.travel"
-                  className="rounded-full border border-sky-600 px-5 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-sky-700 hover:bg-sky-50"
-                >
-                  {t.about.contact}
-                </Link>
-              </div>
             </div>
           </div>
       </section>
