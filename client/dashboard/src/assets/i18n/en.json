@@ -84,7 +84,14 @@
     "SELECT": "Select"
   },
   "PUBLIC_PAGE_SECTIONS_PAGE": {
-    "NEW_SECTION": "New section"
+    "NEW_SECTION": "New section",
+    "SECTION_TYPE": "Section type",
+    "HEADER": "Header",
+    "CONTENT": "Content",
+    "LOCALE": "Locale",
+    "TYPE_TOURS": "Tours",
+    "TYPE_HOUSES": "Houses",
+    "TYPE_INFOS": "Infos"
   },
   "PUBLIC_PAGE_CTAS_PAGE": {
     "NEW_CALL": "New call"

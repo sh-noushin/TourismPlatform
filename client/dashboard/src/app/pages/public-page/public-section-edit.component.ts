@@ -8,13 +8,15 @@ import { firstValueFrom } from 'rxjs';
 import {
   Client,
   CreatePublicSectionRequest,
-  PublicSectionCtaRequest,
   PublicSectionDto,
+  SECTION_TYPE_LIST,
+  SECTION_TYPE_VALUES,
+  SectionType,
   UpsertPublicSectionRequest
 } from '../../api/client';
 
 type DialogData =
-  | { mode: 'create'; locale: 'fa' | 'en' }
+  | { mode: 'create'; locale: 'fa' | 'en'; availableTypes: SectionType[] }
   | { mode: 'edit'; locale: string; id: string; existing?: PublicSectionDto };
 
 @Component({
@@ -32,18 +34,10 @@ export class PublicSectionEditComponent {
   readonly mode: 'create' | 'edit';
   readonly locale: string;
   readonly id = signal('');
-
-  readonly heading = signal('');
-  readonly tagline = signal('');
-  readonly body = signal('');
-  readonly imageUrl = signal('');
-  readonly order = signal<number>(0);
-  readonly isActive = signal(true);
-
-  readonly primaryCtaText = signal('');
-  readonly primaryCtaUrl = signal('');
-  readonly secondaryCtaText = signal('');
-  readonly secondaryCtaUrl = signal('');
+  readonly availableTypes = signal<SectionType[]>(SECTION_TYPE_LIST.slice());
+  readonly sectionType = signal<SectionType>(SECTION_TYPE_VALUES[0]);
+  readonly header = signal('');
+  readonly content = signal('');
 
   constructor(
     private readonly client: Client,
@@ -53,13 +47,23 @@ export class PublicSectionEditComponent {
   ) {
     this.mode = this.data?.mode ?? 'create';
     this.locale = (this.data as any)?.locale ?? 'en';
+    this.availableTypes.set(SECTION_TYPE_LIST.slice());
 
-    if (this.mode === 'edit') {
-      const existing = (this.data as any)?.existing as PublicSectionDto | undefined;
+    const raw = this.data as any;
+    if (this.mode === 'create') {
+      const available = (raw?.availableTypes as SectionType[]) ?? SECTION_TYPE_LIST;
+      const source = available.length ? [...available] : SECTION_TYPE_LIST.slice();
+      this.availableTypes.set(source);
+      this.sectionType.set(source[0] ?? SECTION_TYPE_LIST[0]);
+    } else {
+      const existing = raw?.existing as PublicSectionDto | undefined;
       if (existing) {
         this.hydrate(existing);
       }
-      this.id.set((this.data as any).id);
+      this.id.set(raw?.id ?? '');
+      if (!existing) {
+        this.sectionType.set(this.availableTypes()[0] ?? SECTION_TYPE_LIST[0]);
+      }
     }
   }
 
@@ -81,6 +85,11 @@ export class PublicSectionEditComponent {
 
     try {
       const normalizedLocale = (this.locale || 'en').trim();
+      const payload = {
+        sectionType: this.sectionType(),
+        header: this.header().trim(),
+        content: this.content().trim()
+      };
 
       if (this.mode === 'create') {
         const newId = this.id().trim();
@@ -89,30 +98,11 @@ export class PublicSectionEditComponent {
           return;
         }
 
-        const req = new CreatePublicSectionRequest({
-          id: newId,
-          heading: this.heading().trim(),
-          tagline: this.tagline().trim() || undefined,
-          body: this.body().trim(),
-          imageUrl: this.imageUrl().trim() || undefined,
-          order: Number(this.order() ?? 0),
-          isActive: !!this.isActive(),
-          primaryCta: this.makeCta(this.primaryCtaText(), this.primaryCtaUrl()),
-          secondaryCta: this.makeCta(this.secondaryCtaText(), this.secondaryCtaUrl())
-        });
+        const req = new CreatePublicSectionRequest({ id: newId, ...payload });
 
         await firstValueFrom(this.client.sectionsPOST(normalizedLocale, req));
       } else {
-        const req = new UpsertPublicSectionRequest({
-          heading: this.heading().trim(),
-          tagline: this.tagline().trim() || undefined,
-          body: this.body().trim(),
-          imageUrl: this.imageUrl().trim() || undefined,
-          order: Number(this.order() ?? 0),
-          isActive: !!this.isActive(),
-          primaryCta: this.makeCta(this.primaryCtaText(), this.primaryCtaUrl()),
-          secondaryCta: this.makeCta(this.secondaryCtaText(), this.secondaryCtaUrl())
-        });
+        const req = new UpsertPublicSectionRequest(payload);
 
         await firstValueFrom(this.client.sectionsPUT(normalizedLocale, this.id(), req));
       }
@@ -127,23 +117,14 @@ export class PublicSectionEditComponent {
 
   private hydrate(existing: PublicSectionDto): void {
     this.id.set(existing.id);
-    this.heading.set(existing.heading ?? '');
-    this.tagline.set(existing.tagline ?? '');
-    this.body.set(existing.body ?? '');
-    this.imageUrl.set(existing.imageUrl ?? '');
-    this.order.set(Number(existing.order ?? 0));
-    this.isActive.set(!!existing.isActive);
-
-    this.primaryCtaText.set(existing.primaryCta?.text ?? '');
-    this.primaryCtaUrl.set(existing.primaryCta?.url ?? '');
-    this.secondaryCtaText.set(existing.secondaryCta?.text ?? '');
-    this.secondaryCtaUrl.set(existing.secondaryCta?.url ?? '');
+    this.sectionType.set(existing.sectionType);
+    this.header.set(existing.header ?? '');
+    this.content.set(existing.content ?? '');
   }
 
-  private makeCta(text: string, url: string): PublicSectionCtaRequest | undefined {
-    const t = (text ?? '').trim();
-    const u = (url ?? '').trim();
-    if (!t && !u) return undefined;
-    return new PublicSectionCtaRequest({ text: t, url: u });
+  sectionTypeOptionLabel(type: SectionType) {
+    const key = `PUBLIC_PAGE_SECTIONS_PAGE.TYPE_${type.toUpperCase()}`;
+    const translation = this.translate.instant(key);
+    return translation === key ? type : translation;
   }
 }

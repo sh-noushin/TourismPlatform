@@ -85,7 +85,14 @@
     "REFRESH": "بروزرسانی"
   },
   "PUBLIC_PAGE_SECTIONS_PAGE": {
-    "NEW_SECTION": "بخش جدید"
+    "NEW_SECTION": "بخش جدید",
+    "SECTION_TYPE": "نوع بخش",
+    "HEADER": "عنوان",
+    "CONTENT": "محتوا",
+    "LOCALE": "زبان",
+    "TYPE_TOURS": "تورها",
+    "TYPE_HOUSES": "املاک",
+    "TYPE_INFOS": "اطلاعات"
   },
   "PUBLIC_PAGE_CTAS_PAGE": {
     "NEW_CALL": "فراخوان جدید"

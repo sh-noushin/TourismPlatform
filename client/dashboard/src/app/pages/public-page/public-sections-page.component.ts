@@ -10,7 +10,7 @@ import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-he
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn } from '../../shared/models/table.models';
 
-import { Client, PublicSectionDto } from '../../api/client';
+import { Client, PublicSectionDto, SECTION_TYPE_VALUES, SectionType, sectionTypeIndex } from '../../api/client';
 import { PublicSectionEditComponent } from './public-section-edit.component';
 
 @Component({
@@ -29,13 +29,28 @@ export class PublicSectionsPageComponent implements OnDestroy {
   readonly error = signal<string | null>(null);
   readonly sections = signal<PublicSectionDto[]>([]);
 
+  readonly tableRows = computed(() => {
+    this.lang();
+    return this.sections().map(section => ({
+      ...section,
+      sectionTypeLabel: this.sectionTypeLabel(section.sectionType ?? SECTION_TYPE_VALUES[0])
+    }));
+  });
+
+  readonly missingSectionTypes = computed<SectionType[]>(() => {
+    const seen = new Set(this.sections().map(section => section.sectionType));
+    return SECTION_TYPE_VALUES.filter(type => !seen.has(type));
+  });
+
+  readonly canCreateSection = computed(() => this.missingSectionTypes().length > 0);
+
   readonly columns = computed<SfTableColumn[]>(() => {
     this.lang();
     return [
-      { key: 'id', header: 'ID', field: 'id', sortable: true, align: 'start' },
-      { key: 'heading', header: 'Heading', field: 'heading', sortable: false },
-      { key: 'order', header: 'Order', field: 'order', sortable: true },
-      { key: 'isActive', header: 'Active', field: 'isActive', sortable: false }
+      { key: 'locale', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.LOCALE'), field: 'locale', sortable: true },
+      { key: 'sectionType', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.SECTION_TYPE'), field: 'sectionTypeLabel', sortable: true },
+      { key: 'header', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.HEADER'), field: 'header', sortable: false },
+      { key: 'content', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.CONTENT'), field: 'content', sortable: false }
     ];
   });
 
@@ -66,7 +81,7 @@ export class PublicSectionsPageComponent implements OnDestroy {
 
     try {
       const data = await firstValueFrom(this.client.sectionsAll(this.lang()));
-      const sorted = [...(data ?? [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      const sorted = [...(data ?? [])].sort((a, b) => sectionTypeIndex(a.sectionType) - sectionTypeIndex(b.sectionType));
       this.sections.set(sorted);
     } catch (err: any) {
       this.error.set(err?.message ?? 'Failed loading sections');
@@ -76,12 +91,15 @@ export class PublicSectionsPageComponent implements OnDestroy {
   }
 
   openCreate(): void {
+    const missing = this.missingSectionTypes();
+    if (!missing.length) return;
+
     const ref = this.dialog.open(PublicSectionEditComponent, {
       panelClass: 'public-page-edit-dialog',
       autoFocus: false,
       maxWidth: 'none',
       width: 'min(720px, calc(100vw - 32px))',
-      data: { mode: 'create', locale: this.lang() }
+      data: { mode: 'create', locale: this.lang(), availableTypes: missing }
     });
 
     ref.afterClosed().subscribe((saved) => {
@@ -107,5 +125,11 @@ export class PublicSectionsPageComponent implements OnDestroy {
     if (event?.action?.type === 'edit') {
       this.openEdit(event.row);
     }
+  }
+
+  private sectionTypeLabel(type: SectionType) {
+    const key = `PUBLIC_PAGE_SECTIONS_PAGE.TYPE_${type.toUpperCase()}`;
+    const translation = this.translate.instant(key);
+    return translation === key ? type : translation;
   }
 }

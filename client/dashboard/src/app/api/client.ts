@@ -4541,18 +4541,16 @@ export interface ICreatePermissionDefinitionRequest {
 
 export class CreatePublicSectionRequest implements ICreatePublicSectionRequest {
     id?: string | undefined;
-    tagline?: string | undefined;
-    heading?: string;
-    body?: string;
-    imageUrl?: string | undefined;
-    primaryCta?: PublicSectionCtaRequest | undefined;
-    secondaryCta?: PublicSectionCtaRequest | undefined;
-    order?: number;
-    isActive?: boolean;
+    sectionType!: SectionType;
+    header!: string;
+    content!: string;
 
     [key: string]: any;
 
     constructor(data?: ICreatePublicSectionRequest) {
+        this.sectionType = SECTION_TYPE_VALUES[0];
+        this.header = '';
+        this.content = '';
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4568,14 +4566,9 @@ export class CreatePublicSectionRequest implements ICreatePublicSectionRequest {
                     this[property] = _data[property];
             }
             this.id = _data["id"];
-            this.tagline = _data["tagline"];
-            this.heading = _data["heading"];
-            this.body = _data["body"];
-            this.imageUrl = _data["imageUrl"];
-            this.primaryCta = _data["primaryCta"] ? PublicSectionCtaRequest.fromJS(_data["primaryCta"]) : undefined as any;
-            this.secondaryCta = _data["secondaryCta"] ? PublicSectionCtaRequest.fromJS(_data["secondaryCta"]) : undefined as any;
-            this.order = _data["order"];
-            this.isActive = _data["isActive"];
+            this.sectionType = sectionTypeFromValue(_data["sectionType"]);
+            this.header = _data["header"];
+            this.content = _data["content"];
         }
     }
 
@@ -4593,28 +4586,18 @@ export class CreatePublicSectionRequest implements ICreatePublicSectionRequest {
                 data[property] = this[property];
         }
         data["id"] = this.id;
-        data["tagline"] = this.tagline;
-        data["heading"] = this.heading;
-        data["body"] = this.body;
-        data["imageUrl"] = this.imageUrl;
-        data["primaryCta"] = this.primaryCta ? this.primaryCta.toJSON() : undefined as any;
-        data["secondaryCta"] = this.secondaryCta ? this.secondaryCta.toJSON() : undefined as any;
-        data["order"] = this.order;
-        data["isActive"] = this.isActive;
+        data["sectionType"] = sectionTypeToValue(this.sectionType);
+        data["header"] = this.header;
+        data["content"] = this.content;
         return data;
     }
 }
 
 export interface ICreatePublicSectionRequest {
     id?: string | undefined;
-    tagline?: string | undefined;
-    heading?: string;
-    body?: string;
-    imageUrl?: string | undefined;
-    primaryCta?: PublicSectionCtaRequest | undefined;
-    secondaryCta?: PublicSectionCtaRequest | undefined;
-    order?: number;
-    isActive?: boolean;
+    sectionType?: SectionType;
+    header?: string;
+    content?: string;
 
     [key: string]: any;
 }
@@ -5904,18 +5887,17 @@ export interface IPublicSectionCtaRequest {
 export class PublicSectionDto implements IPublicSectionDto {
     id!: string;
     locale!: string;
-    tagline!: string | undefined;
-    heading!: string;
-    body!: string;
-    imageUrl!: string | undefined;
-    primaryCta!: PublicSectionCtaDto | undefined;
-    secondaryCta!: PublicSectionCtaDto | undefined;
-    order!: number;
-    isActive!: boolean;
+    sectionType!: SectionType;
+    header!: string;
+    content!: string;
 
     [key: string]: any;
 
     constructor(data?: IPublicSectionDto) {
+        this.sectionType = SECTION_TYPE_VALUES[0];
+        this.header = '';
+        this.content = '';
+
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5932,14 +5914,9 @@ export class PublicSectionDto implements IPublicSectionDto {
             }
             this.id = _data["id"];
             this.locale = _data["locale"];
-            this.tagline = _data["tagline"];
-            this.heading = _data["heading"];
-            this.body = _data["body"];
-            this.imageUrl = _data["imageUrl"];
-            this.primaryCta = _data["primaryCta"] ? PublicSectionCtaDto.fromJS(_data["primaryCta"]) : undefined as any;
-            this.secondaryCta = _data["secondaryCta"] ? PublicSectionCtaDto.fromJS(_data["secondaryCta"]) : undefined as any;
-            this.order = _data["order"];
-            this.isActive = _data["isActive"];
+            this.sectionType = sectionTypeFromValue(_data["sectionType"]);
+            this.header = _data["header"];
+            this.content = _data["content"];
         }
     }
 
@@ -5958,14 +5935,9 @@ export class PublicSectionDto implements IPublicSectionDto {
         }
         data["id"] = this.id;
         data["locale"] = this.locale;
-        data["tagline"] = this.tagline;
-        data["heading"] = this.heading;
-        data["body"] = this.body;
-        data["imageUrl"] = this.imageUrl;
-        data["primaryCta"] = this.primaryCta ? this.primaryCta.toJSON() : undefined as any;
-        data["secondaryCta"] = this.secondaryCta ? this.secondaryCta.toJSON() : undefined as any;
-        data["order"] = this.order;
-        data["isActive"] = this.isActive;
+        data["sectionType"] = sectionTypeToValue(this.sectionType);
+        data["header"] = this.header;
+        data["content"] = this.content;
         return data;
     }
 }
@@ -5973,16 +5945,61 @@ export class PublicSectionDto implements IPublicSectionDto {
 export interface IPublicSectionDto {
     id: string;
     locale: string;
-    tagline: string | undefined;
-    heading: string;
-    body: string;
-    imageUrl: string | undefined;
-    primaryCta: PublicSectionCtaDto | undefined;
-    secondaryCta: PublicSectionCtaDto | undefined;
-    order: number;
-    isActive: boolean;
+    sectionType: SectionType;
+    header: string;
+    content: string;
 
     [key: string]: any;
+}
+
+export const SECTION_TYPE_VALUES = ['Tours', 'Houses', 'Infos'] as const;
+export type SectionType = (typeof SECTION_TYPE_VALUES)[number];
+export const SECTION_TYPE_LIST: SectionType[] = SECTION_TYPE_VALUES.slice();
+
+const SECTION_TYPE_INDEX: Record<SectionType, number> = {
+    Tours: 0,
+    Houses: 1,
+    Infos: 2
+};
+
+const SECTION_TYPE_BY_NUMBER: Record<number, SectionType> = {
+    0: 'Tours',
+    1: 'Houses',
+    2: 'Infos'
+};
+
+export function sectionTypeFromValue(value: any): SectionType {
+    if (value === undefined || value === null) {
+        return SECTION_TYPE_VALUES[0];
+    }
+
+    if (typeof value === 'number') {
+        return SECTION_TYPE_BY_NUMBER[value] ?? SECTION_TYPE_VALUES[0];
+    }
+
+    if (typeof value === 'string') {
+        const normalized = value.trim();
+        if (!normalized) return SECTION_TYPE_VALUES[0];
+        const exactMatch = SECTION_TYPE_VALUES.find(type => type === normalized);
+        if (exactMatch) return exactMatch;
+        const caseInsensitive = SECTION_TYPE_VALUES.find(type => type.toLowerCase() === normalized.toLowerCase());
+        if (caseInsensitive) return caseInsensitive;
+        const parsedNumber = Number(normalized);
+        if (!Number.isNaN(parsedNumber)) {
+            return SECTION_TYPE_BY_NUMBER[parsedNumber] ?? SECTION_TYPE_VALUES[0];
+        }
+    }
+
+    return SECTION_TYPE_VALUES[0];
+}
+
+export function sectionTypeToValue(type: SectionType): number {
+    return SECTION_TYPE_INDEX[type] ?? 0;
+}
+
+export function sectionTypeIndex(value?: SectionType | string | number): number {
+    const sectionType = sectionTypeFromValue(value);
+    return SECTION_TYPE_INDEX[sectionType] ?? 0;
 }
 
 export class RefreshRequest implements IRefreshRequest {
@@ -7296,18 +7313,16 @@ export interface IUpsertPublicLearnMorePageRequest {
 }
 
 export class UpsertPublicSectionRequest implements IUpsertPublicSectionRequest {
-    tagline?: string | undefined;
-    heading?: string;
-    body?: string;
-    imageUrl?: string | undefined;
-    primaryCta?: PublicSectionCtaRequest | undefined;
-    secondaryCta?: PublicSectionCtaRequest | undefined;
-    order?: number;
-    isActive?: boolean;
+    sectionType!: SectionType;
+    header!: string;
+    content!: string;
 
     [key: string]: any;
 
     constructor(data?: IUpsertPublicSectionRequest) {
+        this.sectionType = SECTION_TYPE_VALUES[0];
+        this.header = '';
+        this.content = '';
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -7322,14 +7337,9 @@ export class UpsertPublicSectionRequest implements IUpsertPublicSectionRequest {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.tagline = _data["tagline"];
-            this.heading = _data["heading"];
-            this.body = _data["body"];
-            this.imageUrl = _data["imageUrl"];
-            this.primaryCta = _data["primaryCta"] ? PublicSectionCtaRequest.fromJS(_data["primaryCta"]) : undefined as any;
-            this.secondaryCta = _data["secondaryCta"] ? PublicSectionCtaRequest.fromJS(_data["secondaryCta"]) : undefined as any;
-            this.order = _data["order"];
-            this.isActive = _data["isActive"];
+            this.sectionType = sectionTypeFromValue(_data["sectionType"]);
+            this.header = _data["header"];
+            this.content = _data["content"];
         }
     }
 
@@ -7346,27 +7356,17 @@ export class UpsertPublicSectionRequest implements IUpsertPublicSectionRequest {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["tagline"] = this.tagline;
-        data["heading"] = this.heading;
-        data["body"] = this.body;
-        data["imageUrl"] = this.imageUrl;
-        data["primaryCta"] = this.primaryCta ? this.primaryCta.toJSON() : undefined as any;
-        data["secondaryCta"] = this.secondaryCta ? this.secondaryCta.toJSON() : undefined as any;
-        data["order"] = this.order;
-        data["isActive"] = this.isActive;
+        data["sectionType"] = sectionTypeToValue(this.sectionType);
+        data["header"] = this.header;
+        data["content"] = this.content;
         return data;
     }
 }
 
 export interface IUpsertPublicSectionRequest {
-    tagline?: string | undefined;
-    heading?: string;
-    body?: string;
-    imageUrl?: string | undefined;
-    primaryCta?: PublicSectionCtaRequest | undefined;
-    secondaryCta?: PublicSectionCtaRequest | undefined;
-    order?: number;
-    isActive?: boolean;
+    sectionType?: SectionType;
+    header?: string;
+    content?: string;
 
     [key: string]: any;
 }

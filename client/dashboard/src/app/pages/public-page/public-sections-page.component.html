@@ -8,6 +8,7 @@
       variant="ghost"
       type="button"
       (click)="openCreate()"
+      [disabled]="!canCreateSection()"
     >
       {{ 'PUBLIC_PAGE_SECTIONS_PAGE.NEW_SECTION' | translate }}
     </sf-button>
@@ -16,7 +17,7 @@
   <sf-card>
     <sf-table
       [columns]="columns()"
-      [data]="sections()"
+      [data]="tableRows()"
       [loading]="loading()"
       [actions]="sections().length ? actions() : []"
       (rowAction)="onRowAction($event)"
