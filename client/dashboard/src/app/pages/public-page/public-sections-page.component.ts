@@ -5,7 +5,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription, firstValueFrom } from 'rxjs';
 
 import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
-import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
 import { SfTableColumn } from '../../shared/models/table.models';
@@ -19,7 +18,7 @@ import { PublicSectionEditComponent } from './public-section-edit.component';
   templateUrl: './public-sections-page.component.html',
   styleUrls: ['./public-sections-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatDialogModule, TranslateModule, SfCardComponent, SfPageHeaderComponent, SfTableComponent, SfButtonComponent]
+  imports: [CommonModule, MatDialogModule, TranslateModule, SfCardComponent, SfPageHeaderComponent, SfTableComponent]
 })
 export class PublicSectionsPageComponent implements OnDestroy {
   readonly lang = signal<'fa' | 'en'>('fa');
@@ -37,17 +36,9 @@ export class PublicSectionsPageComponent implements OnDestroy {
     }));
   });
 
-  readonly missingSectionTypes = computed<SectionType[]>(() => {
-    const seen = new Set(this.sections().map(section => section.sectionType));
-    return SECTION_TYPE_VALUES.filter(type => !seen.has(type));
-  });
-
-  readonly canCreateSection = computed(() => this.missingSectionTypes().length > 0);
-
   readonly columns = computed<SfTableColumn[]>(() => {
     this.lang();
     return [
-      { key: 'locale', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.LOCALE'), field: 'locale', sortable: true },
       { key: 'sectionType', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.SECTION_TYPE'), field: 'sectionTypeLabel', sortable: true },
       { key: 'header', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.HEADER'), field: 'header', sortable: false },
       { key: 'content', header: this.translate.instant('PUBLIC_PAGE_SECTIONS_PAGE.CONTENT'), field: 'content', sortable: false }
@@ -88,23 +79,6 @@ export class PublicSectionsPageComponent implements OnDestroy {
     } finally {
       this.loading.set(false);
     }
-  }
-
-  openCreate(): void {
-    const missing = this.missingSectionTypes();
-    if (!missing.length) return;
-
-    const ref = this.dialog.open(PublicSectionEditComponent, {
-      panelClass: 'public-page-edit-dialog',
-      autoFocus: false,
-      maxWidth: 'none',
-      width: 'min(720px, calc(100vw - 32px))',
-      data: { mode: 'create', locale: this.lang(), availableTypes: missing }
-    });
-
-    ref.afterClosed().subscribe((saved) => {
-      if (saved) void this.load(true);
-    });
   }
 
   openEdit(row: PublicSectionDto): void {

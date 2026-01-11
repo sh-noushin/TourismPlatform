@@ -14,28 +14,10 @@
   gap: spacing(md);
 }
 
-.public-sections-page__header-actions {
-  display: flex;
-  gap: spacing(sm);
-  align-items: center;
-}
-
-.public-sections-page__header-button {
-  margin-left: auto;
-}
-
-:host-context([dir='rtl']) .public-sections-page__header-button {
-  margin-left: 0;
-  margin-right: auto;
-}
-
 @media (max-width: 640px) {
   .public-sections-page__header {
     flex-direction: column;
     align-items: flex-start;
-  }
-  .public-sections-page__header-button {
-    margin-left: 0;
   }
 }
 

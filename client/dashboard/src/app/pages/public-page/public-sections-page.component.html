@@ -2,16 +2,6 @@
   <div class="public-sections-page__header">
     <sf-page-header title="{{ 'MENU.PUBLIC_PAGE_SECTIONS' | translate }}">
     </sf-page-header>
-
-    <sf-button
-      class="public-sections-page__header-button"
-      variant="ghost"
-      type="button"
-      (click)="openCreate()"
-      [disabled]="!canCreateSection()"
-    >
-      {{ 'PUBLIC_PAGE_SECTIONS_PAGE.NEW_SECTION' | translate }}
-    </sf-button>
   </div>
 
   <sf-card>
