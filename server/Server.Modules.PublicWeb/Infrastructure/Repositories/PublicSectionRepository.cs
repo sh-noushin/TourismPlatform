@@ -21,8 +21,8 @@ public sealed class PublicSectionRepository : BaseRepository<PublicSection>, IPu
     public async Task<IReadOnlyCollection<PublicSection>> ListByLocaleAsync(string locale, CancellationToken cancellationToken = default)
     {
         return await Query()
-            .Where(s => s.Locale == locale && s.IsActive)
-            .OrderBy(s => s.SortOrder)
+            .Where(s => s.Locale == locale)
+            .OrderBy(s => s.SectionType)
             .ToListAsync(cancellationToken);
     }
 }

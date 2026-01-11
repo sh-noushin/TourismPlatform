@@ -45,8 +45,11 @@ public sealed class PublicSectionService : IPublicSectionService
             throw new InvalidOperationException($"A section with id '{sectionId}' already exists for locale '{normalizedLocale}'.");
         }
 
-        var section = new PublicSection(normalizedLocale, sectionId);
-        ApplySectionFields(section, request.Tagline, request.Heading, request.Body, request.ImageUrl, request.PrimaryCta, request.SecondaryCta, request.Order, request.IsActive);
+        var section = new PublicSection(normalizedLocale, sectionId, request.SectionType)
+        {
+            Header = request.Header,
+            Content = request.Content
+        };
 
         await _repository.CreateAsync(section, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
@@ -57,15 +60,17 @@ public sealed class PublicSectionService : IPublicSectionService
     public async Task<PublicSectionDto> UpsertSectionAsync(string locale, string id, UpsertPublicSectionRequest request, CancellationToken cancellationToken = default)
     {
         var normalizedLocale = string.IsNullOrWhiteSpace(locale) ? "en" : locale;
-        var section = await _repository.GetAsync(normalizedLocale, id, cancellationToken);
+        var normalizedId = id.Trim();
+        var section = await _repository.GetAsync(normalizedLocale, normalizedId, cancellationToken);
 
         if (section is null)
         {
-            section = new PublicSection(normalizedLocale, id);
+            section = new PublicSection(normalizedLocale, normalizedId, request.SectionType);
             await _repository.CreateAsync(section, cancellationToken);
         }
 
-        ApplySectionFields(section, request.Tagline, request.Heading, request.Body, request.ImageUrl, request.PrimaryCta, request.SecondaryCta, request.Order, request.IsActive);
+        section.Update(request.SectionType, request.Header, request.Content);
+
         await _repository.SaveChangesAsync(cancellationToken);
 
         return ToDto(section);
@@ -76,38 +81,9 @@ public sealed class PublicSectionService : IPublicSectionService
         return new PublicSectionDto(
             section.Id,
             section.Locale,
-            section.Tagline,
-            section.Heading,
-            section.Body,
-            section.ImageUrl,
-            BuildCta(section.PrimaryCtaText, section.PrimaryCtaUrl),
-            BuildCta(section.SecondaryCtaText, section.SecondaryCtaUrl),
-            section.SortOrder,
-            section.IsActive);
-    }
-
-    private static PublicSectionCtaDto? BuildCta(string? text, string? url)
-    {
-        if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(url))
-        {
-            return null;
-        }
-
-        return new PublicSectionCtaDto(text, url);
-    }
-
-    private static void ApplySectionFields(PublicSection section, string? tagline, string heading, string body, string? imageUrl, PublicSectionCtaRequest? primaryCta, PublicSectionCtaRequest? secondaryCta, int order, bool isActive)
-    {
-        section.Tagline = tagline;
-        section.Heading = heading;
-        section.Body = body;
-        section.ImageUrl = imageUrl;
-        section.PrimaryCtaText = primaryCta?.Text;
-        section.PrimaryCtaUrl = primaryCta?.Url;
-        section.SecondaryCtaText = secondaryCta?.Text;
-        section.SecondaryCtaUrl = secondaryCta?.Url;
-        section.SortOrder = order;
-        section.IsActive = isActive;
+            section.SectionType,
+            section.Header,
+            section.Content);
     }
 
     private static string NormalizeSectionId(string? requestedId)

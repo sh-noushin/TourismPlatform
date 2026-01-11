@@ -60,12 +60,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IPublicSectionRepository, PublicSectionRepository>();
         services.AddScoped<IPublicSectionService, PublicSectionService>();
-        services.AddScoped<IPublicCallToActionRepository, PublicCallToActionRepository>();
-        services.AddScoped<IPublicCallToActionService, PublicCallToActionService>();
-        services.AddScoped<IPublicContactInfoRepository, PublicContactInfoRepository>();
-        services.AddScoped<IPublicContactInfoService, PublicContactInfoService>();
-        services.AddScoped<IPublicLearnMorePageRepository, PublicLearnMorePageRepository>();
-        services.AddScoped<IPublicLearnMorePageService, PublicLearnMorePageService>();
         services.AddScoped<PublicWebSeeder>();
         return services;
     }

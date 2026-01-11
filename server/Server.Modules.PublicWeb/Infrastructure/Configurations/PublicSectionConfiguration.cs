@@ -10,16 +10,14 @@ public sealed class PublicSectionConfiguration : IEntityTypeConfiguration<Public
     {
         builder.ToTable("PublicWebSections");
         builder.HasKey(s => s.EntityId);
-        builder.HasIndex(s => new { s.Locale, s.Id }).IsUnique();
+        builder.HasIndex(s => new { s.Locale, s.SectionType }).IsUnique();
         builder.Property(s => s.Id).HasMaxLength(256).IsRequired();
         builder.Property(s => s.Locale).HasMaxLength(10).IsRequired();
-        builder.Property(s => s.Heading).HasMaxLength(512).IsRequired();
-        builder.Property(s => s.Body).IsRequired();
-        builder.Property(s => s.Tagline).HasMaxLength(128);
-        builder.Property(s => s.ImageUrl).HasMaxLength(1024);
-        builder.Property(s => s.PrimaryCtaText).HasMaxLength(64);
-        builder.Property(s => s.PrimaryCtaUrl).HasMaxLength(1024);
-        builder.Property(s => s.SecondaryCtaText).HasMaxLength(64);
-        builder.Property(s => s.SecondaryCtaUrl).HasMaxLength(1024);
+        builder.Property(s => s.SectionType)
+            .HasConversion<string>()
+            .HasMaxLength(32)
+            .IsRequired();
+        builder.Property(s => s.Header).HasMaxLength(512).IsRequired();
+        builder.Property(s => s.Content).IsRequired();
     }
 }
