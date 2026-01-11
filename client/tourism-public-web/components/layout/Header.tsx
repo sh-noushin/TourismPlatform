@@ -28,6 +28,7 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
 
   const translations = useMemo(() => i18n(locale), [locale]);
   const { nav } = translations;
+  const isFarsi = locale === "fa";
 
   const languages = [
     { code: "en", label: "English", flag: "/flags/en.svg" },
@@ -69,6 +70,7 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
     <header
       className={cn(
         "z-40 lang-balanced-header",
+        isHome && "lang-balanced-header--home",
         isHome
           ? "absolute inset-x-0 top-3 md:top-6 bg-transparent"
           : "sticky top-0 border-b border-border bg-surface/90 backdrop-blur"
@@ -76,8 +78,9 @@ export function Header({ initialLocale = "en" }: HeaderProps) {
     >
       <div className="relative mx-auto w-full max-w-6xl px-5 py-3 md:py-4 md:min-h-[64px]">
         {isHome ? (
-          <nav className="flex items-center justify-between gap-6 text-xs font-semibold uppercase tracking-[0.28em] text-white/90">
-            <div className="flex items-center gap-6 text-[0.69rem] tracking-[0.28em]">
+          <nav className={cn("flex items-center justify-between gap-6 text-white/90", isFarsi ? "text-xs font-semibold" : "text-sm font-semibold")}
+          >
+            <div className="flex items-center gap-6 tracking-normal">
               <Link href="#about" className="hover:text-white">
                 {nav.about}
               </Link>

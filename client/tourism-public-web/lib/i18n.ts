@@ -213,8 +213,8 @@ const EN: Translations = {
   navHouses: "Houses",
   navTours: "Tours",
   nav: {
-    about: "About",
-    contact: "Call us",
+    about: "About us",
+    contact: "Contact us",
   },
   siteTitle: "Tourism Platform",
   seeDetails: "Details",

@@ -183,6 +183,9 @@ html.lang-balanced-root[dir='rtl'] {
   font-size: 16px !important;
   line-height: 1.5 !important;
 }
+.lang-balanced-header--home {
+  font-size: 20px !important;
+}
 .lang-balanced-header *,
 html[lang='fa'] .lang-balanced-header *,
 :lang(fa) .lang-balanced-header *,
