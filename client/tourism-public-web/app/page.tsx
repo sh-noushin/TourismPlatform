@@ -6,6 +6,7 @@ import headerImage from "@/app/assets/header.jpg";
 
 import { Hero } from "@/components/home/Hero";
 import { getFeaturedTours, getFeaturedHouses } from "@/lib/api/featured";
+import { getPublicPageSections, type PublicSectionDto } from "@/lib/api/publicPage";
 import { imageUrl } from "@/lib/utils/imageUrl";
 import { i18n, type Translations, formatFarsiNumber } from "@/lib/i18n";
 
@@ -204,10 +205,36 @@ export default async function Home() {
   const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
 
   const t = i18n(locale);
-  const [tours, houses] = await Promise.all([getFeaturedTours(locale), getFeaturedHouses(6, locale)]);
+  const [tours, houses, publicSections] = await Promise.all([
+    getFeaturedTours(locale),
+    getFeaturedHouses(6, locale),
+    getPublicPageSections(),
+  ]);
   const isFarsi = locale === "fa";
   const topTours = tours.slice(0, 3);
   const topHouses = houses.slice(0, 3);
+
+  const findSection = (id: string, fallbackType?: number) => {
+    const idLower = id.trim().toLowerCase();
+    const byId = publicSections.find((section) => section.id?.trim().toLowerCase() === idLower);
+    if (byId) return byId;
+    if (fallbackType === undefined) return undefined;
+    return publicSections.find((section) => Number(section.sectionType) === fallbackType);
+  };
+
+  const toursSection = findSection("tours", 0);
+  const housesSection = findSection("houses", 1);
+  const infosSection = findSection("infos", 2) ?? findSection("info", 2);
+
+  const sectionText = (section: PublicSectionDto | undefined, field: "header" | "content", fallback: string) =>
+    (section?.[field] ?? "").trim() || fallback;
+
+  const toursHeading = sectionText(toursSection, "header", t.headingTours);
+  const toursDescription = sectionText(toursSection, "content", t.toursDescription);
+  const housesHeading = sectionText(housesSection, "header", t.headingHouses);
+  const housesDescription = sectionText(housesSection, "content", t.housesDescription);
+  const infosHeading = sectionText(infosSection, "header", t.about.heading);
+  const infosDescription = sectionText(infosSection, "content", t.about.description);
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
@@ -221,9 +248,9 @@ export default async function Home() {
                 isFarsi ? "!text-3xl !font-black md:!text-4xl" : "text-3xl font-semibold"
               }`}
             >
-              {t.headingTours}
+              {toursHeading}
             </h2>
-            <p className="mt-1 text-sm text-slate-600 md:text-base">{t.toursDescription}</p>
+            <p className="mt-1 text-sm text-slate-600 md:text-base">{toursDescription}</p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -263,9 +290,9 @@ export default async function Home() {
                 isFarsi ? "!text-3xl !font-black md:!text-4xl" : "text-3xl font-semibold"
               }`}
             >
-              {t.headingHouses}
+              {housesHeading}
             </h2>
-            <p className="mt-1 text-sm text-slate-600 md:text-base">{t.housesDescription}</p>
+            <p className="mt-1 text-sm text-slate-600 md:text-base">{housesDescription}</p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -302,7 +329,7 @@ export default async function Home() {
             <div className="overflow-hidden rounded-3xl shadow-xl">
               <Image
                 src={headerImage}
-                alt={t.about.heading}
+                alt={infosHeading}
                 width={900}
                 height={600}
                 className="h-full w-full object-cover"
@@ -317,9 +344,9 @@ export default async function Home() {
                     : "text-3xl font-semibold text-slate-900"
                 }`}
               >
-                {t.about.heading}
+                {infosHeading}
               </h3>
-              <p className="text-base text-slate-700">{t.about.description}</p>
+              <p className="text-base text-slate-700">{infosDescription}</p>
             </div>
           </div>
       </section>

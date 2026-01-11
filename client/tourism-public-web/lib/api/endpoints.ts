@@ -19,9 +19,15 @@ const referenceEndpoints = {
   currencies: "/api/reference/currencies",
 };
 
+const publicPageEndpoints = {
+  sections: "/api/public-page/sections",
+  section: (id: string) => `/api/public-page/sections/${id}`,
+};
+
 export const apiEndpoints = {
   categories: categoryEndpoints,
   houses: houseEndpoints,
   tours: tourEndpoints,
   reference: referenceEndpoints,
+  publicPage: publicPageEndpoints,
 } as const;
