@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.vscode/
+*.log
+
+# Keep local env out of the image so compose-provided values win at runtime.
+.env
+.env.*

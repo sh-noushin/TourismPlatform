@@ -1,0 +1,7 @@
+# core.autocrlf=true would otherwise give these CRLF endings on checkout, which breaks
+# the `#!/bin/sh` shebang inside Linux containers ("no such file or directory").
+*.sh            text eol=lf
+Dockerfile      text eol=lf
+*.dockerignore  text eol=lf
+nginx.conf      text eol=lf
+docker-compose.yml text eol=lf

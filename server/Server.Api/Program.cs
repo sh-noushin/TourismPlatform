@@ -28,7 +28,10 @@ builder.Services.AddPublicWeb(builder.Configuration);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Opening a browser makes no sense inside a container; the official .NET images set this.
+var runningInContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+
+if (app.Environment.IsDevelopment() && !runningInContainer)
 {
     app.Lifetime.ApplicationStarted.Register(() =>
     {
@@ -48,6 +51,8 @@ if (app.Environment.IsDevelopment())
         }
     });
 }
+
+await app.MigrateDatabaseAsync();
 
 await app.SeedIdentityAsync();
 await app.SeedReferenceDataAsync();

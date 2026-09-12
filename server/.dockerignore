@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/TestResults/
+Server.Tests/
+
+# Locally uploaded media must not be baked into the image; a volume provides it.
+Server.Api/images/
+
+**/*.md
