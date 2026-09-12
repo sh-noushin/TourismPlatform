@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, Inject, OnDestroy, Optional, signal } from '@angular/core';
+import { Component, computed, Inject, OnDestroy, Optional, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -57,6 +57,7 @@ type TourForm = {
   selector: 'tour-edit',
   imports: [CommonModule, FormsModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent, SfTourScheduleComponent, TranslateModule],
   templateUrl: './tour-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./tour-edit.component.scss']
 })
 export class TourEditComponent implements OnDestroy {

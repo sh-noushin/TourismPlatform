@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, computed, signal } from '@angular/core';
+import { Component, Inject, OnDestroy, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component
   selector: 'app-login-page',
   imports: [SfButtonComponent, TranslateModule],
   templateUrl: './login-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent implements OnDestroy {

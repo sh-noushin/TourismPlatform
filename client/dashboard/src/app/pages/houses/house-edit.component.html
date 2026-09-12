@@ -15,7 +15,7 @@
               type="text"
               name="name"
               autocomplete="off"
-              [value]="form()?.name"
+              [value]="$safeNavigationMigration(form()?.name)"
               (input)="updateField('name', $any($event.target).value)"
               required
             />
@@ -26,7 +26,7 @@
             <textarea
               name="description"
               rows="3"
-              [value]="form()?.description"
+              [value]="$safeNavigationMigration(form()?.description)"
               (input)="updateField('description', $any($event.target).value)"
             ></textarea>
           </label>
@@ -101,7 +101,7 @@
               type="text"
               name="line1"
               autocomplete="off"
-              [value]="form()?.line1"
+              [value]="$safeNavigationMigration(form()?.line1)"
               (input)="updateField('line1', $any($event.target).value)"
               required
             />
@@ -113,7 +113,7 @@
               type="text"
               name="line2"
               autocomplete="off"
-              [value]="form()?.line2"
+              [value]="$safeNavigationMigration(form()?.line2)"
               (input)="updateField('line2', $any($event.target).value)"
             />
           </label>
@@ -124,7 +124,7 @@
               type="text"
               name="city"
               autocomplete="off"
-              [value]="form()?.city"
+              [value]="$safeNavigationMigration(form()?.city)"
               (input)="updateField('city', $any($event.target).value)"
               required
             />
@@ -136,7 +136,7 @@
               type="text"
               name="region"
               autocomplete="off"
-              [value]="form()?.region"
+              [value]="$safeNavigationMigration(form()?.region)"
               (input)="updateField('region', $any($event.target).value)"
             />
           </label>
@@ -165,7 +165,7 @@
               type="text"
               name="postalCode"
               autocomplete="off"
-              [value]="form()?.postalCode"
+              [value]="$safeNavigationMigration(form()?.postalCode)"
               (input)="updateField('postalCode', $any($event.target).value)"
             />
           </label>

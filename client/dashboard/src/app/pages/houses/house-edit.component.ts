@@ -1,4 +1,4 @@
-import { Component, Inject, Optional, computed, signal, OnDestroy } from '@angular/core';
+import { Component, Inject, Optional, computed, signal, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -80,6 +80,7 @@ const CURRENCY_OPTIONS: CurrencyOption[] = [
   selector: 'house-edit',
   imports: [CommonModule, MatDialogModule, SfDropdownComponent, SfFileuploadComponent, TranslateModule],
   templateUrl: './house-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./house-edit.component.scss']
 })
 export class HouseEditComponent implements OnDestroy {
