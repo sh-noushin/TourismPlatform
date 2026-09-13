@@ -1,0 +1,308 @@
+<section class="fx">
+  <header class="pagehead">
+    <h1>{{ 'EXCHANGE_PAGE.TITLE' | translate }}</h1>
+    <div class="crumb">
+      <b>{{ 'EXCHANGE_PAGE.CRUMB_MONEY' | translate }}</b>
+      <span>/</span>
+      <span>{{ 'EXCHANGE_PAGE.TITLE' | translate }}</span>
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="fx__error" role="alert">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <!-- left column: headline rate + two stats -->
+    <div class="col-a">
+      <section class="card">
+        @if (selected(); as pair) {
+          <div class="card-head">
+            <span class="lead num">{{ formatNumber(pair.rate) }}</span>
+            <h2>{{ currencyName(pair.baseCurrencyCode) }}</h2>
+            <div class="sub">
+              {{ pair.baseCurrencyCode }} / {{ pair.quoteCurrencyCode }} ·
+              {{ 'EXCHANGE_PAGE.RANGE_' + range() | translate }}
+            </div>
+          </div>
+
+          @if (selectedSeries().line) {
+            <svg class="chart chart--area" viewBox="0 0 400 150" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="fxArea" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.22" />
+                  <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <polygon [attr.points]="selectedSeries().area" fill="url(#fxArea)" />
+              <polyline
+                [attr.points]="selectedSeries().line"
+                fill="none"
+                stroke="var(--color-primary)"
+                stroke-width="2"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                vector-effect="non-scaling-stroke"
+              />
+            </svg>
+          } @else {
+            <p class="chart__empty">{{ 'EXCHANGE_PAGE.NO_HISTORY' | translate }}</p>
+          }
+        }
+      </section>
+
+      <div class="statrow">
+        <section class="card stat">
+          <div class="top">
+            <span class="k">{{ 'EXCHANGE_PAGE.STAT_PAIRS' | translate }}</span>
+            <span class="ic" aria-hidden="true">⇄</span>
+          </div>
+          <div class="v num">{{ formatNumber(summaries().length) }}</div>
+          <div class="d muted">
+            {{ 'EXCHANGE_PAGE.STAT_PAIRS_MOVED' | translate: { count: formatNumber(movedCount()) } }}
+          </div>
+        </section>
+
+        <section class="card stat">
+          <div class="top">
+            <span class="k">{{ 'EXCHANGE_PAGE.STAT_BIGGEST_MOVE' | translate }}</span>
+            <span class="ic" aria-hidden="true">↕</span>
+          </div>
+          @if (biggestMove(); as top) {
+            <div class="v num">{{ top.baseCurrencyCode }}</div>
+            <div class="d" [attr.data-dir]="changeDirection(top.changePercent)">
+              <span class="num">{{ formatChange(top.changePercent) }}</span>
+            </div>
+          } @else {
+            <div class="v num">—</div>
+            <div class="d muted">{{ 'EXCHANGE_PAGE.NO_HISTORY' | translate }}</div>
+          }
+        </section>
+      </div>
+    </div>
+
+    <!-- right: monthly comparison -->
+    <section class="card col-b">
+      <div class="card-head">
+        <h2>{{ 'EXCHANGE_PAGE.MONTHLY_TITLE' | translate }}</h2>
+        @if (selected(); as pair) {
+          <div class="sub">
+            {{ pair.baseCurrencyCode }} / {{ pair.quoteCurrencyCode }} ·
+            {{ 'EXCHANGE_PAGE.MONTHLY_SUB' | translate }}
+          </div>
+        }
+      </div>
+
+      @if (hasMonthlyData()) {
+        <div class="bars">
+          @for (bar of monthlyBars(); track bar.month) {
+            <div class="bars__col" [attr.title]="bar.label">
+              <div class="bars__pair">
+                <span
+                  class="bars__bar bars__bar--current"
+                  [style.height.%]="bar.currentHeight"
+                ></span>
+                <span
+                  class="bars__bar bars__bar--previous"
+                  [style.height.%]="bar.previousHeight"
+                ></span>
+              </div>
+              <span class="bars__label">{{ bar.label }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="legend">
+          <span class="legend__item">
+            <i class="legend__swatch legend__swatch--current"></i>
+            {{ 'EXCHANGE_PAGE.THIS_YEAR' | translate }}
+          </span>
+          <span class="legend__item">
+            <i class="legend__swatch legend__swatch--previous"></i>
+            {{ 'EXCHANGE_PAGE.LAST_YEAR' | translate }}
+          </span>
+        </div>
+      } @else {
+        <p class="chart__empty">{{ 'EXCHANGE_PAGE.NO_MONTHLY' | translate }}</p>
+      }
+    </section>
+
+    <!-- rates table -->
+    <section class="card col-wide">
+      <div class="card-head">
+        <h2>{{ 'EXCHANGE_PAGE.RATES_TITLE' | translate }}</h2>
+        <div class="sub">
+          {{ 'EXCHANGE_PAGE.PAIR_COUNT' | translate: { count: formatNumber(displayed().length) } }}
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label class="tsearch">
+          <span class="tsearch__icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            [value]="filter()"
+            (input)="filter.set($any($event.target).value)"
+            [attr.placeholder]="'EXCHANGE_PAGE.SEARCH_PLACEHOLDER' | translate"
+          />
+        </label>
+
+        <div class="chips">
+          @for (m of moveFilters; track m) {
+            <button
+              type="button"
+              class="chip"
+              [class.chip--on]="move() === m"
+              (click)="move.set(m)"
+            >{{ 'EXCHANGE_PAGE.FILTER_' + m | translate }}</button>
+          }
+        </div>
+
+        <div class="end">
+          <div class="rangeswitch">
+            @for (r of ranges; track r) {
+              <button
+                type="button"
+                class="rangeswitch__btn"
+                [class.rangeswitch__btn--on]="range() === r"
+                (click)="setRange(r)"
+              >{{ 'EXCHANGE_PAGE.RANGE_' + r | translate }}</button>
+            }
+          </div>
+
+          <button type="button" class="btn" (click)="refresh()" [disabled]="loading()">
+            <span class="btn__icon" aria-hidden="true">⟳</span>
+            {{ 'EXCHANGE_PAGE.REFRESH' | translate }}
+          </button>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <p class="panel__state">{{ 'COMMON.LOADING' | translate }}</p>
+      } @else if (displayed().length === 0) {
+        <div class="empty">
+          <div class="ic" aria-hidden="true">⇄</div>
+          <h3>{{ 'EXCHANGE_PAGE.EMPTY_TITLE' | translate }}</h3>
+          <p>{{ 'EXCHANGE_PAGE.EMPTY_BODY' | translate }}</p>
+        </div>
+      } @else {
+        <table class="fxtable">
+          <thead>
+            <tr>
+              <th>{{ 'EXCHANGE_PAGE.COL_CURRENCY' | translate }}</th>
+              <th class="n">{{ 'EXCHANGE_PAGE.COL_RATE' | translate }}</th>
+              <th class="n">{{ 'EXCHANGE_PAGE.COL_CHANGE' | translate }}</th>
+              <th class="hide-sm">
+                {{ 'EXCHANGE_PAGE.COL_POSITION' | translate: { range: ('EXCHANGE_PAGE.RANGE_' + range() | translate) } }}
+              </th>
+              <th class="hide-sm">{{ 'EXCHANGE_PAGE.COL_TREND' | translate }}</th>
+              <th class="hide-sm">{{ 'EXCHANGE_PAGE.COL_CAPTURED' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of displayed(); track pairKey(s)) {
+              <tr [class.fxtable__row--on]="pairKey(s) === selectedPair()" (click)="selectPair(s)">
+                <td>
+                  <div class="pair">
+                    <span class="mark">{{ s.baseCurrencyCode }}</span>
+                    <span class="pair__names">
+                      <b>{{ s.baseCurrencyCode }} / {{ s.quoteCurrencyCode }}</b>
+                      <small>{{ currencyName(s.baseCurrencyCode) }}</small>
+                    </span>
+                  </div>
+                </td>
+                <td class="n">
+                  <span class="rate num">{{ formatNumber(s.rate) }}</span>
+                  <em>{{ s.quoteCurrencyCode }}</em>
+                </td>
+                <td class="n">
+                  <span class="delta num" [attr.data-dir]="changeDirection(s.changePercent)">
+                    {{ formatChange(s.changePercent) }}
+                  </span>
+                </td>
+                <td class="hide-sm">
+                  <div class="bar">
+                    <div class="lbl">
+                      <span>{{ 'EXCHANGE_PAGE.LOW' | translate }} {{ formatNumber(s.windowLow) }}</span>
+                      <b class="num">{{ formatNumber(rangePosition(s)) }}%</b>
+                    </div>
+                    <div class="track">
+                      <i
+                        [style.width.%]="rangePosition(s)"
+                        [attr.data-dir]="changeDirection(s.changePercent)"
+                      ></i>
+                    </div>
+                  </div>
+                </td>
+                <td class="hide-sm">
+                  @if (sparkline(s).line) {
+                    <svg class="spark" width="78" height="24" viewBox="0 0 78 24" fill="none" aria-hidden="true">
+                      <polyline
+                        [attr.points]="sparkline(s).line"
+                        [attr.stroke]="changeDirection(s.changePercent) === 'down' ? 'var(--color-danger)' : 'var(--color-success)'"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+                <td class="hide-sm">
+                  <div class="when">{{ formatTime(s.capturedAtUtc) }}</div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <div class="tfoot">
+          <span>
+            {{ 'EXCHANGE_PAGE.SHOWING' | translate: {
+              shown: formatNumber(displayed().length),
+              total: formatNumber(summaries().length)
+            } }}
+          </span>
+        </div>
+      }
+    </section>
+
+    <!-- colour widgets -->
+    <div class="col-side">
+      @if (selected(); as pair) {
+        <section class="card widget widget--blue">
+          <div class="v">
+            <span class="num">{{ formatCompact(pair.rate) }}</span>
+            <em class="num">{{ formatChange(pair.changePercent) }}</em>
+          </div>
+          <div class="k">
+            {{ 'EXCHANGE_PAGE.WIDGET_RATE' | translate: { currency: currencyName(pair.baseCurrencyCode) } }}
+          </div>
+
+          @if (widgetSeries().line) {
+            <svg class="chart chart--widget" viewBox="0 0 320 90" preserveAspectRatio="none" aria-hidden="true">
+              <polyline
+                [attr.points]="widgetSeries().line"
+                fill="none"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                vector-effect="non-scaling-stroke"
+              />
+            </svg>
+          }
+        </section>
+
+        <section class="card widget widget--amber">
+          <div class="v">
+            <span class="num">{{ formatNumber(movedCount()) }}</span>
+            <em>{{ 'EXCHANGE_PAGE.WIDGET_OF_PAIRS' | translate: { total: formatNumber(summaries().length) } }}</em>
+          </div>
+          <div class="k">{{ 'EXCHANGE_PAGE.WIDGET_MOVED' | translate }}</div>
+        </section>
+      }
+    </div>
+  </div>
+</section>

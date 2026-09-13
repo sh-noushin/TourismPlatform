@@ -33,6 +33,14 @@ public sealed class ExchangeController : ControllerBase
         return Ok(dto);
     }
 
+    [HttpGet("rates/summary")]
+    [ProducesResponseType(typeof(IEnumerable<ExchangeRateSummaryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRateSummaries([FromQuery] int days = 7, CancellationToken cancellationToken = default)
+    {
+        var dto = await _exchangeService.GetRateSummariesAsync(days, cancellationToken);
+        return Ok(dto);
+    }
+
     [HttpPost("orders")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]

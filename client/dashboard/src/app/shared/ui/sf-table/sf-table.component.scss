@@ -1,16 +1,15 @@
-@use 'sass:color';
 @use '../../../styles/index' as *;
 
 .sf-table-wrapper {
   position: relative;
   background: $surface;
-  border: 1px solid $border;
-  border-radius: 1rem;
+  border: 1px solid $borderSoft;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
 .sf-table-scroll {
-  max-height: 50vh;
+  max-height: 60vh;
   overflow: auto;
 }
 
@@ -23,9 +22,7 @@ table {
 }
 
 th,
- td {
-  padding: spacing(sm);
-  border-bottom: 1px solid $border;
+td {
   text-align: inherit;
   vertical-align: middle;
   font-family: inherit;
@@ -34,37 +31,46 @@ th,
   white-space: nowrap;
 }
 
-/* Normalize font sizing so headers and cells match visually */
-th,
-td,
-.header-button,
-.header-button *,
-.actions-cell,
-.actions-cell * {
-  font-size: 1rem;
-  line-height: 1.6;
+td {
+  padding: 14px 18px;
+  border-bottom: 1px solid $borderSoft;
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  color: $text;
 }
 
+/* The last row's rule would double up with the footer border. */
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr {
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+tbody tr:hover {
+  background: $tableRowHover;
+}
+
+/* Headers are small and quiet -- a wash background and muted ink, so the eye
+   lands on the rows first. */
 th {
+  padding: 12px 18px;
   text-align: inherit;
-  background: linear-gradient(180deg, $tableHeaderBg 0%, color.adjust($tableHeaderBg, $lightness: -2%) 100%);
-  color: color.adjust($text, $lightness: -30%);
-  border-bottom: 1px solid $tableHeaderBorder;
+  background: $surface;
+  color: $tableHeaderText;
+  font-size: 0.8rem;
+  font-weight: var(--weight-semibold);
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
   position: sticky;
   top: 0;
   z-index: 1;
 }
 
-thead {
-  box-shadow: inset 0 -1px 0 0 $tableHeaderBorder;
-}
-
 .actions-header {
-  font-weight: $font-weight-regular;
   text-align: center;
-  padding: spacing(sm);
   width: 140px;
-  letter-spacing: 0.01em;
 }
 
 .header-button {
@@ -72,17 +78,24 @@ thead {
   background: none;
   border: none;
   text-align: inherit;
-  font-weight: $font-weight-medium;
-  color: $text;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: spacing(xs);
+  gap: var(--space-1);
+  padding: 0;
+  cursor: default;
+}
+
+.header-button.sortable {
   cursor: pointer;
 }
 
 .header-button .indicator {
-  margin-inline-start: spacing(xs);
+  margin-inline-start: var(--space-1);
   margin-inline-end: 0;
   flex-shrink: 0;
 }
@@ -96,16 +109,28 @@ thead {
 }
 
 .indicator {
-  font-size: 0.75rem;
+  font-size: 0.625rem;
+  color: $primary;
 }
 
 .action {
   background: transparent;
   border: 1px solid $border;
-  border-radius: 0.5rem;
-  padding: spacing(xs) spacing(sm);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
   cursor: pointer;
-  color: $text;
+  color: var(--color-text-muted);
+  transition: background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.action:hover {
+  background: var(--tint-primary-subtle);
+  border-color: var(--color-primary-muted);
+  color: $primary;
 }
 
 .actions-cell {
@@ -118,19 +143,39 @@ thead {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: spacing(xs) spacing(md);
+  gap: var(--space-3);
+  padding: 11px var(--space-4);
+  border-top: 1px solid $borderSoft;
+  font-size: var(--text-sm);
+  color: var(--color-text-subtle);
 }
 
 .footer button {
   border: 1px solid $border;
   background: $surface;
-  border-radius: 0.5rem;
-  padding: spacing(xs) spacing(sm);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: $text;
   cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.footer button:hover:not(:disabled) {
+  background: var(--tint-primary-subtle);
+  border-color: var(--color-primary-muted);
+  color: $primary;
+}
+
+.footer button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .empty-state {
-  padding: spacing(md);
+  padding: var(--space-6);
 }
 
 .loading-overlay {
@@ -138,7 +183,8 @@ thead {
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.85);
+  background: color-mix(in srgb, var(--color-surface) 75%, transparent);
+  backdrop-filter: blur(2px);
 }
 
 /* RTL alignment */
@@ -166,18 +212,11 @@ thead {
   white-space: nowrap;
 }
 
-:host-context([dir='rtl']) th,
-:host-context([lang='fa']) th,
-:host-context(:lang(fa)) th {
-  padding-inline-start: spacing(sm); 
-  padding-inline-end: spacing(sm);
-}
-
 :host-context([dir='rtl']) .header-button,
 :host-context([lang='fa']) .header-button,
 :host-context(:lang(fa)) .header-button {
-  flex-direction: row; 
-  justify-content: flex-start; 
+  flex-direction: row;
+  justify-content: flex-start;
   text-align: right;
   direction: rtl;
 }
@@ -186,7 +225,7 @@ thead {
 :host-context([dir='rtl']) .header-button .indicator,
 :host-context([lang='fa']) .header-button .indicator,
 :host-context(:lang(fa)) .header-button .indicator {
-  margin-inline-start: spacing(xs); /* places indicator snug after the label in RTL */
+  margin-inline-start: var(--space-1); /* places indicator snug after the label in RTL */
   margin-inline-end: 0;
   /* keep the indicator glyph LTR so triangle points correctly and stays adjacent */
   direction: ltr;

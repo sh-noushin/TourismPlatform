@@ -1,26 +1,34 @@
-@use 'sass:color';
-@use 'spacing' as *;
 @use 'colors' as *;
 
+// The app's surface primitive. Two-layer shadow instead of the old single
+// 60px blur, which read as a grey smudge under every card on the page.
 @mixin card() {
   background-color: $surface;
-  border-radius: 1.25rem;
-  border: 1px solid $border;
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  border-radius: var(--radius-lg);
+  border: 1px solid $borderSoft;
+  box-shadow: var(--shadow-sm);
   color: $text;
-  padding: spacing(md);
+  padding: var(--space-5);
   position: relative;
   @content;
 }
 
+// Keyboard focus. One ring shape everywhere so focus never goes missing on a
+// custom control.
+@mixin focus-ring() {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
 @mixin sidebarItem($active: false) {
-  border-radius: 0.75rem;
-  padding: spacing(sm) spacing(md);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
   display: flex;
   align-items: center;
-  gap: spacing(sm);
+  gap: var(--space-2);
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out);
 
   @if $active {
     background-color: $sidebarActiveBg;
@@ -34,7 +42,7 @@
     color: $muted;
 
     &:hover {
-      background-color: rgba(15, 23, 42, 0.08);
+      background-color: $sidebarHoverBg;
       color: $text;
 
       & svg {

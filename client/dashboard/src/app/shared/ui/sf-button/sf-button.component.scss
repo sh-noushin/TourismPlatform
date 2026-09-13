@@ -1,34 +1,62 @@
-@use '../../../styles/index' as *; 
-host { display: inline-flex; width: 100%; }
+@use '../../../styles/index' as *;
+
+:host { display: inline-flex; width: 100%; }
 
 .sf-button {
   display: inline-flex;
   width: 100%;
   position: relative;
-  border-radius: 0.65rem;
-  font-weight: $font-weight-medium;
+  border-radius: var(--radius-md);
+  font-family: $font-body;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
   border: 1px solid transparent;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   justify-content: center;
   align-items: center;
-  gap: spacing(sm);
-  min-height: 2.75rem;
+  gap: 7px;
+  min-height: 0;
+  padding: 10px 16px;
   text-transform: none;
-  box-shadow: 0 6px 18px rgba($primary, 0.25);
   text-align: center;
   direction: inherit;
+
+  /* Tight contact shadow only. The old 18px primary-tinted glow made every
+     button look like it was floating off the page. */
+  box-shadow: var(--shadow-xs);
+  transition: filter var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+/* Colour arrives as an inline style from the component, so hover shades it
+   rather than replacing it -- works for any colour a call site passes. */
+.sf-button:hover:not(:disabled) {
+  filter: brightness(0.94);
+  box-shadow: var(--shadow-sm);
+}
+
+.sf-button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.sf-button:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .sf-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .content {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: spacing(sm);
+  gap: var(--space-2);
   width: 100%;
   text-align: center;
   direction: inherit;

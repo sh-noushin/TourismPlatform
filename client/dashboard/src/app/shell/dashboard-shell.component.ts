@@ -43,6 +43,16 @@ export class DashboardShellComponent implements OnDestroy {
   // Language source of truth
   readonly lang = signal<'en' | 'fa'>('fa');
 
+  // Bumped every time ngx-translate finishes switching language.
+  //
+  // `lang` alone is not enough to drive anything built with translate.instant():
+  // setLang() calls translate.use(), which loads the new file asynchronously, so
+  // at the moment we set `lang` the instant() lookups still return the previous
+  // language. onLangChange fires later, but by then `lang` already holds the new
+  // value -- setting it again is a no-op, so nothing recomputes and the menu
+  // stays in the old language until something else happens to invalidate it.
+  private readonly translationsVersion = signal(0);
+
   // Host dir so CSS can use :host([dir="rtl"])
   @HostBinding('attr.dir')
   get dirAttr(): 'rtl' | 'ltr' {
@@ -56,6 +66,7 @@ export class DashboardShellComponent implements OnDestroy {
 
   readonly menuItems = computed<MenuItem[]>(() => {
     this.lang();
+    this.translationsVersion();
     return this.buildMenuItems();
   });
 
@@ -63,6 +74,7 @@ export class DashboardShellComponent implements OnDestroy {
 
   readonly displayName = computed(() => {
     this.lang();
+    this.translationsVersion();
     const name = (this.auth.userName?.() ?? '').trim();
     if (name) return name;
 
@@ -71,6 +83,15 @@ export class DashboardShellComponent implements OnDestroy {
 
     if (this.auth.isSuperUser?.()) return this.translate.instant('USER.SUPER_ADMIN');
     return this.translate.instant('USER.DEFAULT_NAME');
+  });
+
+  // Drives the topbar breadcrumb: the open tab is the only "where am I" signal
+  // this shell has, so it doubles as the page label.
+  readonly activeTabTitle = computed(() => {
+    this.lang();
+    this.translationsVersion();
+    const id = this.tabs.activeTabId();
+    return this.tabs.tabs().find((t: TabItem) => t.id === id)?.title ?? '';
   });
 
   readonly initials = computed(() => {
@@ -125,6 +146,9 @@ export class DashboardShellComponent implements OnDestroy {
     this.langSub = this.translate.onLangChange.subscribe(({ lang }) => {
       const next = (lang === 'en' ? 'en' : 'fa') as 'en' | 'fa';
       this.lang.set(next);
+      // The new strings are loaded only now, so anything derived from
+      // translate.instant() has to be rebuilt here rather than in setLang().
+      this.translationsVersion.update(v => v + 1);
       this.applyDocumentDir();
       this.relabelTabs();
     });
@@ -230,10 +254,12 @@ export class DashboardShellComponent implements OnDestroy {
   }
 
   setLang(lang: 'en' | 'fa') {
+    // Fire and forget: translate.use() loads asynchronously and everything that
+    // depends on the new strings is refreshed from the onLangChange handler.
+    // Relabelling here would run against the *previous* language.
     this.translate.use(lang);
     this.lang.set(lang);
     this.applyDocumentDir();
-    this.relabelTabs();
     this.langMenuOpen.set(false);
   }
 
@@ -326,7 +352,11 @@ export class DashboardShellComponent implements OnDestroy {
           { label: this.translate.instant('MENU.TOURS'), path: '/admin/tours' }
         ]
       },
-      { label: this.translate.instant('MENU.EXCHANGE'), basePath: '/admin/exchange', icon: '💱' },
+      {
+        label: this.translate.instant('MENU.EXCHANGE'),
+        basePath: '/admin/exchange',
+        icon: '💱',
+      },
       {
         label: this.translate.instant('MENU.PUBLIC_WEB'),
         basePath: '/admin/public-page',
@@ -376,7 +406,7 @@ export class DashboardShellComponent implements OnDestroy {
   }
 
   private updateSidebarWidthVar(collapsed: boolean): void {
-    const width = collapsed ? 72 : 220;
+    const width = collapsed ? 74 : 268;
     this.document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
   }
 }

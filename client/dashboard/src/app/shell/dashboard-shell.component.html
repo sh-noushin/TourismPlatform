@@ -1,6 +1,16 @@
 <div class="shell" [class.shell--collapsed]="sidebarCollapsed()" [class.shell--rtl]="lang() === 'fa'" (click)="closeUserMenu()">
   <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed()" (click)="$event.stopPropagation()">
     <div class="sidebar__top">
+      <div class="brand">
+        <div class="brand__logo">TP</div>
+        @if (!sidebarCollapsed()) {
+          <div class="brand__text">
+            <div class="brand__title">{{ 'BRAND.TITLE' | translate }}</div>
+            <div class="brand__sub">{{ 'BRAND.SUBTITLE' | translate }}</div>
+          </div>
+        }
+      </div>
+
       <button type="button" class="icon-btn" (click)="toggleSidebar()" aria-label="Toggle menu">
         <span class="burger"></span>
       </button>
@@ -44,76 +54,35 @@
         </div>
       }
     </nav>
-
-    @if (!sidebarCollapsed()) {
-      <div class="sidebar__brand">
-        <div class="brand">
-          <div class="brand__logo">TP</div>
-          <div class="brand__text">
-            <div class="brand__title">{{ 'BRAND.TITLE' | translate }}</div>
-          </div>
-        </div>
-      </div>
-    }
   </aside>
 
   <div class="main">
     <div class="user-header" (click)="$event.stopPropagation()">
+      <div class="crumb">
+        <b>{{ tabs.tabs().length ? (activeTabTitle() || ('TABS.DEFAULT_TAB' | translate)) : ('BRAND.TITLE' | translate) }}</b>
+      </div>
+
       <div class="header-end">
-            <div
-              class="lang-selector"
-              [class.open]="langMenuOpen()"
-              [class.lang-selector--ltr]="lang() === 'en'"
-              [class.lang-selector--rtl]="lang() === 'fa'"
-            >
-              <button class="lang-trigger" type="button" (click)="toggleLangMenu($event)">
-                <span class="flag">
-                  <svg *ngIf="lang() === 'fa'" width="28" height="20" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="24" height="5" fill="#239f40"/>
-                    <rect y="5" width="24" height="6" fill="#fff"/>
-                    <rect y="11" width="24" height="5" fill="#da0000"/>
-                  </svg>
-                  <svg *ngIf="lang() === 'en'" width="28" height="20" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                    <clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
-                    <path d="M0,0 v30 h60 v-30 z" fill="#00247d"/>
-                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-                    <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#cf142b" stroke-width="4"/>
-                    <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
-                    <path d="M30,0 v30 M0,15 h60" stroke="#cf142b" stroke-width="6"/>
-                  </svg>
-                </span>
-                <span class="lang-trigger__label">{{ lang() === 'fa' ? ('LANG.FARSI' | translate) : ('LANG.ENGLISH' | translate) }}</span>
-                <span class="lang-trigger__chev" aria-hidden="true"></span>
-              </button>
+        <!-- Two languages only, so a segmented switch beats a dropdown: both
+             options stay visible and switching costs one click. -->
+        <div class="langswitch" [class.langswitch--rtl]="lang() === 'fa'">
+          <button
+            type="button"
+            class="langswitch__btn"
+            [class.langswitch__btn--on]="lang() === 'en'"
+            [attr.aria-pressed]="lang() === 'en'"
+            (click)="setLang('en')"
+          >EN</button>
+          <button
+            type="button"
+            class="langswitch__btn"
+            [class.langswitch__btn--on]="lang() === 'fa'"
+            [attr.aria-pressed]="lang() === 'fa'"
+            (click)="setLang('fa')"
+          >{{ 'LANG.FARSI' | translate }}</button>
+        </div>
 
-              <div class="lang-menu" *ngIf="langMenuOpen()">
-                <button class="lang-item" type="button" (click)="setLang('fa')" [class.selected]="lang() === 'fa'">
-                  <span class="lang-item__flag">
-                    <svg width="36" height="24" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="24" height="5" fill="#239f40"/>
-                      <rect y="5" width="24" height="6" fill="#fff"/>
-                      <rect y="11" width="24" height="5" fill="#da0000"/>
-                    </svg>
-                  </span>
-                  <span class="lang-item__label">{{ 'LANG.FARSI' | translate }}</span>
-                </button>
-                <button class="lang-item" type="button" (click)="setLang('en')" [class.selected]="lang() === 'en'">
-                  <span class="lang-item__flag">
-                    <svg width="36" height="24" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                      <clipPath id="t2"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
-                      <path d="M0,0 v30 h60 v-30 z" fill="#00247d"/>
-                      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-                      <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t2)" stroke="#cf142b" stroke-width="4"/>
-                      <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
-                      <path d="M30,0 v30 M0,15 h60" stroke="#cf142b" stroke-width="6"/>
-                    </svg>
-                  </span>
-                  <span class="lang-item__label">{{ 'LANG.ENGLISH' | translate }}</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="user">
+        <div class="user">
           <button #userMenuBtn type="button" class="user__btn" (click)="toggleUserMenu($event)">
             <span class="user__avatar">{{ initials() }}</span>
             <span class="user__name">{{ displayName() }}</span>
@@ -143,10 +112,10 @@
             [class.tab--active]="tabs.activeTabId() === tab.id"
             (click)="activate(tab)"
           >
-            <span class="tab__title">{{ tab.title || ('TABS.DEFAULT' | translate) }}</span>
+            <span class="tab__title">{{ tab.title || ('TABS.DEFAULT_TAB' | translate) }}</span>
 
             @if (!tab.pinned) {
-              <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">x</span>
+              <span class="tab__close" (click)="close(tab, $event)" aria-hidden="true">×</span>
             }
           </button>
         }

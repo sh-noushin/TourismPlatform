@@ -1,25 +1,48 @@
 @use '../../../styles/index' as *;
 
+/* Not a card: an empty state sits inside a panel that already has a border, and
+   nesting two bordered white surfaces reads as a bug. Centred column with a
+   tinted art tile instead. */
 .sf-empty-state {
-  @include card();
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: spacing(lg);
+  padding: 58px 22px;
+  max-width: 400px;
+  margin: 0 auto;
+  color: $text;
 }
 
 .sf-empty-state .icon {
-  margin-bottom: spacing(sm);
-  color: $muted;
-  svg {
-    font-size: 2.5rem;
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+
+  svg,
+  mat-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
   }
 }
 
 .sf-empty-state h3 {
-  margin: 0;
-  font-size: 1.125rem;
+  margin: 0 0 6px;
+  font-family: $font-display;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: $text;
 }
 
 .sf-empty-state p {
-  margin: spacing(xs) 0 0 0;
+  margin: 0;
+  font-size: var(--text-base);
   color: $muted;
 }

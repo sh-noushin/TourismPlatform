@@ -1,113 +1,110 @@
-:host ::ng-deep .cdk-overlay-pane.house-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface,
-:host ::ng-deep .house-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface {
-  padding: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  overflow: visible !important;
-}
+@use '../../styles/index' as *;
+
+/* The overlay chrome (pane, container, surface) is styled globally in
+   styles.scss -- from here those elements are ancestors, and a `:host ::ng-deep`
+   rule can only reach descendants. */
 
 :host {
+  display: block;
   width: 100%;
+  min-height: 0;
 }
 
 .edit-shell {
   width: 100%;
   display: flex;
   justify-content: center;
+  min-height: 0;
 }
 
 .glass-panel {
-  width: min(920px, 100%);
-  background: #ffffff;
-  border-radius: 6px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-  border: 1px solid rgba(79, 70, 229, 0.15);
+  @include dialog-surface(680px);
+  max-height: 88vh;
+}
+
+.dialog-head {
+  @include dialog-header();
+}
+
+.dialog-head h3 {
+  @include dialog-title();
+}
+
+.dialog-close {
+  @include dialog-close();
+}
+
+/* The form is the flex column: body scrolls, footer stays. */
+.dialog-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 18px;
-  max-height: min(88vh, 780px);
-  overflow-y: auto;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
-.header h3 {
-  margin: 0;
-  font-size: 1.4rem;
-  color: #111827;
+.dialog-body {
+  @include dialog-body();
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.dialog-foot {
+  @include dialog-footer();
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  background: #f9fafb;
-  border-radius: 12px;
-  border: 1px solid rgba(79, 70, 229, 0.08);
-  padding: 14px 16px;
+.form-section {
+  @include form-section();
 }
 
-.form-grid.top {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 260px));
-  align-items: start;
+.form-section__title {
+  @include form-section-title();
 }
 
-.form-grid.listing {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  align-items: start;
+.field-grid {
+  @include field-grid(200px);
 }
 
 .listing-type {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .listing-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .listing-option {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border: 1px solid rgba(79, 70, 229, 0.2);
-  border-radius: 10px;
-  background: #fff;
-  font-weight: 500;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid $border;
+  border-radius: var(--radius-md);
+  background: $surface;
+  color: $text;
+  font-weight: var(--weight-medium);
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
 }
 
 .listing-option input {
-  accent-color: #4f46e5;
+  width: auto;
+  accent-color: var(--color-primary);
 }
 
 .listing-option:hover {
-  border-color: rgba(79, 70, 229, 0.4);
-  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
-}
-
-.form-grid.address {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  border-color: $primary;
+  background: $bg;
 }
 
 .fileupload-row {
   width: 100%;
-  margin: 4px 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px 0 4px;
 }
 
 .fileupload-row sf-fileupload {
@@ -120,10 +117,10 @@
 .photo-thumb {
   width: 48px;
   height: 48px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background: #fff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: $bg;
+  border: 1px solid $border;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,18 +132,12 @@
   object-fit: cover;
 }
 
-
 label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-weight: 600;
-  color: #374151;
+  @include field();
 }
 
 .label-text {
-  font-size: 0.75rem;
-  color: #475569;
+  @include field-label();
 }
 
 .combobox sf-dropdown {
@@ -156,66 +147,59 @@ label {
 
 input,
 textarea {
-  border-radius: 12px;
-  border: 1px solid rgba(79, 70, 229, 0.2);
-  padding: 10px 12px;
-  font-size: 0.9rem;
-  background: #fff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  @include text-input();
 }
 
-input:focus,
-textarea:focus {
-  border-color: #4f46e5;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
+/* The old textarea grew to fill the sheet and dominated the form. Three lines
+   is the useful default; the user can drag for more. */
+textarea {
+  min-height: 84px;
+  max-height: 200px;
+  resize: vertical;
 }
 
 .mini-note {
   margin: 0;
-  font-size: 0.8rem;
-  color: #6b7280;
-}
-
-.photos {
-  margin-top: 8px;
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
 }
 
 .photo-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-2);
 }
 
 .photo-item {
   display: grid;
   grid-template-columns: 48px 1fr auto;
-  gap: 0.85rem;
+  gap: var(--space-3);
   align-items: center;
-  background: #f9fafb;
-  border-radius: 12px;
-  border: 1px solid rgba(79, 70, 229, 0.08);
-  padding: 10px 12px;
+  background: $surface;
+  border-radius: var(--radius-md);
+  border: 1px solid $border;
+  padding: var(--space-2) var(--space-3);
 }
 
 .photo-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-size: 0.9rem;
-  color: #111827;
+  font-size: var(--text-base);
+  color: $text;
 }
 
 .photo-info span {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
 }
 
 .text-button {
   background: transparent;
   border: none;
-  color: #2563eb;
-  font-weight: 600;
+  color: $primary;
+  font: inherit;
+  font-weight: var(--weight-medium);
   cursor: pointer;
   padding: 0;
 }
@@ -224,147 +208,102 @@ textarea:focus {
   text-decoration: underline;
 }
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(79, 70, 229, 0.1);
-  margin-top: 6px;
-  flex-shrink: 0;
+.no-photos {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-subtle);
+  text-align: center;
 }
 
-.btn {
-  border-radius: 999px;
-  padding: 8px 18px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.btn.ghost {
-  background: #eef2ff;
-  color: #4c1d95;
-  border: 1px solid transparent;
-}
-
-.btn.primary {
-  background: #4f46e5;
-  color: #fff;
-  border: none;
-  box-shadow: 0 14px 28px rgba(79, 70, 229, 0.35);
-}
-
-.btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
+/* Status sits at the footer's inline start, opposite the buttons, so a save
+   error is visible at the moment the user reaches for Save. */
 .status-bar {
-  min-height: 24px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .status {
-  font-weight: 600;
-  font-size: 0.9rem;
+  @include status-message();
 }
 
 .status.error {
-  color: #dc2626;
+  @include status-error();
 }
 
 .status.success {
-  color: #16a34a;
+  color: var(--color-success-text);
 }
 
-:host-context([dir='ltr']) .edit-shell {
-  direction: ltr;
-  text-align: left;
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-inline-start: auto;
 }
 
+.btn {
+  @include btn-base();
+}
+
+.btn.ghost {
+  @include btn-ghost();
+}
+
+.btn.primary {
+  @include btn-primary();
+}
+
+:host-context([dir='ltr']) .edit-shell,
 :host-context([dir='ltr']) .glass-panel {
   direction: ltr;
   text-align: left;
 }
 
-:host-context([dir='ltr']) .header h3 {
-  text-align: left;
-}
-
-:host-context([dir='ltr']) label {
-  text-align: left;
-}
-
-:host-context([dir='ltr']) .label-text {
+:host-context([dir='ltr']) .dialog-head h3,
+:host-context([dir='ltr']) label,
+:host-context([dir='ltr']) .label-text,
+:host-context([dir='ltr']) .mini-note {
   text-align: left;
 }
 
 :host-context([dir='ltr']) .actions {
   flex-direction: row;
-  justify-content: flex-end;
 }
 
 :host-context([dir='ltr']) .btn.ghost { order: 1; }
 :host-context([dir='ltr']) .btn.primary { order: 2; }
 
-:host-context([dir='ltr']) .mini-note,
-:host-context([dir='ltr']) .no-photos {
-  text-align: left;
-}
-
-:host-context([dir='rtl']) .edit-shell {
-  direction: rtl;
-  text-align: right;
-}
-
+:host-context([dir='rtl']) .edit-shell,
 :host-context([dir='rtl']) .glass-panel {
   direction: rtl;
   text-align: right;
 }
 
-:host-context([dir='rtl']) .header h3 {
-  text-align: right;
-}
-
-:host-context([dir='rtl']) label {
-  text-align: right;
-}
-
-:host-context([dir='rtl']) .label-text {
+:host-context([dir='rtl']) .dialog-head h3,
+:host-context([dir='rtl']) label,
+:host-context([dir='rtl']) .label-text,
+:host-context([dir='rtl']) .mini-note {
   text-align: right;
 }
 
 :host-context([dir='rtl']) .actions {
   flex-direction: row-reverse;
-  justify-content: flex-start;
 }
 
 :host-context([dir='rtl']) .btn.ghost { order: 2; }
 :host-context([dir='rtl']) .btn.primary { order: 1; }
 
-:host-context([dir='rtl']) .mini-note,
-:host-context([dir='rtl']) .no-photos {
-  text-align: right;
-}
-
 @media (max-width: 740px) {
-  .glass-panel {
-    padding: 16px;
+  .dialog-body {
+    padding: var(--space-4);
   }
 
-  .form-grid.top,
-  .form-grid.address {
+  .field-grid {
     grid-template-columns: 1fr;
   }
 
   .photo-item {
     grid-template-columns: 44px 1fr;
-    gap: 0.5rem;
-  }
-
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
+    gap: var(--space-2);
   }
 }

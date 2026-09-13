@@ -117,7 +117,10 @@ export class HousesPageComponent {
       panelClass: 'house-edit-dialog',
       autoFocus: false,
       maxWidth: 'none',
-      width: 'min(920px, calc(100vw - 32px))',
+      // 920px stretched two columns of inputs across half a screen of dead
+      // space. 680 keeps a field at a readable width and the label beside it.
+      width: 'min(680px, calc(100vw - 32px))',
+      maxHeight: '88vh',
       data: { id: id ?? null }
     });
 

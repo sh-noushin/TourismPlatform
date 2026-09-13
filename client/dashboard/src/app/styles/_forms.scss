@@ -1,0 +1,266 @@
+@use 'colors' as *;
+@use 'typography' as *;
+
+// =============================================================================
+// Dialog and form vocabulary.
+//
+// Every add/edit dialog in the app is built from the same handful of class
+// names (.glass-panel, .header h3, label, .label-text, input, .actions,
+// .btn.primary/.ghost) and each one used to re-declare its own colours. That is
+// why they drifted from the dashboard.
+//
+// Angular's emulated encapsulation stamps a component attribute onto every
+// selector in a component stylesheet, so a global rule loses to a component's
+// own. The shared look therefore has to be *included* by each component rather
+// than imposed from outside -- these mixins are that shared source.
+// =============================================================================
+
+/// The floating sheet a dialog's content sits on.
+///
+/// No padding of its own: the header, body and footer each own their spacing so
+/// the header and footer can run edge to edge with their dividers.
+@mixin dialog-surface($width: 520px) {
+  width: min($width, 100%);
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: $text;
+}
+
+/// Titled header bar. Tinted so it separates from the white form beneath it
+/// without a second border.
+@mixin dialog-header() {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: $bg;
+  border-bottom: 1px solid $border;
+  flex: 0 0 auto;
+}
+
+@mixin dialog-close() {
+  margin-inline-start: auto;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: $muted;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: $surface;
+    color: $text;
+  }
+}
+
+/// Scrolling middle. Long forms scroll here, leaving the header and footer put.
+@mixin dialog-body() {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/// Footer that stays reachable no matter how long the form is -- the single
+/// biggest usability gap in the old dialogs, where Save scrolled off the end.
+@mixin dialog-footer() {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: $surface;
+  border-top: 1px solid $border;
+  flex: 0 0 auto;
+}
+
+/// A group of fields under a ruled caption. Replaces the boxed grey panels,
+/// which stacked a second surface inside the sheet for no structural gain.
+@mixin form-section() {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+@mixin form-section-title() {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-heading);
+  white-space: nowrap;
+
+  /* Rule fills whatever space the caption leaves. */
+  &::after {
+    content: '';
+    flex: 1 1 auto;
+    height: 1px;
+    background: $border;
+  }
+}
+
+@mixin field-grid($min: 200px) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min, 1fr));
+  gap: var(--space-4);
+}
+
+@mixin dialog-title() {
+  margin: 0;
+  font-family: $font-display;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.02em;
+  color: $text;
+}
+
+@mixin dialog-subtitle() {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: $muted;
+}
+
+/// Wraps a label and its control.
+@mixin field() {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-weight: var(--weight-medium);
+  color: $text;
+  min-width: 0;
+}
+
+@mixin field-label() {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: $muted;
+}
+
+/// Text inputs, textareas and selects: white field, hairline border, accent
+/// border on focus. No focus glow -- the reference relies on the border alone.
+@mixin text-input() {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid $border;
+  background: $surface;
+  color: $text;
+  font: inherit;
+  transition: border-color var(--duration-fast) var(--ease-out);
+
+  &::placeholder {
+    color: var(--color-text-subtle);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+@mixin btn-base() {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 9px 15px;
+  border-radius: var(--radius-md);
+  border: 1px solid $border;
+  background: $surface;
+  color: $text;
+  font: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+
+  &:hover:not(:disabled) {
+    background: $bg;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+@mixin btn-primary() {
+  background: $primary;
+  border-color: $primary;
+  color: var(--color-text-on-accent);
+  font-weight: var(--weight-semibold);
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+}
+
+@mixin btn-ghost() {
+  background: $surface;
+  border-color: $border;
+  color: $muted;
+
+  &:hover:not(:disabled) {
+    background: $bg;
+    color: $text;
+  }
+}
+
+@mixin btn-danger() {
+  background: $surface;
+  border-color: $border;
+  color: var(--color-danger-text);
+
+  &:hover:not(:disabled) {
+    background: var(--color-danger-subtle);
+  }
+}
+
+/// Footer row. Confirm sits at the inline end in both directions; the RTL
+/// ordering rules each dialog already carries stay valid.
+@mixin dialog-actions() {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+}
+
+@mixin status-message() {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: $muted;
+}
+
+@mixin status-error() {
+  color: var(--color-danger-text);
+}

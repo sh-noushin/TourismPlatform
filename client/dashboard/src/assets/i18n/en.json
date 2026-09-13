@@ -1,6 +1,7 @@
 {
   "BRAND": {
-    "TITLE": "Tourism Platform"
+    "TITLE": "Tourism Platform",
+    "SUBTITLE": "Operations console"
   },
   "LANG": {
     "FARSI": "FARSI",
@@ -146,10 +147,15 @@
     "DELETE_CONFIRMATION": "Delete this tour category?"
   },
   "CATEGORY_DIALOG": {
+    "EDIT_TITLE": "Edit tour category",
+    "CREATE_TITLE": "Create tour category",
     "NAME": "Name",
+    "NAME_REQUIRED": "Name is required.",
     "CANCEL": "Cancel",
     "SAVE": "Save",
-    "SAVING": "Saving..."
+    "SAVING": "Saving...",
+    "SAVE_FAILED": "Unable to save tour category.",
+    "LOAD_FAILED": "Failed to load tour category."
   },
   "HOUSES_PAGE": {
     "TITLE": "Houses",
@@ -161,6 +167,10 @@
     "NEW": "New house",
     "CREATE_TITLE": "Create house",
     "EDIT_TITLE": "Edit house",
+    "SECTION_DETAILS": "Details",
+    "SECTION_PRICING": "Listing and price",
+    "SECTION_ADDRESS": "Address",
+    "SECTION_PHOTOS": "Photos",
     "NAME": "Name",
     "DESCRIPTION": "Description",
     "TYPE": "Type",
@@ -213,17 +223,6 @@
     "SAVE_FAILED": "Unable to save house type.",
     "LOAD_FAILED": "Failed to load house type."
   },
-  "CATEGORY_DIALOG": {
-    "EDIT_TITLE": "Edit tour category",
-    "CREATE_TITLE": "Create tour category",
-    "NAME": "Name",
-    "NAME_REQUIRED": "Name is required.",
-    "CANCEL": "Cancel",
-    "SAVE": "Save",
-    "SAVING": "Saving...",
-    "SAVE_FAILED": "Unable to save tour category.",
-    "LOAD_FAILED": "Failed to load tour category."
-  },
   "USERS_PAGE": {
     "TITLE": "Users",
     "SUBTITLE": "Platform users",
@@ -273,9 +272,48 @@
     "SEARCH_PLACEHOLDER": "Search permissions"
   },
   "EXCHANGE_PAGE": {
-    "TITLE": "Exchange",
+    "TITLE": "Exchange rates",
     "SUBTITLE": "Live currency rates",
-    "SEARCH_PLACEHOLDER": "Search currency code"
+    "DESCRIPTION": "Rates used to price tours and property bookings for international guests. Each pair shows its latest capture and how it has moved over the selected window.",
+    "SEARCH_PLACEHOLDER": "Search USD, euro, dirham…",
+    "REFRESH": "Refresh",
+    "HISTORY": "Rate history",
+    "NO_HISTORY": "No history captured for this pair yet.",
+    "LAST_24H": "last 24 hours",
+    "WINDOW_RANGE": "Window range",
+    "CAPTURED": "Captured",
+    "RANGE_24h": "24h",
+    "RANGE_7d": "7d",
+    "RANGE_30d": "30d",
+    "FILTER_all": "All",
+    "FILTER_up": "Gainers",
+    "FILTER_down": "Fallers",
+    "PAIR_COUNT": "{{count}} pairs",
+    "COL_PAIR": "Currency pair",
+    "COL_RATE": "Rate",
+    "COL_CHANGE": "24h",
+    "COL_TREND": "Trend",
+    "COL_CAPTURED": "Captured",
+    "EMPTY_TITLE": "No rates to show",
+    "EMPTY_BODY": "No currency pair matches the current search and filter. Clear them to see everything captured.",
+    "LOAD_FAILED": "Could not load exchange rates.",
+    "CRUMB_MONEY": "Money",
+    "STAT_PAIRS": "Pairs tracked",
+    "STAT_PAIRS_MOVED": "{{count}} moved in this window",
+    "STAT_BIGGEST_MOVE": "Biggest 24h move",
+    "MONTHLY_TITLE": "Monthly average",
+    "MONTHLY_SUB": "this year against last year",
+    "THIS_YEAR": "This year",
+    "LAST_YEAR": "Last year",
+    "NO_MONTHLY": "Not enough history yet for a monthly comparison.",
+    "RATES_TITLE": "Rates",
+    "COL_CURRENCY": "Currency",
+    "COL_POSITION": "Position in {{range}} range",
+    "LOW": "low",
+    "SHOWING": "Showing {{shown}} of {{total}}",
+    "WIDGET_RATE": "{{currency}} rate",
+    "WIDGET_OF_PAIRS": "of {{total}} pairs",
+    "WIDGET_MOVED": "Pairs that moved in this window"
   },
   "CATEGORIES": {
     "NEW_CATEGORY": "New category",

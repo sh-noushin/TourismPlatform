@@ -8,6 +8,12 @@ public interface IExchangeService
     Task<IReadOnlyCollection<CurrencyDto>> GetCurrenciesAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<ExchangeRateDto>> GetLatestRatesAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Latest rate per pair plus its movement and history over the last
+    /// <paramref name="days"/> days.
+    /// </summary>
+    Task<IReadOnlyCollection<ExchangeRateSummaryDto>> GetRateSummariesAsync(int days, CancellationToken cancellationToken = default);
+
     Task<CreateExchangeOrderResult> CreateOrderAsync(Guid userId, CreateExchangeOrderRequest request, CancellationToken cancellationToken = default);
     Task<UpdateExchangeOrderStatusResult> UpdateOrderStatusAsync(Guid orderId, ExchangeOrderStatus status, CancellationToken cancellationToken = default);
 }

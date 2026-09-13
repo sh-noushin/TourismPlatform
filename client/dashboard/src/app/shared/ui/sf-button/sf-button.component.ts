@@ -20,8 +20,10 @@ export class SfButtonComponent {
   }
 
   readonly text = input<string>('');
-  readonly color = input<string>('#2f80ed');
-  readonly textColor = input<string>('#ffffff');
+  // Defaults point at the design tokens rather than a literal hex, so a palette
+  // change reaches every button that does not override them.
+  readonly color = input<string>('var(--color-primary)');
+  readonly textColor = input<string>('var(--color-text-on-accent)');
   readonly width = input<string | undefined>(undefined);
   readonly height = input<string | undefined>(undefined);
   readonly disabled = input<boolean>(false);

@@ -1,4 +1,4 @@
-import {
+﻿import {
   ApplicationConfig,
   importProvidersFrom,
   provideBrowserGlobalErrorListeners,
@@ -27,6 +27,10 @@ import { TabRouteReuseStrategy } from './core/tab/route-reuse.strategy';
 const rawDashboardApiBase = (globalThis as any).__DASHBOARD_API_BASE_URL ?? 'https://localhost:7110/';
 const dashboardApiBase = rawDashboardApiBase.replace(/\/+$/, ''); // avoid double slashes when building API URLs
 
+// Bump when translation files change. The JSON filenames are stable, so this is
+// what forces a cached copy to be replaced.
+const TRANSLATIONS_VERSION = '3';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -39,9 +43,14 @@ export const appConfig: ApplicationConfig = {
         defaultLanguage: 'en'
       })
     ),
+    // The suffix carries a build stamp so a new deployment always fetches fresh
+    // translations. Without it the filenames never change: a browser that
+    // cached a copy before the no-cache header existed keeps serving it to the
+    // XHR (a hard reload does not cover later XHRs), and any key added since
+    // then silently falls back to the default language.
     provideTranslateHttpLoader({
       prefix: './assets/i18n/',
-      suffix: '.json'
+      suffix: `.json?v=${TRANSLATIONS_VERSION}`
     }),
     // HTTP interceptors: correlation id -> auth header -> refresh/retry -> error normalization
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationIdInterceptor, multi: true },

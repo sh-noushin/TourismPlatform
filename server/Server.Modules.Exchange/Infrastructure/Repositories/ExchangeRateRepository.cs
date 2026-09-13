@@ -28,6 +28,19 @@ public sealed class ExchangeRateRepository : BaseRepository<ExchangeRateSnapshot
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyCollection<ExchangeRateSnapshot>> GetSinceAsync(DateTime fromUtc, CancellationToken cancellationToken = default)
+    {
+        return await Set
+            .AsNoTracking()
+            .Where(x => x.CapturedAtUtc >= fromUtc)
+            .Include(x => x.BaseCurrency)
+            .Include(x => x.QuoteCurrency)
+            .OrderBy(x => x.BaseCurrency.Code)
+            .ThenBy(x => x.QuoteCurrency.Code)
+            .ThenBy(x => x.CapturedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<ExchangeRateSnapshot?> GetLatestForPairAsync(Guid baseCurrencyId, Guid quoteCurrencyId, CancellationToken cancellationToken = default)
     {
         return Set

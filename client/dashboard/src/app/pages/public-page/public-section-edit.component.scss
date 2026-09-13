@@ -1,16 +1,7 @@
 @use '../../styles/index' as *;
 
-:host ::ng-deep .cdk-overlay-pane.public-page-edit-dialog .mat-mdc-dialog-container,
-:host ::ng-deep .public-page-edit-dialog .mat-mdc-dialog-container {
-  padding: 0 !important;
-}
-
-:host ::ng-deep .cdk-overlay-pane.public-page-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface,
-:host ::ng-deep .public-page-edit-dialog .mat-mdc-dialog-container .mdc-dialog__surface {
-  padding: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
+/* Overlay chrome is styled globally in styles.scss: from inside the dialog the
+   pane and surface are ancestors, which `:host ::ng-deep` cannot reach. */
 
 :host {
   width: 100%;
@@ -20,16 +11,7 @@
 }
 
 .glass-panel {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid rgba(79, 70, 229, 0.15);
-  padding: spacing(md);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-  display: flex;
-  flex-direction: column;
-  gap: spacing(sm);
-
+  @include dialog-surface(100%);
   max-height: min(80vh, 820px);
   overflow-y: auto;
 
@@ -45,60 +27,54 @@
 .section-edit-header {
   display: flex;
   flex-direction: column;
-  gap: spacing(xs);
+  gap: var(--space-1);
 }
 
 .section-edit-header h2 {
-  margin: 0;
-  font-size: 1.4rem;
-  color: #0f172a;
+  @include dialog-title();
 }
 
 .eyebrow {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 0.75rem;
-  color: $muted;
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
 }
 
 .subtitle {
-  margin: 0;
-  font-size: 0.9rem;
-  color: $muted;
+  @include dialog-subtitle();
 }
 
 .status-bar {
   min-height: 20px;
   display: flex;
   align-items: center;
-  gap: spacing(sm);
+  gap: var(--space-2);
 }
 
 .status {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
+  @include status-message();
 }
 
 .status.error {
-  color: #dc2626;
+  @include status-error();
 }
 
 .section-edit-form {
   display: flex;
   flex-direction: column;
-  gap: spacing(sm);
+  gap: var(--space-3);
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0.75rem;
-  background: #f8fafc;
-  border-radius: 10px;
-  border: 1px solid rgba(79, 70, 229, 0.08);
-  padding: 12px;
+  gap: var(--space-3);
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-soft);
+  padding: var(--space-3);
 }
 
 .form-grid.description {
@@ -106,79 +82,40 @@
 }
 
 label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-weight: 600;
-  color: #374151;
+  @include field();
+  gap: var(--space-1);
 }
 
 .label-text {
-  font-size: 0.75rem;
+  @include field-label();
+  font-size: var(--text-xs);
   letter-spacing: 0.04em;
-  color: #475569;
 }
 
 input,
 textarea,
 select {
-  border: 1px solid rgba(79, 70, 229, 0.2);
-  border-radius: 10px;
-  padding: 8px 10px;
-  font-size: 0.9rem;
-  font-family: inherit;
-  background: #ffffff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #4f46e5;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
+  @include text-input();
 }
 
 .actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: spacing(sm);
-  padding-top: spacing(sm);
-  border-top: 1px solid rgba(79, 70, 229, 0.08);
+  @include dialog-actions();
+  border-top: 1px solid var(--color-border-soft);
 }
 
 .btn {
-  border-radius: 999px;
-  padding: 6px 18px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border: none;
-  transition: transform 0.2s ease;
-}
-
-.btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-  transform: none;
+  @include btn-base();
 }
 
 .btn.ghost {
-  background: #eef2ff;
-  color: #4c1d95;
+  @include btn-ghost();
 }
 
 .btn.primary {
-  background: #4f46e5;
-  color: #ffffff;
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35);
+  @include btn-primary();
 }
 
-:host-context([dir='ltr']) {
-  direction: ltr;
-  text-align: left;
-}
-
+:host-context([dir='ltr']),
 :host-context([dir='ltr']) .glass-panel {
   direction: ltr;
   text-align: left;
@@ -196,19 +133,10 @@ select:focus {
   justify-content: flex-end;
 }
 
-:host-context([dir='ltr']) .btn.ghost {
-  order: 1;
-}
+:host-context([dir='ltr']) .btn.ghost { order: 1; }
+:host-context([dir='ltr']) .btn.primary { order: 2; }
 
-:host-context([dir='ltr']) .btn.primary {
-  order: 2;
-}
-
-:host-context([dir='rtl']) {
-  direction: rtl;
-  text-align: right;
-}
-
+:host-context([dir='rtl']),
 :host-context([dir='rtl']) .glass-panel {
   direction: rtl;
   text-align: right;
@@ -226,23 +154,18 @@ select:focus {
   justify-content: flex-start;
 }
 
-:host-context([dir='rtl']) .btn.ghost {
-  order: 2;
-}
-
-:host-context([dir='rtl']) .btn.primary {
-  order: 1;
-}
+:host-context([dir='rtl']) .btn.ghost { order: 2; }
+:host-context([dir='rtl']) .btn.primary { order: 1; }
 
 @media (max-width: 720px) {
   .glass-panel {
-    padding: spacing(sm);
+    padding: var(--space-3);
     max-height: 90vh;
   }
 
   .form-grid {
     grid-template-columns: 1fr;
-    padding: 10px;
+    padding: var(--space-3);
   }
 
   .actions {

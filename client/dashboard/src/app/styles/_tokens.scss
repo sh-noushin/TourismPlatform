@@ -1,14 +1,16 @@
 // =============================================================================
 // Design tokens — the single source of truth for the dashboard's visual language.
 //
-// These are CSS custom properties, not Sass variables, on purpose:
-//   * they can be re-themed at runtime (per-tenant accent, future dark mode)
-//     without a rebuild, which compile-time Sass variables cannot do;
-//   * Angular Material 3 is themed from the same values, so Material components
-//     and our own sf-* components cannot drift apart.
+// Ported from the approved reference (tourism-admin-redesign.html): a light
+// console with a slate navigation rail, white cards on a grey canvas, a blue
+// accent, and a tight 5px radius. Surfaces are separated by hairlines plus one
+// very small shadow, not by depth.
 //
-// _colors.scss re-exports the Sass names that existing components already use,
-// so nothing has to be migrated in one go.
+// These are CSS custom properties, not Sass variables, on purpose:
+//   * the palette can be re-themed at runtime with no rebuild, which
+//     compile-time Sass variables cannot do;
+//   * _colors.scss re-exports the Sass names components already use, so nothing
+//     has to be migrated in one go.
 //
 // Naming: --<category>-<role>-<variant>. Roles are semantic (surface, border,
 // text-muted), never literal (grey-200), so a palette change is a one-line edit.
@@ -17,142 +19,170 @@
 :root {
   // ---------------------------------------------------------------------------
   // Palette primitives — the only place raw colour values appear.
+  // Comments give the reference's own variable name.
   // ---------------------------------------------------------------------------
-  --palette-indigo-50:  #eef2ff;
-  --palette-indigo-100: #e0e7ff;
-  --palette-indigo-200: #c7d2fe;
-  --palette-indigo-400: #818cf8;
-  --palette-indigo-500: #6366f1;
-  --palette-indigo-600: #4f46e5;
-  --palette-indigo-700: #4338ca;
+  --palette-rail:      #2f3a4f;  // --rail
+  --palette-rail-top:  #26303f;  // --rail-top
+  --palette-rail-text: #b6bfcd;  // --rail-text
+  --palette-rail-dim:  #7c8798;  // --rail-dim
 
-  --palette-slate-50:  #f8fafc;
-  --palette-slate-100: #f1f5f9;
-  --palette-slate-200: #e8ebf0;
-  --palette-slate-300: #cbd5e1;
-  --palette-slate-400: #94a3b8;
-  --palette-slate-500: #64748b;
-  --palette-slate-600: #475569;
-  --palette-slate-700: #334155;
-  --palette-slate-900: #0f172a;
+  --palette-canvas:    #ebedef;  // --canvas
+  --palette-card:      #ffffff;  // --card
+  --palette-line:      #d8dbe0;  // --line
+  --palette-line-soft: #e6e8eb;  // --line-soft
+  --palette-row-hover: #f7f9fc;
 
-  --palette-emerald-50:  #ecfdf5;
-  --palette-emerald-500: #10b981;
-  --palette-emerald-700: #047857;
+  --palette-head:  #2e3a4f;  // --head  (headings)
+  --palette-text:  #3c4b64;  // --text  (body)
+  --palette-muted: #768192;  // --muted
 
-  --palette-amber-50:  #fffbeb;
-  --palette-amber-500: #f59e0b;
-  --palette-amber-700: #b45309;
-
-  --palette-rose-50:  #fff1f2;
-  --palette-rose-500: #f43f5e;
-  --palette-rose-600: #e11d48;
-  --palette-rose-700: #be123c;
+  --palette-primary:       #2b6cf6;  // --primary
+  --palette-primary-hover: #1d5bdd;
+  --palette-primary-bg:    #e7effe;  // icon tiles, avatars, empty-state art
+  --palette-info:          #39a0f8;  // --info
+  --palette-success:       #2eb85c;  // --success
+  --palette-success-bg:    #e3f5ea;
+  --palette-danger:        #e55353;  // --danger
+  --palette-danger-bg:     #fdecec;
+  --palette-warning:       #f0a518;  // --warning
+  --palette-warning-bg:    #fdf1da;
+  --palette-warning-text:  #9a6b08;
 
   // ---------------------------------------------------------------------------
   // Semantic colour roles — what components should actually reference.
   // ---------------------------------------------------------------------------
-  --color-canvas:          var(--palette-slate-50);
-  --color-surface:         #ffffff;
-  --color-surface-sunken:  var(--palette-slate-100);
-  --color-surface-hover:   var(--palette-slate-50);
+  --color-canvas:          var(--palette-canvas);
+  --color-surface:         var(--palette-card);
+  --color-surface-sunken:  var(--palette-canvas);
+  --color-surface-hover:   var(--palette-row-hover);
+  --color-surface-raised:  var(--palette-canvas);
 
-  --color-border:          var(--palette-slate-200);
-  --color-border-strong:   var(--palette-slate-300);
+  --color-border:          var(--palette-line);
+  --color-border-soft:     var(--palette-line-soft);
+  --color-border-strong:   var(--palette-line);
 
-  --color-text:            var(--palette-slate-900);
-  --color-text-muted:      var(--palette-slate-500);
-  --color-text-subtle:     var(--palette-slate-400);
+  --color-heading:         var(--palette-head);
+  --color-text:            var(--palette-text);
+  --color-text-muted:      var(--palette-muted);
+  --color-text-subtle:     var(--palette-muted);
   --color-text-on-accent:  #ffffff;
 
-  --color-primary:         var(--palette-indigo-600);
-  --color-primary-hover:   var(--palette-indigo-700);
-  --color-primary-subtle:  var(--palette-indigo-50);
-  --color-primary-muted:   var(--palette-indigo-100);
-  --color-primary-ring:    color-mix(in srgb, var(--palette-indigo-600) 35%, transparent);
+  --color-primary:         var(--palette-primary);
+  --color-primary-hover:   var(--palette-primary-hover);
+  --color-primary-bright:  var(--palette-info);
+  --color-primary-subtle:  var(--palette-primary-bg);
+  --color-primary-muted:   var(--palette-primary-bg);
+  --color-primary-ring:    var(--palette-primary);
 
-  --color-success:         var(--palette-emerald-500);
-  --color-success-subtle:  var(--palette-emerald-50);
-  --color-success-text:    var(--palette-emerald-700);
+  // Translucent tints. Sass colour functions can't operate on a var(), so the
+  // steps live here as named tokens instead of rgba() at each call site.
+  --tint-primary-subtle:   color-mix(in srgb, var(--color-primary)  6%, transparent);
+  --tint-primary-soft:     color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --tint-primary-medium:   color-mix(in srgb, var(--color-primary) 16%, transparent);
+  --tint-primary-strong:   color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --tint-danger-subtle:    color-mix(in srgb, var(--color-danger)  10%, transparent);
 
-  --color-warning:         var(--palette-amber-500);
-  --color-warning-subtle:  var(--palette-amber-50);
-  --color-warning-text:    var(--palette-amber-700);
+  --color-success:         var(--palette-success);
+  --color-success-subtle:  var(--palette-success-bg);
+  --color-success-text:    var(--palette-success);
 
-  --color-danger:          var(--palette-rose-500);
-  --color-danger-hover:    var(--palette-rose-600);
-  --color-danger-subtle:   var(--palette-rose-50);
-  --color-danger-text:     var(--palette-rose-700);
+  --color-warning:         var(--palette-warning);
+  --color-warning-subtle:  var(--palette-warning-bg);
+  --color-warning-text:    var(--palette-warning-text);
 
-  // Component-specific roles. Declared here rather than inside components so the
-  // whole surface of the app stays auditable from one file.
-  --color-sidebar-surface:      #ffffff;
-  --color-sidebar-item-hover:   var(--palette-slate-100);
-  --color-sidebar-item-active:  var(--palette-indigo-50);
-  --color-sidebar-item-active-text: var(--palette-indigo-700);
+  --color-danger:          var(--palette-danger);
+  --color-danger-hover:    #cf4646;
+  --color-danger-subtle:   var(--palette-danger-bg);
+  --color-danger-text:     var(--palette-danger);
 
-  --color-topbar-surface:       #ffffff;
+  // The navigation rail — the only dark surface in the design.
+  --color-rail-surface:          var(--palette-rail);
+  --color-rail-top:              var(--palette-rail-top);
+  --color-rail-text:             var(--palette-rail-text);
+  --color-rail-text-strong:      #ffffff;
+  --color-rail-text-dim:         var(--palette-rail-dim);
+  --color-rail-label:            var(--palette-rail-dim);
+  --color-rail-sub:              var(--palette-rail-dim);
+  --color-rail-item-hover:       rgb(255 255 255 / 5%);
+  --color-rail-item-active:      rgb(255 255 255 / 6%);
+  --color-rail-divider:          rgb(255 255 255 / 8%);
+  --color-rail-field:            rgb(255 255 255 / 6%);
+  --color-rail-field-border:     rgb(255 255 255 / 10%);
+  --color-rail-chip:             rgb(255 255 255 / 12%);
 
-  --color-table-header-bg:      var(--palette-slate-50);
-  --color-table-header-text:    var(--palette-slate-600);
-  --color-table-row-hover:      var(--palette-slate-50);
+  // Legacy aliases kept so components still reading the sidebar roles compile.
+  --color-sidebar-surface:          var(--color-rail-surface);
+  --color-sidebar-item-hover:       var(--color-rail-item-hover);
+  --color-sidebar-item-active:      var(--color-rail-item-active);
+  --color-sidebar-item-active-text: var(--color-rail-text-strong);
 
-  --color-overlay-scrim:        rgb(15 23 42 / 45%);
+  --color-topbar-surface:       var(--palette-card);
+
+  --color-table-header-bg:      transparent;
+  --color-table-header-text:    var(--palette-muted);
+  --color-table-row-hover:      var(--palette-row-hover);
+
+  --color-overlay-scrim:        rgb(46 58 79 / 45%);
 
   // ---------------------------------------------------------------------------
   // Spacing — 4px base. Named by step so vertical rhythm stays consistent.
   // ---------------------------------------------------------------------------
   --space-0:  0;
-  --space-1:  0.25rem;  //  4px
-  --space-2:  0.5rem;   //  8px
-  --space-3:  0.75rem;  // 12px
-  --space-4:  1rem;     // 16px
-  --space-5:  1.25rem;  // 20px
-  --space-6:  1.5rem;   // 24px
-  --space-8:  2rem;     // 32px
-  --space-10: 2.5rem;   // 40px
-  --space-12: 3rem;     // 48px
-  --space-16: 4rem;     // 64px
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
 
   // ---------------------------------------------------------------------------
-  // Radii — 12px is the signature card radius for this design.
+  // Radii. The reference uses a single 5px value nearly everywhere; pills are
+  // reserved for tags and badges.
   // ---------------------------------------------------------------------------
-  --radius-sm:   6px;
-  --radius-md:   8px;
-  --radius-lg:   12px;
-  --radius-xl:   16px;
-  --radius-2xl:  20px;
+  --radius-sm:   3px;
+  --radius-md:   5px;
+  --radius-lg:   5px;
+  --radius-xl:   5px;
+  --radius-2xl:  5px;
   --radius-pill: 999px;
 
   // ---------------------------------------------------------------------------
-  // Elevation — layered, low-opacity shadows. Two layers (tight contact shadow
-  // plus a wide diffuse one) read as soft depth; a single large blur reads muddy.
+  // Elevation — one hairline shadow, used sparingly. Cards are told apart from
+  // the canvas by their border and white fill, not by depth.
   // ---------------------------------------------------------------------------
-  --shadow-xs: 0 1px 2px rgb(15 23 42 / 5%);
-  --shadow-sm: 0 1px 3px rgb(15 23 42 / 6%), 0 1px 2px rgb(15 23 42 / 4%);
-  --shadow-md: 0 4px 12px rgb(15 23 42 / 6%), 0 2px 4px rgb(15 23 42 / 4%);
-  --shadow-lg: 0 12px 32px rgb(15 23 42 / 8%), 0 4px 8px rgb(15 23 42 / 4%);
-  --shadow-xl: 0 24px 48px rgb(15 23 42 / 12%), 0 8px 16px rgb(15 23 42 / 6%);
-  --shadow-focus: 0 0 0 3px var(--color-primary-ring);
+  --shadow-xs: 0 1px 2px rgb(60 75 100 / 8%);
+  --shadow-sm: 0 1px 2px rgb(60 75 100 / 8%);
+  --shadow-md: 0 4px 12px -4px rgb(60 75 100 / 18%);
+  --shadow-lg: 0 12px 30px -10px rgb(46 58 79 / 30%);
+  --shadow-xl: 0 8px 24px -6px rgb(46 58 79 / 45%);
+  --shadow-focus: 0 0 0 2px var(--color-primary);
 
   // ---------------------------------------------------------------------------
-  // Typography. Farsi falls back to Nazanin via the [lang] rule in styles.scss.
+  // Typography. Geist for Latin UI and tables, Vazirmatn for Farsi.
+  //
+  // Sizes are rem against a 17px root (18px in RTL, set in styles.scss) -- that
+  // root is what makes this scale read comfortably rather than cramped.
   // ---------------------------------------------------------------------------
-  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Cascadia Code', ui-monospace, monospace;
+  --font-body: 'Geist', 'Vazirmatn', system-ui, -apple-system, sans-serif;
+  --font-display: 'Geist', 'Vazirmatn', system-ui, sans-serif;
+  --font-arabic: 'Vazirmatn', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
 
-  --text-xs:   0.75rem;   // 12px
-  --text-sm:   0.8125rem; // 13px
-  --text-base: 0.875rem;  // 14px — dashboard body size
-  --text-md:   1rem;      // 16px
-  --text-lg:   1.125rem;  // 18px
-  --text-xl:   1.375rem;  // 22px
-  --text-2xl:  1.75rem;   // 28px
+  --text-xs:   0.76rem;  // meta, captions, tags
+  --text-sm:   0.8rem;   // table headers, secondary rows
+  --text-base: 0.88rem;  // body, buttons, cells
+  --text-md:   1.02rem;  // emphasised values
+  --text-lg:   1.18rem;  // card titles
+  --text-xl:   1.9rem;   // page titles
+  --text-2xl:  1.75rem;  // hero figure
 
-  --leading-tight: 1.25;
-  --leading-snug:  1.4;
-  --leading-normal: 1.6;
+  --leading-tight: 1.2;
+  --leading-snug:  1.35;
+  --leading-normal: 1.5;
 
   --weight-regular:  400;
   --weight-medium:   500;
@@ -163,18 +193,18 @@
   // Motion. Short and eased-out; anything slower feels sluggish in an admin tool.
   // ---------------------------------------------------------------------------
   --duration-fast: 120ms;
-  --duration-base: 180ms;
-  --duration-slow: 280ms;
+  --duration-base: 150ms;
+  --duration-slow: 240ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
   // ---------------------------------------------------------------------------
   // Layout constants shared between the shell and the pages it hosts.
   // ---------------------------------------------------------------------------
-  --layout-sidebar-width: 248px;
-  --layout-sidebar-width-collapsed: 72px;
-  --layout-topbar-height: 64px;
-  --layout-content-max: 1440px;
+  --layout-sidebar-width: 256px;
+  --layout-sidebar-width-collapsed: 60px;
+  --layout-topbar-height: 58px;
+  --layout-content-max: 1500px;
 
   --z-dropdown: 100;
   --z-sticky: 200;

@@ -1,12 +1,23 @@
-$font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-$font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+$font-display: var(--font-display);
+$font-body: var(--font-body);
 $font-weight-regular: 400;
 $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
-@mixin heading($size: 2rem, $weight: $font-weight-semibold) {
+@mixin heading($size: var(--text-xl), $weight: $font-weight-semibold) {
   font-family: $font-display;
+  font-size: $size;
   font-weight: $weight;
-  line-height: 1.25;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.01em;
+}
+
+// Small uppercase label used for table headers and section eyebrows.
+@mixin eyebrow() {
+  font-size: var(--text-xs);
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }

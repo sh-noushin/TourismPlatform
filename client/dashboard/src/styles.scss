@@ -1,8 +1,25 @@
+// Tokens are pulled in here and nowhere else. They emit a :root block, and a
+// component stylesheet is its own compilation unit -- forwarding them through
+// app/styles/index would stamp that block into every component's CSS.
+@use 'app/styles/tokens';
 @use 'app/styles/index' as *;
 
 :root {
 	background-color: $bg;
 	color: $text;
+	color-scheme: light;
+}
+
+// The reference sets the root to 17px, and 18px in RTL. Every rem in the token
+// scale hangs off this -- it is what separates "comfortable" from "cramped",
+// and Farsi needs the extra point because the same size renders visually
+// smaller than Latin.
+html {
+	font-size: 17px;
+}
+
+html[dir='rtl'] {
+	font-size: 18px;
 }
 
 *,
@@ -15,7 +32,136 @@ body {
 	margin: 0;
 	min-height: 100vh;
 	font-family: $font-body;
+	font-size: 0.88rem;
+	line-height: var(--leading-normal);
 	background-color: $bg;
+	color: $text;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+// Farsi runs on Vazirmatn with looser leading -- Arabic script needs the extra
+// room its ascenders and descenders take.
+html[dir='rtl'] body {
+	font-family: var(--font-arabic);
+	line-height: 1.75;
+}
+
+// Headings sit a step darker than body text -- that contrast is what gives the
+// light theme its hierarchy, since there is no colour doing the work.
+h1, h2, h3, h4 {
+	font-family: var(--font-display);
+	line-height: var(--leading-tight);
+	letter-spacing: -0.02em;
+	color: var(--color-heading);
+}
+
+// Latin headings get the tighter tracking; Arabic letterforms connect, so
+// negative tracking damages them.
+html[dir='rtl'] h1,
+html[dir='rtl'] h2,
+html[dir='rtl'] h3,
+html[dir='rtl'] h4 {
+	font-family: var(--font-arabic);
+	letter-spacing: 0;
+}
+
+// One focus treatment for the whole app. :focus-visible keeps it off mouse
+// clicks, so it reads as a keyboard affordance rather than visual noise.
+:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+// =============================================================================
+// Material overlay chrome for our dialogs.
+//
+// These rules MUST live here, not in the dialog components. Angular compiles
+// `:host ::ng-deep .cdk-overlay-pane` to `[_nghost-x] .cdk-overlay-pane`, which
+// only matches *descendants* of the component -- and the pane, container and
+// surface are all ancestors of it. Every such rule in the codebase was silently
+// doing nothing, which is why dialogs showed a second, taller white surface
+// behind the sheet, with its own scrollbar.
+//
+// Matching on the `-dialog` suffix covers every panelClass we pass to
+// MatDialog.open (house-edit-dialog, tour-edit-dialog, …); the CDK adds no
+// classes of its own that end that way.
+.cdk-overlay-pane[class*='-dialog'] {
+	max-height: 88vh;
+
+	.mat-mdc-dialog-container,
+	.mat-mdc-dialog-inner-container,
+	.mdc-dialog__surface {
+		// One scrolling region per dialog: the component's own .dialog-body.
+		overflow: hidden;
+		max-height: inherit;
+		height: auto;
+	}
+
+	// The component draws its own sheet, so Material's surface steps back
+	// entirely -- otherwise there are two stacked white cards.
+	.mdc-dialog__surface {
+		padding: 0;
+		background: transparent;
+		box-shadow: none;
+		border-radius: 0;
+	}
+
+	.mat-mdc-dialog-container {
+		padding: 0;
+	}
+}
+
+// sf-table already draws the panel -- border, radius, shadow and all. Pages wrap
+// it in an sf-card, which produced two nested white surfaces with a gutter
+// between them and read as a rendering bug. When a card holds nothing but a
+// table, it steps back and lets the table be the panel.
+//
+// Global rather than in sf-card's own stylesheet: the table is projected
+// content, so it carries the *parent* component's encapsulation attribute and a
+// scoped :has() would never match it.
+sf-card .sf-card:has(> sf-table:only-child) {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	border-radius: 0;
+}
+
+// sf-button fills its host by design -- dialog footers and the login form want
+// a full-width control. In a page header it is one of several inline controls,
+// so it has to shrink-wrap or it eats the whole row.
+sf-button[class*='__header-button'],
+[sfPageHeaderActions] sf-button {
+	width: auto;
+	flex: 0 0 auto;
+}
+
+// Scrollbars, toned down to match the surfaces they sit on.
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: var(--color-border-strong);
+	border: 3px solid transparent;
+	background-clip: content-box;
+	border-radius: var(--radius-pill);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: var(--color-text-subtle);
+	background-clip: content-box;
+}
+
+*::-webkit-scrollbar-track {
+	background: transparent;
 }
 
 /* ===========================================

@@ -1,48 +1,67 @@
-// Core palette used throughout the dashboard (fresh, clean, not heavy)
-$bg: rgb(245, 247, 250);
-$surface: rgb(255, 255, 255);
-$text: rgb(15, 23, 42);
-$muted: rgb(75, 85, 99);
-$border: rgb(226, 232, 240);
+// Sass aliases for the design tokens in _tokens.scss.
+//
+// Every name here existed before the tokens did, and components across the app
+// still reference them, so they stay -- but each one now points at a CSS custom
+// property instead of carrying its own literal colour. One palette, one file to
+// edit, and no component has to be migrated for a re-theme to reach it.
+//
+// These are var() references, not Sass colours: `rgba($primary, 0.1)` and
+// `color.adjust($text, ...)` cannot work on them. Use the --tint-* tokens, or
+// color-mix() at the call site, when you need a translucent variant.
 
-// Accent (clean blue)
-$primary: rgb(37, 99, 235);
-$primaryContrast: rgb(255, 255, 255);
+// Surfaces
+$bg: var(--color-canvas);
+$surface: var(--color-surface);
+$surfaceSunken: var(--color-surface-sunken);
 
-// Sidebar
-$sidebarBg: rgb(255, 255, 255);
-$sidebarActiveBg: rgb(37, 99, 235);
-$sidebarActiveText: rgb(255, 255, 255);
+// Text
+$text: var(--color-text);
+$muted: var(--color-text-muted);
+$subtle: var(--color-text-subtle);
 
-// Topbar (light)
-$topbarBg: rgb(255, 255, 255);
+// Lines
+$border: var(--color-border);
+$borderSoft: var(--color-border-soft);
+$borderStrong: var(--color-border-strong);
+
+// Accent
+$primary: var(--color-primary);
+$primaryHover: var(--color-primary-hover);
+$primarySubtle: var(--color-primary-subtle);
+$primaryContrast: var(--color-text-on-accent);
+
+// Sidebar (the dark navigation rail)
+$sidebarBg: var(--color-rail-surface);
+$sidebarText: var(--color-rail-text);
+$sidebarActiveBg: var(--color-rail-item-active);
+$sidebarActiveText: var(--color-rail-text-strong);
+$sidebarHoverBg: var(--color-rail-item-hover);
+
+// Topbar
+$topbarBg: var(--color-topbar-surface);
+$topbarText: var(--color-text);
 
 // Status
-$danger: rgb(239, 68, 68);
-$warning: rgb(249, 115, 22);
-$success: rgb(34, 197, 94);
+$danger: var(--color-danger);
+$dangerText: var(--color-danger-text);
+$warning: var(--color-warning);
+$success: var(--color-success);
 
 // Tables
-$tableHeaderBg: rgba(37, 99, 235, 0.06);
-$tableHeaderBorder: rgba(37, 99, 235, 0.12);
+$tableHeaderBg: var(--color-table-header-bg);
+$tableHeaderText: var(--color-table-header-text);
+$tableHeaderBorder: var(--color-border);
+$tableRowHover: var(--color-table-row-hover);
 
-// Login (brighter, less “sad”)
-$loginHeroGradientStart: rgba(59, 130, 246, 1);
-$loginHeroGradientMid: rgba(99, 102, 241, 1);
-$loginHeroGradientEnd: rgba(37, 99, 235, 1);
-$loginGlow: rgba(255, 255, 255, 0.45);
-$loginHeroOverlay: rgba(255, 255, 255, 0.10);
-$loginBadgeBg: rgba(255, 255, 255, 0.22);
+// Page background. Flat now -- the old two-stop gradient fought with every
+// card sitting on top of it.
+$dashboardBgStart: var(--color-canvas);
+$dashboardBgEnd: var(--color-canvas);
 
-// Dashboard background (light)
-$dashboardBgStart: rgba(245, 247, 250, 1);
-$dashboardBgEnd: rgba(236, 242, 255, 1);
-
-$topbarBg: mix($primary, $surface, 18%);
-$topbarText: $text;                      
-
-
-$dashboardBgStart: rgb(248, 250, 252);   
-$dashboardBgEnd: rgb(236, 239, 244);     
-$topbarBg: rgb(230, 235, 242);           
-$topbarText: rgb(15, 23, 42);
+// Login hero
+$loginHeroGradientStart: var(--palette-ground-950);
+$loginHeroGradientMid: var(--palette-ground-800);
+$loginHeroGradientEnd: var(--palette-mint-700);
+$loginGlow: rgb(255 255 255 / 45%);
+$loginHeroOverlay: rgb(255 255 255 / 10%);
+$loginBadgeBg: rgb(255 255 255 / 22%);

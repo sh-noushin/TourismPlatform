@@ -1,79 +1,330 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
-import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
-import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.component';
-import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
-import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
-import { ExchangeRateDto } from '../../api/client';
-import { ExchangeFacade } from '../../features/exchange/exchange.facade';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+import {
+  ExchangeRatesService,
+  ExchangeRateSummary,
+} from '../../features/exchange/exchange-rates.service';
+
+type RangeKey = '24h' | '7d' | '30d';
+type MoveFilter = 'all' | 'up' | 'down';
+
+/** A polyline ready for an <svg viewBox="0 0 w h">, plus the closed area under it. */
+interface Series {
+  line: string;
+  area: string;
+}
+
+/** One month of the year-over-year comparison. */
+interface MonthBar {
+  month: number;
+  label: string;
+  current: number | null;
+  previous: number | null;
+  currentHeight: number;
+  previousHeight: number;
+}
+
+const RANGE_DAYS: Record<RangeKey, number> = { '24h': 1, '7d': 7, '30d': 30 };
+
+/** Days pulled for the monthly comparison: two years, so last year has bars. */
+const YEAR_WINDOW_DAYS = 730;
 
 @Component({
   standalone: true,
   selector: 'exchange-page',
-  template: `
-    <section class="exchange-page">
-      <div class="exchange-page__header">
-        <sf-page-header title="{{ 'EXCHANGE_PAGE.TITLE' | translate }}" subtitle="{{ 'EXCHANGE_PAGE.SUBTITLE' | translate }}"></sf-page-header>
-        <div class="exchange-page__filters">
-          <sf-searchbar placeholder="{{ 'EXCHANGE_PAGE.SEARCH_PLACEHOLDER' | translate }}" (valueChange)="filter.set($event)"></sf-searchbar>
-        </div>
-      </div>
-
-      @if (facade.error()) {
-        <div class="exchange-page__error">{{ facade.error() }}</div>
-      }
-
-      <sf-card>
-        <sf-table
-          [columns]="columns"
-          [data]="displayed()"
-          [loading]="facade.loading()"
-          (sortChange)="onSortChange($event)"
-        ></sf-table>
-      </sf-card>
-    </section>
-  `,
+  templateUrl: './exchange-page.component.html',
   styleUrls: ['./exchange-page.component.scss'],
-  imports: [CommonModule, SfCardComponent, SfPageHeaderComponent, SfSearchbarComponent, SfTableComponent, TranslateModule],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [CommonModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExchangePageComponent {
-  readonly filter = signal('');
-  readonly sortSignal = signal<SfTableSort | null>(null);
+  readonly ranges: RangeKey[] = ['30d', '7d', '24h'];
+  readonly moveFilters: MoveFilter[] = ['all', 'up', 'down'];
 
-  readonly columns: SfTableColumn[] = [
-    { key: 'base', header: 'Base', headerKey: 'TABLE_HEADERS.BASE', field: 'baseCurrencyCode', sortable: true },
-    { key: 'quote', header: 'Quote', headerKey: 'TABLE_HEADERS.QUOTE', field: 'quoteCurrencyCode', sortable: true },
-    { key: 'rate', header: 'Rate', headerKey: 'TABLE_HEADERS.RATE', field: 'rate', sortable: true },
-    { key: 'captured', header: 'Captured (UTC)', headerKey: 'TABLE_HEADERS.CAPTURED_UTC', field: 'capturedAtUtc', sortable: true }
-  ];
+  readonly summaries = signal<ExchangeRateSummary[]>([]);
+  /** Same pairs over two years, used only by the monthly chart. */
+  readonly yearly = signal<ExchangeRateSummary[]>([]);
+  readonly currencyNames = signal<Record<string, string>>({});
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+
+  readonly range = signal<RangeKey>('7d');
+  readonly filter = signal('');
+  readonly move = signal<MoveFilter>('all');
+  readonly selectedPair = signal<string | null>(null);
+
+  constructor(
+    private readonly rates: ExchangeRatesService,
+    private readonly translate: TranslateService
+  ) {
+    void this.loadCurrencies();
+    void this.load();
+    void this.loadYearly();
+  }
+
+  // ---------------------------------------------------------------- data ----
+
+  async load(): Promise<void> {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const data = await this.rates.getSummaries(RANGE_DAYS[this.range()]);
+      this.summaries.set(data ?? []);
+
+      // Keep the hero on whatever the user picked; fall back to the first pair
+      // when the selection disappears (filtered out, or first load).
+      const keys = (data ?? []).map(s => this.pairKey(s));
+      if (!this.selectedPair() || !keys.includes(this.selectedPair()!)) {
+        this.selectedPair.set(keys[0] ?? null);
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      this.error.set(message ?? this.translate.instant('EXCHANGE_PAGE.LOAD_FAILED'));
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /** Failures here only cost the monthly chart, so they don't raise a page error. */
+  private async loadYearly(): Promise<void> {
+    try {
+      this.yearly.set((await this.rates.getSummaries(YEAR_WINDOW_DAYS)) ?? []);
+    } catch {
+      this.yearly.set([]);
+    }
+  }
+
+  private async loadCurrencies(): Promise<void> {
+    try {
+      const list = await this.rates.getCurrencies();
+      const map: Record<string, string> = {};
+      for (const c of list ?? []) map[c.code] = c.name;
+      this.currencyNames.set(map);
+    } catch {
+      this.currencyNames.set({});
+    }
+  }
+
+  setRange(range: RangeKey): void {
+    if (this.range() === range) return;
+    this.range.set(range);
+    void this.load();
+  }
+
+  refresh(): void {
+    void this.load();
+    void this.loadYearly();
+  }
+
+  // ------------------------------------------------------------- derived ----
 
   readonly displayed = computed(() => {
-    const q = this.filter().toLowerCase();
-    const list = q
-      ? this.facade
-          .rates()
-          .filter((r) => [r.baseCurrencyCode, r.quoteCurrencyCode].some((v) => v?.toLowerCase().includes(q)))
-      : this.facade.rates();
+    const q = this.filter().trim().toLowerCase();
+    const move = this.move();
 
-    const sort = this.sortSignal();
-    if (!sort) return list;
+    return this.summaries().filter(s => {
+      const name = this.currencyName(s.baseCurrencyCode).toLowerCase();
+      const matchesText =
+        !q ||
+        s.baseCurrencyCode.toLowerCase().includes(q) ||
+        s.quoteCurrencyCode.toLowerCase().includes(q) ||
+        name.includes(q);
 
-    const field = sort.field as keyof ExchangeRateDto;
-    return [...list].sort((a, b) => {
-      const aV = (a[field] ?? '').toString().toLowerCase();
-      const bV = (b[field] ?? '').toString().toLowerCase();
-      return sort.direction === 'asc' ? aV.localeCompare(bV, undefined, { numeric: true }) : bV.localeCompare(aV, undefined, { numeric: true });
+      const change = s.changePercent ?? 0;
+      const matchesMove =
+        move === 'all' || (move === 'up' && change > 0) || (move === 'down' && change < 0);
+
+      return matchesText && matchesMove;
     });
   });
 
-  constructor(public readonly facade: ExchangeFacade) {
-    this.facade.loadRates();
+  readonly selected = computed(() => {
+    const key = this.selectedPair();
+    const list = this.summaries();
+    return list.find(s => this.pairKey(s) === key) ?? list[0] ?? null;
+  });
+
+  readonly selectedSeries = computed<Series>(() =>
+    this.buildSeries(this.selected()?.points ?? [], 400, 150)
+  );
+
+  readonly widgetSeries = computed<Series>(() =>
+    this.buildSeries(this.selected()?.points ?? [], 320, 90)
+  );
+
+  /** Pairs that moved at all in the window -- the amber widget's figure. */
+  readonly movedCount = computed(
+    () => this.summaries().filter(s => (s.changePercent ?? 0) !== 0).length
+  );
+
+  /** Largest absolute 24h move, shown as the second stat. */
+  readonly biggestMove = computed(() => {
+    const withChange = this.summaries().filter(s => s.changePercent !== null);
+    if (withChange.length === 0) return null;
+    return withChange.reduce((a, b) =>
+      Math.abs(b.changePercent!) > Math.abs(a.changePercent!) ? b : a
+    );
+  });
+
+  /**
+   * Monthly averages for the selected pair, this year against last.
+   * Bars are scaled against the largest average in either year so the two
+   * series stay comparable.
+   */
+  readonly monthlyBars = computed<MonthBar[]>(() => {
+    const key = this.selectedPair();
+    const pair = this.yearly().find(s => this.pairKey(s) === key) ?? this.yearly()[0] ?? null;
+    if (!pair) return [];
+
+    const thisYear = new Date().getFullYear();
+    const sums = new Map<string, { total: number; count: number }>();
+
+    for (const p of pair.points) {
+      const d = new Date(p.capturedAtUtc);
+      if (Number.isNaN(d.getTime())) continue;
+      const bucket = `${d.getFullYear()}-${d.getMonth()}`;
+      const acc = sums.get(bucket) ?? { total: 0, count: 0 };
+      acc.total += p.rate;
+      acc.count += 1;
+      sums.set(bucket, acc);
+    }
+
+    const avg = (year: number, month: number): number | null => {
+      const acc = sums.get(`${year}-${month}`);
+      return acc && acc.count > 0 ? acc.total / acc.count : null;
+    };
+
+    const months = Array.from({ length: 12 }, (_, m) => ({
+      month: m,
+      current: avg(thisYear, m),
+      previous: avg(thisYear - 1, m),
+    }));
+
+    const peak = Math.max(
+      0,
+      ...months.flatMap(m => [m.current ?? 0, m.previous ?? 0])
+    );
+
+    const locale = this.translate.currentLang === 'fa' ? 'fa-IR' : 'en-US';
+    const monthName = new Intl.DateTimeFormat(locale, { month: 'short' });
+
+    return months.map(m => ({
+      month: m.month,
+      label: monthName.format(new Date(thisYear, m.month, 1)),
+      current: m.current,
+      previous: m.previous,
+      currentHeight: peak > 0 ? ((m.current ?? 0) / peak) * 100 : 0,
+      previousHeight: peak > 0 ? ((m.previous ?? 0) / peak) * 100 : 0,
+    }));
+  });
+
+  readonly hasMonthlyData = computed(() =>
+    this.monthlyBars().some(b => b.current !== null || b.previous !== null)
+  );
+
+  pairKey(summary: ExchangeRateSummary): string {
+    return `${summary.baseCurrencyCode}/${summary.quoteCurrencyCode}`;
   }
 
-  onSortChange(sort: SfTableSort) {
-    this.sortSignal.set(sort);
+  currencyName(code: string): string {
+    return this.currencyNames()[code] ?? code;
+  }
+
+  selectPair(summary: ExchangeRateSummary): void {
+    this.selectedPair.set(this.pairKey(summary));
+  }
+
+  /**
+   * Where the current rate sits inside the window's low-high band, 0-100.
+   * A flat band has no meaningful position, so it reads as 0.
+   */
+  rangePosition(summary: ExchangeRateSummary): number {
+    const low = summary.windowLow;
+    const high = summary.windowHigh;
+    if (low === null || high === null || high <= low) return 0;
+    const pct = ((summary.rate - low) / (high - low)) * 100;
+    return Math.max(0, Math.min(100, Math.round(pct)));
+  }
+
+  sparkline(summary: ExchangeRateSummary): Series {
+    return this.buildSeries(summary.points, 78, 24);
+  }
+
+  /**
+   * Maps points onto an SVG box. Flat series would divide by a zero range, so
+   * they are pinned to the vertical middle instead of collapsing onto the axis.
+   */
+  private buildSeries(points: { rate: number }[], width: number, height: number): Series {
+    if (points.length === 0) return { line: '', area: '' };
+
+    const pad = 2;
+    const usable = height - pad * 2;
+    const values = points.map(p => p.rate);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = max - min;
+
+    const step = points.length > 1 ? width / (points.length - 1) : 0;
+    const coords = points.map((p, i) => {
+      const x = points.length > 1 ? i * step : width / 2;
+      const y = range === 0 ? height / 2 : pad + (1 - (p.rate - min) / range) * usable;
+      return { x: Number(x.toFixed(2)), y: Number(y.toFixed(2)) };
+    });
+
+    const line = coords.map(c => `${c.x},${c.y}`).join(' ');
+    const first = coords[0];
+    const last = coords[coords.length - 1];
+    const area = `${first.x},${height} ${line} ${last.x},${height}`;
+
+    return { line, area };
+  }
+
+  // ------------------------------------------------------------ display ----
+
+  /** Farsi renders Persian digits; English keeps Latin. Grouping either way. */
+  formatNumber(value: number | null | undefined, fractionDigits = 0): string {
+    if (value === null || value === undefined) return '—';
+    return new Intl.NumberFormat(this.locale(), {
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    }).format(value);
+  }
+
+  /** 1,042,500 -> 1.04M. Used where a headline has no room for full digits. */
+  formatCompact(value: number | null | undefined): string {
+    if (value === null || value === undefined) return '—';
+    return new Intl.NumberFormat(this.locale(), {
+      notation: 'compact',
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
+
+  formatChange(value: number | null | undefined): string {
+    if (value === null || value === undefined) return '—';
+    const sign = value > 0 ? '+' : value < 0 ? '−' : '';
+    return `${sign}${this.formatNumber(Math.abs(value), 1)}%`;
+  }
+
+  changeDirection(value: number | null | undefined): 'up' | 'down' | 'flat' {
+    if (!value) return 'flat';
+    return value > 0 ? 'up' : 'down';
+  }
+
+  formatTime(iso: string | null | undefined): string {
+    if (!iso) return '—';
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return '—';
+    return new Intl.DateTimeFormat(this.locale(), {
+      hour: '2-digit',
+      minute: '2-digit',
+      day: '2-digit',
+      month: 'short',
+    }).format(date);
+  }
+
+  private locale(): string {
+    return this.translate.currentLang === 'fa' ? 'fa-IR' : 'en-US';
   }
 }

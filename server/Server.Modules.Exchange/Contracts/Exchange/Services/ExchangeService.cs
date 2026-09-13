@@ -46,6 +46,59 @@ public sealed class ExchangeService : IExchangeService
             .ToList();
     }
 
+    public async Task<IReadOnlyCollection<ExchangeRateSummaryDto>> GetRateSummariesAsync(int days, CancellationToken cancellationToken = default)
+    {
+        // Clamp rather than reject: the window is a display preference, and a
+        // silly value should degrade to a sane chart, not a 400.
+        var window = Math.Clamp(days, 1, 365);
+        var fromUtc = DateTime.UtcNow.AddDays(-window);
+
+        var snapshots = await _exchangeRateRepository.GetSinceAsync(fromUtc, cancellationToken);
+
+        // A pair with no movement inside the window still has a current rate, so
+        // start from the latest set and enrich it -- otherwise quiet pairs would
+        // vanish from the screen entirely.
+        var latest = await _exchangeRateRepository.GetLatestAsync(cancellationToken);
+
+        var history = snapshots
+            .GroupBy(s => (Base: s.BaseCurrency.Code, Quote: s.QuoteCurrency.Code))
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderBy(s => s.CapturedAtUtc).ToList());
+
+        var summaries = new List<ExchangeRateSummaryDto>(latest.Count);
+
+        foreach (var snapshot in latest)
+        {
+            var key = (Base: snapshot.BaseCurrency.Code, Quote: snapshot.QuoteCurrency.Code);
+            var points = history.TryGetValue(key, out var series) ? series : new List<Domain.Rates.ExchangeRateSnapshot>();
+
+            // "Previous" is the last reading at least 24h older than the current
+            // one; falling back to the prior point keeps the delta meaningful for
+            // pairs that are sampled less often than daily.
+            var cutoff = snapshot.CapturedAtUtc.AddHours(-24);
+            var previous = points.LastOrDefault(p => p.CapturedAtUtc <= cutoff)
+                ?? points.LastOrDefault(p => p.CapturedAtUtc < snapshot.CapturedAtUtc);
+
+            decimal? changePercent = previous is { Rate: > 0 }
+                ? Math.Round((snapshot.Rate - previous.Rate) / previous.Rate * 100m, 2, MidpointRounding.AwayFromZero)
+                : null;
+
+            summaries.Add(new ExchangeRateSummaryDto(
+                snapshot.BaseCurrency.Code,
+                snapshot.QuoteCurrency.Code,
+                snapshot.Rate,
+                snapshot.CapturedAtUtc,
+                previous?.Rate,
+                changePercent,
+                points.Count > 0 ? points.Min(p => p.Rate) : null,
+                points.Count > 0 ? points.Max(p => p.Rate) : null,
+                points.Select(p => new ExchangeRatePointDto(p.CapturedAtUtc, p.Rate)).ToList()));
+        }
+
+        return summaries;
+    }
+
     public async Task<CreateExchangeOrderResult> CreateOrderAsync(Guid userId, CreateExchangeOrderRequest request, CancellationToken cancellationToken = default)
     {
         if (request.BaseAmount <= 0) return new CreateExchangeOrderResult(false, null, CreateExchangeOrderError.Invalid);

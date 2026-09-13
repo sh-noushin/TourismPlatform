@@ -1,4 +1,6 @@
-﻿:host {
+﻿@use '../../../styles/index' as *;
+
+:host {
   display: block;
   position: relative;
   width: 100%;
@@ -15,35 +17,34 @@
   direction: inherit;
 }
 
+/* Matches the text inputs it sits beside in every form: same sunken fill, same
+   hairline, same focus colour. */
 .sf-dropdown-trigger {
   width: 100%;
-  border-radius: 16px;
-  border: 1px solid rgba(79, 70, 229, 0.25);
-  background: #ffffff;
-  padding: 12px 16px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #111827;
+  border-radius: var(--radius-md);
+  border: 1px solid $border;
+  background: $surface;
+  padding: 9px 12px;
+  font: inherit;
+  color: $text;
   position: relative;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: row;
-  gap: 8px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  gap: var(--space-2);
+  transition: border-color var(--duration-fast) var(--ease-out);
   text-align: left;
 }
 
 .sf-dropdown.open .sf-dropdown-trigger {
-  border-color: rgba(79, 70, 229, 0.6);
-  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+  border-color: $primary;
 }
 
 .sf-dropdown.disabled .sf-dropdown-trigger {
-  background: #f3f4f6;
+  opacity: 0.55;
   cursor: not-allowed;
-  opacity: 0.8;
 }
 
 .sf-dropdown-trigger .sf-dropdown-label {
@@ -51,19 +52,17 @@
   display: block;
   width: 100%;
   text-align: left;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #111827;
+  color: $text;
   order: 1;
 }
 
 .sf-dropdown-icon {
-  width: 12px;
-  height: 12px;
-  border-right: 2px solid rgba(75, 85, 99, 0.8);
-  border-bottom: 2px solid rgba(75, 85, 99, 0.8);
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--color-text-subtle);
+  border-bottom: 2px solid var(--color-text-subtle);
   transform: rotate(45deg);
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-base) var(--ease-out);
   margin-left: auto;
   order: 2;
 }
@@ -77,21 +76,20 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: #ffffff;
-  border-radius: 14px;
-  border: 1px solid rgba(79, 70, 229, 0.2);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
+  background: $surface;
+  border-radius: var(--radius-md);
+  border: 1px solid $border;
+  box-shadow: var(--shadow-lg);
   margin: 0;
-  padding: 8px 0;
+  padding: var(--space-1) 0;
   list-style: none;
-  z-index: 20;
+  z-index: var(--z-dropdown);
   text-align: left;
 }
 
 .sf-dropdown-menu li {
-  padding: 8px 16px;
-  font-size: 0.85rem;
-  color: #0f172a;
+  padding: var(--space-2) var(--space-4);
+  color: $text;
   cursor: pointer;
   display: flex;
   justify-content: flex-start;
@@ -105,17 +103,18 @@
 }
 
 .sf-dropdown-menu li.selected {
-  background: rgba(79, 70, 229, 0.12);
-  font-weight: 600;
+  background: var(--color-primary-subtle);
+  color: $primary;
+  font-weight: var(--weight-semibold);
 }
 
 .sf-dropdown-menu li:hover {
-  background: rgba(79, 70, 229, 0.08);
+  background: var(--color-surface-raised);
 }
 
 .sf-dropdown-hint {
-  font-size: 0.8rem;
-  color: #6b7280;
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
 }
 
 :host-context([dir='rtl']) .sf-dropdown-trigger,

@@ -1,37 +1,36 @@
+@use '../../../styles/index' as *;
+
+/* Row actions stay muted until hovered: a table of twenty rows with twenty
+   coloured icons reads as an alarm, not a list. */
 .sf-action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
   padding: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  color: inherit;
+  transition: background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+  color: var(--color-text-subtle);
 }
 
 .sf-action-button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.sf-action-button.sf-action--edit {
-  color: #2563eb;
-}
-
 .sf-action-button.sf-action--edit:hover:not(:disabled) {
-  background: rgba(37, 99, 235, 0.08);
-}
-
-.sf-action-button.sf-action--delete {
-  color: #dc2626;
+  background: var(--color-surface-raised);
+  color: $primary;
 }
 
 .sf-action-button.sf-action--delete:hover:not(:disabled) {
-  background: rgba(220, 38, 38, 0.08);
+  background: var(--color-danger-subtle);
+  color: var(--color-danger-text);
 }
 
 .sf-action-button mat-icon {
