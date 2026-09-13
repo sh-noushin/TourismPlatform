@@ -58,13 +58,16 @@
 
 /* A darker block at the top of the rail, the same height as the topbar beside
    it, so the two line up across the fold. */
+/* The block was pinned to the topbar's exact height so the two lined up across
+   the fold, which left the brand pressed against the top edge. That height is
+   now a floor, with real padding above and below it. */
 .sidebar__top {
   display: flex;
   align-items: center;
   gap: 11px;
-  height: var(--layout-topbar-height);
-  flex: 0 0 var(--layout-topbar-height);
-  padding: 0 16px;
+  min-height: var(--layout-topbar-height);
+  flex: 0 0 auto;
+  padding: 22px 16px 18px;
   background: var(--color-rail-top);
 }
 

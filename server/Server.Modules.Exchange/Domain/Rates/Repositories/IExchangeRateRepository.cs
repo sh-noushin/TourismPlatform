@@ -13,4 +13,11 @@ public interface IExchangeRateRepository : IBaseRepository<ExchangeRateSnapshot>
     /// per pair, and the windows involved are small.
     /// </summary>
     Task<IReadOnlyCollection<ExchangeRateSnapshot>> GetSinceAsync(DateTime fromUtc, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// True when this exact quote is already stored. Guards the importer against
+    /// writing the same reading twice -- which happens whenever two API
+    /// instances overlap, as during a rolling restart.
+    /// </summary>
+    Task<bool> ExistsAsync(Guid baseCurrencyId, Guid quoteCurrencyId, DateTime capturedAtUtc, CancellationToken cancellationToken = default);
 }

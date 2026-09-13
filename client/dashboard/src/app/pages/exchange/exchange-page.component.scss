@@ -51,6 +51,17 @@
   color: var(--color-danger-text);
 }
 
+/* Setup state or "nothing changed" -- informational, so it must not wear the
+   colour of a failure. */
+.fx__notice {
+  margin-bottom: 20px;
+  padding: var(--space-4);
+  border: 1px solid var(--color-primary-muted);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-hover);
+}
+
 /* ---------------------------------------------------------------- grid ---- */
 .grid {
   display: grid;
@@ -145,12 +156,19 @@
 
 /* Monthly comparison. CSS bars rather than an SVG chart: twelve pairs of
    rectangles need no scales or axes, and this way they inherit the palette. */
+/* Same reasoning as the sparklines: months must run right-to-left in RTL, and
+   these are real DOM elements, so reversing the flex direction is enough --
+   their labels stay upright. */
 .bars {
   display: flex;
   align-items: flex-end;
   gap: var(--space-2);
   height: 240px;
   padding: var(--space-5) 18px 0;
+}
+
+:host-context([dir='rtl']) .bars {
+  flex-direction: row-reverse;
 }
 
 .bars__col {
@@ -395,6 +413,18 @@
   background: $bg;
 }
 
+.btn--primary {
+  background: $primary;
+  border-color: $primary;
+  color: var(--color-text-on-accent);
+  font-weight: var(--weight-semibold);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
 .btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
@@ -547,6 +577,18 @@
 
 .spark {
   display: block;
+}
+
+/* Time runs right-to-left in an RTL page, but an SVG's coordinate system does
+   not flip with direction: oldest stayed pinned at x=0 (the left edge), so a
+   falling rate drew a line that descends rightwards -- which, read right to
+   left, looks like a rise. Mirroring puts the newest reading at the leading
+   edge, so the line's slope matches the % change beside it.
+   Only the plot is mirrored; there is no text inside these charts to reverse. */
+:host-context([dir='rtl']) .spark,
+:host-context([dir='rtl']) .chart--area,
+:host-context([dir='rtl']) .chart--widget {
+  transform: scaleX(-1);
 }
 
 .when {

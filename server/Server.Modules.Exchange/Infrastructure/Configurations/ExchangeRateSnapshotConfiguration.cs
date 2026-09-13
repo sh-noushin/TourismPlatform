@@ -32,6 +32,11 @@ public sealed class ExchangeRateSnapshotConfiguration : IEntityTypeConfiguration
             .HasForeignKey(x => x.QuoteCurrencyId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(x => new { x.BaseCurrencyId, x.QuoteCurrencyId, x.CapturedAtUtc });
+        // Unique, not merely indexed: a pair can only have one reading for a
+        // given capture time. Application-level checks cannot enforce this --
+        // two API instances (as during a rolling restart) both pass a
+        // check-then-insert and both write. The database has to be the arbiter.
+        builder.HasIndex(x => new { x.BaseCurrencyId, x.QuoteCurrencyId, x.CapturedAtUtc })
+            .IsUnique();
     }
 }

@@ -17,7 +17,9 @@ using Server.Modules.Exchange.Contracts.Exchange.Services;
 using Server.Modules.Exchange.Domain.Currencies.Repositories;
 using Server.Modules.Exchange.Domain.Orders.Repositories;
 using Server.Modules.Exchange.Domain.Rates.Repositories;
+using Server.Modules.Exchange.Infrastructure.RateFeed;
 using Server.Modules.Exchange.Infrastructure.Repositories;
+using Microsoft.Extensions.Options;
 using Server.Modules.Identity.Application.Services;
 using Server.Modules.Identity.Contracts.Permissions.Services;
 using Server.Modules.Identity.Domain.Roles;
@@ -206,12 +208,39 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddExchangeServices(this IServiceCollection services)
+    public static IServiceCollection AddExchangeServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
         services.AddScoped<IExchangeOrderRepository, ExchangeOrderRepository>();
         services.AddScoped<IExchangeService, ExchangeService>();
+
+        services.Configure<NavasanOptions>(configuration.GetSection(NavasanOptions.SectionName));
+
+        // Two sources, same interface. "site" is the default because it needs no
+        // key and no quota; "api" is the documented keyed service.
+        var feedOptions = configuration.GetSection(NavasanOptions.SectionName).Get<NavasanOptions>() ?? new NavasanOptions();
+
+        if (string.Equals(feedOptions.Provider, "api", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddHttpClient<IRateFeedClient, NavasanRateClient>((provider, client) =>
+            {
+                var options = provider.GetRequiredService<IOptions<NavasanOptions>>().Value;
+                client.BaseAddress = new Uri(options.BaseUrl);
+                // The feed is a nice-to-have: a slow response must not hold a request.
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
+        }
+        else
+        {
+            services.AddHttpClient<IRateFeedClient, NavasanSiteRateClient>(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
+        }
+
+        services.AddScoped<IRateFeedImporter, RateFeedImporter>();
+        services.AddHostedService<Server.Api.Services.ExchangeRateSyncService>();
         return services;
     }
 }

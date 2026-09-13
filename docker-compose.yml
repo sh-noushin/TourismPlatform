@@ -37,6 +37,10 @@ services:
       Jwt__Key: ${JWT_KEY:?set JWT_KEY in .env}
       Jwt__Issuer: TourismPlatform
       Jwt__Audience: TourismPlatform
+      # Live currency rates from navasan.tech. With no key the feed stays idle
+      # and the exchange page shows whatever is already in the database.
+      Navasan__ApiKey: ${NAVASAN_API_KEY:-}
+      Navasan__SyncIntervalMinutes: ${NAVASAN_SYNC_MINUTES:-360}
       SuperUser__Email: ${SUPERUSER_EMAIL:-superadmin@gmail.com}
       SuperUser__Password: ${SUPERUSER_PASSWORD:-SuperAdmin!123}
       SuperUser__Username: ${SUPERUSER_USERNAME:-superadmin}

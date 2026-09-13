@@ -1,56 +1,69 @@
 @use '../../../styles/index' as *;
 
+:host {
+  display: block;
+  width: 100%;
+}
+
 .sf-searchbar {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
 }
 
 .sf-searchbar__control {
   width: 100%;
+  /* Wide enough that a full placeholder fits: the old 270px cut
+     "جستجو بر اساس نام، شهر، نوع یا کشور" mid-phrase. */
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: var(--space-2);
 
   border-radius: var(--radius-md);
-  padding: 9px 12px;
+  padding: 0 12px;
+  height: 38px;
 
-  background: var(--color-surface-sunken);
-  border: 1px solid var(--color-border-soft);
-  transition: background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out),
+  background: $surface;
+  border: 1px solid $border;
+  transition: border-color var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
 }
 
 .sf-searchbar__control:hover {
-  border-color: $border;
+  border-color: $borderStrong;
 }
 
 .sf-searchbar__control:focus-within {
   border-color: $primary;
+  /* A faint ring rather than a hard outline: the field sits on a grey page
+     header where a bare border change is easy to miss. */
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 14%, transparent);
 }
 
 .sf-searchbar__icon {
   width: 18px;
   height: 18px;
   font-size: 18px;
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
   flex: 0 0 auto;
 }
 
 .sf-searchbar__input {
   flex: 1 1 auto;
   width: 100%;
+  min-width: 0;
   border: none;
   outline: none;
   background: transparent;
-  font-family: inherit;
+  font: inherit;
   font-size: var(--text-base);
   color: $text;
+  /* Long Persian placeholders ellipsise instead of being chopped mid-word. */
+  text-overflow: ellipsis;
 }
 
 .sf-searchbar__input::placeholder {
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
 }
 
 .sf-searchbar__clear {
@@ -75,9 +88,5 @@
 }
 
 .sf-searchbar__clear:hover {
-  background: var(--color-border);
-}
-
-.sf-searchbar__clear:active {
-  background: var(--color-border-strong);
+  background: $bg;
 }

@@ -4,6 +4,24 @@
 @use 'app/styles/tokens';
 @use 'app/styles/index' as *;
 
+// IRANSans (FaNum) -- the face navasan.net uses. Self-hosted rather than
+// hot-linked so the app does not depend on their server staying up.
+//
+// One weight only: their site publishes just the Medium cut (the Light,
+// Regular and Bold URLs 404). It is declared across the whole weight range so
+// every weight resolves to it instead of falling back mid-sentence; bold text
+// is synthesised by the browser.
+//
+// "FaNum" means the font renders Latin digits as Persian ones, which is why
+// navasan's numbers look native.
+@font-face {
+	font-family: 'IRANSansFaNum';
+	src: url('assets/fonts/IRANSansWeb-FaNum-Medium.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
 	background-color: $bg;
 	color: $text;
@@ -112,20 +130,21 @@ html[dir='rtl'] h4 {
 	}
 }
 
-// sf-table already draws the panel -- border, radius, shadow and all. Pages wrap
-// it in an sf-card, which produced two nested white surfaces with a gutter
-// between them and read as a rendering bug. When a card holds nothing but a
-// table, it steps back and lets the table be the panel.
+// sf-card carries no padding so tables can run edge to edge; text projected
+// straight into a card still needs insets, and a status line under a table
+// needs the rule that separates it from the last row.
 //
-// Global rather than in sf-card's own stylesheet: the table is projected
-// content, so it carries the *parent* component's encapsulation attribute and a
-// scoped :has() would never match it.
-sf-card .sf-card:has(> sf-table:only-child) {
-	padding: 0;
-	border: 0;
-	background: transparent;
-	box-shadow: none;
-	border-radius: 0;
+// Global rather than in sf-card's stylesheet: projected content carries the
+// *parent* component's encapsulation attribute, so a scoped rule never matches.
+sf-card .sf-card > p {
+	margin: 0;
+	padding: 14px 18px;
+	font-size: var(--text-base);
+	color: var(--color-text-muted);
+}
+
+sf-card .sf-card > sf-table + p {
+	border-top: 1px solid var(--color-border-soft);
 }
 
 // sf-button fills its host by design -- dialog footers and the login form want
@@ -318,7 +337,7 @@ html[lang='fa'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.materia
 html[dir='rtl'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
 body[lang='fa'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined),
 body[dir='rtl'] *:not(mat-icon):not(.mat-icon):not(.material-icons):not(.material-icons-outlined) {
-  font-family: 'NazaninLocal', 'Nazanin', 'B Nazanin', Tahoma, $font-body !important;
+  font-family: var(--font-arabic) !important;
 }
 
 /* ===========================================

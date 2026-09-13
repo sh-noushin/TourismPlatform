@@ -3,13 +3,15 @@
 /* Not a card: an empty state sits inside a panel that already has a border, and
    nesting two bordered white surfaces reads as a bug. Centred column with a
    tinted art tile instead. */
+/* Sized for a table that has nothing in it: enough room to read as deliberate,
+   not so much that an empty list becomes a screen-high blank card. */
 .sf-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 58px 22px;
+  padding: 40px 22px;
   max-width: 400px;
   margin: 0 auto;
   color: $text;
@@ -18,18 +20,18 @@
 .sf-empty-state .icon {
   display: grid;
   place-items: center;
-  width: 66px;
-  height: 66px;
-  margin: 0 auto 16px;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
   border-radius: var(--radius-pill);
   background: var(--color-primary-subtle);
   color: var(--color-primary);
 
   svg,
   mat-icon {
-    font-size: 26px;
-    width: 26px;
-    height: 26px;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
   }
 }
 

@@ -12,6 +12,10 @@
     <div class="fx__error" role="alert">{{ error() }}</div>
   }
 
+  @if (notice()) {
+    <div class="fx__notice" role="status">{{ notice() }}</div>
+  }
+
   <div class="grid">
     <!-- left column: headline rate + two stats -->
     <div class="col-a">
@@ -170,9 +174,15 @@
             }
           </div>
 
-          <button type="button" class="btn" (click)="refresh()" [disabled]="loading()">
+          <button type="button" class="btn" (click)="refresh()" [disabled]="loading() || syncing()">
             <span class="btn__icon" aria-hidden="true">⟳</span>
             {{ 'EXCHANGE_PAGE.REFRESH' | translate }}
+          </button>
+
+          <!-- Pulls the live feed; refresh() above only re-reads stored rates. -->
+          <button type="button" class="btn btn--primary" (click)="syncNow()" [disabled]="syncing()">
+            <span class="btn__icon" aria-hidden="true">↧</span>
+            {{ (syncing() ? 'EXCHANGE_PAGE.SYNCING' : 'EXCHANGE_PAGE.SYNC_NOW') | translate }}
           </button>
         </div>
       </div>
@@ -213,7 +223,7 @@
                 </td>
                 <td class="n">
                   <span class="rate num">{{ formatNumber(s.rate) }}</span>
-                  <em>{{ s.quoteCurrencyCode }}</em>
+                  <em>{{ unitLabel(s.quoteCurrencyCode) }}</em>
                 </td>
                 <td class="n">
                   <span class="delta num" [attr.data-dir]="changeDirection(s.changePercent)">
@@ -274,6 +284,7 @@
         <section class="card widget widget--blue">
           <div class="v">
             <span class="num">{{ formatCompact(pair.rate) }}</span>
+            <em>{{ unitLabel(pair.quoteCurrencyCode) }}</em>
             <em class="num">{{ formatChange(pair.changePercent) }}</em>
           </div>
           <div class="k">

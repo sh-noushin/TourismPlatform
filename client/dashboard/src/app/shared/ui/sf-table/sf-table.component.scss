@@ -1,16 +1,27 @@
 @use '../../../styles/index' as *;
 
+/* The table is content, not a panel: whatever card it sits in owns the border,
+   radius and background. Drawing its own frame produced a card inside a card on
+   every list page. */
 .sf-table-wrapper {
   position: relative;
-  background: $surface;
-  border: 1px solid $borderSoft;
-  border-radius: var(--radius-lg);
+  background: transparent;
+  border: none;
+  border-radius: 0;
   overflow: hidden;
 }
 
+/* Only scrolls once there are enough rows to need it. Without the auto height a
+   table of two rows still reserved 60vh, leaving a tall blank card. */
 .sf-table-scroll {
   max-height: 60vh;
   overflow: auto;
+}
+
+/* An empty table shows only its header row; the empty state below carries the
+   message, so the scroll area must not add height of its own. */
+.sf-table-wrapper:has(.empty-state) .sf-table-scroll {
+  max-height: none;
 }
 
 table {
@@ -174,8 +185,9 @@ th {
   cursor: not-allowed;
 }
 
+/* sf-empty-state brings its own padding; doubling it was most of the void. */
 .empty-state {
-  padding: var(--space-6);
+  border-top: 1px solid $borderSoft;
 }
 
 .loading-overlay {
@@ -253,11 +265,11 @@ th {
 :host-context([dir='rtl']) .actions-cell * ,
 :host-context([lang='fa']) .actions-cell * ,
 :host-context(:lang(fa)) .actions-cell * {
-  font-family: 'NazaninLocal', 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+  font-family: var(--font-arabic) !important;
 }
 
 /* Ensure component host and children prefer Nazanin when page is Farsi */
 :host-context([lang='fa']),
 :host-context(:lang(fa)) {
-  font-family: 'B Nazanin', 'Nazanin', 'Tahoma', $font-body !important;
+  font-family: var(--font-arabic) !important;
 }

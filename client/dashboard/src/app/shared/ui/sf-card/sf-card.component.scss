@@ -4,7 +4,15 @@
   display: block;
 }
 
+/* No padding: a card's content decides its own insets. Tables run edge to edge
+   so their header rule meets the card border, while prose is padded by the
+   rule below. */
 .sf-card {
-  @include card();
+  background-color: $surface;
+  border: 1px solid $border;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  color: $text;
   width: 100%;
+  overflow: hidden;
 }

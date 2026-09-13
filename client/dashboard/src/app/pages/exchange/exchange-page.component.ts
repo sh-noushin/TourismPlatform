@@ -48,7 +48,10 @@ export class ExchangePageComponent {
   readonly yearly = signal<ExchangeRateSummary[]>([]);
   readonly currencyNames = signal<Record<string, string>>({});
   readonly loading = signal(false);
+  readonly syncing = signal(false);
   readonly error = signal<string | null>(null);
+  /** Informational, not a failure: setup state or "nothing changed". */
+  readonly notice = signal<string | null>(null);
 
   readonly range = signal<RangeKey>('7d');
   readonly filter = signal('');
@@ -113,9 +116,42 @@ export class ExchangePageComponent {
     void this.load();
   }
 
+  /** Re-reads what the API already holds. */
   refresh(): void {
     void this.load();
     void this.loadYearly();
+  }
+
+  /**
+   * Pulls the live feed, then re-reads. Kept separate from refresh() because it
+   * spends the feed's monthly request quota.
+   */
+  async syncNow(): Promise<void> {
+    this.syncing.set(true);
+    this.error.set(null);
+    this.notice.set(null);
+    try {
+      const result = await this.rates.sync();
+
+      // "No key configured" is a setup state, not a failure -- saying so beats a
+      // red banner that implies the network or the provider is broken.
+      if (!result.configured) {
+        this.notice.set(this.translate.instant('EXCHANGE_PAGE.FEED_NOT_CONFIGURED'));
+        return;
+      }
+
+      if (result.imported === 0) {
+        this.notice.set(this.translate.instant('EXCHANGE_PAGE.SYNC_NO_CHANGES'));
+      }
+
+      await this.load();
+      await this.loadYearly();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      this.error.set(message ?? this.translate.instant('EXCHANGE_PAGE.SYNC_FAILED'));
+    } finally {
+      this.syncing.set(false);
+    }
   }
 
   // ------------------------------------------------------------- derived ----
@@ -230,6 +266,17 @@ export class ExchangePageComponent {
 
   currencyName(code: string): string {
     return this.currencyNames()[code] ?? code;
+  }
+
+  /**
+   * The unit shown after an amount. Persian writes ریال rather than the ISO
+   * code; any currency without a translation falls back to its code, so adding
+   * one is just a new CURRENCY.* key.
+   */
+  unitLabel(code: string): string {
+    const key = `CURRENCY.${code.toUpperCase()}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? code : translated;
   }
 
   selectPair(summary: ExchangeRateSummary): void {

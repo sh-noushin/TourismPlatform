@@ -167,9 +167,11 @@
   // Sizes are rem against a 17px root (18px in RTL, set in styles.scss) -- that
   // root is what makes this scale read comfortably rather than cramped.
   // ---------------------------------------------------------------------------
-  --font-body: 'Geist', 'Vazirmatn', system-ui, -apple-system, sans-serif;
-  --font-display: 'Geist', 'Vazirmatn', system-ui, sans-serif;
-  --font-arabic: 'Vazirmatn', system-ui, sans-serif;
+  // IRANSansFaNum carries all Persian text (the face navasan.net uses);
+  // Vazirmatn stays as the fallback in case the local file is missing.
+  --font-body: 'Geist', 'IRANSansFaNum', 'Vazirmatn', system-ui, -apple-system, sans-serif;
+  --font-display: 'Geist', 'IRANSansFaNum', 'Vazirmatn', system-ui, sans-serif;
+  --font-arabic: 'IRANSansFaNum', 'Vazirmatn', system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, monospace;
 
   --text-xs:   0.76rem;  // meta, captions, tags
@@ -177,8 +179,11 @@
   --text-base: 0.88rem;  // body, buttons, cells
   --text-md:   1.02rem;  // emphasised values
   --text-lg:   1.18rem;  // card titles
-  --text-xl:   1.9rem;   // page titles
-  --text-2xl:  1.75rem;  // hero figure
+  // 1.9rem came from the reference, which runs a 17px root and Latin titles.
+  // On the 18px RTL root that lands near 34px and shouts; 1.5rem keeps the
+  // hierarchy without dominating the page.
+  --text-xl:   1.5rem;   // page titles
+  --text-2xl:  1.6rem;   // hero figure
 
   --leading-tight: 1.2;
   --leading-snug:  1.35;

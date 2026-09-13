@@ -20,10 +20,9 @@
 }
 
 .tours-page__header-search {
-  flex: 1;
-  max-width: 420px;
-  margin-top: spacing(xs);
-  margin-left: spacing(lg);
+  flex: 1 1 auto;
+  width: min(340px, 100%);
+  max-width: 340px;
 }
 
 .tours-page__header-button {

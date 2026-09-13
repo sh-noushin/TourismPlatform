@@ -13,18 +13,17 @@
   gap: spacing(md);
 }
 
+/* Full width, like every other list page. The old 760px cap left the card
+   stranded in the middle of the content area with the page header stretched
+   across the full width above it. */
 .house-types-page sf-card {
-  padding: 0;
-  width: min(760px, 100%);
-  max-width: 760px;
-  margin-inline: auto;
+  width: 100%;
 }
 
 .house-types-page__header-search {
-  flex: 1;
-  max-width: 420px;
-  margin-top: spacing(xs);
-  margin-left: spacing(lg);
+  flex: 1 1 auto;
+  width: min(340px, 100%);
+  max-width: 340px;
 }
 
 .house-types-page__header-button {
@@ -41,12 +40,7 @@
   justify-content: flex-end;
 }
 
-.status {
-  margin: 0.75rem 0 0;
-  font-weight: 600;
-  color: $muted;
-}
-
+/* Padding and the divider above come from the global sf-card rule. */
 .status--error {
-  color: $danger;
+  color: var(--color-danger-text);
 }

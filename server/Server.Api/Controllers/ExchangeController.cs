@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Exchange.Application.Services;
 using Server.Modules.Exchange.Contracts.Exchange.Dtos;
+using Server.Modules.Exchange.Infrastructure.RateFeed;
 using Server.SharedKernel.Auth;
 
 namespace Server.Api.Controllers;
@@ -11,10 +12,12 @@ namespace Server.Api.Controllers;
 public sealed class ExchangeController : ControllerBase
 {
     private readonly IExchangeService _exchangeService;
+    private readonly IRateFeedImporter _rateFeedImporter;
 
-    public ExchangeController(IExchangeService exchangeService)
+    public ExchangeController(IExchangeService exchangeService, IRateFeedImporter rateFeedImporter)
     {
         _exchangeService = exchangeService;
+        _rateFeedImporter = rateFeedImporter;
     }
 
     [HttpGet("currencies")]
@@ -39,6 +42,21 @@ public sealed class ExchangeController : ControllerBase
     {
         var dto = await _exchangeService.GetRateSummariesAsync(days, cancellationToken);
         return Ok(dto);
+    }
+
+    /// <summary>
+    /// Pulls the rate feed on demand. Behind ExchangeManage because it spends
+    /// the feed's request quota.
+    /// </summary>
+    [HttpPost("rates/sync")]
+    [Authorize(PolicyNames.ExchangeManage)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> SyncRates(CancellationToken cancellationToken)
+    {
+        var result = await _rateFeedImporter.ImportAsync(cancellationToken);
+        return Ok(new { imported = result.Imported, configured = result.Configured });
     }
 
     [HttpPost("orders")]

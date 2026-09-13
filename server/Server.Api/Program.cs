@@ -23,7 +23,7 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddMediaServices();
 builder.Services.AddPropertiesServices();
 builder.Services.AddToursServices();
-builder.Services.AddExchangeServices();
+builder.Services.AddExchangeServices(builder.Configuration);
 builder.Services.AddPublicWeb(builder.Configuration);
 
 var app = builder.Build();

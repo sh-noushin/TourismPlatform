@@ -41,6 +41,17 @@ public sealed class ExchangeRateRepository : BaseRepository<ExchangeRateSnapshot
             .ToListAsync(cancellationToken);
     }
 
+    public Task<bool> ExistsAsync(Guid baseCurrencyId, Guid quoteCurrencyId, DateTime capturedAtUtc, CancellationToken cancellationToken = default)
+    {
+        return Set
+            .AsNoTracking()
+            .AnyAsync(
+                x => x.BaseCurrencyId == baseCurrencyId
+                     && x.QuoteCurrencyId == quoteCurrencyId
+                     && x.CapturedAtUtc == capturedAtUtc,
+                cancellationToken);
+    }
+
     public Task<ExchangeRateSnapshot?> GetLatestForPairAsync(Guid baseCurrencyId, Guid quoteCurrencyId, CancellationToken cancellationToken = default)
     {
         return Set

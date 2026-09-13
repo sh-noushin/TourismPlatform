@@ -313,7 +313,12 @@
     "SHOWING": "Showing {{shown}} of {{total}}",
     "WIDGET_RATE": "{{currency}} rate",
     "WIDGET_OF_PAIRS": "of {{total}} pairs",
-    "WIDGET_MOVED": "Pairs that moved in this window"
+    "WIDGET_MOVED": "Pairs that moved in this window",
+    "SYNC_NOW": "Sync now",
+    "SYNCING": "Syncing…",
+    "SYNC_FAILED": "Could not reach the rate feed.",
+    "FEED_NOT_CONFIGURED": "Live rates are not switched on yet: the API has no NAVASAN_API_KEY. Add one to .env and restart the API.",
+    "SYNC_NO_CHANGES": "The feed had no new rates since the last sync."
   },
   "CATEGORIES": {
     "NEW_CATEGORY": "New category",
@@ -344,5 +349,13 @@
     "TITLE": "Confirm",
     "CANCEL": "Cancel",
     "CONFIRM": "Confirm"
+  },
+  "CURRENCY": {
+    "AED": "AED",
+    "EUR": "EUR",
+    "GBP": "GBP",
+    "IRR": "IRR",
+    "TRY": "TRY",
+    "USD": "USD"
   }
 }
