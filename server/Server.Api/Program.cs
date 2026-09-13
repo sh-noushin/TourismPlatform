@@ -57,6 +57,7 @@ await app.MigrateDatabaseAsync();
 await app.SeedIdentityAsync();
 await app.SeedReferenceDataAsync();
 await app.SeedPublicWebAsync();
+await app.SeedDemoDataAsync();
 
 app.UseApiDocumentation();
 

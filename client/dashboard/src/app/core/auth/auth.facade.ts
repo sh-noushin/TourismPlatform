@@ -109,14 +109,21 @@ export class AuthFacade {
     this.roles.set(extractRoles(payload as any));
     this.permissions.set(extractPermissions(payload as any));
 
+    // "emailaddress" is the short name of the ASP.NET claim URI this API issues.
     const emailCandidate =
-      this.firstString(payload, ['email', 'upn']) ??
+      this.firstString(payload, ['email', 'emailaddress', 'upn']) ??
       (this.firstString(payload, ['sub'])?.includes('@') ? this.firstString(payload, ['sub']) : null);
 
     this.userEmail.set(emailCandidate && emailCandidate.includes('@') ? emailCandidate : null);
 
     const nameCandidate =
-      this.firstString(payload, ['preferred_username', 'username', 'unique_name', 'name', 'given_name']) ??
+      this.firstString(payload, [
+        'preferred_username',
+        'username',
+        'unique_name',
+        'name',
+        'given_name',
+      ]) ??
       this.firstString(payload, ['sub']) ??
       null;
 
@@ -124,13 +131,31 @@ export class AuthFacade {
     this.userName.set(finalName);
   }
 
+  /**
+   * Reads a claim by short name, matching the long form too.
+   *
+   * ASP.NET Identity issues claims under their XML schema URIs
+   * ("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"),
+   * so looking only for "email" found nothing and every user displayed as the
+   * literal fallback "User". Comparing the last path segment handles both.
+   */
   private firstString(payload: JwtPayload, keys: string[]): string | null {
     if (!payload) return null;
+
+    const wanted = keys.map(k => k.toLowerCase());
 
     for (const k of keys) {
       const v = payload[k];
       if (typeof v === 'string' && v.trim().length) return v.trim();
     }
+
+    for (const [key, value] of Object.entries(payload)) {
+      const shortName = key.split('/').pop()?.toLowerCase() ?? '';
+      if (wanted.includes(shortName) && typeof value === 'string' && value.trim().length) {
+        return value.trim();
+      }
+    }
+
     return null;
   }
 

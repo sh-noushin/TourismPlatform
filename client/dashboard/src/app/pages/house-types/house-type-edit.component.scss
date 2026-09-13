@@ -4,64 +4,19 @@
    pane and surface are ancestors, which `:host ::ng-deep` cannot reach. */
 
 :host {
+  display: block;
   width: 100%;
+  min-height: 0;
 }
 
 .edit-shell {
   width: 100%;
   display: flex;
   justify-content: center;
+  min-height: 0;
 }
 
-.glass-panel {
-  @include dialog-surface(520px);
-}
-
-.header h3 {
-  @include dialog-title();
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-label {
-  @include field();
-}
-
-.label-text {
-  @include field-label();
-}
-
-input {
-  @include text-input();
-}
-
-.actions {
-  @include dialog-actions();
-}
-
-.btn {
-  @include btn-base();
-}
-
-.btn.ghost {
-  @include btn-ghost();
-}
-
-.btn.primary {
-  @include btn-primary();
-}
-
-.status {
-  @include status-message();
-}
-
-.status.error {
-  @include status-error();
-}
+@include dialog-layout(480px);
 
 :host-context([dir='ltr']) .edit-shell,
 :host-context([dir='ltr']) .glass-panel {
@@ -69,7 +24,7 @@ input {
   text-align: left;
 }
 
-:host-context([dir='ltr']) .header h3,
+:host-context([dir='ltr']) .dialog-head h3,
 :host-context([dir='ltr']) label,
 :host-context([dir='ltr']) .label-text {
   text-align: left;
@@ -77,7 +32,6 @@ input {
 
 :host-context([dir='ltr']) .actions {
   flex-direction: row;
-  justify-content: flex-end;
 }
 
 :host-context([dir='ltr']) .btn.ghost { order: 1; }
@@ -89,7 +43,7 @@ input {
   text-align: right;
 }
 
-:host-context([dir='rtl']) .header h3,
+:host-context([dir='rtl']) .dialog-head h3,
 :host-context([dir='rtl']) label,
 :host-context([dir='rtl']) .label-text {
   text-align: right;
@@ -97,7 +51,6 @@ input {
 
 :host-context([dir='rtl']) .actions {
   flex-direction: row-reverse;
-  justify-content: flex-start;
 }
 
 :host-context([dir='rtl']) .btn.ghost { order: 2; }

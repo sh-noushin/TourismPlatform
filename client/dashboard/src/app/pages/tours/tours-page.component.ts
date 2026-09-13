@@ -6,7 +6,8 @@ import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.component';
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
-import { SfTableColumn, SfTableRowAction, SfTableSort } from '../../shared/models/table.models';
+import { SfTableColumn, SfTablePaging, SfTableRowAction, SfTableSort } from '../../shared/models/table.models';
+import { DEFAULT_PAGE_SIZE, toSortTerm } from '../../shared/models/paging.models';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
@@ -34,33 +35,22 @@ export class ToursPageComponent {
     { key: 'year', header: 'Year', headerKey: 'TABLE_HEADERS.YEAR', field: 'year', sortable: true }
   ];
 
-  readonly displayedTours = computed(() => {
-    const filter = this.filterSignal().toLowerCase();
-    const list = filter
-      ? this.tours.items().filter((tour) =>
-          [tour.name, tour.description, tour.tourCategoryName, tour.year?.toString()]
-            .filter(Boolean)
-            .some((value) => value?.toLowerCase().includes(filter))
-        )
-      : this.tours.items();
-
-    const sort = this.sortSignal();
-    const unsorted = sort
-      ? [...list].sort((a, b) => {
-          const key = sort.field as keyof TourSummaryDto;
-          const aValue = (a[key] ?? '').toString().toLowerCase();
-          const bValue = (b[key] ?? '').toString().toLowerCase();
-          return sort.direction === 'asc'
-            ? aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' })
-            : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
-        })
-      : list;
-    return unsorted.map((tour) => ({
+  /** The server's page, with the two fields the table needs derived per row. */
+  readonly rows = computed(() =>
+    this.tours.items().map((tour) => ({
       ...tour,
       photoCount: Array.isArray(tour.photos) ? tour.photos.length : 0,
       year: tour.year ?? undefined
-    }));
-  });
+    }))
+  );
+
+  readonly pageIndex = signal(0);
+
+  readonly paging = computed<SfTablePaging>(() => ({
+    pageIndex: this.pageIndex(),
+    pageSize: DEFAULT_PAGE_SIZE,
+    total: this.tours.total()
+  }));
 
   readonly actions: SfTableRowAction[] = [
     { label: 'Edit', labelKey: 'TABLE_ACTIONS.EDIT', type: 'edit', icon: 'edit' },
@@ -73,7 +63,16 @@ export class ToursPageComponent {
     private readonly confirm: ConfirmService,
     private readonly translate: TranslateService
   ) {
-    this.tours.load();
+    void this.fetch();
+  }
+
+  private fetch() {
+    return this.tours.loadPage({
+      page: this.pageIndex() + 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      search: this.filterSignal(),
+      sort: toSortTerm(this.sortSignal())
+    });
   }
 
   onRowAction(event: { action: any; row: TourRow }) {
@@ -116,18 +115,25 @@ export class ToursPageComponent {
     });
     ref.afterClosed().subscribe((saved) => {
       if (saved) {
-        this.tours.load();
+        void this.fetch();
       }
     });
   }
 
   setFilter(value: string) {
     this.filterSignal.set(value);
+    this.pageIndex.set(0);
+    void this.fetch();
   }
 
   onSortChange(sort: SfTableSort) {
     this.sortSignal.set(sort);
+    this.pageIndex.set(0);
+    void this.fetch();
   }
 
-  // data is loaded via `ToursFacade.load()` called in constructor
+  onPageChange(paging: SfTablePaging) {
+    this.pageIndex.set(paging.pageIndex);
+    void this.fetch();
+  }
 }

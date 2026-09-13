@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
+using Server.SharedKernel.Paging;
 
 namespace Server.Api.Controllers;
 
@@ -26,6 +27,22 @@ public sealed class HouseTypesController : ControllerBase
     {
         var types = await _houseTypeService.GetHouseTypesAsync(cancellationToken);
         return Ok(types);
+    }
+
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResult<HouseTypeDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPaged(
+        [FromQuery] int page,
+        [FromQuery] int pageSize,
+        [FromQuery] string? search,
+        [FromQuery] string? sort,
+        CancellationToken cancellationToken)
+    {
+        var result = await _houseTypeService.GetHouseTypesPagedAsync(
+            new PageQuery(page, pageSize, search, sort),
+            cancellationToken);
+
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}")]

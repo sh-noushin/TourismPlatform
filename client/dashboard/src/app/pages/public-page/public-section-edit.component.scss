@@ -4,168 +4,74 @@
    pane and surface are ancestors, which `:host ::ng-deep` cannot reach. */
 
 :host {
-  width: 100%;
-  height: 100%;
   display: block;
-  padding: 0;
+  width: 100%;
+  min-height: 0;
 }
 
-.glass-panel {
-  @include dialog-surface(100%);
-  max-height: min(80vh, 820px);
-  overflow-y: auto;
+@include dialog-layout(720px);
 
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.glass-panel::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-.section-edit-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.section-edit-header h2 {
-  @include dialog-title();
-}
-
-.eyebrow {
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: var(--text-xs);
-  color: var(--color-text-subtle);
-}
-
-.subtitle {
+.dialog-subtitle {
   @include dialog-subtitle();
 }
 
-.status-bar {
-  min-height: 20px;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.status {
-  @include status-message();
-}
-
-.status.error {
-  @include status-error();
-}
-
-.section-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
 .form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--space-3);
-  background: var(--color-surface-sunken);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-soft);
-  padding: var(--space-3);
+  @include field-grid(200px);
 }
 
 .form-grid.description {
   grid-template-columns: 1fr;
 }
 
-label {
-  @include field();
-  gap: var(--space-1);
+/* Three lines by default; drag for more. Left to itself the content textarea
+   grew until it dominated the sheet. */
+textarea {
+  min-height: 96px;
+  max-height: 240px;
+  resize: vertical;
 }
 
-.label-text {
-  @include field-label();
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-}
-
-input,
-textarea,
-select {
-  @include text-input();
-}
-
-.actions {
-  @include dialog-actions();
-  border-top: 1px solid var(--color-border-soft);
-}
-
-.btn {
-  @include btn-base();
-}
-
-.btn.ghost {
-  @include btn-ghost();
-}
-
-.btn.primary {
-  @include btn-primary();
-}
-
-:host-context([dir='ltr']),
 :host-context([dir='ltr']) .glass-panel {
   direction: ltr;
   text-align: left;
 }
 
-:host-context([dir='ltr']) .section-edit-header h2,
+:host-context([dir='ltr']) .dialog-head h3,
 :host-context([dir='ltr']) label,
-:host-context([dir='ltr']) .eyebrow,
-:host-context([dir='ltr']) .subtitle {
+:host-context([dir='ltr']) .label-text,
+:host-context([dir='ltr']) .dialog-subtitle {
   text-align: left;
 }
 
 :host-context([dir='ltr']) .actions {
   flex-direction: row;
-  justify-content: flex-end;
 }
 
 :host-context([dir='ltr']) .btn.ghost { order: 1; }
 :host-context([dir='ltr']) .btn.primary { order: 2; }
 
-:host-context([dir='rtl']),
 :host-context([dir='rtl']) .glass-panel {
   direction: rtl;
   text-align: right;
 }
 
-:host-context([dir='rtl']) .section-edit-header h2,
+:host-context([dir='rtl']) .dialog-head h3,
 :host-context([dir='rtl']) label,
-:host-context([dir='rtl']) .eyebrow,
-:host-context([dir='rtl']) .subtitle {
+:host-context([dir='rtl']) .label-text,
+:host-context([dir='rtl']) .dialog-subtitle {
   text-align: right;
 }
 
 :host-context([dir='rtl']) .actions {
   flex-direction: row-reverse;
-  justify-content: flex-start;
 }
 
 :host-context([dir='rtl']) .btn.ghost { order: 2; }
 :host-context([dir='rtl']) .btn.primary { order: 1; }
 
 @media (max-width: 720px) {
-  .glass-panel {
-    padding: var(--space-3);
-    max-height: 90vh;
-  }
-
   .form-grid {
     grid-template-columns: 1fr;
-    padding: var(--space-3);
   }
 
   .actions {

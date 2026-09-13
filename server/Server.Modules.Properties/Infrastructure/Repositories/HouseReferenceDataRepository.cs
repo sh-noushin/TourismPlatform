@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
+using Server.SharedKernel.Paging;
 using Server.SharedKernel.ReferenceData;
 
 namespace Server.Modules.Properties.Infrastructure.Repositories;
@@ -138,6 +139,34 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
         _dbContext.Add(created);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return created;
+    }
+
+    public async Task<(IReadOnlyCollection<HouseType> Items, int Total)> GetHouseTypesPagedAsync(
+        PageQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        query = query.Normalized();
+
+        IQueryable<HouseType> filtered = _dbContext.Set<HouseType>().AsNoTracking();
+
+        if (query.Search is { } search)
+        {
+            filtered = filtered.Where(t => t.Name.Contains(search));
+        }
+
+        var total = await filtered.CountAsync(cancellationToken);
+
+        var (_, descending) = query.SortOrDefault("name");
+        filtered = descending
+            ? filtered.OrderByDescending(t => t.Name).ThenBy(t => t.Id)
+            : filtered.OrderBy(t => t.Name).ThenBy(t => t.Id);
+
+        var items = await filtered
+            .Skip(query.Skip)
+            .Take(query.PageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, total);
     }
 
     public async Task<IReadOnlyCollection<HouseType>> GetHouseTypesAsync(CancellationToken cancellationToken = default)

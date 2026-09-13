@@ -9,23 +9,7 @@
   min-height: 0;
 }
 
-/* Was a full-screen sheet, but only because of rules that never applied. It is
-   a normal dialog now, matching the other edit forms. */
-.glass-panel {
-  @include dialog-surface(880px);
-  max-height: 88vh;
-}
-
-.tour-edit-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.tour-edit-header h2 {
-  @include dialog-title();
-  font-size: var(--text-xl);
-}
+@include dialog-layout(880px);
 
 .eyebrow {
   margin: 0;
@@ -39,51 +23,27 @@
   @include dialog-subtitle();
 }
 
-.status-bar {
-  min-height: 20px;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.status {
-  @include status-message();
-}
-
-.status.error {
-  @include status-error();
-}
-
-.status.success {
-  color: var(--color-success-text);
-}
-
 .tour-edit-loading,
 .tour-edit-placeholder {
   margin: 0;
-  padding: var(--space-2) 0;
+  padding: var(--space-8) var(--space-5);
+  text-align: center;
   font-style: italic;
   color: $muted;
 }
 
-.tour-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
 .form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--space-3);
-  background: var(--color-surface-sunken);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-soft);
-  padding: var(--space-3);
+  @include field-grid(200px);
 }
 
 .form-grid.description {
   grid-template-columns: 1fr;
+}
+
+textarea {
+  min-height: 96px;
+  max-height: 240px;
+  resize: vertical;
 }
 
 .combobox {
@@ -92,29 +52,16 @@
 
 .combobox sf-dropdown {
   width: 100%;
+  display: block;
 }
 
+/* The schedule editor is a region of its own inside the form, so it keeps a
+   border while the plain field groups do not. */
 .schedule-section {
-  background: var(--color-surface-sunken);
+  background: $bg;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-soft);
-  padding: var(--space-3);
-}
-
-label {
-  @include field();
-  gap: var(--space-1);
-}
-
-.label-text {
-  @include field-label();
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-}
-
-input,
-textarea {
-  @include text-input();
+  border: 1px solid $border;
+  padding: var(--space-4);
 }
 
 .fileupload-row {
@@ -122,13 +69,11 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4px 0;
 }
 
 .fileupload-row sf-fileupload {
   max-width: 180px;
   width: 100%;
-  margin: 0 auto;
 }
 
 .mini-note {
@@ -152,9 +97,9 @@ textarea {
   grid-template-columns: 48px 1fr auto;
   gap: var(--space-3);
   align-items: center;
-  background: var(--color-surface-sunken);
+  background: $surface;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-soft);
+  border: 1px solid $border;
   padding: var(--space-2) var(--space-3);
 }
 
@@ -163,8 +108,8 @@ textarea {
   height: 48px;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border-soft);
+  background: $bg;
+  border: 1px solid $border;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -191,7 +136,7 @@ textarea {
   background: transparent;
   color: $primary;
   font: inherit;
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-medium);
   cursor: pointer;
   padding: 0;
 }
@@ -204,43 +149,25 @@ textarea {
   margin: 0;
   font-size: var(--text-sm);
   color: var(--color-text-subtle);
+  text-align: center;
 }
 
-.actions {
-  @include dialog-actions();
-  border-top: 1px solid var(--color-border-soft);
-}
-
-.btn {
-  @include btn-base();
-}
-
-.btn.ghost {
-  @include btn-ghost();
-}
-
-.btn.primary {
-  @include btn-primary();
-}
-
-:host-context([dir='ltr']),
 :host-context([dir='ltr']) .glass-panel {
   direction: ltr;
   text-align: left;
 }
 
-:host-context([dir='ltr']) .tour-edit-header h2,
+:host-context([dir='ltr']) .dialog-head h3,
 :host-context([dir='ltr']) label,
+:host-context([dir='ltr']) .label-text,
 :host-context([dir='ltr']) .eyebrow,
 :host-context([dir='ltr']) .subtitle,
-:host-context([dir='ltr']) .no-photos,
 :host-context([dir='ltr']) .mini-note {
   text-align: left;
 }
 
 :host-context([dir='ltr']) .actions {
   flex-direction: row;
-  justify-content: flex-end;
 }
 
 :host-context([dir='ltr']) .btn.ghost { order: 1; }
@@ -252,24 +179,22 @@ textarea {
   text-align: left;
 }
 
-:host-context([dir='rtl']),
 :host-context([dir='rtl']) .glass-panel {
   direction: rtl;
   text-align: right;
 }
 
-:host-context([dir='rtl']) .tour-edit-header h2,
+:host-context([dir='rtl']) .dialog-head h3,
 :host-context([dir='rtl']) label,
+:host-context([dir='rtl']) .label-text,
 :host-context([dir='rtl']) .eyebrow,
 :host-context([dir='rtl']) .subtitle,
-:host-context([dir='rtl']) .no-photos,
 :host-context([dir='rtl']) .mini-note {
   text-align: right;
 }
 
 :host-context([dir='rtl']) .actions {
   flex-direction: row-reverse;
-  justify-content: flex-start;
 }
 
 :host-context([dir='rtl']) .btn.ghost { order: 2; }
@@ -282,22 +207,17 @@ textarea {
 }
 
 @media (max-width: 720px) {
-  .glass-panel {
-    padding: var(--space-3);
-  }
-
   .form-grid {
     grid-template-columns: 1fr;
-    padding: var(--space-3);
-  }
-
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
   }
 
   .photo-item {
     grid-template-columns: 48px 1fr;
     gap: var(--space-2);
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

@@ -171,6 +171,13 @@ public sealed class AuthService : IAuthService
             new Claim(System.Security.Claims.ClaimTypes.Email, user.Email ?? string.Empty)
         };
 
+        // Without a name claim the dashboard had nothing to greet the user with
+        // and fell back to the literal word "User".
+        if (!string.IsNullOrWhiteSpace(user.UserName))
+        {
+            claims.Add(new Claim(System.Security.Claims.ClaimTypes.Name, user.UserName));
+        }
+
         claims.AddRange(roles.Select(r => new Claim(System.Security.Claims.ClaimTypes.Role, r)));
 
         var token = new JwtSecurityToken(

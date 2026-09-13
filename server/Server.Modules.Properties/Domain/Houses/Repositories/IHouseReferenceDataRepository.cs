@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Properties.Domain.Houses.Repositories;
 
@@ -16,4 +17,7 @@ public interface IHouseReferenceDataRepository
     Task<Location> GetOrCreateLocationAsync(AddressRequest request, CancellationToken cancellationToken = default);
     Task<Address> GetOrCreateAddressAsync(Guid locationId, AddressRequest request, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<HouseType>> GetHouseTypesAsync(CancellationToken cancellationToken = default);
+    Task<(IReadOnlyCollection<HouseType> Items, int Total)> GetHouseTypesPagedAsync(
+        PageQuery query,
+        CancellationToken cancellationToken = default);
 }

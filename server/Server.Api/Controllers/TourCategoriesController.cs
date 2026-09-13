@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Modules.Tours.Application.Services;
 using Server.Modules.Tours.Contracts.Tours.Dtos;
+using Server.SharedKernel.Paging;
 
 namespace Server.Api.Controllers;
 
@@ -21,6 +22,22 @@ public sealed class TourCategoriesController : ControllerBase
     {
         var categories = await _tourCategoryService.GetTourCategoriesAsync(cancellationToken);
         return Ok(categories);
+    }
+
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResult<TourCategoryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPaged(
+        [FromQuery] int page,
+        [FromQuery] int pageSize,
+        [FromQuery] string? search,
+        [FromQuery] string? sort,
+        CancellationToken cancellationToken)
+    {
+        var result = await _tourCategoryService.GetTourCategoriesPagedAsync(
+            new PageQuery(page, pageSize, search, sort),
+            cancellationToken);
+
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}")]

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Modules.Tours.Domain.Tours;
 using Server.Modules.Tours.Domain.Tours.Repositories;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Tours.Infrastructure.Repositories;
 
@@ -33,6 +34,34 @@ public sealed class TourReferenceDataRepository : ITourReferenceDataRepository
         return await _dbContext.Set<TourCategory>()
             .OrderBy(x => x.Name)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<(IReadOnlyCollection<TourCategory> Items, int Total)> GetTourCategoriesPagedAsync(
+        PageQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        query = query.Normalized();
+
+        IQueryable<TourCategory> filtered = _dbContext.Set<TourCategory>().AsNoTracking();
+
+        if (query.Search is { } search)
+        {
+            filtered = filtered.Where(c => c.Name.Contains(search));
+        }
+
+        var total = await filtered.CountAsync(cancellationToken);
+
+        var (_, descending) = query.SortOrDefault("name");
+        filtered = descending
+            ? filtered.OrderByDescending(c => c.Name).ThenBy(c => c.Id)
+            : filtered.OrderBy(c => c.Name).ThenBy(c => c.Id);
+
+        var items = await filtered
+            .Skip(query.Skip)
+            .Take(query.PageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, total);
     }
 
     public async Task<TourCategory?> GetTourCategoryByIdAsync(Guid id, CancellationToken cancellationToken = default)

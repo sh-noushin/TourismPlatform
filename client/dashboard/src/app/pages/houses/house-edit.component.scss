@@ -17,39 +17,9 @@
   min-height: 0;
 }
 
-.glass-panel {
-  @include dialog-surface(680px);
-  max-height: 88vh;
-}
+@include dialog-layout(680px);
 
-.dialog-head {
-  @include dialog-header();
-}
-
-.dialog-head h3 {
-  @include dialog-title();
-}
-
-.dialog-close {
-  @include dialog-close();
-}
-
-/* The form is the flex column: body scrolls, footer stays. */
-.dialog-form {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  flex: 1 1 auto;
-}
-
-.dialog-body {
-  @include dialog-body();
-}
-
-.dialog-foot {
-  @include dialog-footer();
-}
-
+/* Field groups under ruled captions -- details, pricing, address, photos. */
 .form-section {
   @include form-section();
 }
@@ -132,22 +102,9 @@
   object-fit: cover;
 }
 
-label {
-  @include field();
-}
-
-.label-text {
-  @include field-label();
-}
-
 .combobox sf-dropdown {
   width: 100%;
   display: block;
-}
-
-input,
-textarea {
-  @include text-input();
 }
 
 /* The old textarea grew to fill the sheet and dominated the form. Three lines
@@ -222,35 +179,11 @@ textarea {
   min-width: 0;
 }
 
-.status {
-  @include status-message();
-}
-
-.status.error {
-  @include status-error();
-}
-
-.status.success {
-  color: var(--color-success-text);
-}
-
 .actions {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin-inline-start: auto;
-}
-
-.btn {
-  @include btn-base();
-}
-
-.btn.ghost {
-  @include btn-ghost();
-}
-
-.btn.primary {
-  @include btn-primary();
 }
 
 :host-context([dir='ltr']) .edit-shell,

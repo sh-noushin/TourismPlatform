@@ -21,9 +21,11 @@
   <sf-card>
     <sf-table
       [columns]="columns"
-      [data]="displayedHouses()"
+      [data]="houses.items()"
       [loading]="loadingSignal()"
       [actions]="actions"
+      [paging]="paging()"
+      (pageChange)="onPageChange($event)"
       (sortChange)="onSortChange($event)"
       (rowAction)="onRowAction($event)"
     ></sf-table>

@@ -104,4 +104,22 @@ public static class WebApplicationExtensions
         var seeder = scope.ServiceProvider.GetRequiredService<PublicWebSeeder>();
         await seeder.SeedAsync();
     }
+
+    /// <summary>
+    /// Fills the admin screens with demo records when <c>Seed:DemoData</c> is on.
+    /// Off by default: this writes houses, tours, users and orders, which is the
+    /// last thing a real deployment wants. It must run after the reference data
+    /// seeder, whose currencies the demo exchange orders point at.
+    /// </summary>
+    public static async Task SeedDemoDataAsync(this WebApplication app)
+    {
+        if (!app.Configuration.GetValue<bool>("Seed:DemoData"))
+        {
+            return;
+        }
+
+        using var scope = app.Services.CreateScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<DemoDataSeeder>();
+        await seeder.SeedAsync();
+    }
 }

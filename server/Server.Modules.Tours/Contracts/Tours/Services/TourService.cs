@@ -7,6 +7,7 @@ using Server.Modules.Tours.Contracts.Tours.Dtos;
 using Server.Modules.Tours.Domain.Tours;
 using Server.Modules.Tours.Domain.Tours.Repositories;
 using Server.SharedKernel.Media;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Tours.Contracts.Tours.Services;
 
@@ -58,6 +59,32 @@ public sealed class TourService : ITourService
                 t.CreatedAtUtc.Year,
                 photosByTour.TryGetValue(t.Id, out var ph) ? ph : Array.Empty<TourPhotoDto>()))
             .ToList();
+    }
+
+    public async Task<PagedResult<TourSummaryDto>> GetPagedAsync(
+        PageQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        query = query.Normalized();
+
+        var (tours, total) = await _tourRepository.GetPagedAsync(query, cancellationToken);
+
+        var tourIds = tours.Select(t => t.Id).ToArray();
+        var photosByTour = await _tourPhotoRepository.GetPhotosByTourIdsAsync(tourIds, cancellationToken);
+
+        var items = tours
+            .Select(t => new TourSummaryDto(
+                t.Id,
+                t.Name,
+                t.Description,
+                t.TourCategory.Name,
+                t.Price,
+                t.Currency,
+                t.CreatedAtUtc.Year,
+                photosByTour.TryGetValue(t.Id, out var ph) ? ph : Array.Empty<TourPhotoDto>()))
+            .ToList();
+
+        return new PagedResult<TourSummaryDto>(items, total, query.Page, query.PageSize);
     }
 
     public async Task<TourDetailDto?> GetDetailAsync(Guid id, CancellationToken cancellationToken = default)

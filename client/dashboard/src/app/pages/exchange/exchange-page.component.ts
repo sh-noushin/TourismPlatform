@@ -58,10 +58,24 @@ export class ExchangePageComponent {
   readonly move = signal<MoveFilter>('all');
   readonly selectedPair = signal<string | null>(null);
 
+  /**
+   * The active language, as a signal.
+   *
+   * TranslateService.currentLang is a plain property, so a computed that reads
+   * it never recomputes when the language changes -- which left the chart's
+   * month labels in whichever language the page first rendered in.
+   */
+  readonly lang = signal<'fa' | 'en'>('fa');
+
   constructor(
     private readonly rates: ExchangeRatesService,
     private readonly translate: TranslateService
   ) {
+    this.lang.set(this.translate.currentLang === 'en' ? 'en' : 'fa');
+    this.translate.onLangChange.subscribe(({ lang }) => {
+      this.lang.set(lang === 'en' ? 'en' : 'fa');
+    });
+
     void this.loadCurrencies();
     void this.load();
     void this.loadYearly();
@@ -116,17 +130,16 @@ export class ExchangePageComponent {
     void this.load();
   }
 
-  /** Re-reads what the API already holds. */
-  refresh(): void {
-    void this.load();
-    void this.loadYearly();
-  }
-
   /**
-   * Pulls the live feed, then re-reads. Kept separate from refresh() because it
-   * spends the feed's monthly request quota.
+   * Pulls navasan.net, then re-reads what was stored.
+   *
+   * This was two buttons -- one that only re-queried the database and one that
+   * fetched. They looked alike but behaved differently, and a "refresh" that
+   * cannot bring new prices is not what anyone expects. The public feed has no
+   * request quota, so there is no reason to keep fetching behind a second,
+   * deliberate action.
    */
-  async syncNow(): Promise<void> {
+  async refresh(): Promise<void> {
     this.syncing.set(true);
     this.error.set(null);
     this.notice.set(null);
@@ -243,8 +256,14 @@ export class ExchangePageComponent {
       ...months.flatMap(m => [m.current ?? 0, m.previous ?? 0])
     );
 
-    const locale = this.translate.currentLang === 'fa' ? 'fa-IR' : 'en-US';
-    const monthName = new Intl.DateTimeFormat(locale, { month: 'short' });
+    // Buckets above are Gregorian months, so the label has to name a Gregorian
+    // month. Farsi's default calendar in Intl is Jalali, which would translate
+    // 1 September into شهریور -- a month that only half overlaps the bucket it
+    // is labelling. -u-ca-gregory keeps the Persian script and the real month.
+    const monthName = new Intl.DateTimeFormat(
+      this.lang() === 'fa' ? 'fa-IR-u-ca-gregory' : 'en-US',
+      { month: 'short' }
+    );
 
     return months.map(m => ({
       month: m.month,
@@ -264,8 +283,34 @@ export class ExchangePageComponent {
     return `${summary.baseCurrencyCode}/${summary.quoteCurrencyCode}`;
   }
 
+  /**
+   * Full currency name in the active language, e.g. "دلار آمریکا".
+   * Falls back to the API's English name, then the code itself, so an
+   * un-translated currency still reads sensibly.
+   */
   currencyName(code: string): string {
+    const key = `CURRENCY_NAME.${code.toUpperCase()}`;
+    const translated = this.translate.instant(key);
+    if (translated !== key) return translated;
     return this.currencyNames()[code] ?? code;
+  }
+
+  /**
+   * Path to a currency's flag.
+   *
+   * Emoji were the obvious route -- an ISO currency code opens with its ISO
+   * country code, so USD -> US -> regional indicators -- but Windows has no
+   * colour font for country flags, and Chrome renders the pair as the literal
+   * letters "US". These are self-hosted SVGs instead (flag-icons, MIT).
+   */
+  flagUrl(code: string): string | null {
+    const country = code.slice(0, 2).toLowerCase();
+    return /^[a-z]{2}$/.test(country) ? `assets/flags/${country}.svg` : null;
+  }
+
+  /** Hides the image rather than showing a broken-image icon. */
+  onFlagError(event: Event): void {
+    (event.target as HTMLImageElement).style.visibility = 'hidden';
   }
 
   /**
@@ -372,6 +417,6 @@ export class ExchangePageComponent {
   }
 
   private locale(): string {
-    return this.translate.currentLang === 'fa' ? 'fa-IR' : 'en-US';
+    return this.lang() === 'fa' ? 'fa-IR' : 'en-US';
   }
 }

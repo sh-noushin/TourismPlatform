@@ -1,10 +1,12 @@
 using Server.Modules.Tours.Contracts.Tours.Dtos;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Tours.Application.Services;
 
 public interface ITourService
 {
     Task<IReadOnlyCollection<TourSummaryDto>> GetListAsync(CancellationToken cancellationToken = default);
+    Task<PagedResult<TourSummaryDto>> GetPagedAsync(PageQuery query, CancellationToken cancellationToken = default);
     Task<TourDetailDto?> GetDetailAsync(Guid id, CancellationToken cancellationToken = default);
 
     Task<Guid> CreateAsync(CreateTourRequest request, Guid? currentUserId, CancellationToken cancellationToken = default);

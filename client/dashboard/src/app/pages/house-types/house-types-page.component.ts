@@ -6,7 +6,8 @@ import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.component';
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
-import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
+import { SfTableColumn, SfTablePaging, SfTableSort } from '../../shared/models/table.models';
+import { DEFAULT_PAGE_SIZE, toSortTerm } from '../../shared/models/paging.models';
 import { HouseTypesService, HouseTypeDto } from '../../features/houses/house-types.service';
 import { HouseTypeEditComponent } from './house-type-edit.component';
 import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
@@ -45,30 +46,15 @@ export class HouseTypesPageComponent implements OnDestroy {
     ];
   });
 
-  readonly displayedTypes = computed(() => {
-    const locale = this.lang();
-    const filter = this.filterSignal().toLowerCase();
-    const items = filter
-      ? this.houseTypes.houseTypes().filter((type) =>
-          [type.name]
-            .filter(Boolean)
-            .some((value) => value.toLowerCase().includes(filter))
-        )
-      : this.houseTypes.houseTypes();
+  /** The rows the server returned for the current page, search and ordering. */
+  readonly rows = computed(() => this.houseTypes.page().items);
+  readonly pageIndex = signal(0);
 
-    const sort = this.sortSignal();
-    if (!sort) return items;
-
-    const key = sort.field as keyof HouseTypeDto;
-    const localeCode = locale === 'fa' ? 'fa' : 'en';
-    return [...items].sort((a, b) => {
-      const aValue = (a[key] ?? '').toString().toLowerCase();
-      const bValue = (b[key] ?? '').toString().toLowerCase();
-      return sort.direction === 'asc'
-        ? aValue.localeCompare(bValue, localeCode, { numeric: true, sensitivity: 'base' })
-        : bValue.localeCompare(aValue, localeCode, { numeric: true, sensitivity: 'base' });
-    });
-  });
+  readonly paging = computed<SfTablePaging>(() => ({
+    pageIndex: this.pageIndex(),
+    pageSize: DEFAULT_PAGE_SIZE,
+    total: this.houseTypes.total()
+  }));
 
   readonly actions = computed(() => {
     this.lang();
@@ -89,7 +75,16 @@ export class HouseTypesPageComponent implements OnDestroy {
     this.langSub = this.translate.onLangChange.subscribe(({ lang }) => {
       this.lang.set(lang === 'en' ? 'en' : 'fa');
     });
-    void this.houseTypes.load();
+    void this.fetch();
+  }
+
+  private fetch() {
+    return this.houseTypes.loadPage({
+      page: this.pageIndex() + 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      search: this.filterSignal(),
+      sort: toSortTerm(this.sortSignal())
+    });
   }
 
   ngOnDestroy() {
@@ -98,10 +93,19 @@ export class HouseTypesPageComponent implements OnDestroy {
 
   setFilter(value: string) {
     this.filterSignal.set(value);
+    this.pageIndex.set(0);
+    void this.fetch();
   }
 
   onSortChange(sort: SfTableSort) {
     this.sortSignal.set(sort);
+    this.pageIndex.set(0);
+    void this.fetch();
+  }
+
+  onPageChange(paging: SfTablePaging) {
+    this.pageIndex.set(paging.pageIndex);
+    void this.fetch();
   }
 
   onRowAction(event: { action: any; row: HouseTypeDto }) {
@@ -123,7 +127,7 @@ export class HouseTypesPageComponent implements OnDestroy {
     if (!confirmed) return;
     try {
       await this.houseTypes.delete(id);
-      await this.houseTypes.load({ force: true });
+      await this.fetch();
     } catch {}
   }
 
@@ -138,7 +142,7 @@ export class HouseTypesPageComponent implements OnDestroy {
 
     ref.afterClosed().subscribe((saved) => {
       if (saved) {
-        void this.houseTypes.load({ force: true });
+        void this.fetch();
       }
     });
   }

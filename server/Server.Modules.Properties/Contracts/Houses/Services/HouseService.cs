@@ -8,6 +8,7 @@ using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.Modules.Properties.Domain.Houses.Repositories;
 using Server.SharedKernel.Media;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Properties.Contracts.Houses.Services;
 
@@ -91,6 +92,40 @@ public sealed class HouseService : IHouseService
                     photosByHouse.TryGetValue(h.Id, out var ph) ? ph : Array.Empty<HousePhotoDto>());
             })
             .ToList();
+    }
+
+    /// <summary>
+    /// The paged twin of <see cref="GetListAsync(HouseListingType?, CancellationToken)"/>.
+    /// Photos are fetched for the page's rows only -- the whole point of paging
+    /// is that nothing scales with the size of the table.
+    /// </summary>
+    public async Task<PagedResult<HouseSummaryDto>> GetPagedAsync(
+        HouseListingType? listingType,
+        PageQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        query = query.Normalized();
+
+        var (houses, total) = await _houseRepository.GetPagedAsync(listingType, query, cancellationToken);
+
+        var houseIds = houses.Select(h => h.Id).ToArray();
+        var photosByHouse = await _housePhotoRepository.GetPhotosByHouseIdsAsync(houseIds, cancellationToken);
+
+        var items = houses
+            .Select(h => new HouseSummaryDto(
+                h.Id,
+                h.Name,
+                h.Description,
+                h.ListingType,
+                h.Price,
+                h.Currency,
+                h.HouseType.Name,
+                h.Address.Location.City,
+                h.Address.Location.Country,
+                photosByHouse.TryGetValue(h.Id, out var ph) ? ph : Array.Empty<HousePhotoDto>()))
+            .ToList();
+
+        return new PagedResult<HouseSummaryDto>(items, total, query.Page, query.PageSize);
     }
 
     public async Task<HouseDetailDto?> GetDetailAsync(Guid id, CancellationToken cancellationToken = default)

@@ -1,34 +1,46 @@
 <div class="edit-shell" (click)="$event.stopPropagation()">
   <div class="glass-panel">
-    <header class="header">
+    <header class="dialog-head">
       <h3>{{ title() }}</h3>
+      <button
+        type="button"
+        class="dialog-close"
+        (click)="cancel()"
+        [attr.aria-label]="'COMMON.CANCEL' | translate"
+      >&#10005;</button>
     </header>
 
-    <form class="form" (submit)="save($event)">
-      <label>
-        <span class="label-text">{{ 'TYPE_DIALOG.NAME' | translate }}</span>
-        <input
-          type="text"
-          name="name"
-          autocomplete="off"
-          [value]="name()"
-          (input)="name.set($any($event.target).value)"
-          required
-        />
-      </label>
-
-      <div class="actions">
-        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
-          {{ 'COMMON.CANCEL' | translate }}
-        </button>
-        <button type="submit" class="btn primary" [disabled]="saving()">
-          {{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
-        </button>
+    <form class="dialog-form" (submit)="save($event)">
+      <div class="dialog-body">
+        <label>
+          <span class="label-text">{{ 'TYPE_DIALOG.NAME' | translate }}</span>
+          <input
+            type="text"
+            name="name"
+            autocomplete="off"
+            [value]="name()"
+            (input)="name.set($any($event.target).value)"
+            required
+          />
+        </label>
       </div>
 
-      @if (error()) {
-        <p class="status error">{{ error() }}</p>
-      }
+      <footer class="dialog-foot">
+        <div class="status-bar">
+          @if (error()) {
+            <span class="status error">{{ error() }}</span>
+          }
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button type="submit" class="btn primary" [disabled]="saving()">
+            {{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
+          </button>
+        </div>
+      </footer>
     </form>
   </div>
 </div>

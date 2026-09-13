@@ -126,6 +126,98 @@
   gap: var(--space-4);
 }
 
+/// The whole dialog shell in one include: titled header, scrolling body,
+/// sticky footer, and the field and button vocabulary inside them.
+///
+/// Every add/edit dialog shares this markup, so they share this rule rather
+/// than each repeating twenty declarations and drifting apart again.
+@mixin dialog-layout($width: 520px) {
+  .glass-panel {
+    @include dialog-surface($width);
+    max-height: 88vh;
+  }
+
+  .dialog-head {
+    @include dialog-header();
+  }
+
+  .dialog-head h3 {
+    @include dialog-title();
+  }
+
+  .dialog-close {
+    @include dialog-close();
+  }
+
+  /* The form is the flex column: body scrolls, footer stays put. */
+  .dialog-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .dialog-body {
+    @include dialog-body();
+  }
+
+  .dialog-foot {
+    @include dialog-footer();
+  }
+
+  label {
+    @include field();
+  }
+
+  .label-text {
+    @include field-label();
+  }
+
+  input,
+  textarea,
+  select {
+    @include text-input();
+  }
+
+  /* Status sits opposite the buttons, so a save error is visible exactly where
+     the user is reaching. */
+  .status-bar {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .status {
+    @include status-message();
+  }
+
+  .status.error {
+    @include status-error();
+  }
+
+  .status.success {
+    color: var(--color-success-text);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-inline-start: auto;
+  }
+
+  .btn {
+    @include btn-base();
+  }
+
+  .btn.ghost {
+    @include btn-ghost();
+  }
+
+  .btn.primary {
+    @include btn-primary();
+  }
+}
+
 @mixin dialog-title() {
   margin: 0;
   font-family: $font-display;

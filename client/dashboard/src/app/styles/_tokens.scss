@@ -180,10 +180,11 @@
   --text-md:   1.02rem;  // emphasised values
   --text-lg:   1.18rem;  // card titles
   // 1.9rem came from the reference, which runs a 17px root and Latin titles.
-  // On the 18px RTL root that lands near 34px and shouts; 1.5rem keeps the
-  // hierarchy without dominating the page.
-  --text-xl:   1.5rem;   // page titles
-  --text-2xl:  1.6rem;   // hero figure
+  // On the 18px RTL root that lands near 34px and shouts. Page titles head a
+  // list of records, not an article, so they only need to be a clear step above
+  // the card titles beneath them (--text-lg).
+  --text-xl:   1.12rem;  // page titles
+  --text-2xl:  1.5rem;   // hero figure
 
   --leading-tight: 1.2;
   --leading-snug:  1.35;
@@ -209,7 +210,15 @@
   --layout-sidebar-width: 256px;
   --layout-sidebar-width-collapsed: 60px;
   --layout-topbar-height: 58px;
-  --layout-content-max: 1500px;
+  // 1500px was the reference's figure, set for a wide multi-column dashboard.
+  // List pages carry two or three columns, so at that width a table stretches
+  // its name column across the whole screen and the row's ends stop relating to
+  // each other. A capped measure keeps rows scannable; wide pages (exchange)
+  // still fill it.
+  --layout-content-max: 1120px;
+  // List pages hold two or three columns; a full-width row leaves its two ends
+  // unrelated. Grid dashboards opt out of this narrower measure.
+  --layout-list-max: 860px;
 
   --z-dropdown: 100;
   --z-sticky: 200;

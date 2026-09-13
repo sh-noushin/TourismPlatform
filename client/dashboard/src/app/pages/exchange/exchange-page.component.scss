@@ -488,17 +488,16 @@
   gap: 12px;
 }
 
-.mark {
-  width: 36px;
-  height: 36px;
+/* SVG flag rather than a code badge: it identifies the currency at a glance,
+   the way navasan's own table does. A hairline border keeps flags with white
+   fields (Japan, Switzerland's surround) from dissolving into the row. */
+.flag {
   flex: none;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-pill);
-  background: var(--color-primary-subtle);
-  color: $primary;
-  font-size: 0.72rem;
-  font-weight: var(--weight-bold);
+  width: 28px;
+  height: 21px;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--color-border-soft);
 }
 
 .pair__names b {

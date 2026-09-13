@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses.Repositories;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Properties.Contracts.Houses.Services;
 
@@ -24,6 +25,21 @@ public sealed class HouseTypeService : IHouseTypeService
         return houseTypes
             .Select(ht => new HouseTypeDto(ht.Id, ht.Name))
             .ToList();
+    }
+
+    public async Task<PagedResult<HouseTypeDto>> GetHouseTypesPagedAsync(
+        PageQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        query = query.Normalized();
+
+        var (items, total) = await _referenceDataRepository.GetHouseTypesPagedAsync(query, cancellationToken);
+
+        return new PagedResult<HouseTypeDto>(
+            items.Select(ht => new HouseTypeDto(ht.Id, ht.Name)).ToList(),
+            total,
+            query.Page,
+            query.PageSize);
     }
 
     public async Task<HouseTypeDto?> GetHouseTypeAsync(Guid id, CancellationToken cancellationToken = default)

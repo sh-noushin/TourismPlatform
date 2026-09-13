@@ -21,9 +21,11 @@
   <sf-card>
     <sf-table
       [columns]="columns()"
-      [data]="displayedTypes()"
+      [data]="rows()"
       [loading]="loadingSignal()"
       [actions]="actions()"
+      [paging]="paging()"
+      (pageChange)="onPageChange($event)"
       (sortChange)="onSortChange($event)"
       (rowAction)="onRowAction($event)"
     ></sf-table>
@@ -31,7 +33,7 @@
     @if (errorSignal()) {
       <p class="status status--error">{{ errorSignal() }}</p>
     }
-    @if (!loadingSignal() && !errorSignal() && displayedTypes().length === 0) {
+    @if (!loadingSignal() && !errorSignal() && rows().length === 0) {
       <p class="status">{{ 'HOUSE_TYPES_PAGE.NO_TYPES' | translate }}</p>
     }
   </sf-card>

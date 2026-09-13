@@ -357,5 +357,33 @@
     "IRR": "IRR",
     "TRY": "TRY",
     "USD": "USD"
+  },
+  "CURRENCY_NAME": {
+    "AED": "UAE Dirham",
+    "AFN": "Afghan Afghani",
+    "AUD": "Australian Dollar",
+    "AZN": "Azerbaijani Manat",
+    "CAD": "Canadian Dollar",
+    "CHF": "Swiss Franc",
+    "CNY": "Chinese Yuan",
+    "DKK": "Danish Krone",
+    "EUR": "Euro",
+    "GBP": "British Pound",
+    "INR": "Indian Rupee",
+    "IQD": "Iraqi Dinar",
+    "IRR": "Iranian Rial",
+    "JPY": "Japanese Yen",
+    "KWD": "Kuwaiti Dinar",
+    "NOK": "Norwegian Krone",
+    "NZD": "New Zealand Dollar",
+    "OMR": "Omani Rial",
+    "PKR": "Pakistani Rupee",
+    "QAR": "Qatari Riyal",
+    "RUB": "Russian Rouble",
+    "SAR": "Saudi Riyal",
+    "SEK": "Swedish Krona",
+    "SGD": "Singapore Dollar",
+    "TRY": "Turkish Lira",
+    "USD": "US Dollar"
   }
 }

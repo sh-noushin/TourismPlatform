@@ -5,6 +5,7 @@ using Server.Modules.Tours.Contracts.Tours.Dtos;
 using SharedCountryDto = Server.SharedKernel.ReferenceData.CountryDto;
 using Server.Modules.Properties.Application.Services;
 using Server.SharedKernel.Auth;
+using Server.SharedKernel.Paging;
 
 namespace Server.Api.Controllers;
 
@@ -27,6 +28,26 @@ public sealed class ToursController : ControllerBase
     {
         var dto = await _tourService.GetListAsync(cancellationToken);
         return Ok(dto);
+    }
+
+    /// <summary>
+    /// One page of tours. The unpaged list above stays as it is: the public
+    /// site reads it and expects a plain array.
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResult<TourSummaryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPaged(
+        [FromQuery] int page,
+        [FromQuery] int pageSize,
+        [FromQuery] string? search,
+        [FromQuery] string? sort,
+        CancellationToken cancellationToken)
+    {
+        var result = await _tourService.GetPagedAsync(
+            new PageQuery(page, pageSize, search, sort),
+            cancellationToken);
+
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}")]

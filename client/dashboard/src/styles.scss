@@ -28,16 +28,20 @@
 	color-scheme: light;
 }
 
-// The reference sets the root to 17px, and 18px in RTL. Every rem in the token
-// scale hangs off this -- it is what separates "comfortable" from "cramped",
-// and Farsi needs the extra point because the same size renders visually
+// Every rem in the token scale hangs off this, so it is the one lever that
+// resizes the whole console at once -- which is why the density passes land
+// here rather than in dozens of component rules.
+//
+// The reference's 17px/18px was authored for a 100% display; on a 125%-scaled
+// Windows desktop (the target here) that renders ~21px and reads oversized.
+// Farsi still gets the extra half point because the same size renders visually
 // smaller than Latin.
 html {
-	font-size: 17px;
+	font-size: 15.5px;
 }
 
 html[dir='rtl'] {
-	font-size: 18px;
+	font-size: 16px;
 }
 
 *,
@@ -138,8 +142,8 @@ html[dir='rtl'] h4 {
 // *parent* component's encapsulation attribute, so a scoped rule never matches.
 sf-card .sf-card > p {
 	margin: 0;
-	padding: 14px 18px;
-	font-size: var(--text-base);
+	padding: 10px 14px;
+	font-size: var(--text-xs);
 	color: var(--color-text-muted);
 }
 
@@ -433,4 +437,24 @@ body[lang='en'] sf-dropdown .sf-dropdown-trigger .sf-dropdown-icon {
   order: 2 !important;
   margin-left: auto !important;
   margin-right: 0 !important;
+}
+
+// -----------------------------------------------------------------------------
+// Page measure
+//
+// Route components render into the shell's <router-outlet>, so their host
+// elements carry no component's scoping attribute -- neither the shell's nor
+// their own. That is why this cap has to be global: there is no stylesheet that
+// can reach them from inside encapsulation.
+// -----------------------------------------------------------------------------
+.content > *:not(router-outlet) {
+	display: block;
+	max-width: var(--layout-list-max);
+	margin-inline: auto;
+}
+
+// The exchange screen is a 12-column dashboard, not a list. At the list measure
+// its widgets collapse into slivers, so it keeps the full content width.
+.content > exchange-page {
+	max-width: none;
 }

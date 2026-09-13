@@ -1,19 +1,19 @@
 <div class="glass-panel" (click)="$event.stopPropagation()">
-  <header class="section-edit-header">
-    <p class="eyebrow">{{ 'MENU.PUBLIC_PAGE_SECTIONS' | translate }}</p>
-    <h2>{{ mode === 'create' ? ('PUBLIC_PAGE_SECTIONS_EDIT.NEW_TITLE' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.EDIT_TITLE' | translate) }}</h2>
-    <p class="subtitle">
-      {{ mode === 'create' ? ('PUBLIC_PAGE_SECTIONS_EDIT.SUBTITLE_CREATE' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.SUBTITLE_EDIT' | translate) }}
-    </p>
+  <header class="dialog-head">
+    <h3>{{ mode === 'create' ? ('PUBLIC_PAGE_SECTIONS_EDIT.NEW_TITLE' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.EDIT_TITLE' | translate) }}</h3>
+    <button
+      type="button"
+      class="dialog-close"
+      (click)="cancel()"
+      [attr.aria-label]="'COMMON.CANCEL' | translate"
+    >&#10005;</button>
   </header>
 
-  <div class="status-bar">
-    @if (error()) {
-      <span class="status error">{{ error() }}</span>
-    }
-  </div>
-
-  <form class="section-edit-form" (submit)="save($event)">
+  <form class="dialog-form" (submit)="save($event)">
+    <div class="dialog-body">
+      <p class="dialog-subtitle">
+        {{ mode === 'create' ? ('PUBLIC_PAGE_SECTIONS_EDIT.SUBTITLE_CREATE' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.SUBTITLE_EDIT' | translate) }}
+      </p>
     <section class="form-grid top">
       <label>
         <span class="label-text">{{ 'PUBLIC_PAGE_SECTIONS_PAGE.SECTION_TYPE' | translate }}</span>
@@ -55,13 +55,23 @@
       </label>
     </section>
 
-    <section class="actions">
-      <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
-        {{ 'COMMON.CANCEL' | translate }}
-      </button>
-      <button type="submit" class="btn primary" [disabled]="saving()">
-        {{ saving() ? ('COMMON.SAVING' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.SAVE' | translate) }}
-      </button>
-    </section>
+    </div>
+
+    <footer class="dialog-foot">
+      <div class="status-bar">
+        @if (error()) {
+          <span class="status error">{{ error() }}</span>
+        }
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn primary" [disabled]="saving()">
+          {{ saving() ? ('COMMON.SAVING' | translate) : ('PUBLIC_PAGE_SECTIONS_EDIT.SAVE' | translate) }}
+        </button>
+      </div>
+    </footer>
   </form>
 </div>

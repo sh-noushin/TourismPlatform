@@ -1,22 +1,13 @@
 ﻿<div class="glass-panel" (click)="$event.stopPropagation()">
-  <header class="tour-edit-header">
-    <p class="eyebrow">
-      {{ id ? ('TOUR_EDIT.EYEBROW_TOUR' | translate) : ('TOUR_EDIT.EYEBROW_NEW' | translate) }}
-    </p>
-    <h2>{{ id ? ('TOUR_EDIT.EDIT_TITLE' | translate) : ('TOUR_EDIT.NEW_TITLE' | translate) }}</h2>
-    <p class="subtitle">
-      {{ id ? ('TOUR_EDIT.SUBTITLE_EDIT' | translate) : ('TOUR_EDIT.SUBTITLE_CREATE' | translate) }}
-    </p>
+  <header class="dialog-head">
+    <h3>{{ id ? ('TOUR_EDIT.EDIT_TITLE' | translate) : ('TOUR_EDIT.NEW_TITLE' | translate) }}</h3>
+    <button
+      type="button"
+      class="dialog-close"
+      (click)="cancel()"
+      [attr.aria-label]="'COMMON.CANCEL' | translate"
+    >&#10005;</button>
   </header>
-
-  <div class="status-bar">
-    @if (error()) {
-      <span class="status error">{{ error() }}</span>
-    }
-    @if (saved()) {
-      <span class="status success">{{ 'TOUR_EDIT.SAVED' | translate }}</span>
-    }
-  </div>
 
   @if (loadingSignal()) {
     <div class="tour-edit-loading">
@@ -24,7 +15,8 @@
     </div>
   } @else {
     @if (form(); as currentForm) {
-      <form class="tour-edit-form" (submit)="save($event)">
+      <form class="dialog-form" (submit)="save($event)">
+        <div class="dialog-body">
         <section class="form-grid top">
           <label>
             <span class="label-text">{{ 'TOUR_EDIT.NAME' | translate }}</span>
@@ -145,14 +137,27 @@
           <p class="no-photos">{{ 'TOUR_EDIT.NO_PHOTOS' | translate }}</p>
         }
 
-        <section class="actions">
-          <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
-            {{ 'COMMON.CANCEL' | translate }}
-          </button>
-          <button type="submit" class="btn primary" [disabled]="saving()">
-            {{ saving() ? ('COMMON.SAVING' | translate) : ('TOUR_EDIT.SAVE_TOUR' | translate) }}
-          </button>
-        </section>
+        </div>
+
+        <footer class="dialog-foot">
+          <div class="status-bar">
+            @if (error()) {
+              <span class="status error">{{ error() }}</span>
+            }
+            @if (saved()) {
+              <span class="status success">{{ 'TOUR_EDIT.SAVED' | translate }}</span>
+            }
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn ghost" (click)="cancel()" [disabled]="saving()">
+              {{ 'COMMON.CANCEL' | translate }}
+            </button>
+            <button type="submit" class="btn primary" [disabled]="saving()">
+              {{ saving() ? ('COMMON.SAVING' | translate) : ('TOUR_EDIT.SAVE_TOUR' | translate) }}
+            </button>
+          </div>
+        </footer>
       </form>
     } @else {
       <p class="tour-edit-placeholder">{{ 'COMMON.NO_DATA' | translate }}</p>

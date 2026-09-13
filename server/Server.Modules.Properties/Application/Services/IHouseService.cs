@@ -1,5 +1,6 @@
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Properties.Application.Services;
 
@@ -7,6 +8,10 @@ public interface IHouseService
 {
     Task<IReadOnlyCollection<HouseSummaryDto>> GetListAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<HouseSummaryDto>> GetListAsync(HouseListingType? listingType, CancellationToken cancellationToken = default);
+    Task<PagedResult<HouseSummaryDto>> GetPagedAsync(
+        HouseListingType? listingType,
+        PageQuery query,
+        CancellationToken cancellationToken = default);
     Task<HouseDetailDto?> GetDetailAsync(Guid id, CancellationToken cancellationToken = default);
 
     Task<Guid> CreateAsync(CreateHouseRequest request, Guid? currentUserId, CancellationToken cancellationToken = default);

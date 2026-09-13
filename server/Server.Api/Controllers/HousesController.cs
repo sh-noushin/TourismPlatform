@@ -4,6 +4,7 @@ using Server.Modules.Properties.Application.Services;
 using Server.Modules.Properties.Contracts.Houses.Dtos;
 using Server.Modules.Properties.Domain.Houses;
 using Server.SharedKernel.Auth;
+using Server.SharedKernel.Paging;
 
 namespace Server.Api.Controllers;
 
@@ -24,6 +25,28 @@ public sealed class HousesController : ControllerBase
     {
         var dto = await _houseService.GetListAsync(listingType, cancellationToken);
         return Ok(dto);
+    }
+
+    /// <summary>
+    /// One page of houses. The unpaged list above stays as it is: the public
+    /// site reads it and expects a plain array.
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResult<HouseSummaryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPaged(
+        [FromQuery] HouseListingType? listingType,
+        [FromQuery] int page,
+        [FromQuery] int pageSize,
+        [FromQuery] string? search,
+        [FromQuery] string? sort,
+        CancellationToken cancellationToken)
+    {
+        var result = await _houseService.GetPagedAsync(
+            listingType,
+            new PageQuery(page, pageSize, search, sort),
+            cancellationToken);
+
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}")]

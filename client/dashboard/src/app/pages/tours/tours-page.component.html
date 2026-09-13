@@ -25,9 +25,11 @@
   <sf-card>
     <sf-table
       [columns]="columns"
-      [data]="displayedTours()"
+      [data]="rows()"
       [loading]="loadingSignal()"
       [actions]="actions"
+      [paging]="paging()"
+      (pageChange)="onPageChange($event)"
       (sortChange)="onSortChange($event)"
       (rowAction)="onRowAction($event)"
     ></sf-table>

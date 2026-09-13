@@ -1,7 +1,9 @@
 @use '../../../styles/index' as *;
 
-/* Row actions stay muted until hovered: a table of twenty rows with twenty
-   coloured icons reads as an alarm, not a list. */
+/* Row actions carry their meaning in their colour -- blue edits, red deletes --
+   so the destructive one is recognisable before the pointer reaches it. The
+   tinted background stays until hover, which is what keeps a column of coloured
+   icons from reading as an alarm. */
 .sf-action-button {
   display: inline-flex;
   align-items: center;
@@ -18,19 +20,27 @@
   color: var(--color-text-subtle);
 }
 
+.sf-action-button.sf-action--edit {
+  color: var(--color-primary);
+}
+
+.sf-action-button.sf-action--delete {
+  color: var(--color-danger);
+}
+
 .sf-action-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 .sf-action-button.sf-action--edit:hover:not(:disabled) {
-  background: var(--color-surface-raised);
-  color: $primary;
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-hover);
 }
 
 .sf-action-button.sf-action--delete:hover:not(:disabled) {
   background: var(--color-danger-subtle);
-  color: var(--color-danger-text);
+  color: var(--color-danger-hover);
 }
 
 .sf-action-button mat-icon {

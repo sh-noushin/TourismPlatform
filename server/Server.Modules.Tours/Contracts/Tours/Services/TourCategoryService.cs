@@ -1,6 +1,7 @@
 using Server.Modules.Tours.Application.Services;
 using Server.Modules.Tours.Contracts.Tours.Dtos;
 using Server.Modules.Tours.Domain.Tours.Repositories;
+using Server.SharedKernel.Paging;
 
 namespace Server.Modules.Tours.Contracts.Tours.Services;
 
@@ -19,6 +20,21 @@ public sealed class TourCategoryService : ITourCategoryService
         return categories
             .Select(c => new TourCategoryDto(c.Id, c.Name))
             .ToList();
+    }
+
+    public async Task<PagedResult<TourCategoryDto>> GetTourCategoriesPagedAsync(
+        PageQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        query = query.Normalized();
+
+        var (items, total) = await _referenceDataRepository.GetTourCategoriesPagedAsync(query, cancellationToken);
+
+        return new PagedResult<TourCategoryDto>(
+            items.Select(c => new TourCategoryDto(c.Id, c.Name)).ToList(),
+            total,
+            query.Page,
+            query.PageSize);
     }
 
     public async Task<TourCategoryDto?> GetTourCategoryAsync(Guid id, CancellationToken cancellationToken = default)

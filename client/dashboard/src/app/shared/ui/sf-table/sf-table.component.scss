@@ -11,11 +11,11 @@
   overflow: hidden;
 }
 
-/* Only scrolls once there are enough rows to need it. Without the auto height a
-   table of two rows still reserved 60vh, leaving a tall blank card. */
+/* No inner scrollbar: a page holds ten rows, which fit. The 60vh cap that used
+   to live here dates from the unpaged list, and now only produces a scrollbar
+   inside a card that has nothing left to scroll to. */
 .sf-table-scroll {
-  max-height: 60vh;
-  overflow: auto;
+  overflow: visible;
 }
 
 /* An empty table shows only its header row; the empty state below carries the
@@ -43,11 +43,30 @@ td {
 }
 
 td {
-  padding: 14px 18px;
+  padding: 12px 14px;
   border-bottom: 1px solid $borderSoft;
   font-size: var(--text-base);
   line-height: var(--leading-snug);
   color: $text;
+}
+
+/* The first column is the row's identity -- the name you scan for -- so it
+   carries a little more weight and darker ink than the columns describing it. */
+td:first-child {
+  font-weight: var(--weight-medium);
+  color: var(--color-heading);
+}
+
+/* Content should not start hard against the card's edge. Logical properties, so
+   the inset lands on the right in RTL and the left in LTR without a second rule. */
+th:first-child,
+td:first-child {
+  padding-inline-start: 18px;
+}
+
+th:last-child,
+td:last-child {
+  padding-inline-end: 18px;
 }
 
 /* The last row's rule would double up with the footer border. */
@@ -63,25 +82,41 @@ tbody tr:hover {
   background: $tableRowHover;
 }
 
-/* Headers are small and quiet -- a wash background and muted ink, so the eye
-   lands on the rows first. */
+/* The header is its own band: a tinted wash, heading ink and a full-strength
+   rule beneath it, so the column titles read as a label strip rather than a
+   first row that happens to be bold. */
 th {
-  padding: 12px 18px;
+  padding: 13px 14px;
   text-align: inherit;
-  background: $surface;
-  color: $tableHeaderText;
-  font-size: 0.8rem;
+  background: var(--color-surface-hover);
+  color: var(--color-heading);
+  font-size: var(--text-md);
   font-weight: var(--weight-semibold);
-  border-top: 1px solid $border;
   border-bottom: 1px solid $border;
   position: sticky;
   top: 0;
   z-index: 1;
 }
 
+/* The wash is the top edge of the card, so it has to take the card's corners --
+   otherwise a square band sits inside a rounded frame. */
+thead tr th:first-child {
+  border-start-start-radius: var(--radius-md);
+}
+
+thead tr th:last-child {
+  border-start-end-radius: var(--radius-md);
+}
+
 .actions-header {
   text-align: center;
-  width: 140px;
+  width: 110px;
+}
+
+/* Actions are controls, not data: centring them keeps a straight column of
+   icons however wide the row's text runs. */
+.actions-header .header-button {
+  justify-content: center;
 }
 
 .header-button {
@@ -120,7 +155,12 @@ th {
 }
 
 .indicator {
-  font-size: 0.625rem;
+  font-size: 0.6rem;
+  color: $primary;
+}
+
+/* A sortable header should say so before it is clicked. */
+.header-button.sortable:hover {
   color: $primary;
 }
 
@@ -146,7 +186,7 @@ th {
 
 .actions-cell {
   text-align: center;
-  width: 140px;
+  width: 110px;
   vertical-align: middle;
 }
 
@@ -155,17 +195,20 @@ th {
   justify-content: space-between;
   align-items: center;
   gap: var(--space-3);
-  padding: 11px var(--space-4);
-  border-top: 1px solid $borderSoft;
+  padding: 10px 18px;
+  background: var(--color-surface-hover);
+  border-top: 1px solid $border;
+  border-end-start-radius: var(--radius-md);
+  border-end-end-radius: var(--radius-md);
   font-size: var(--text-sm);
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
 }
 
 .footer button {
   border: 1px solid $border;
   background: $surface;
   border-radius: var(--radius-sm);
-  padding: var(--space-1) var(--space-3);
+  padding: 5px 14px;
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: $text;

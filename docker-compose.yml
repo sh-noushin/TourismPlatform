@@ -41,6 +41,9 @@ services:
       # and the exchange page shows whatever is already in the database.
       Navasan__ApiKey: ${NAVASAN_API_KEY:-}
       Navasan__SyncIntervalMinutes: ${NAVASAN_SYNC_MINUTES:-360}
+      # Demo records for every admin screen (houses, tours, users, orders).
+      # Set SEED_DEMO_DATA=false for a deployment that should start empty.
+      Seed__DemoData: ${SEED_DEMO_DATA:-true}
       SuperUser__Email: ${SUPERUSER_EMAIL:-superadmin@gmail.com}
       SuperUser__Password: ${SUPERUSER_PASSWORD:-SuperAdmin!123}
       SuperUser__Username: ${SUPERUSER_USERNAME:-superadmin}

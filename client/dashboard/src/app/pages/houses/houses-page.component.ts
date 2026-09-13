@@ -6,7 +6,8 @@ import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.component';
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
-import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
+import { SfTableColumn, SfTablePaging, SfTableSort } from '../../shared/models/table.models';
+import { DEFAULT_PAGE_SIZE, toSortTerm } from '../../shared/models/paging.models';
 import { SfButtonComponent } from '../../shared/ui/sf-button/sf-button.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { HouseEditComponent } from './house-edit.component';
@@ -42,27 +43,13 @@ export class HousesPageComponent {
     { key: 'country', header: 'Country', headerKey: 'TABLE_HEADERS.COUNTRY', field: 'country', sortable: true }
   ];
 
-  readonly displayedHouses = computed(() => {
-    const filter = this.filterSignal().toLowerCase();
-    const list = filter
-      ? this.houses.items().filter((house) =>
-          [house.name, house.city, house.country, house.houseTypeName]
-            .filter(Boolean)
-            .some((value) => value?.toLowerCase().includes(filter))
-        )
-      : this.houses.items();
+  readonly pageIndex = signal(0);
 
-    const sort = this.sortSignal();
-    if (!sort) return list;
-    const key = sort.field as keyof HouseSummaryDto;
-    return [...list].sort((a, b) => {
-      const aValue = (a[key] ?? '').toString().toLowerCase();
-      const bValue = (b[key] ?? '').toString().toLowerCase();
-      return sort.direction === 'asc'
-        ? aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' })
-        : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
-    });
-  });
+  readonly paging = computed<SfTablePaging>(() => ({
+    pageIndex: this.pageIndex(),
+    pageSize: DEFAULT_PAGE_SIZE,
+    total: this.houses.total()
+  }));
 
   readonly actions = [
     { label: 'Edit', labelKey: 'TABLE_ACTIONS.EDIT', type: 'edit', icon: 'edit' },
@@ -70,12 +57,40 @@ export class HousesPageComponent {
   ];
 
   constructor(
-    private readonly houses: HousesFacade,
+    public readonly houses: HousesFacade,
     private readonly dialog: MatDialog,
     private readonly confirm: ConfirmService,
     private readonly translate: TranslateService
   ) {
-    this.houses.load();
+    void this.fetch();
+  }
+
+  /** Page, sort and search all round-trip: the filter runs over every row in
+      the table, not just the ten the browser happens to be holding. */
+  private fetch() {
+    return this.houses.loadPage({
+      page: this.pageIndex() + 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      search: this.filterSignal(),
+      sort: toSortTerm(this.sortSignal())
+    });
+  }
+
+  setFilter(value: string) {
+    this.filterSignal.set(value);
+    this.pageIndex.set(0);
+    void this.fetch();
+  }
+
+  onSortChange(sort: SfTableSort) {
+    this.sortSignal.set(sort);
+    this.pageIndex.set(0);
+    void this.fetch();
+  }
+
+  onPageChange(paging: SfTablePaging) {
+    this.pageIndex.set(paging.pageIndex);
+    void this.fetch();
   }
 
   async onRowAction(event: { action: any; row: any }) {
@@ -104,14 +119,6 @@ export class HousesPageComponent {
     }
   }
 
-  setFilter(value: string) {
-    this.filterSignal.set(value);
-  }
-
-  onSortChange(sort: SfTableSort) {
-    this.sortSignal.set(sort);
-  }
-
   openDialog(id?: string) {
     const ref = this.dialog.open(HouseEditComponent, {
       panelClass: 'house-edit-dialog',
@@ -126,7 +133,7 @@ export class HousesPageComponent {
 
     ref.afterClosed().subscribe((saved) => {
       if (saved) {
-        this.houses.load();
+        void this.fetch();
       }
     });
   }

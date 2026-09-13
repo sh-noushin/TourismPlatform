@@ -2,6 +2,13 @@ import { Injectable, Inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../api/client';
+import {
+  DEFAULT_PAGE_SIZE,
+  PageRequest,
+  PagedResult,
+  emptyPage,
+  toPageParams
+} from '../../shared/models/paging.models';
 
 export interface TourCategoryDto {
   id: string;
@@ -14,7 +21,35 @@ export class TourCategoriesService {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
+  readonly page = signal<PagedResult<TourCategoryDto>>(emptyPage<TourCategoryDto>());
+  readonly total = signal(0);
+
   constructor(private readonly http: HttpClient, @Inject(API_BASE_URL) private readonly apiBaseUrl: string) {}
+
+  /** One page from the server; `load()` still serves the tour form's dropdown. */
+  async loadPage(request: PageRequest = {}) {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const result = await firstValueFrom(
+        this.http.get<PagedResult<TourCategoryDto>>(`${this.apiBaseUrl}/api/tour-categories/paged`, {
+          params: toPageParams(request)
+        })
+      );
+      const page = result ?? emptyPage<TourCategoryDto>(request.pageSize ?? DEFAULT_PAGE_SIZE);
+      this.page.set(page);
+      this.total.set(page.total);
+      return page;
+    } catch (err: any) {
+      this.error.set(err?.message ?? 'Failed to load tour categories');
+      const empty = emptyPage<TourCategoryDto>(request.pageSize ?? DEFAULT_PAGE_SIZE);
+      this.page.set(empty);
+      this.total.set(0);
+      return empty;
+    } finally {
+      this.loading.set(false);
+    }
+  }
 
   async load(options?: { force?: boolean }) {
     if (!options?.force && this.tourCategories().length) return this.tourCategories();

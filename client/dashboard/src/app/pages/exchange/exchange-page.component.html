@@ -174,15 +174,12 @@
             }
           </div>
 
-          <button type="button" class="btn" (click)="refresh()" [disabled]="loading() || syncing()">
+          <!-- One button: it pulls navasan.net, then re-reads what was stored.
+               A refresh that only re-queried the database looked identical but
+               never brought new prices, which is not what anyone expects. -->
+          <button type="button" class="btn btn--primary" (click)="refresh()" [disabled]="loading() || syncing()">
             <span class="btn__icon" aria-hidden="true">⟳</span>
-            {{ 'EXCHANGE_PAGE.REFRESH' | translate }}
-          </button>
-
-          <!-- Pulls the live feed; refresh() above only re-reads stored rates. -->
-          <button type="button" class="btn btn--primary" (click)="syncNow()" [disabled]="syncing()">
-            <span class="btn__icon" aria-hidden="true">↧</span>
-            {{ (syncing() ? 'EXCHANGE_PAGE.SYNCING' : 'EXCHANGE_PAGE.SYNC_NOW') | translate }}
+            {{ (syncing() ? 'EXCHANGE_PAGE.SYNCING' : 'EXCHANGE_PAGE.REFRESH') | translate }}
           </button>
         </div>
       </div>
@@ -214,10 +211,12 @@
               <tr [class.fxtable__row--on]="pairKey(s) === selectedPair()" (click)="selectPair(s)">
                 <td>
                   <div class="pair">
-                    <span class="mark">{{ s.baseCurrencyCode }}</span>
+                    @if (flagUrl(s.baseCurrencyCode); as flag) {
+                      <img class="flag" [src]="flag" alt="" (error)="onFlagError($event)" />
+                    }
                     <span class="pair__names">
-                      <b>{{ s.baseCurrencyCode }} / {{ s.quoteCurrencyCode }}</b>
-                      <small>{{ currencyName(s.baseCurrencyCode) }}</small>
+                      <b>{{ currencyName(s.baseCurrencyCode) }}</b>
+                      <small>{{ s.baseCurrencyCode }} / {{ s.quoteCurrencyCode }}</small>
                     </span>
                   </div>
                 </td>

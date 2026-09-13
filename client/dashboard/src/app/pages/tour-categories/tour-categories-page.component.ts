@@ -6,7 +6,8 @@ import { SfCardComponent } from '../../shared/ui/sf-card/sf-card.component';
 import { SfPageHeaderComponent } from '../../shared/ui/sf-page-header/sf-page-header.component';
 import { SfSearchbarComponent } from '../../shared/ui/sf-searchbar/sf-searchbar.component';
 import { SfTableComponent } from '../../shared/ui/sf-table/sf-table.component';
-import { SfTableColumn, SfTableSort } from '../../shared/models/table.models';
+import { SfTableColumn, SfTablePaging, SfTableSort } from '../../shared/models/table.models';
+import { DEFAULT_PAGE_SIZE, toSortTerm } from '../../shared/models/paging.models';
 import { TourCategoriesService, TourCategoryDto } from '../../features/tours/tour-categories.service';
 import { TourCategoryEditComponent } from './tour-category-edit.component';
 import { ConfirmService } from '../../shared/ui/sf-dialog/confirm.service';
@@ -37,28 +38,18 @@ export class TourCategoriesPageComponent {
 
   readonly columns: SfTableColumn[] = [{ key: 'name', header: 'Name', headerKey: 'TABLE_HEADERS.NAME', field: 'name', sortable: true }];
 
-  readonly displayedCategories = computed(() => {
-    const filter = this.filterSignal().toLowerCase();
-    const items = filter
-      ? this.tourCategories.tourCategories().filter((c) =>
-          [c.name]
-            .filter(Boolean)
-            .some((value) => value.toLowerCase().includes(filter))
-        )
-      : this.tourCategories.tourCategories();
+  /**
+   * The server decides which rows these are: searching and sorting run in SQL
+   * over the whole table, not over the ten rows currently in the browser.
+   */
+  readonly rows = computed(() => this.tourCategories.page().items);
+  readonly pageIndex = signal(0);
 
-    const sort = this.sortSignal();
-    if (!sort) return items;
-
-    const key = sort.field as keyof TourCategoryDto;
-    return [...items].sort((a, b) => {
-      const aValue = (a[key] ?? '').toString().toLowerCase();
-      const bValue = (b[key] ?? '').toString().toLowerCase();
-      return sort.direction === 'asc'
-        ? aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' })
-        : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
-    });
-  });
+  readonly paging = computed<SfTablePaging>(() => ({
+    pageIndex: this.pageIndex(),
+    pageSize: DEFAULT_PAGE_SIZE,
+    total: this.tourCategories.total()
+  }));
 
   readonly actions = [
     { label: '', type: 'edit' },
@@ -71,15 +62,36 @@ export class TourCategoriesPageComponent {
     private readonly confirm: ConfirmService,
     private readonly translate: TranslateService
   ) {
-    void this.tourCategories.load();
+    void this.fetch();
   }
 
+  /** Every change of page, sort or search comes back through here. */
+  private fetch() {
+    return this.tourCategories.loadPage({
+      page: this.pageIndex() + 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      search: this.filterSignal(),
+      sort: toSortTerm(this.sortSignal())
+    });
+  }
+
+  // A new search or ordering re-shuffles the whole result set, so staying on
+  // page 4 would show an arbitrary slice of it -- or nothing at all.
   setFilter(value: string) {
     this.filterSignal.set(value);
+    this.pageIndex.set(0);
+    void this.fetch();
   }
 
   onSortChange(sort: SfTableSort) {
     this.sortSignal.set(sort);
+    this.pageIndex.set(0);
+    void this.fetch();
+  }
+
+  onPageChange(paging: SfTablePaging) {
+    this.pageIndex.set(paging.pageIndex);
+    void this.fetch();
   }
 
   onRowAction(event: { action: any; row: TourCategoryDto }) {
@@ -101,7 +113,7 @@ export class TourCategoriesPageComponent {
     if (!confirmed) return;
     try {
       await this.tourCategories.delete(id);
-      await this.tourCategories.load({ force: true });
+      await this.fetch();
     } catch {}
   }
 
@@ -116,7 +128,7 @@ export class TourCategoriesPageComponent {
 
     ref.afterClosed().subscribe((saved) => {
       if (saved) {
-        void this.tourCategories.load({ force: true });
+        void this.fetch();
       }
     });
   }

@@ -112,6 +112,7 @@ public static class ServiceCollectionExtensions
             .AddDefaultTokenProviders();
 
         services.AddScoped<IdentitySeeder>();
+        services.AddScoped<DemoDataSeeder>();
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISuperUserPermissionService, SuperUserPermissionService>();

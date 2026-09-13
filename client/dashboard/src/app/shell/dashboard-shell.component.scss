@@ -250,8 +250,11 @@
 
 .nav__icon {
   flex: none;
-  width: 20px;
-  font-size: 1rem;
+  // These are emoji, not an icon font: they render at their own weight and read
+  // smaller than a glyph of the same nominal size, so they take a size of their
+  // own rather than inheriting the label's.
+  width: 26px;
+  font-size: 1.35rem;
   line-height: 1;
   text-align: center;
   opacity: 0.9;
@@ -576,11 +579,14 @@
 }
 
 /* ---------- page ---------- */
+/* The capped measure is centred in whatever space the rail leaves, so the free
+   room is split evenly instead of pooling on one side. */
 .content {
   flex: 1 1 auto;
   padding: 24px 22px 80px;
   max-width: var(--layout-content-max);
   width: 100%;
+  margin-inline: auto;
   overflow: auto;
 }
 
