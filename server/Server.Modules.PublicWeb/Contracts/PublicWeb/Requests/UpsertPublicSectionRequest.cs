@@ -9,4 +9,8 @@ public sealed class UpsertPublicSectionRequest
     public Domain.PublicSectionType SectionType { get; set; }
     public string Header { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
+
+    /// <summary>Optional; blank stores null and the Persian is used.</summary>
+    public string? HeaderEn { get; set; }
+    public string? ContentEn { get; set; }
 }

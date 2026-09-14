@@ -93,7 +93,9 @@
     "LOCALE": "زبان",
     "TYPE_TOURS": "تورها",
     "TYPE_HOUSES": "املاک",
-    "TYPE_INFOS": "اطلاعات"
+    "TYPE_INFOS": "اطلاعات",
+    "HEADER_EN": "عنوان انگلیسی (اختیاری)",
+    "CONTENT_EN": "متن انگلیسی (اختیاری)"
   },
   "PUBLIC_PAGE_SECTIONS_EDIT": {
     "NEW_TITLE": "بخش جدید",
@@ -109,7 +111,9 @@
     "TITLE": "تورها",
     "SEARCH_PLACEHOLDER": "جستجو بر اساس نام یا دسته‌بندی",
     "NEW_TOUR": "تور جدید",
-    "DELETE_CONFIRMATION": "تور {{name}} حذف شود؟"
+    "DELETE_CONFIRMATION": "تور {{name}} حذف شود؟",
+    "NAME_EN": "نام انگلیسی (اختیاری)",
+    "DESCRIPTION_EN": "توضیحات انگلیسی (اختیاری)"
   },
   "TOUR_EDIT": {
     "EYEBROW_TOUR": "تور",
@@ -137,7 +141,9 @@
     "NO_PHOTOS": "هنوز عکسی وجود ندارد.از بالا عکس بارگذاری کنید.",
     "CANCEL": "انصراف",
     "SAVE_TOUR": "ذخیره",
-    "SAVED": "ذخیره شد."
+    "SAVED": "ذخیره شد.",
+    "NAME_EN": "نام انگلیسی (اختیاری)",
+    "DESCRIPTION_EN": "توضیحات انگلیسی (اختیاری)"
   },
   "TOUR_CATEGORIES_PAGE": {
     "TITLE": "دسته‌بندی تورها",
@@ -156,13 +162,16 @@
     "SAVE": "ذخیره",
     "SAVING": "در حال ذخیره...",
     "SAVE_FAILED": "امکان ذخیره دسته‌بندی نیست.",
-    "LOAD_FAILED": "خطا در بارگذاری دسته‌بندی."
+    "LOAD_FAILED": "خطا در بارگذاری دسته‌بندی.",
+    "NAME_EN": "نام انگلیسی (اختیاری)"
   },
   "HOUSES_PAGE": {
     "TITLE": "املاک",
     "SEARCH_PLACEHOLDER": "جستجو بر اساس نام، شهر، نوع یا کشور",
     "NEW_HOUSE": "ملک جدید",
-    "DELETE_CONFIRMATION": "این ملک حذف شود؟"
+    "DELETE_CONFIRMATION": "این ملک حذف شود؟",
+    "NAME_EN": "نام انگلیسی (اختیاری)",
+    "DESCRIPTION_EN": "توضیحات انگلیسی (اختیاری)"
   },
   "HOUSES": {
     "NEW": "ملک جدید",
@@ -195,7 +204,9 @@
     "CURRENCY": "واحد پول",
     "SELECT_CURRENCY": "واحد پول را انتخاب کنید",
     "CANCEL": "انصراف",
-    "SAVED": "ذخیره شد."
+    "SAVED": "ذخیره شد.",
+    "NAME_EN": "نام انگلیسی (اختیاری)",
+    "DESCRIPTION_EN": "توضیحات انگلیسی (اختیاری)"
   },
   "HOUSE_TYPES_PAGE": {
     "TITLE": "انواع املاک",

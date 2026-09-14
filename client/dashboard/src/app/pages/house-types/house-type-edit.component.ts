@@ -14,6 +14,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class HouseTypeEditComponent {
   readonly name = signal('');
+  /** Optional: the public site falls back to the Persian name when empty. */
+  readonly nameEn = signal('');
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly title = computed(() =>
@@ -46,9 +48,9 @@ export class HouseTypeEditComponent {
 
     try {
       if (this.id) {
-        await this.houseTypes.update(this.id, trimmed);
+        await this.houseTypes.update(this.id, trimmed, this.nameEn().trim());
       } else {
-        await this.houseTypes.create(trimmed);
+        await this.houseTypes.create(trimmed, this.nameEn().trim());
       }
       this.dialogRef?.close(true);
     } catch (err: any) {
@@ -68,12 +70,14 @@ export class HouseTypeEditComponent {
     const existing = this.houseTypes.houseTypes().find((type) => type.id === this.id);
     if (existing) {
       this.name.set(existing.name);
+      this.nameEn.set(existing.nameEn ?? '');
       return;
     }
 
     try {
       const type = await this.houseTypes.getById(this.id);
       this.name.set(type.name);
+      this.nameEn.set(type.nameEn ?? '');
     } catch (err: any) {
       this.error.set(err?.message ?? this.translate.instant('TYPE_DIALOG.LOAD_FAILED'));
     }

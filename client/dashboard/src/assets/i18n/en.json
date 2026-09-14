@@ -92,7 +92,9 @@
     "LOCALE": "Locale",
     "TYPE_TOURS": "Tours",
     "TYPE_HOUSES": "Houses",
-    "TYPE_INFOS": "Infos"
+    "TYPE_INFOS": "Infos",
+    "HEADER_EN": "English header (optional)",
+    "CONTENT_EN": "English content (optional)"
   },
   "PUBLIC_PAGE_SECTIONS_EDIT": {
     "NEW_TITLE": "New section",
@@ -108,7 +110,9 @@
     "TITLE": "Tours",
     "SEARCH_PLACEHOLDER": "Search by name or category",
     "NEW_TOUR": "New tour",
-    "DELETE_CONFIRMATION": "Delete {{name}}?"
+    "DELETE_CONFIRMATION": "Delete {{name}}?",
+    "NAME_EN": "English name (optional)",
+    "DESCRIPTION_EN": "English description (optional)"
   },
   "TOUR_EDIT": {
     "EYEBROW_TOUR": "Tour",
@@ -136,7 +140,9 @@
     "NO_PHOTOS": "No photos yet. Upload one above.",
     "CANCEL": "Cancel",
     "SAVE_TOUR": "Save",
-    "SAVED": "Saved."
+    "SAVED": "Saved.",
+    "NAME_EN": "English name (optional)",
+    "DESCRIPTION_EN": "English description (optional)"
   },
   "TOUR_CATEGORIES_PAGE": {
     "TITLE": "Tour categories",
@@ -155,13 +161,16 @@
     "SAVE": "Save",
     "SAVING": "Saving...",
     "SAVE_FAILED": "Unable to save tour category.",
-    "LOAD_FAILED": "Failed to load tour category."
+    "LOAD_FAILED": "Failed to load tour category.",
+    "NAME_EN": "English name (optional)"
   },
   "HOUSES_PAGE": {
     "TITLE": "Houses",
     "SEARCH_PLACEHOLDER": "Search by name, city, type, or country",
     "NEW_HOUSE": "New house",
-    "DELETE_CONFIRMATION": "Delete {{name}}?"
+    "DELETE_CONFIRMATION": "Delete {{name}}?",
+    "NAME_EN": "English name (optional)",
+    "DESCRIPTION_EN": "English description (optional)"
   },
   "HOUSES": {
     "NEW": "New house",
@@ -194,7 +203,9 @@
     "CURRENCY": "Currency",
     "SELECT_CURRENCY": "Select currency",
     "CANCEL": "Cancel",
-    "SAVED": "Saved."
+    "SAVED": "Saved.",
+    "NAME_EN": "English name (optional)",
+    "DESCRIPTION_EN": "English description (optional)"
   },
   "HOUSE_TYPES": {
     "TITLE": "House types",

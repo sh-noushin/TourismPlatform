@@ -1,8 +1,8 @@
 import { SortDropdown } from "../shared/SortDropdown.client";
 import type { SortOption } from "../shared/SortDropdown.client";
 import { TourCard } from "./TourCard";
-import { cookies } from "next/headers";
 import { i18n } from "@/lib/i18n";
+import { resolveLocale } from "@/lib/locale";
 import type { TourSort } from "@/lib/filters/tours";
 import { tourSortValues } from "@/lib/filters/tours";
 
@@ -30,8 +30,7 @@ export async function TourResults({
   basePath = "/tours",
   title,
 }: TourResultsProps) {
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const locale = await resolveLocale();
   const t = i18n(locale);
 
   const count = tours?.length ?? 0;
@@ -50,7 +49,7 @@ export async function TourResults({
     <section className="space-y-6">
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-2xl font-bold">{title ?? t.results.toursHeader(count)}</h2>
+          <h2 className="text-2xl font-semibold text-[color:var(--text)]">{title ?? t.results.toursHeader(count)}</h2>
         </div>
 
         <div className="shrink-0">
@@ -65,8 +64,8 @@ export async function TourResults({
       </header>
 
       {count === 0 ? (
-        <div className="rounded-lg border border-dashed p-8 text-center">
-          <p className="text-gray-500">{t.results.toursEmpty}</p>
+        <div className="rounded-2xl border border-dashed border-[color:var(--border)] bg-[color:var(--surface)] p-10 text-center">
+          <p className="text-[color:var(--muted)]">{t.results.toursEmpty}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

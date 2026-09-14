@@ -18,7 +18,7 @@ public sealed class TourCategoryService : ITourCategoryService
     {
         var categories = await _referenceDataRepository.GetTourCategoriesAsync(cancellationToken);
         return categories
-            .Select(c => new TourCategoryDto(c.Id, c.Name))
+            .Select(c => new TourCategoryDto(c.Id, c.Name, c.NameEn))
             .ToList();
     }
 
@@ -31,7 +31,7 @@ public sealed class TourCategoryService : ITourCategoryService
         var (items, total) = await _referenceDataRepository.GetTourCategoriesPagedAsync(query, cancellationToken);
 
         return new PagedResult<TourCategoryDto>(
-            items.Select(c => new TourCategoryDto(c.Id, c.Name)).ToList(),
+            items.Select(c => new TourCategoryDto(c.Id, c.Name, c.NameEn)).ToList(),
             total,
             query.Page,
             query.PageSize);
@@ -42,18 +42,18 @@ public sealed class TourCategoryService : ITourCategoryService
         var category = await _referenceDataRepository.GetTourCategoryByIdAsync(id, cancellationToken);
         if (category == null) return null;
 
-        return new TourCategoryDto(category.Id, category.Name);
+        return new TourCategoryDto(category.Id, category.Name, category.NameEn);
     }
 
     public async Task<TourCategoryDto> CreateTourCategoryAsync(CreateTourCategoryRequest request, CancellationToken cancellationToken = default)
     {
-        var created = await _referenceDataRepository.CreateTourCategoryAsync(request.Name, cancellationToken);
-        return new TourCategoryDto(created.Id, created.Name);
+        var created = await _referenceDataRepository.CreateTourCategoryAsync(request.Name, request.NameEn, cancellationToken);
+        return new TourCategoryDto(created.Id, created.Name, created.NameEn);
     }
 
     public async Task UpdateTourCategoryAsync(Guid id, UpdateTourCategoryRequest request, CancellationToken cancellationToken = default)
     {
-        var updated = await _referenceDataRepository.UpdateTourCategoryAsync(id, request.Name, cancellationToken);
+        var updated = await _referenceDataRepository.UpdateTourCategoryAsync(id, request.Name, request.NameEn, cancellationToken);
         if (updated == null)
         {
             throw new KeyNotFoundException($"Tour category '{id}' not found.");

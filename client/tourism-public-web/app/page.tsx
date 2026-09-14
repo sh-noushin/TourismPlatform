@@ -1,17 +1,25 @@
-import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
-import headerImage from "@/app/assets/header.jpg";
+import heroImage from "@/app/assets/header.png";
 
-import { Hero } from "@/components/home/Hero";
+import { HeroSearch } from "@/components/home/HeroSearch.client";
+import { ListingCard } from "@/components/shared/ListingCard";
+import { RateStrip } from "@/components/home/RateStrip";
+import { TrustBlock } from "@/components/home/TrustBlock";
+import { fetchTourCategories } from "@/lib/api/categories";
+import { getRateSummaries } from "@/lib/api/exchange";
 import { getFeaturedTours, getFeaturedHouses } from "@/lib/api/featured";
 import { getPublicPageSections, type PublicSectionDto } from "@/lib/api/publicPage";
-import { imageUrl } from "@/lib/utils/imageUrl";
-import { i18n, type Translations, formatFarsiNumber } from "@/lib/i18n";
+import { i18n, formatFarsiNumber } from "@/lib/i18n";
+import { localized } from "@/lib/i18n/localized";
+import { translateValue } from "@/lib/i18n/translateValue";
+import { resolveLocale } from "@/lib/locale";
 
 export const dynamic = "force-dynamic";
 
+/** Prices are the one number readers compare, so they get grouping separators
+ *  and the currency after them, in the reader's own digits. */
 const formatPrice = (
   value: number | string | undefined,
   currency: string | undefined,
@@ -19,200 +27,63 @@ const formatPrice = (
 ) => {
   if (value === undefined || value === null || !Number.isFinite(Number(value))) return null;
   const numeric = Number(value);
-  const formatted = isFarsi ? formatFarsiNumber(numeric) : new Intl.NumberFormat("en-US").format(numeric);
-  return {
-    amount: formatted,
-    currency,
-  };
+  const formatted = new Intl.NumberFormat(isFarsi ? "fa-IR" : "en-US", {
+    maximumFractionDigits: 0,
+  }).format(numeric);
+  return currency ? `${formatted} ${currency}` : formatted;
 };
 
-const getBadgeClassName = (isFarsi: boolean) =>
-  [
-    "bg-[#0d97d6]",
-    "flex",
-    "w-full",
-    "items-center",
-    "justify-between",
-    "rounded-none",
-    "px-4",
-    "py-2",
-    "text-[11px]",
-    "font-semibold",
-    "leading-none",
-    "text-white",
-    "shadow-sm",
-    isFarsi ? "tracking-[0.08em]" : "tracking-[0.22em] uppercase",
-  ].join(" ");
-
-const formatYearForLocale = (value: number | string | undefined, isFarsi: boolean) => {
-  const fallbackYear = new Date().getFullYear();
-  const parsedYear = typeof value === "number" ? value : Number(value ?? fallbackYear);
-  const safeYear = Number.isFinite(parsedYear) ? parsedYear : fallbackYear;
-  return isFarsi ? formatFarsiNumber(safeYear) : String(safeYear);
-};
-
-const TourCard = ({
-  id,
-  name,
-  category,
+function SectionHeading({
+  title,
   description,
-  price,
-  currency,
-  year,
-  image,
-  translations,
-  isFarsi,
+  href,
+  linkLabel,
 }: {
-  id: string;
-  name: string;
-  category?: string | null;
-  description?: string | null;
-  price?: number | string;
-  currency?: string;
-  year?: number;
-  image?: string | null;
-  translations: Translations;
-  isFarsi: boolean;
-}) => {
-  const src = imageUrl(image ?? undefined);
-  const priceValue = formatPrice(price, currency, isFarsi);
-  const daysLabel = translations.cards.tourDurationLabel(9);
-  const yearLabel = formatYearForLocale(year, isFarsi);
-  const descriptionText = description || translations.cards.tourDescriptionFallback;
-  const badgeClassName = getBadgeClassName(isFarsi);
-  const priceText = priceValue ? (
-    <>
-      <span>{translations.priceLabel}:</span>
-      <span className="flex items-center gap-1" dir={isFarsi ? "ltr" : "ltr"}>
-        <span>{priceValue.amount}</span>
-        {priceValue.currency && <span>{priceValue.currency}</span>}
-      </span>
-    </>
-  ) : (
-    translations.cards.pricingSoon
-  );
+  title: string;
+  description?: string;
+  href: string;
+  linkLabel: string;
+}) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-      <div className="relative h-52 w-full">
-        {src ? (
-          <Image src={src} alt={name} fill className="object-cover" sizes="(min-width:1024px) 25vw, 90vw" priority />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-slate-100 text-lg font-semibold text-slate-500">
-            {name.slice(0, 1)}
-          </div>
+    <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="max-w-2xl">
+        <h2 className="text-2xl font-semibold text-[color:var(--text)] md:text-3xl">{title}</h2>
+        {description && (
+          <p className="mt-2 leading-relaxed text-[color:var(--muted)]">{description}</p>
         )}
       </div>
-      <div className={badgeClassName}>
-        <span>{daysLabel}</span>
-        <span>{yearLabel}</span>
-      </div>
-      <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{category}</div>
-        <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
-        <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-sm font-semibold text-slate-800">{priceText}</span>
-          <Link
-            href={`/tours/${id}`}
-            className="flex items-center gap-2 rounded-md bg-[#1273b5] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-[#0f5f95]"
-          >
-            {translations.seeDetails} <span aria-hidden="true">›</span>
-          </Link>
-        </div>
-      </div>
-    </article>
+      <Link
+        href={href}
+        className="shrink-0 text-sm font-semibold text-[color:var(--primary)] hover:underline"
+      >
+        {linkLabel} →
+      </Link>
+    </div>
   );
-};
-
-const HouseCard = ({
-  id,
-  name,
-  description,
-  city,
-  country,
-  price,
-  currency,
-  image,
-  translations,
-  isFarsi,
-}: {
-  id: string;
-  name: string;
-  description?: string | null;
-  city?: string | null;
-  country?: string | null;
-  price?: number | string;
-  currency?: string;
-  image?: string | null;
-  translations: Translations;
-  isFarsi: boolean;
-}) => {
-  const src = imageUrl(image ?? undefined);
-  const priceValue = formatPrice(price, currency, isFarsi);
-  const location = [city, country].filter(Boolean).join(", ");
-  const yearLabel = formatYearForLocale(undefined, isFarsi);
-  const statusLabel = translations.cards.availableStatus;
-  const locationText = location || translations.cards.houseLocationFallback;
-  const descriptionText = description || translations.cards.houseDescriptionFallback;
-  const badgeClassName = getBadgeClassName(isFarsi);
-  const priceText = priceValue ? (
-    <>
-      <span>{translations.priceLabel}:</span>
-      <span className="flex items-center gap-1" dir={isFarsi ? "ltr" : "ltr"}>
-        <span>{priceValue.amount}</span>
-        {priceValue.currency && <span>{priceValue.currency}</span>}
-      </span>
-    </>
-  ) : (
-    translations.cards.pricingSoon
-  );
-
-  return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-      <div className="relative h-52 w-full">
-        {src ? (
-          <Image src={src} alt={name} fill className="object-cover" sizes="(min-width:1024px) 25vw, 90vw" priority />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-slate-100 text-lg font-semibold text-slate-500">
-            {name.slice(0, 1)}
-          </div>
-        )}
-      </div>
-      <div className={badgeClassName}>
-        <span>{yearLabel}</span>
-        <span>{statusLabel}</span>
-      </div>
-      <div className="flex flex-1 flex-col gap-3 px-4 py-4">
-        <div className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600">{locationText}</div>
-        <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
-        <p className="text-sm text-slate-600 line-clamp-2">{descriptionText}</p>
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-sm font-semibold text-slate-800">{priceText}</span>
-          <Link
-            href={`/houses/${id}`}
-            className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-sky-500"
-          >
-            {translations.seeDetails}
-          </Link>
-        </div>
-      </div>
-    </article>
-  );
-};
+}
 
 export default async function Home() {
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
-
-  const t = i18n(locale);
-  const [tours, houses, publicSections] = await Promise.all([
-    getFeaturedTours(locale),
-    getFeaturedHouses(6, locale),
-    getPublicPageSections(),
-  ]);
+  const locale = await resolveLocale();
   const isFarsi = locale === "fa";
-  const topTours = tours.slice(0, 3);
-  const topHouses = houses.slice(0, 3);
+  const t = i18n(locale);
+
+  // Everything the page needs, fetched together: a slow rate feed should not
+  // delay the tours, and a failed one should not blank the page.
+  const [tours, houses, publicSections, categories, rates] = await Promise.all([
+    getFeaturedTours(locale),
+    getFeaturedHouses(24, locale),
+    getPublicPageSections(),
+    fetchTourCategories().catch(() => []),
+    getRateSummaries(7),
+  ]);
+
+  const topTours = tours.slice(0, 6);
+  const topHouses = houses.slice(0, 6);
+
+  // Distinct cities across the catalogue -- the "destinations" counter below.
+  const destinationCount = new Set(
+    houses.map((house) => house.city).filter((city): city is string => Boolean(city)),
+  ).size;
 
   const findSection = (id: string, fallbackType?: number) => {
     const idLower = id.trim().toLowerCase();
@@ -222,134 +93,196 @@ export default async function Home() {
     return publicSections.find((section) => Number(section.sectionType) === fallbackType);
   };
 
+  // A CMS section carries both languages; in English the translation wins and
+  // the Persian is the fallback, field by field. A section translated by half
+  // shows an English heading over a Persian paragraph rather than nothing.
+  const sectionText = (section: PublicSectionDto | undefined, field: "header" | "content", fallback: string) => {
+    const english = field === "header" ? section?.headerEn : section?.contentEn;
+    if (locale === "en" && english?.trim()) {
+      return english.trim();
+    }
+    return (section?.[field] ?? "").trim() || fallback;
+  };
+
   const toursSection = findSection("tours", 0);
   const housesSection = findSection("houses", 1);
   const infosSection = findSection("infos", 2) ?? findSection("info", 2);
 
-  const sectionText = (section: PublicSectionDto | undefined, field: "header" | "content", fallback: string) =>
-    (section?.[field] ?? "").trim() || fallback;
-
-  const toursHeading = sectionText(toursSection, "header", t.headingTours);
-  const toursDescription = sectionText(toursSection, "content", t.toursDescription);
-  const housesHeading = sectionText(housesSection, "header", t.headingHouses);
-  const housesDescription = sectionText(housesSection, "content", t.housesDescription);
-  const infosHeading = sectionText(infosSection, "header", t.about.heading);
-  const infosDescription = sectionText(infosSection, "content", t.about.description);
-
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <Hero />
+    <div className="bg-[color:var(--bg)] text-[color:var(--text)]">
+      {/* ---------------------------------------------------------------- hero */}
+      <section className="relative isolate flex min-h-[78vh] items-center overflow-hidden">
+        <Image
+          src={heroImage}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="-z-10 object-cover"
+        />
+        {/* Two stops rather than one: the copy sits in the lower third, and a
+            flat scrim over the whole photo would grey out the sky as well. */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/45 to-black/20" />
 
-      <section className="bg-white py-16">
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
-          <div className="text-center">
-            <h2
-              className={`mt-2 text-sky-600 ${
-                isFarsi ? "!text-3xl !font-black md:!text-4xl" : "text-3xl font-semibold"
-              }`}
-            >
-              {toursHeading}
-            </h2>
-            <p className="mt-1 text-sm text-slate-600 md:text-base">{toursDescription}</p>
+        <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-28 text-white">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-white/75">
+            {t.home.heroKicker}
+          </p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight md:text-6xl">
+            {t.home.heroTitle}
+          </h1>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
+            {t.home.heroSubtitle}
+          </p>
+
+          <div className="mt-8">
+            <HeroSearch
+              labelDestination={t.home.searchDestination}
+              placeholder={t.home.searchPlaceholder}
+              labelTours={t.home.searchKindTours}
+              labelHouses={t.home.searchKindHouses}
+              labelSubmit={t.home.searchSubmit}
+            />
           </div>
+        </div>
+      </section>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {topTours.map((tour) => (
-              <TourCard
-                key={tour.tourId}
-                id={tour.tourId}
-                name={tour.name}
-                category={tour.tourCategoryName}
-                description={tour.description}
-                price={tour.price}
-                currency={tour.currency}
-                year={tour.year}
-                image={tour.photos?.[0]?.permanentRelativePath}
-                translations={t}
-                isFarsi={isFarsi}
-              />
+      {/* ---------------------------------------------------------- categories */}
+      {categories.length > 0 && (
+        <section className="border-b border-[color:var(--border)] bg-[color:var(--surface)] py-6">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-6">
+            <span className="me-2 text-sm font-medium text-[color:var(--muted)]">
+              {t.home.categoriesTitle}
+            </span>
+            {categories.slice(0, 8).map((category) => (
+              <Link
+                key={category.id}
+                href={`/tours?category=${encodeURIComponent(category.name)}`}
+                className="rounded-full border border-[color:var(--border)] px-4 py-1.5 text-sm transition hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
+              >
+                {localized(translateValue(category.name, locale), category.nameEn, locale)}
+              </Link>
             ))}
-          </div>
-
-          <div className="text-center">
             <Link
               href="/tours"
-              className="inline-flex items-center rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg hover:bg-sky-500"
+              className="rounded-full bg-[color:var(--cta)] px-4 py-1.5 text-sm font-medium text-white transition hover:bg-[color:var(--cta-hover)]"
             >
-              {t.allTrips}
+              {t.home.categoriesAll}
             </Link>
           </div>
+        </section>
+      )}
+
+      {/* --------------------------------------------------------------- tours */}
+      <section className="py-16">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6">
+          <SectionHeading
+            title={sectionText(toursSection, "header", t.headingTours)}
+            description={sectionText(toursSection, "content", t.toursDescription)}
+            href="/tours"
+            linkLabel={t.allTrips}
+          />
+
+          {topTours.length === 0 ? (
+            <p className="text-[color:var(--muted)]">{t.noTours}</p>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {topTours.map((tour) => (
+                <ListingCard
+                  key={tour.tourId}
+                  id={tour.tourId}
+                  href={`/tours/${tour.tourId}`}
+                  name={localized(tour.name, tour.nameEn, locale)}
+                  context={localized(
+                    translateValue(tour.tourCategoryName, locale),
+                    tour.tourCategoryNameEn,
+                    locale,
+                  )}
+                  description={localized(tour.description, tour.descriptionEn, locale)}
+                  image={tour.photos?.[0]?.permanentRelativePath}
+                  price={formatPrice(tour.price, tour.currency, isFarsi)}
+                  meta={
+                    tour.year
+                      ? isFarsi
+                        ? formatFarsiNumber(Number(tour.year))
+                        : String(tour.year)
+                      : null
+                  }
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="bg-slate-50 py-16">
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
-          <div className="text-center">
-            <h2
-              className={`mt-2 text-sky-600 ${
-                isFarsi ? "!text-3xl !font-black md:!text-4xl" : "text-3xl font-semibold"
-              }`}
-            >
-              {housesHeading}
+      {/* -------------------------------------------------------------- houses */}
+      <section className="bg-[color:var(--surface-sunken)] py-16">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6">
+          <SectionHeading
+            title={sectionText(housesSection, "header", t.headingHouses)}
+            description={sectionText(housesSection, "content", t.housesDescription)}
+            href="/houses"
+            linkLabel={t.allHouses}
+          />
+
+          {topHouses.length === 0 ? (
+            <p className="text-[color:var(--muted)]">{t.noHouses}</p>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {topHouses.map((house) => (
+                <ListingCard
+                  key={house.houseId}
+                  id={house.houseId}
+                  href={`/houses/${house.houseId}`}
+                  name={localized(house.name, house.nameEn, locale)}
+                  context={translateValue(
+                    [house.city, house.country].filter(Boolean).join("، "),
+                    locale,
+                  )}
+                  description={localized(house.description, house.descriptionEn, locale)}
+                  image={house.photos?.[0]?.permanentRelativePath}
+                  price={formatPrice(house.price, house.currency, isFarsi)}
+                  meta={localized(translateValue(house.houseTypeName, locale), house.houseTypeNameEn, locale)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* --------------------------------------------------------------- rates */}
+      <RateStrip rates={rates} t={t} isFarsi={isFarsi} />
+
+      {/* ------------------------------------------------------ about the firm */}
+      <section id="about" className="py-16">
+        <div className="mx-auto grid max-w-6xl gap-10 px-6 md:grid-cols-2 md:items-center">
+          <div className="overflow-hidden rounded-2xl">
+            <Image
+              src={heroImage}
+              alt=""
+              width={900}
+              height={640}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div>
+            <h2 className="text-2xl font-semibold md:text-3xl">
+              {sectionText(infosSection, "header", t.about.heading)}
             </h2>
-            <p className="mt-1 text-sm text-slate-600 md:text-base">{housesDescription}</p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {topHouses.map((house) => (
-              <HouseCard
-                key={house.houseId}
-                id={house.houseId}
-                name={house.name}
-                description={house.description}
-                city={house.city}
-                country={house.country}
-                price={house.price}
-                currency={house.currency}
-                image={house.photos?.[0]?.permanentRelativePath}
-                translations={t}
-                isFarsi={isFarsi}
-              />
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/houses"
-              className="inline-flex items-center rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg hover:bg-sky-500"
-            >
-              {t.allHouses}
-            </Link>
+            <p className="mt-3 leading-relaxed text-[color:var(--muted)]">
+              {sectionText(infosSection, "content", t.about.description)}
+            </p>
           </div>
         </div>
       </section>
 
-      <section id="about" className="bg-white py-16">
-          <div className="mx-auto grid max-w-6xl gap-10 px-6 md:grid-cols-[1.1fr_0.9fr]">
-            <div className="overflow-hidden rounded-3xl shadow-xl">
-              <Image
-                src={headerImage}
-                alt={infosHeading}
-                width={900}
-                height={600}
-                className="h-full w-full object-cover"
-                priority
-              />
-            </div>
-            <div className="flex flex-col justify-center gap-4">
-              <h3
-                className={`${
-                  isFarsi
-                    ? "text-sky-600 !text-3xl !font-black md:!text-4xl"
-                    : "text-3xl font-semibold text-slate-900"
-                }`}
-              >
-                {infosHeading}
-              </h3>
-              <p className="text-base text-slate-700">{infosDescription}</p>
-            </div>
-          </div>
-      </section>
-    </main>
+      {/* ------------------------------------------------------- trust/contact */}
+      <TrustBlock
+        t={t}
+        isFarsi={isFarsi}
+        tourCount={tours.length}
+        destinationCount={destinationCount}
+      />
+    </div>
   );
 }

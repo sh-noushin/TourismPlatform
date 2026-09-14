@@ -31,6 +31,23 @@ public sealed class PublicWebSeeder
             {
                 await _sectionRepository.CreateAsync(section, cancellationToken);
                 isDirty = true;
+                continue;
+            }
+
+            // A database seeded before the English columns existed keeps its
+            // Persian-only rows, and this seeder only ever inserts. Fill the
+            // blanks -- and only the blanks, so edits made in the dashboard
+            // survive the next restart.
+            if (existing.HeaderEn is null && section.HeaderEn is not null)
+            {
+                existing.HeaderEn = section.HeaderEn;
+                isDirty = true;
+            }
+
+            if (existing.ContentEn is null && section.ContentEn is not null)
+            {
+                existing.ContentEn = section.ContentEn;
+                isDirty = true;
             }
         }
 

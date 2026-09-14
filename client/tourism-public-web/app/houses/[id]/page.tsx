@@ -1,12 +1,15 @@
-import { cookies } from "next/headers";
-
-import { Card } from "@/components/ui";
-import { Gallery } from "@/components/shared/Gallery";
-import { DetailProperties } from "@/components/shared/DetailProperties";
+import Image from "next/image";
+import Link from "next/link";
 
 import { getJson } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/api/endpoints";
 import { i18n } from "@/lib/i18n";
+import { localized } from "@/lib/i18n/localized";
+import { translateValue } from "@/lib/i18n/translateValue";
+import { resolveLocale } from "@/lib/locale";
+import { destinationPhoto } from "@/lib/media/destinationPhoto";
+import { posterStyle } from "@/lib/media/poster";
+import { imageUrl } from "@/lib/utils/imageUrl";
 import type { components } from "@/lib/openapi/types";
 
 type HouseDetailDto = components["schemas"]["HouseDetailDto"];
@@ -14,185 +17,175 @@ type HouseDetailDto = components["schemas"]["HouseDetailDto"];
 const normalizeGuidParam = (value: string) => value.trim().replace(/^\{/, "").replace(/\}$/, "");
 
 const isGuid = (value: string) =>
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+  // Shape only -- see the tour page for why the RFC-4122 version check went.
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 
 const fetchHouseDetail = async (id: string): Promise<HouseDetailDto | null> => {
-  let primaryError: unknown = null;
-
   try {
     return await getJson<HouseDetailDto>(apiEndpoints.houses.detail(id));
   } catch (error) {
-    console.error("Failed to load house detail (primary)", error);
-    primaryError = error;
-  }
-
-  const proxyBase = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const proxyUrl = `${proxyBase.replace(/\/$/, "")}/api/proxy${apiEndpoints.houses.detail(id)}`;
-
-  try {
-    const response = await fetch(proxyUrl, { headers: { Accept: "application/json" }, cache: "no-store" });
-    if (!response.ok) {
-      let proxyMessage = "";
-      try {
-        const payload = (await response.clone().json()) as { message?: string };
-        proxyMessage = payload?.message ? `: ${payload.message}` : "";
-      } catch {
-        // ignore json parsing errors
-      }
-      throw new Error(`Proxy status ${response.status}${proxyMessage}`);
-    }
-    return (await response.json()) as HouseDetailDto;
-  } catch (error) {
-    console.error("Failed to load house detail (proxy fallback)", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-
-    if (primaryError instanceof Error) {
-      throw primaryError;
-    }
-
-    throw new Error("Failed to load house detail");
-  }
-};
-
-const formatPriceValue = (
-  value: number | string | null | undefined,
-  locale: string,
-): string | null => {
-  if (value === null || value === undefined) {
+    console.error("Failed to load house detail", error);
     return null;
   }
-
-  const numeric = typeof value === "string" ? Number(value) : value;
-  if (!Number.isFinite(numeric)) {
-    return null;
-  }
-
-  return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 0,
-  }).format(numeric);
-};
-
-const formatListingType = (
-  value: number | string | null | undefined,
-  translations: { rent: string; buy: string },
-  prefix: string,
-): string | null => {
-  if (value === null || value === undefined) {
-    return null;
-  }
-
-  const numeric = typeof value === "string" ? Number(value) : value;
-  if (Number.isFinite(numeric)) {
-    if (numeric === 1) {
-      return `${prefix} ${translations.rent}`;
-    }
-    if (numeric === 2) {
-      return `${prefix} ${translations.buy}`;
-    }
-  }
-
-  if (typeof value === "string") {
-    const normalized = value.trim().toLowerCase();
-    if (normalized === "rent") {
-      return `${prefix} ${translations.rent}`;
-    }
-    if (normalized === "buy") {
-      return `${prefix} ${translations.buy}`;
-    }
-    if (normalized.length > 0) {
-      return `${prefix} ${value}`;
-    }
-  }
-
-  return `${prefix} ${value}`;
 };
 
 type HouseDetailParams = { params: { id?: string | string[] } | Promise<{ id?: string | string[] }> };
 
 export default async function HouseDetailPage({ params }: HouseDetailParams) {
   const resolvedParams = await Promise.resolve(params);
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const locale = await resolveLocale();
+  const isFarsi = locale === "fa";
   const t = i18n(locale);
 
   const rawId = Array.isArray(resolvedParams.id) ? resolvedParams.id.at(0) ?? "" : resolvedParams.id ?? "";
   const requestedId = rawId ? normalizeGuidParam(rawId) : "";
+  const house = isGuid(requestedId) ? await fetchHouseDetail(requestedId) : null;
 
-  let house: HouseDetailDto | null = null;
-  let loadError: string | null = null;
-
-  if (!rawId) {
-    loadError = "Missing house id.";
-  } else if (!isGuid(requestedId)) {
-    loadError = `Invalid house id: ${rawId}`;
+  if (!house) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-24 text-center">
+        <h1 className="text-2xl font-semibold">{t.detail.house.loadErrorTitle}</h1>
+        <p className="mt-3 text-[color:var(--muted)]">{t.detail.house.loadErrorCopy}</p>
+        <Link
+          href="/houses"
+          className="mt-8 inline-flex rounded-xl bg-[color:var(--cta)] px-6 py-3 text-sm font-semibold text-white"
+        >
+          {t.detail.backToHouses}
+        </Link>
+      </div>
+    );
   }
 
-  try {
-    if (!loadError) {
-      house = await fetchHouseDetail(requestedId);
-    }
-  } catch (error) {
-    console.error("Failed to load house detail", error);
-    loadError = error instanceof Error ? error.message : String(error);
-  }
+  const number = new Intl.NumberFormat(isFarsi ? "fa-IR" : "en-US", { maximumFractionDigits: 0 });
+  const price =
+    house.price !== undefined && Number.isFinite(Number(house.price)) && house.currency
+      ? `${number.format(Number(house.price))} ${house.currency}`
+      : null;
 
-  if (!house && !loadError) {
-    loadError = "No house data returned.";
-  }
+  const listingType =
+    Number(house.listingType) === 1
+      ? t.detail.house.listingTypeValues.rent
+      : Number(house.listingType) === 2
+        ? t.detail.house.listingTypeValues.buy
+        : null;
 
-  const resolvedHouse: HouseDetailDto =
-    house ?? {
-      houseId: requestedId,
-      name: t.detail.house.loadErrorTitle,
-      description: t.detail.house.loadErrorCopy,
-      houseTypeName: null,
-      listingType: undefined,
-      price: undefined,
-      currency: undefined,
-      line1: null,
-      line2: null,
-      city: null,
-      region: null,
-      country: null,
-      postalCode: null,
-      photos: [],
-    };
-
-  const description = resolvedHouse.description?.trim() || t.detail.house.descriptionFallback;
-  const formattedPrice = formatPriceValue(resolvedHouse.price, locale);
-  const combinedPriceValue = [formattedPrice, resolvedHouse.currency].filter(Boolean).join(" ") || null;
-  const listingTypeDisplay = formatListingType(
-    resolvedHouse.listingType,
-    t.detail.house.listingTypeValues,
-    t.detail.house.listingTypePrefix,
+  const location = translateValue(
+    [house.city, house.country].filter(Boolean).join("، "),
+    locale,
   );
-  const propertyItems = [
-    { label: t.detail.house.propertyLabels.houseId, value: resolvedHouse.houseId },
-    { label: t.detail.house.propertyLabels.name, value: resolvedHouse.name },
-    { label: t.detail.house.propertyLabels.description, value: description },
-    { label: t.detail.house.propertyLabels.listingType, value: listingTypeDisplay },
-    { label: t.detail.house.propertyLabels.price, value: combinedPriceValue },
-    { label: t.detail.house.propertyLabels.houseTypeName, value: resolvedHouse.houseTypeName },
-    { label: t.detail.house.propertyLabels.line1, value: resolvedHouse.line1 },
-    { label: t.detail.house.propertyLabels.line2, value: resolvedHouse.line2 },
-    { label: t.detail.house.propertyLabels.city, value: resolvedHouse.city },
-    { label: t.detail.house.propertyLabels.region, value: resolvedHouse.region },
-    { label: t.detail.house.propertyLabels.country, value: resolvedHouse.country },
-    { label: t.detail.house.propertyLabels.postalCode, value: resolvedHouse.postalCode },
-  ];
+  const address = [house.line1, house.line2, translateValue(house.region, locale), house.postalCode].filter(
+    Boolean,
+  );
+
+  const title = localized(house.name, house.nameEn, locale);
+  const description = localized(house.description, house.descriptionEn, locale);
+
+  const hero =
+    imageUrl(house.photos?.[0]?.permanentRelativePath) ||
+    destinationPhoto(house.name, location, house.description);
+  const gallery = (house.photos ?? []).slice(1, 5);
+
+  const facts = [
+    {
+      label: t.detail.house.typeLabel,
+      value: localized(translateValue(house.houseTypeName, locale), house.houseTypeNameEn, locale),
+    },
+    { label: t.detail.house.listingTypeLabel, value: listingType },
+    { label: t.detail.house.locationLabel, value: location || t.detail.house.locationFallback },
+    { label: t.detail.house.postalCodeLabel, value: house.postalCode },
+  ].filter((fact) => Boolean(fact.value));
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
-      <Card className="mx-auto w-full max-w-4xl overflow-hidden border border-white/10 bg-slate-950/50 p-0 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
-        <Gallery photos={resolvedHouse.photos} alt={`${resolvedHouse.name} gallery`} />
-      </Card>
+    <div className="bg-[color:var(--bg)]">
+      <div className="relative h-[42vh] min-h-[280px] w-full overflow-hidden">
+        {hero ? (
+          <Image src={hero} alt={title} fill priority sizes="100vw" className="object-cover" />
+        ) : (
+          <div className="h-full w-full" style={posterStyle(house.houseId)} aria-hidden="true" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
 
-      <div className="space-y-6">
-        <DetailProperties title={t.detail.house.propertyListTitle} items={propertyItems} />
+        <div className="absolute inset-x-0 bottom-0">
+          <div className="mx-auto max-w-5xl px-6 pb-8 text-white">
+            {location && (
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur">
+                {location}
+              </span>
+            )}
+            <h1 className="mt-3 text-3xl font-semibold md:text-5xl">{title}</h1>
+            {price && <p className="mt-2 text-lg text-white/90">{price}</p>}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto grid max-w-5xl gap-10 px-6 py-12 md:grid-cols-[1.6fr_1fr]">
+        <div className="space-y-10">
+          <section>
+            <h2 className="text-xl font-semibold">{t.detail.house.quickFactsTitle}</h2>
+            <p className="mt-3 leading-relaxed text-[color:var(--muted)]">
+              {description.trim() || t.detail.house.descriptionFallback}
+            </p>
+          </section>
+
+          {gallery.length > 0 && (
+            <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {gallery.map((photo) => (
+                <div key={photo.photoId} className="relative aspect-square overflow-hidden rounded-xl">
+                  <Image
+                    src={imageUrl(photo.permanentRelativePath)}
+                    alt={photo.label ?? house.name}
+                    fill
+                    sizes="25vw"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </section>
+          )}
+
+          {address.length > 0 && (
+            <section>
+              <h2 className="text-xl font-semibold">{t.detail.house.addressTitle}</h2>
+              <p className="mt-3 text-[color:var(--muted)]">{address.join(isFarsi ? "، " : ", ")}</p>
+            </section>
+          )}
+        </div>
+
+        <aside className="space-y-6">
+          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6">
+            <dl className="space-y-3 text-sm">
+              {facts.map((fact) => (
+                <div key={fact.label} className="flex items-start justify-between gap-4">
+                  <dt className="text-[color:var(--muted)]">{fact.label}</dt>
+                  <dd className="text-end font-medium">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <div className="rounded-2xl bg-[color:var(--primary-soft)] p-6">
+            <h2 className="font-semibold">{t.detail.house.exploreTitle}</h2>
+            <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
+              {t.detail.house.exploreCopy}
+            </p>
+            <Link
+              href={`mailto:${t.home.contactEmail}?subject=${encodeURIComponent(title)}`}
+              className="mt-4 inline-flex rounded-xl bg-[color:var(--cta)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[color:var(--cta-hover)]"
+            >
+              {t.home.contactCta}
+            </Link>
+          </div>
+
+          <Link
+            href="/houses"
+            className="inline-flex text-sm font-semibold text-[color:var(--primary)] hover:underline"
+          >
+            ← {t.detail.backToHouses}
+          </Link>
+        </aside>
       </div>
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";

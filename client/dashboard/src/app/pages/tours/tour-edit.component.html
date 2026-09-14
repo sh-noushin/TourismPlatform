@@ -30,6 +30,16 @@
             />
           </label>
 
+          <label>
+            <span class="label-text">{{ 'TOUR_EDIT.NAME_EN' | translate }}</span>
+            <input
+              type="text"
+              dir="ltr"
+              [value]="currentForm.nameEn"
+              (input)="updateField('nameEn', $any($event.target).value)"
+            />
+          </label>
+
           <label class="combobox">
             <span class="label-text">{{ 'TOUR_EDIT.CATEGORY' | translate }}</span>
             <sf-dropdown
@@ -76,6 +86,16 @@
               placeholder="{{ 'TOUR_EDIT.DESCRIPTION_PLACEHOLDER' | translate }}"
               [value]="currentForm.description"
               (input)="updateField('description', $any($event.target).value)"
+            ></textarea>
+          </label>
+
+          <label>
+            <span class="label-text">{{ 'TOUR_EDIT.DESCRIPTION_EN' | translate }}</span>
+            <textarea
+              rows="3"
+              dir="ltr"
+              [value]="currentForm.descriptionEn"
+              (input)="updateField('descriptionEn', $any($event.target).value)"
             ></textarea>
           </label>
         </section>

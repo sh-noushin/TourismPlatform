@@ -14,6 +14,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class TourCategoryEditComponent {
   readonly name = signal('');
+  /** Optional: the public site falls back to the Persian name when empty. */
+  readonly nameEn = signal('');
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly title = computed(() =>
@@ -46,9 +48,9 @@ export class TourCategoryEditComponent {
 
     try {
       if (this.id) {
-        await this.tourCategories.update(this.id, trimmed);
+        await this.tourCategories.update(this.id, trimmed, this.nameEn().trim());
       } else {
-        await this.tourCategories.create(trimmed);
+        await this.tourCategories.create(trimmed, this.nameEn().trim());
       }
       this.dialogRef?.close(true);
     } catch (err: any) {
@@ -68,12 +70,14 @@ export class TourCategoryEditComponent {
     const existing = this.tourCategories.tourCategories().find((cat) => cat.id === this.id);
     if (existing) {
       this.name.set(existing.name);
+      this.nameEn.set(existing.nameEn ?? '');
       return;
     }
 
     try {
       const category = await this.tourCategories.getById(this.id);
       this.name.set(category.name);
+      this.nameEn.set(category.nameEn ?? '');
     } catch (err: any) {
       this.error.set(err?.message ?? this.translate.instant('CATEGORY_DIALOG.LOAD_FAILED'));
     }

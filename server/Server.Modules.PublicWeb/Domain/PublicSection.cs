@@ -21,10 +21,25 @@ public sealed class PublicSection
     public string Header { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
 
-    public void Update(PublicSectionType sectionType, string header, string content)
+    /// <summary>
+    /// English heading and body. Null or blank means "not translated" and the
+    /// Persian is shown instead, so a half-translated site degrades to Persian
+    /// rather than to an empty section.
+    /// </summary>
+    public string? HeaderEn { get; set; }
+    public string? ContentEn { get; set; }
+
+    public void Update(
+        PublicSectionType sectionType,
+        string header,
+        string content,
+        string? headerEn = null,
+        string? contentEn = null)
     {
         SectionType = sectionType;
         Header = header;
         Content = content;
+        HeaderEn = string.IsNullOrWhiteSpace(headerEn) ? null : headerEn.Trim();
+        ContentEn = string.IsNullOrWhiteSpace(contentEn) ? null : contentEn.Trim();
     }
 }

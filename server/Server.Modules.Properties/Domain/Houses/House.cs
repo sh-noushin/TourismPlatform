@@ -7,6 +7,10 @@ public sealed class House
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
 
+    /// <summary>English text; null falls back to the Persian. See Tour.</summary>
+    public string? NameEn { get; set; }
+    public string? DescriptionEn { get; set; }
+
     public HouseListingType ListingType { get; set; } = HouseListingType.Buy;
 
     public decimal Price { get; set; }

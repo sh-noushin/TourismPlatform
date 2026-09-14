@@ -187,6 +187,45 @@ export type Translations = {
     learnMore: string;
     contact: string;
   };
+  home: {
+    heroKicker: string;
+    heroTitle: string;
+    heroSubtitle: string;
+    searchDestination: string;
+    searchPlaceholder: string;
+    searchKindTours: string;
+    searchKindHouses: string;
+    searchSubmit: string;
+    categoriesTitle: string;
+    categoriesAll: string;
+    ratesTitle: string;
+    ratesSubtitle: string;
+    ratesUpdated: string;
+    ratesEmpty: string;
+    ratesPerUnit: (code: string) => string;
+    trustTitle: string;
+    trustSubtitle: string;
+    trustOneTitle: string;
+    trustOneBody: string;
+    trustTwoTitle: string;
+    trustTwoBody: string;
+    trustThreeTitle: string;
+    trustThreeBody: string;
+    statTours: string;
+    statDestinations: string;
+    statTravellers: string;
+    statYears: string;
+    contactTitle: string;
+    contactBody: string;
+    contactCta: string;
+    contactPhone: string;
+    contactEmail: string;
+    contactAddress: string;
+    footerTagline: string;
+    footerExplore: string;
+    footerCompany: string;
+    footerContact: string;
+  };
   filters: FiltersTranslationDefinition;
   sort: SortTranslation;
   results: ResultsTranslation;
@@ -227,6 +266,50 @@ const EN: Translations = {
       "Discover tailored itineraries, curated homes, and seamless journeys. Our team handles the details so you can focus on the experience.",
     learnMore: "Learn More",
     contact: "Contact Us",
+  },
+  home: {
+    heroKicker: "Iran & beyond",
+    heroTitle: "Book your next journey",
+    heroSubtitle:
+      "Curated tours and handpicked homes, arranged end to end by a team that travels these routes itself.",
+    searchDestination: "Where to?",
+    searchPlaceholder: "Isfahan, Kish, Istanbul…",
+    searchKindTours: "Tours",
+    searchKindHouses: "Homes",
+    searchSubmit: "Search",
+    categoriesTitle: "Browse by style",
+    categoriesAll: "All tours",
+    ratesTitle: "Today's exchange rates",
+    ratesSubtitle: "Live from navasan.net, so you can budget before you book.",
+    ratesUpdated: "Updated",
+    ratesEmpty: "Rates are being fetched.",
+    ratesPerUnit: (code: string) => `per 1 ${code}`,
+    trustTitle: "Why travel with us",
+    trustSubtitle: "Fifteen years of arranging journeys, and the same team answers the phone.",
+    trustOneTitle: "Routes we know first-hand",
+    trustOneBody:
+      "Every itinerary is walked by our own guides before it is sold. No agency in the middle, no surprises on arrival.",
+    trustTwoTitle: "One price, all in",
+    trustTwoBody:
+      "Transfers, stays and entry fees are quoted together in rial or your own currency, at today's published rate.",
+    trustThreeTitle: "Someone on the ground",
+    trustThreeBody:
+      "A local coordinator travels with every group, and the office answers seven days a week while you are away.",
+    statTours: "Tours running",
+    statDestinations: "Destinations",
+    statTravellers: "Travellers a year",
+    statYears: "Years arranging trips",
+    contactTitle: "Tell us where you want to go",
+    contactBody:
+      "Send a note with your dates and group size and we will come back with an itinerary and a price, usually the same day.",
+    contactCta: "Start planning",
+    contactPhone: "+98 21 8800 0000",
+    contactEmail: "hello@tourismplatform.ir",
+    contactAddress: "Vali-e Asr Ave, Tehran",
+    footerTagline: "Tours, stays and everything between.",
+    footerExplore: "Explore",
+    footerCompany: "Company",
+    footerContact: "Contact",
   },
   filters: {
     title: "Filters",
@@ -413,6 +496,50 @@ const FA: Translations = {
       "برنامه‌های سفر سفارشی، خانه‌های منتخب و سفرهای بدون دردسر را کشف کنید. تیم ما جزئیات را مدیریت می‌کند تا شما روی تجربه تمرکز کنید.",
     learnMore: "بیشتر بدانید",
     contact: "تماس بگیرید",
+  },
+  home: {
+    heroKicker: "ایران و فراتر از آن",
+    heroTitle: "سفر بعدی خود را رزرو کنید",
+    heroSubtitle:
+      "تورهای دستچین‌شده و اقامتگاه‌های منتخب، از ابتدا تا انتها توسط تیمی که خود این مسیرها را رفته است.",
+    searchDestination: "مقصد شما کجاست؟",
+    searchPlaceholder: "اصفهان، کیش، استانبول…",
+    searchKindTours: "تور",
+    searchKindHouses: "اقامتگاه",
+    searchSubmit: "جستجو",
+    categoriesTitle: "بر اساس سلیقه بگردید",
+    categoriesAll: "همه تورها",
+    ratesTitle: "نرخ ارز امروز",
+    ratesSubtitle: "به‌صورت زنده از navasan.net، تا پیش از رزرو برنامه‌ریزی کنید.",
+    ratesUpdated: "به‌روزرسانی",
+    ratesEmpty: "نرخ‌ها در حال دریافت است.",
+    ratesPerUnit: (code: string) => `به ازای ۱ ${code}`,
+    trustTitle: "چرا با ما سفر کنید",
+    trustSubtitle: "پانزده سال برنامه‌ریزی سفر، و همان تیم پاسخگوی تلفن است.",
+    trustOneTitle: "مسیرهایی که خود رفته‌ایم",
+    trustOneBody:
+      "هر برنامه پیش از فروش توسط راهنمایان خود ما پیموده می‌شود؛ بدون واسطه و بدون غافلگیری در مقصد.",
+    trustTwoTitle: "یک قیمت، همه‌چیز داخل آن",
+    trustTwoBody:
+      "ترانسفر، اقامت و بلیط ورودی یکجا و به ریال یا ارز دلخواه شما محاسبه می‌شود.",
+    trustThreeTitle: "همراه محلی در طول سفر",
+    trustThreeBody:
+      "هماهنگ‌کننده‌ای با هر گروه همسفر است و دفتر هفت روز هفته پاسخگوست.",
+    statTours: "تور فعال",
+    statDestinations: "مقصد",
+    statTravellers: "مسافر در سال",
+    statYears: "سال تجربه",
+    contactTitle: "بگویید کجا می‌خواهید بروید",
+    contactBody:
+      "تاریخ و تعداد نفرات را برای ما بفرستید؛ معمولاً همان روز با برنامه و قیمت پاسخ می‌دهیم.",
+    contactCta: "شروع برنامه‌ریزی",
+    contactPhone: "۰۲۱-۸۸۰۰۰۰۰۰",
+    contactEmail: "hello@tourismplatform.ir",
+    contactAddress: "تهران، خیابان ولی‌عصر",
+    footerTagline: "تور، اقامت و هرچه میان این دوست.",
+    footerExplore: "گشت و گذار",
+    footerCompany: "شرکت",
+    footerContact: "تماس",
   },
   filters: {
     title: "فیلترها",

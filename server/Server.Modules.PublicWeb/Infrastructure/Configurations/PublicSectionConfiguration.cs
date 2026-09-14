@@ -19,5 +19,7 @@ public sealed class PublicSectionConfiguration : IEntityTypeConfiguration<Public
             .IsRequired();
         builder.Property(s => s.Header).HasMaxLength(512).IsRequired();
         builder.Property(s => s.Content).IsRequired();
+        builder.Property(s => s.HeaderEn).HasMaxLength(512);
+        builder.Property(s => s.ContentEn);
     }
 }

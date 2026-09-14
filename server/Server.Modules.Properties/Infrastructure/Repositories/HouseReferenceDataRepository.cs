@@ -44,7 +44,7 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
             .FirstOrDefaultAsync(x => x.Name == normalized, cancellationToken);
     }
 
-    public async Task<HouseType> CreateHouseTypeAsync(string name, CancellationToken cancellationToken = default)
+    public async Task<HouseType> CreateHouseTypeAsync(string name, string? nameEn, CancellationToken cancellationToken = default)
     {
         var normalized = Normalize(name);
         var existing = await GetHouseTypeByNameAsync(normalized, cancellationToken);
@@ -53,13 +53,13 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
             throw new InvalidOperationException($"House type '{normalized}' already exists.");
         }
 
-        var created = new HouseType { Id = Guid.NewGuid(), Name = normalized };
+        var created = new HouseType { Id = Guid.NewGuid(), Name = normalized, NameEn = Translation(nameEn) };
         _dbContext.Add(created);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return created;
     }
 
-    public async Task<HouseType?> UpdateHouseTypeAsync(Guid id, string name, CancellationToken cancellationToken = default)
+    public async Task<HouseType?> UpdateHouseTypeAsync(Guid id, string name, string? nameEn, CancellationToken cancellationToken = default)
     {
         var normalized = Normalize(name);
 
@@ -77,6 +77,7 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
         }
 
         houseType.Name = normalized;
+        houseType.NameEn = Translation(nameEn);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return houseType;
     }
@@ -186,4 +187,8 @@ public sealed class HouseReferenceDataRepository : IHouseReferenceDataRepository
 
         return value.Trim();
     }
+
+    /// <summary>Blank means "not translated"; store null so display falls back.</summary>
+    private static string? Translation(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

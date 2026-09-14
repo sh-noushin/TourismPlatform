@@ -87,6 +87,9 @@ public sealed class HouseService : IHouseService
                     h.Price,
                     h.Currency,
                     h.HouseType.Name,
+                    h.NameEn,
+                    h.DescriptionEn,
+                    h.HouseType.NameEn,
                     h.Address.Location.City,
                     h.Address.Location.Country,
                     photosByHouse.TryGetValue(h.Id, out var ph) ? ph : Array.Empty<HousePhotoDto>());
@@ -120,6 +123,9 @@ public sealed class HouseService : IHouseService
                 h.Price,
                 h.Currency,
                 h.HouseType.Name,
+                h.NameEn,
+                h.DescriptionEn,
+                h.HouseType.NameEn,
                 h.Address.Location.City,
                 h.Address.Location.Country,
                 photosByHouse.TryGetValue(h.Id, out var ph) ? ph : Array.Empty<HousePhotoDto>()))
@@ -143,6 +149,9 @@ public sealed class HouseService : IHouseService
             house.Price,
             house.Currency,
             house.HouseType.Name,
+            house.NameEn,
+            house.DescriptionEn,
+            house.HouseType.NameEn,
             house.Address.Line1,
             house.Address.Line2,
             house.Address.Location.City,
@@ -167,6 +176,8 @@ public sealed class HouseService : IHouseService
             Id = Guid.NewGuid(),
             Name = request.Name.Trim(),
             Description = request.Description,
+            NameEn = Translation(request.NameEn),
+            DescriptionEn = Translation(request.DescriptionEn),
             ListingType = request.ListingType,
             Price = request.Price,
             Currency = request.Currency.Trim(),
@@ -200,6 +211,8 @@ public sealed class HouseService : IHouseService
 
         house.Name = request.Name.Trim();
         house.Description = request.Description;
+        house.NameEn = Translation(request.NameEn);
+        house.DescriptionEn = Translation(request.DescriptionEn);
         house.ListingType = request.ListingType;
         house.Price = request.Price;
         house.Currency = request.Currency.Trim();
@@ -302,4 +315,12 @@ public sealed class HouseService : IHouseService
         await _housePhotoRepository.SaveChangesAsync(cancellationToken);
         await _photoCleanupService.CleanupOrphanedPhotosAsync(removed, cancellationToken);
     }
+
+    /// <summary>
+    /// Blank and whitespace both mean "no translation", and both must store
+    /// null -- an empty string would read as a translation that exists and is
+    /// empty, and the display fallback would stop firing.
+    /// </summary>
+    private static string? Translation(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

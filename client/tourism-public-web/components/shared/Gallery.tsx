@@ -53,18 +53,18 @@ export function Gallery({ photos = [], className, alt }: GalleryProps) {
   };
 
   const arrowButtonBase =
-    "flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white/80 shadow-[0_25px_60px_rgba(0,0,0,0.5)] transition hover:border-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+    "flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text)] transition hover:border-[color:var(--primary)] hover:text-[color:var(--primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[30px] border border-white/20 bg-gradient-to-br from-slate-950/90 to-slate-900/60 p-4 shadow-[0_24px_70px_rgba(0,0,0,0.65)]",
+        "relative overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4",
         className
       )}
     >
       <div className="relative mx-auto max-w-[720px]">
         <div className="pointer-events-none absolute inset-3 rounded-[34px] border-[3px] border-white/70 opacity-50" />
-        <div className="relative rounded-[30px] border border-white/10 bg-slate-950/70 p-1 shadow-[0_16px_40px_rgba(0,0,0,0.65)]">
+        <div className="relative overflow-hidden rounded-xl bg-[color:var(--surface-sunken)]">
           <div className="relative h-[260px] w-full overflow-hidden rounded-[26px] sm:h-[320px]">
             <Image
               src={activeSrc}
@@ -81,12 +81,12 @@ export function Gallery({ photos = [], className, alt }: GalleryProps) {
 
       <div className="absolute inset-0 z-10 flex items-center justify-between px-3">
         <button type="button" onClick={goToPrev} aria-label="Show previous photo" className={arrowButtonBase}>
-          <span aria-hidden className="text-lg font-bold text-white">
+          <span aria-hidden className="text-lg font-bold">
             &lt;
           </span>
         </button>
         <button type="button" onClick={goToNext} aria-label="Show next photo" className={arrowButtonBase}>
-          <span aria-hidden className="text-lg font-bold text-white">
+          <span aria-hidden className="text-lg font-bold">
             &gt;
           </span>
         </button>

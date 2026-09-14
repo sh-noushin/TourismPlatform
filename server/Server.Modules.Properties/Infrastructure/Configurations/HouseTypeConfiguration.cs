@@ -19,6 +19,11 @@ public sealed class HouseTypeConfiguration : IEntityTypeConfiguration<HouseType>
             .IsRequired()
             .HasMaxLength(128);
 
+        // Not unique: two categories may share an English name while their
+        // Persian names differ, and an empty translation is not a collision.
+        builder.Property(x => x.NameEn)
+            .HasMaxLength(128);
+
         builder.HasIndex(x => x.Name)
             .IsUnique();
     }

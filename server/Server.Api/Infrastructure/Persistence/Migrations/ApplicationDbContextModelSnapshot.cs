@@ -642,6 +642,10 @@ namespace Server.Api.Infrastructure.Persistence.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
+                    b.Property<string>("DescriptionEn")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
                     b.Property<Guid>("HouseTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -652,6 +656,10 @@ namespace Server.Api.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NameEn")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -719,6 +727,10 @@ namespace Server.Api.Infrastructure.Persistence.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<string>("NameEn")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -766,8 +778,15 @@ namespace Server.Api.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ContentEn")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Header")
                         .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<string>("HeaderEn")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
@@ -852,8 +871,16 @@ namespace Server.Api.Infrastructure.Persistence.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
+                    b.Property<string>("DescriptionEn")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NameEn")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -889,6 +916,10 @@ namespace Server.Api.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("NameEn")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 

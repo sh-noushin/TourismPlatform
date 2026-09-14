@@ -53,6 +53,7 @@ public sealed class PublicSectionService : IPublicSectionService
             Header = request.Header,
             Content = request.Content
         };
+        section.Update(request.SectionType, request.Header, request.Content, request.HeaderEn, request.ContentEn);
 
         await _repository.CreateAsync(section, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
@@ -71,7 +72,7 @@ public sealed class PublicSectionService : IPublicSectionService
             await _repository.CreateAsync(section, cancellationToken);
         }
 
-        section.Update(request.SectionType, request.Header, request.Content);
+        section.Update(request.SectionType, request.Header, request.Content, request.HeaderEn, request.ContentEn);
 
         await _repository.SaveChangesAsync(cancellationToken);
 
@@ -84,7 +85,9 @@ public sealed class PublicSectionService : IPublicSectionService
             section.Id,
             section.SectionType,
             section.Header,
-            section.Content);
+            section.Content,
+            section.HeaderEn,
+            section.ContentEn);
     }
 
     private static string NormalizeSectionId(string? requestedId)

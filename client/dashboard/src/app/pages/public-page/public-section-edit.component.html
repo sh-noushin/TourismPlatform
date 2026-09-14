@@ -40,6 +40,17 @@
           required
         />
       </label>
+
+      <label>
+        <span class="label-text">{{ 'PUBLIC_PAGE_SECTIONS_PAGE.HEADER_EN' | translate }}</span>
+        <input
+          type="text"
+          name="headerEn"
+          dir="ltr"
+          [value]="headerEn()"
+          (input)="headerEn.set($any($event.target).value)"
+        />
+      </label>
     </section>
 
     <section class="form-grid description">
@@ -51,6 +62,17 @@
           [value]="content()"
           (input)="content.set($any($event.target).value)"
           required
+        ></textarea>
+      </label>
+
+      <label>
+        <span class="label-text">{{ 'PUBLIC_PAGE_SECTIONS_PAGE.CONTENT_EN' | translate }}</span>
+        <textarea
+          name="contentEn"
+          rows="6"
+          dir="ltr"
+          [value]="contentEn()"
+          (input)="contentEn.set($any($event.target).value)"
         ></textarea>
       </label>
     </section>

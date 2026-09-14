@@ -31,6 +31,18 @@
                 />
               </label>
 
+              <label>
+                <span class="label-text">{{ 'HOUSES.NAME_EN' | translate }}</span>
+                <input
+                  type="text"
+                  name="nameEn"
+                  autocomplete="off"
+                  dir="ltr"
+                  [value]="$safeNavigationMigration(form()?.nameEn)"
+                  (input)="updateField('nameEn', $any($event.target).value)"
+                />
+              </label>
+
               <label class="combobox">
                 <span class="label-text">{{ 'HOUSES.TYPE' | translate }}</span>
                 <sf-dropdown
@@ -57,6 +69,17 @@
                 rows="3"
                 [value]="$safeNavigationMigration(form()?.description)"
                 (input)="updateField('description', $any($event.target).value)"
+              ></textarea>
+            </label>
+
+            <label class="description">
+              <span class="label-text">{{ 'HOUSES.DESCRIPTION_EN' | translate }}</span>
+              <textarea
+                name="descriptionEn"
+                rows="3"
+                dir="ltr"
+                [value]="$safeNavigationMigration(form()?.descriptionEn)"
+                (input)="updateField('descriptionEn', $any($event.target).value)"
               ></textarea>
             </label>
           </section>

@@ -6,8 +6,8 @@ import { fetchTourCategories, CategoryDto } from "@/lib/api/categories";
 import { getJson } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/api/endpoints";
 import { parseTourFilters, toTourQuery, TourFilters as TourFiltersShape, tourSortValues } from "@/lib/filters/tours";
-import { cookies } from "next/headers";
 import { i18n } from "@/lib/i18n";
+import { resolveLocale } from "@/lib/locale";
 import type { SortOption } from "@/components/shared/SortDropdown.client";
 
 type TourSummaryDto = components["schemas"]["TourSummaryDto"];
@@ -57,8 +57,7 @@ const sortTours = (tours: TourSummaryDto[], sort: TourFiltersShape["sort"]) => {
 export default async function ToursPage({ searchParams }: ToursPageProps) {
   const resolvedSearchParams = (await Promise.resolve(searchParams)) ?? {};
   const filters = parseTourFilters(resolvedSearchParams);
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const locale = await resolveLocale();
   const translations = i18n(locale);
   const sortOptions: SortOption[] = tourSortValues.map((value) => ({
     value,
@@ -98,7 +97,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
               />
         </div>
 
-        <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">
+        <div>
           <TourResults
             tours={paged}
             page={currentPage}

@@ -6,6 +6,14 @@ public sealed class Tour
 
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+
+    /// <summary>
+    /// English name and description. Null means "not translated yet" and the
+    /// Persian is shown instead -- the site must never render an empty title
+    /// because nobody has got round to the translation.
+    /// </summary>
+    public string? NameEn { get; set; }
+    public string? DescriptionEn { get; set; }
     public decimal Price { get; set; }
     public string Currency { get; set; } = "USD";
     public string CountryCode { get; set; } = "US";

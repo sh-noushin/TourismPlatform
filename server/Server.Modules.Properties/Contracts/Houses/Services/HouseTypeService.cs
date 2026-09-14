@@ -23,7 +23,7 @@ public sealed class HouseTypeService : IHouseTypeService
     {
         var houseTypes = await _referenceDataRepository.GetHouseTypesAsync(cancellationToken);
         return houseTypes
-            .Select(ht => new HouseTypeDto(ht.Id, ht.Name))
+            .Select(ht => new HouseTypeDto(ht.Id, ht.Name, ht.NameEn))
             .ToList();
     }
 
@@ -36,7 +36,7 @@ public sealed class HouseTypeService : IHouseTypeService
         var (items, total) = await _referenceDataRepository.GetHouseTypesPagedAsync(query, cancellationToken);
 
         return new PagedResult<HouseTypeDto>(
-            items.Select(ht => new HouseTypeDto(ht.Id, ht.Name)).ToList(),
+            items.Select(ht => new HouseTypeDto(ht.Id, ht.Name, ht.NameEn)).ToList(),
             total,
             query.Page,
             query.PageSize);
@@ -47,18 +47,18 @@ public sealed class HouseTypeService : IHouseTypeService
         var houseType = await _referenceDataRepository.GetHouseTypeByIdAsync(id, cancellationToken);
         if (houseType == null) return null;
 
-        return new HouseTypeDto(houseType.Id, houseType.Name);
+        return new HouseTypeDto(houseType.Id, houseType.Name, houseType.NameEn);
     }
 
     public async Task<HouseTypeDto> CreateHouseTypeAsync(CreateHouseTypeRequest request, CancellationToken cancellationToken = default)
     {
-        var created = await _referenceDataRepository.CreateHouseTypeAsync(request.Name, cancellationToken);
-        return new HouseTypeDto(created.Id, created.Name);
+        var created = await _referenceDataRepository.CreateHouseTypeAsync(request.Name, request.NameEn, cancellationToken);
+        return new HouseTypeDto(created.Id, created.Name, created.NameEn);
     }
 
     public async Task UpdateHouseTypeAsync(Guid id, UpdateHouseTypeRequest request, CancellationToken cancellationToken = default)
     {
-        var updated = await _referenceDataRepository.UpdateHouseTypeAsync(id, request.Name, cancellationToken);
+        var updated = await _referenceDataRepository.UpdateHouseTypeAsync(id, request.Name, request.NameEn, cancellationToken);
         if (updated == null)
         {
             throw new KeyNotFoundException($"House type '{id}' not found.");

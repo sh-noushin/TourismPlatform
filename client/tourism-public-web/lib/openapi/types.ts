@@ -352,6 +352,100 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/exchange/rates/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    days?: number | string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ExchangeRateSummaryDto"][];
+                        "application/json": components["schemas"]["ExchangeRateSummaryDto"][];
+                        "text/json": components["schemas"]["ExchangeRateSummaryDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exchange/rates/sync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/exchange/orders": {
         parameters: {
             query?: never;
@@ -529,7 +623,9 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    listingType?: components["schemas"]["HouseListingType"];
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -607,6 +703,49 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/houses/paged": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    listingType?: components["schemas"]["HouseListingType"];
+                    page?: number | string;
+                    pageSize?: number | string;
+                    search?: string;
+                    sort?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PagedResultOfHouseSummaryDto"];
+                        "application/json": components["schemas"]["PagedResultOfHouseSummaryDto"];
+                        "text/json": components["schemas"]["PagedResultOfHouseSummaryDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -842,6 +981,268 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/house-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateHouseTypeRequest"];
+                    "text/json": components["schemas"]["CreateHouseTypeRequest"];
+                    "application/*+json": components["schemas"]["CreateHouseTypeRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["HouseTypeDto"];
+                        "application/json": components["schemas"]["HouseTypeDto"];
+                        "text/json": components["schemas"]["HouseTypeDto"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/house-types/paged": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    page?: number | string;
+                    pageSize?: number | string;
+                    search?: string;
+                    sort?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PagedResultOfHouseTypeDto"];
+                        "application/json": components["schemas"]["PagedResultOfHouseTypeDto"];
+                        "text/json": components["schemas"]["PagedResultOfHouseTypeDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/house-types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["HouseTypeDto"];
+                        "application/json": components["schemas"]["HouseTypeDto"];
+                        "text/json": components["schemas"]["HouseTypeDto"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateHouseTypeRequest"];
+                    "text/json": components["schemas"]["UpdateHouseTypeRequest"];
+                    "application/*+json": components["schemas"]["UpdateHouseTypeRequest"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/photos/stage": {
         parameters: {
             query?: never;
@@ -902,7 +1303,41 @@ export interface paths {
                 };
             };
         };
-        delete?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CleanupStageUploadsRequest"];
+                    "text/json": components["schemas"]["CleanupStageUploadsRequest"];
+                    "application/*+json": components["schemas"]["CleanupStageUploadsRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -957,6 +1392,246 @@ export interface paths {
                         "text/plain": components["schemas"]["ProblemDetails"];
                         "application/json": components["schemas"]["ProblemDetails"];
                         "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/public-page/sections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    lang?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PublicSectionDto"][];
+                        "application/json": components["schemas"]["PublicSectionDto"][];
+                        "text/json": components["schemas"]["PublicSectionDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreatePublicSectionRequest"];
+                    "text/json": components["schemas"]["CreatePublicSectionRequest"];
+                    "application/*+json": components["schemas"]["CreatePublicSectionRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PublicSectionDto"];
+                        "application/json": components["schemas"]["PublicSectionDto"];
+                        "text/json": components["schemas"]["PublicSectionDto"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/public-page/sections/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpsertPublicSectionRequest"];
+                    "text/json": components["schemas"]["UpsertPublicSectionRequest"];
+                    "application/*+json": components["schemas"]["UpsertPublicSectionRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PublicSectionDto"];
+                        "application/json": components["schemas"]["PublicSectionDto"];
+                        "text/json": components["schemas"]["PublicSectionDto"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reference/countries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["CountryDto"][];
+                        "application/json": components["schemas"]["CountryDto"][];
+                        "text/json": components["schemas"]["CountryDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reference/currencies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["CurrencyDto"][];
+                        "application/json": components["schemas"]["CurrencyDto"][];
+                        "text/json": components["schemas"]["CurrencyDto"][];
                     };
                 };
             };
@@ -1547,6 +2222,268 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tour-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateTourCategoryRequest"];
+                    "text/json": components["schemas"]["CreateTourCategoryRequest"];
+                    "application/*+json": components["schemas"]["CreateTourCategoryRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TourCategoryDto"];
+                        "application/json": components["schemas"]["TourCategoryDto"];
+                        "text/json": components["schemas"]["TourCategoryDto"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tour-categories/paged": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    page?: number | string;
+                    pageSize?: number | string;
+                    search?: string;
+                    sort?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PagedResultOfTourCategoryDto"];
+                        "application/json": components["schemas"]["PagedResultOfTourCategoryDto"];
+                        "text/json": components["schemas"]["PagedResultOfTourCategoryDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tour-categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TourCategoryDto"];
+                        "application/json": components["schemas"]["TourCategoryDto"];
+                        "text/json": components["schemas"]["TourCategoryDto"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateTourCategoryRequest"];
+                    "text/json": components["schemas"]["UpdateTourCategoryRequest"];
+                    "application/*+json": components["schemas"]["UpdateTourCategoryRequest"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tours": {
         parameters: {
             query?: never;
@@ -1634,6 +2571,48 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tours/paged": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    page?: number | string;
+                    pageSize?: number | string;
+                    search?: string;
+                    sort?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PagedResultOfTourSummaryDto"];
+                        "application/json": components["schemas"]["PagedResultOfTourSummaryDto"];
+                        "text/json": components["schemas"]["PagedResultOfTourSummaryDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1795,6 +2774,43 @@ export interface paths {
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tours/countries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["CountryDto"][];
+                        "application/json": components["schemas"]["CountryDto"][];
+                        "text/json": components["schemas"]["CountryDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -2188,6 +3204,15 @@ export interface components {
             country: string;
             postalCode: null | string;
         };
+        CleanupStageUploadsRequest: {
+            stagedUploadIds: string[];
+        };
+        CountryDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+        };
         CreateBookingRequest: {
             /** Format: uuid */
             tourScheduleId: string;
@@ -2203,21 +3228,47 @@ export interface components {
         CreateHouseRequest: {
             name: string;
             description: null | string;
+            listingType: components["schemas"]["HouseListingType"];
+            /** Format: double */
+            price: number | string;
+            currency: string;
             houseTypeName: string;
             address: components["schemas"]["AddressRequest"];
             photos: null | components["schemas"]["HouseCommitPhotoItem"][];
+            nameEn?: null | string;
+            descriptionEn?: null | string;
+        };
+        CreateHouseTypeRequest: {
+            name: string;
+            nameEn?: null | string;
         };
         CreatePermissionDefinitionRequest: {
             code: string;
             description: null | string;
             isEnabled: boolean;
         };
+        CreatePublicSectionRequest: {
+            id?: null | string;
+            sectionType?: components["schemas"]["PublicSectionType"];
+            header?: string;
+            content?: string;
+        };
+        CreateTourCategoryRequest: {
+            name: string;
+            nameEn?: null | string;
+        };
         CreateTourRequest: {
             name: string;
             description: null | string;
             tourCategoryName: string;
-            photos: null | components["schemas"]["TourCommitPhotoItem"][];
-            schedules: null | components["schemas"]["CreateTourScheduleRequest"][];
+            /** Format: double */
+            price: number | string;
+            currency: string;
+            countryCode: string;
+            photos?: null | components["schemas"]["TourCommitPhotoItem"][];
+            schedules?: null | components["schemas"]["CreateTourScheduleRequest"][];
+            nameEn?: null | string;
+            descriptionEn?: null | string;
         };
         CreateTourScheduleRequest: {
             /** Format: date-time */
@@ -2231,6 +3282,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             code: string;
+            name: string;
         };
         ExchangeOrderStatus: number;
         ExchangeRateDto: {
@@ -2240,6 +3292,29 @@ export interface components {
             rate: number | string;
             /** Format: date-time */
             capturedAtUtc: string;
+        };
+        ExchangeRatePointDto: {
+            /** Format: date-time */
+            capturedAtUtc: string;
+            /** Format: double */
+            rate: number | string;
+        };
+        ExchangeRateSummaryDto: {
+            baseCurrencyCode: string;
+            quoteCurrencyCode: string;
+            /** Format: double */
+            rate: number | string;
+            /** Format: date-time */
+            capturedAtUtc: string;
+            /** Format: double */
+            previousRate: null | number | string;
+            /** Format: double */
+            changePercent: null | number | string;
+            /** Format: double */
+            windowLow: null | number | string;
+            /** Format: double */
+            windowHigh: null | number | string;
+            points: components["schemas"]["ExchangeRatePointDto"][];
         };
         HouseCommitPhotoItem: {
             /** Format: uuid */
@@ -2253,11 +3328,14 @@ export interface components {
             houseId: string;
             name: string;
             description: null | string;
-            listingType?: number | string;
+            listingType: components["schemas"]["HouseListingType"];
             /** Format: double */
-            price?: number | string;
-            currency?: string;
+            price: number | string;
+            currency: string;
             houseTypeName: null | string;
+            nameEn: null | string;
+            descriptionEn: null | string;
+            houseTypeNameEn: null | string;
             line1: null | string;
             line2: null | string;
             city: null | string;
@@ -2266,6 +3344,7 @@ export interface components {
             postalCode: null | string;
             photos: components["schemas"]["HousePhotoDto"][];
         };
+        HouseListingType: number;
         HousePhotoDto: {
             /** Format: uuid */
             photoId: string;
@@ -2278,14 +3357,24 @@ export interface components {
             /** Format: uuid */
             houseId: string;
             name: string;
-            description?: null | string;
-            listingType?: any;
-            price?: number | string;
-            currency?: string;
+            description: null | string;
+            listingType: components["schemas"]["HouseListingType"];
+            /** Format: double */
+            price: number | string;
+            currency: string;
             houseTypeName: null | string;
+            nameEn: null | string;
+            descriptionEn: null | string;
+            houseTypeNameEn: null | string;
             city: null | string;
             country: null | string;
             photos: components["schemas"]["HousePhotoDto"][];
+        };
+        HouseTypeDto: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            nameEn?: null | string;
         };
         /** Format: binary */
         IFormFile: string;
@@ -2299,6 +3388,42 @@ export interface components {
         };
         LogoutRequest: {
             refreshToken: string;
+        };
+        PagedResultOfHouseSummaryDto: {
+            items: components["schemas"]["HouseSummaryDto"][];
+            /** Format: int32 */
+            total: number | string;
+            /** Format: int32 */
+            page: number | string;
+            /** Format: int32 */
+            pageSize: number | string;
+        };
+        PagedResultOfHouseTypeDto: {
+            items: components["schemas"]["HouseTypeDto"][];
+            /** Format: int32 */
+            total: number | string;
+            /** Format: int32 */
+            page: number | string;
+            /** Format: int32 */
+            pageSize: number | string;
+        };
+        PagedResultOfTourCategoryDto: {
+            items: components["schemas"]["TourCategoryDto"][];
+            /** Format: int32 */
+            total: number | string;
+            /** Format: int32 */
+            page: number | string;
+            /** Format: int32 */
+            pageSize: number | string;
+        };
+        PagedResultOfTourSummaryDto: {
+            items: components["schemas"]["TourSummaryDto"][];
+            /** Format: int32 */
+            total: number | string;
+            /** Format: int32 */
+            page: number | string;
+            /** Format: int32 */
+            pageSize: number | string;
         };
         PermissionDefinitionDto: {
             /** Format: uuid */
@@ -2315,6 +3440,13 @@ export interface components {
             detail?: null | string;
             instance?: null | string;
         };
+        PublicSectionDto: {
+            id: string;
+            sectionType: components["schemas"]["PublicSectionType"];
+            header: string;
+            content: string;
+        };
+        PublicSectionType: unknown;
         RefreshRequest: {
             refreshToken: string;
         };
@@ -2338,6 +3470,12 @@ export interface components {
             expiresAtUtc: string;
             targetType: components["schemas"]["StagedUploadTargetType"];
         };
+        TourCategoryDto: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            nameEn?: null | string;
+        };
         TourCommitPhotoItem: {
             /** Format: uuid */
             stagedUploadId: string;
@@ -2351,7 +3489,11 @@ export interface components {
             name: string;
             description: null | string;
             tourCategoryName: string;
-            price: number;
+            nameEn: null | string;
+            descriptionEn: null | string;
+            tourCategoryNameEn: null | string;
+            /** Format: double */
+            price: number | string;
             currency: string;
             countryCode: string;
             schedules: components["schemas"]["TourScheduleDto"][];
@@ -2375,39 +3517,6 @@ export interface components {
             /** Format: int32 */
             capacity: number | string;
         };
-        TourSummaryDto: {
-            /** Format: uuid */
-            tourId: string;
-            name: string;
-            description: null | string;
-            tourCategoryName: string;
-            price: number;
-            currency: string;
-            year: number;
-            photos: components["schemas"]["TourPhotoDto"][];
-        };
-        UpdateExchangeOrderStatusRequest: {
-            status: components["schemas"]["ExchangeOrderStatus"];
-        };
-        UpdateHouseRequest: {
-            name: string;
-            description: null | string;
-            houseTypeName: string;
-            address: components["schemas"]["AddressRequest"];
-            photos: null | components["schemas"]["HouseCommitPhotoItem"][];
-        };
-        UpdatePermissionDefinitionRequest: {
-            description: null | string;
-            isEnabled: boolean;
-        };
-        UpdateTourRequest: {
-            name: string;
-            description: null | string;
-            tourCategoryName: string;
-            photos: null | components["schemas"]["TourCommitPhotoItem"][];
-            schedules: null | components["schemas"]["TourScheduleUpdateItem"][];
-            deletedScheduleIds: null | string[];
-        };
         TourScheduleUpdateItem: {
             /** Format: uuid */
             id: null | string;
@@ -2418,6 +3527,65 @@ export interface components {
             /** Format: int32 */
             capacity: number | string;
         };
+        TourSummaryDto: {
+            /** Format: uuid */
+            tourId: string;
+            name: string;
+            description: null | string;
+            tourCategoryName: string;
+            nameEn: null | string;
+            descriptionEn: null | string;
+            tourCategoryNameEn: null | string;
+            /** Format: double */
+            price: number | string;
+            currency: string;
+            /** Format: int32 */
+            year: number | string;
+            photos: components["schemas"]["TourPhotoDto"][];
+        };
+        UpdateExchangeOrderStatusRequest: {
+            status: components["schemas"]["ExchangeOrderStatus"];
+        };
+        UpdateHouseRequest: {
+            name: string;
+            description: null | string;
+            listingType: components["schemas"]["HouseListingType"];
+            /** Format: double */
+            price: number | string;
+            currency: string;
+            houseTypeName: string;
+            address: components["schemas"]["AddressRequest"];
+            photos: null | components["schemas"]["HouseCommitPhotoItem"][];
+            deletedPhotoIds: null | string[];
+            nameEn?: null | string;
+            descriptionEn?: null | string;
+        };
+        UpdateHouseTypeRequest: {
+            name: string;
+            nameEn?: null | string;
+        };
+        UpdatePermissionDefinitionRequest: {
+            description: null | string;
+            isEnabled: boolean;
+        };
+        UpdateTourCategoryRequest: {
+            name: string;
+            nameEn?: null | string;
+        };
+        UpdateTourRequest: {
+            name: string;
+            description: null | string;
+            tourCategoryName: string;
+            /** Format: double */
+            price: number | string;
+            currency: string;
+            countryCode: string;
+            photos?: null | components["schemas"]["TourCommitPhotoItem"][];
+            schedules?: null | components["schemas"]["TourScheduleUpdateItem"][];
+            deletedScheduleIds?: null | string[];
+            nameEn?: null | string;
+            descriptionEn?: null | string;
+        };
         UpdateTourScheduleRequest: {
             /** Format: date-time */
             startAtUtc: string;
@@ -2425,6 +3593,11 @@ export interface components {
             endAtUtc: string;
             /** Format: int32 */
             capacity: number | string;
+        };
+        UpsertPublicSectionRequest: {
+            sectionType?: components["schemas"]["PublicSectionType"];
+            header?: string;
+            content?: string;
         };
     };
     responses: never;

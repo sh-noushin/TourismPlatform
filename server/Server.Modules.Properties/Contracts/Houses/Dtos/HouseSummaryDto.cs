@@ -10,6 +10,9 @@ public sealed record HouseSummaryDto(
     decimal Price,
     string Currency,
     string? HouseTypeName,
+    string? NameEn,
+    string? DescriptionEn,
+    string? HouseTypeNameEn,
     string? City,
     string? Country,
     IReadOnlyCollection<HousePhotoDto> Photos);

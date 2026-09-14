@@ -13,6 +13,8 @@ import {
 export interface TourCategoryDto {
   id: string;
   name: string;
+  /** English name; null when it has not been translated. */
+  nameEn?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -75,12 +77,16 @@ export class TourCategoriesService {
     return firstValueFrom(this.http.get<TourCategoryDto>(`${this.apiBaseUrl}/api/tour-categories/${id}`));
   }
 
-  async create(name: string) {
-    return firstValueFrom(this.http.post<TourCategoryDto>(`${this.apiBaseUrl}/api/tour-categories`, { name }));
+  async create(name: string, nameEn?: string | null) {
+    return firstValueFrom(
+      this.http.post<TourCategoryDto>(`${this.apiBaseUrl}/api/tour-categories`, { name, nameEn: nameEn || null })
+    );
   }
 
-  async update(id: string, name: string) {
-    return firstValueFrom(this.http.put<void>(`${this.apiBaseUrl}/api/tour-categories/${id}`, { name }));
+  async update(id: string, name: string, nameEn?: string | null) {
+    return firstValueFrom(
+      this.http.put<void>(`${this.apiBaseUrl}/api/tour-categories/${id}`, { name, nameEn: nameEn || null })
+    );
   }
 
   async delete(id: string) {

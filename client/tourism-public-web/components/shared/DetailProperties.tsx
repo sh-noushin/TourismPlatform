@@ -15,7 +15,7 @@ type DetailPropertiesProps = {
 
 export function DetailProperties({ title, items, className }: DetailPropertiesProps) {
   const wrapperClassName = [
-    "space-y-4 border border-white/10 bg-slate-900/60 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.55)]",
+    "space-y-4 border border-[color:var(--border)] bg-[color:var(--surface)] p-6",
     className,
   ]
     .filter(Boolean)
@@ -28,7 +28,7 @@ export function DetailProperties({ title, items, className }: DetailPropertiesPr
       <div>
         <h2 className="text-lg font-semibold text-text">{title}</h2>
       </div>
-      <dl className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+      <dl className="overflow-hidden rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-sunken)]">
         {items.map((item, index) => {
           const displayValue =
             item.value === undefined ||
@@ -42,7 +42,7 @@ export function DetailProperties({ title, items, className }: DetailPropertiesPr
               key={item.label}
               className={[
                 "flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-start sm:gap-6",
-                index === 0 ? "" : "border-t border-white/10",
+                index === 0 ? "" : "border-t border-[color:var(--border)]",
               ]
                 .filter(Boolean)
                 .join(" ")}

@@ -44,6 +44,9 @@ type TourPhotoVm = ExistingPhotoVm | StagedPhotoVm;
 type TourForm = {
   name: string;
   description: string;
+  /** Optional English text; the public site falls back to the Persian. */
+  nameEn: string;
+  descriptionEn: string;
   tourCategoryName: string;
   price: number;
   currency: string;
@@ -246,6 +249,8 @@ export class TourEditComponent implements OnDestroy {
       this.form.set({
         name: detail.name ?? '',
         description: detail.description ?? '',
+        nameEn: detail.nameEn ?? '',
+        descriptionEn: detail.descriptionEn ?? '',
         tourCategoryName: detail.tourCategoryName ?? '',
         price: detail.price ?? 0,
         currency: detail.currency ?? 'USD',
@@ -281,6 +286,8 @@ export class TourEditComponent implements OnDestroy {
     return {
       name: '',
       description: '',
+      nameEn: '',
+      descriptionEn: '',
       tourCategoryName: '',
       price: 0,
       currency: 'USD',
@@ -333,6 +340,10 @@ export class TourEditComponent implements OnDestroy {
     });
 
     const descriptionValue = form.description.trim();
+    // Empty means "not translated" and must travel as undefined, so the server
+    // stores null and the site keeps falling back to the Persian.
+    const nameEnValue = form.nameEn.trim() || undefined;
+    const descriptionEnValue = form.descriptionEn.trim() || undefined;
     const categoryName = form.tourCategoryName.trim();
     const currencyCode = form.currency.trim() || 'USD';
 
@@ -349,6 +360,8 @@ export class TourEditComponent implements OnDestroy {
       const payload = new UpdateTourRequest({
         name: form.name.trim(),
         description: descriptionValue || undefined,
+        nameEn: nameEnValue,
+        descriptionEn: descriptionEnValue,
         tourCategoryName: categoryName,
         price: form.price,
         currency: currencyCode,
@@ -372,6 +385,8 @@ export class TourEditComponent implements OnDestroy {
       const payload = new CreateTourRequest({
         name: form.name.trim(),
         description: descriptionValue || undefined,
+        nameEn: nameEnValue,
+        descriptionEn: descriptionEnValue,
         tourCategoryName: categoryName,
         price: form.price,
         currency: currencyCode,

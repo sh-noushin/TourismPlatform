@@ -1,60 +1,90 @@
 @import "tailwindcss";
 
+/* =============================================================================
+   Public site design tokens — editorial travel.
+
+   Warm paper rather than white, ink rather than black, one deep accent and one
+   warm one. The previous palette declared a near-black background that no page
+   ever used, so every component hard-coded its own slate/sky colours instead.
+   ========================================================================== */
+
 :root {
-  --bg: #010101;
-  --surface: #020202;
-  --text: #f8fafc;
-  --muted: #9ca6b5;
-  --border: #1a1a1a;
-  --primary: #fbbf24;
-  --primary-foreground: #010101;
-  --radius: 0.75rem;
-  --font-fa: 'B Nazanin', 'NazaninLocal', 'Nazanin', system-ui, -apple-system, sans-serif;
+  --bg: #fbf9f6;          /* warm paper */
+  --surface: #ffffff;
+  --surface-sunken: #f4f1ea;
+  --text: #1c1a17;        /* ink */
+  --muted: #6f6a60;
+  --border: #e6e0d6;
+
+  --primary: #10706a;     /* deep teal — links, buttons, active states */
+  --primary-hover: #0b5a55;
+  --primary-soft: #e6f1ef;
+  --primary-foreground: #ffffff;
+
+  --accent: #c2603f;      /* terracotta — highlights */
+  --accent-soft: #fbeee8;
+
+  /* Call to action. Split from --primary on purpose: the teal is doing three
+     jobs already (links, chips, stat figures), and a button painted the same
+     colour as the text around it stops looking clickable. Blue also carries
+     the strongest "this is the button" convention on travel sites, and clears
+     6:1 on white -- the teal managed 3.9, too low for a small label. */
+  --cta: #1462c6;
+  --cta-hover: #0f4fa3;
+
+  --radius: 1rem;
+
+  --font-fa: 'IRANSansFaNum', 'Vazirmatn', system-ui, -apple-system, sans-serif;
 }
 
-/* Nazanin local font bundle (TTF placed in public/fonts/NAZANIN.TTF) */
 @font-face {
-  font-family: 'NazaninLocal';
-  src: url('/fonts/NAZANIN.TTF') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'NazaninLocal';
-  src: url('/fonts/NAZANIN.TTF') format('truetype');
-  font-weight: 700;
+  font-family: 'IRANSansFaNum';
+  src: url('/fonts/IRANSansWeb-FaNum-Medium.woff2') format('woff2');
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @theme inline {
   --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
   --color-foreground: var(--text);
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
   --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-cta: var(--cta);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f172a;
-    --surface: #111827;
-    --text: #f8fafc;
-    --muted: #94a3b8;
-    --border: #1f2937;
-    --primary: #22d3ee;
-    --primary-foreground: #0f172a;
-  }
-}
+/* -----------------------------------------------------------------------------
+   Type scale.
 
+   One root size per direction, inherited from there. What used to live here was
+   a 20px !important on every Farsi element, then a set of .lang-balanced-*
+   classes fighting it back down inside cards and headers -- a rule and its own
+   counter-rule. Persian renders visually smaller than Latin at the same size,
+   so it gets one extra point at the root and nothing else needs to know.
+-------------------------------------------------------------------------- */
 html {
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-size: 16px;
   background-color: var(--bg);
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+html[lang='fa'],
+html[dir='rtl'] {
+  font-family: var(--font-fa);
+  font-size: 17px;
+  /* Arabic letterforms are already connected; tracking pulls them apart. */
+  letter-spacing: 0;
 }
 
 body {
@@ -68,217 +98,6 @@ body {
   box-sizing: border-box;
 }
 
-/* Farsi / RTL override: prefer B Nazanin where available for menus, tables, and components */
-html[lang='fa'],
-html[dir='rtl'],
-:lang(fa),
-[lang='fa'] {
-  font-family: var(--font-fa);
-}
-
-/* Apply specifically to tables, navs and common UI containers to avoid mixed fonts */
-html[lang='fa'] table,
-html[lang='fa'] th,
-html[lang='fa'] td,
-html[lang='fa'] nav,
-html[lang='fa'] .menu,
-html[lang='fa'] .dropdown,
-html[dir='rtl'] table,
-html[dir='rtl'] th,
-html[dir='rtl'] td,
-html[dir='rtl'] nav,
-html[dir='rtl'] .menu {
-  font-family: var(--font-fa);
-}
-
-/* Broad Farsi selectors: ensure menus, navs, lists, buttons, inputs and common components use B Nazanin when page language is Farsi */
-html[lang='fa'],
-html[dir='rtl'],
-:lang(fa) {
-  font-family: var(--font-fa);
-  font-size: 20px !important;
-}
-html[lang='fa'] body *,
-html[lang='fa'] nav,
-html[lang='fa'] .menu,
-html[lang='fa'] .dropdown,
-html[lang='fa'] .mat-menu-panel,
-html[lang='fa'] .mat-list,
-html[lang='fa'] button,
-html[lang='fa'] input,
-html[lang='fa'] textarea,
-html[lang='fa'] table,
-html[lang='fa'] th,
-html[lang='fa'] td,
-html[lang='fa'] [class^="sf-"],
-html[lang='fa'] [class*=" sf-"] {
-  font-family: var(--font-fa);
-}
-
-/* Keep cards the same size across locales by neutralizing global font bumps inside .lang-balanced-card */
-.lang-balanced-card {
-  font-size: 15px !important;
-  line-height: 1.5 !important;
-}
-@media (min-width: 768px) {
-  .lang-balanced-card {
-    font-size: 16px !important;
-  }
-}
-.lang-balanced-card,
-.lang-balanced-card * {
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-
-/* Keep hero/section headings consistent across locales */
-.lang-balanced-section {
-  font-size: 16px !important;
-  line-height: 1.6 !important;
-}
-@media (min-width: 768px) {
-  .lang-balanced-section {
-    font-size: 17px !important;
-  }
-}
-.lang-balanced-section,
-.lang-balanced-section * {
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-html[lang='fa'] .lang-balanced-section,
-:lang(fa) .lang-balanced-section,
-html[dir='rtl'] .lang-balanced-section {
-  font-size: 16px !important;
-  line-height: 1.6 !important;
-}
-@media (min-width: 768px) {
-  html[lang='fa'] .lang-balanced-section,
-  :lang(fa) .lang-balanced-section,
-  html[dir='rtl'] .lang-balanced-section {
-    font-size: 17px !important;
-  }
-}
-html[lang='fa'] .lang-balanced-section *,
-:lang(fa) .lang-balanced-section *,
-html[dir='rtl'] .lang-balanced-section * {
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-
-/* Clamp root font size for consistent layout widths across locales */
-html.lang-balanced-root {
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-}
-html.lang-balanced-root:lang(fa),
-html.lang-balanced-root[lang='fa'],
-html.lang-balanced-root[dir='rtl'] {
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-}
-
-/* Keep header typography consistent across locales */
-.lang-balanced-header {
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-}
-.lang-balanced-header--home {
-  font-size: 20px !important;
-}
-.lang-balanced-header *,
-html[lang='fa'] .lang-balanced-header *,
-:lang(fa) .lang-balanced-header *,
-html[dir='rtl'] .lang-balanced-header * {
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-html[lang='fa'] .lang-balanced-header,
-:lang(fa) .lang-balanced-header,
-html[dir='rtl'] .lang-balanced-header {
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-}
-.lang-balanced-header nav a {
-  font-size: 16px;
-}
-html[lang='fa'] .lang-balanced-header nav a,
-:lang(fa) .lang-balanced-header nav a,
-html[dir='rtl'] .lang-balanced-header nav a {
-  font-size: 26px !important;
-}
-@font-face {
-  font-family: 'Nazanin';
-  src: url('/fonts/NAZANIN.TTF') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-:lang(fa),
-html[lang='fa'],
-html[dir='rtl'] {
-  font-family: var(--font-fa) !important;
-  font-size: 20px !important;
-}
-
-html[lang='fa'] body,
-html[lang='fa'] body *,
-:lang(fa) body,
-:lang(fa) body * {
-  font-family: var(--font-fa) !important;
-  font-size: 20px !important;
-}
-
-/* Side menu: use B Nazanin at 35px when page is Farsi/RTL */
-html[lang='fa'] .side-menu,
-html[lang='fa'] .sidemenu,
-html[lang='fa'] .sidebar,
-:lang(fa) .side-menu,
-:lang(fa) .sidemenu,
-:lang(fa) .sidebar,
-html[dir='rtl'] .side-menu,
-html[dir='rtl'] .sidemenu,
-html[dir='rtl'] .sidebar {
-  font-family: var(--font-fa) !important;
-  font-size: 24px !important;
-}
-
-/* Override nested sidebar items that set their own font-size in component styles */
-html[lang='fa'] .sidebar .nav__label,
-html[lang='fa'] .sidebar .nav__item,
-html[lang='fa'] .sidebar .nav__submenu-item,
-:lang(fa) .sidebar .nav__label,
-:lang(fa) .sidebar .nav__item,
-:lang(fa) .sidebar .nav__submenu-item,
-html[dir='rtl'] .sidebar .nav__label,
-html[dir='rtl'] .sidebar .nav__item,
-html[dir='rtl'] .sidebar .nav__submenu-item {
-  font-family: var(--font-fa) !important;
-  font-size: 24px !important;
-}
-
-/* Force balanced sizing inside cards even under Farsi font bumps */
-html[lang='fa'] .lang-balanced-card,
-:lang(fa) .lang-balanced-card,
-html[dir='rtl'] .lang-balanced-card {
-  font-size: 15px !important;
-  line-height: 1.5 !important;
-}
-@media (min-width: 768px) {
-  html[lang='fa'] .lang-balanced-card,
-  :lang(fa) .lang-balanced-card,
-  html[dir='rtl'] .lang-balanced-card {
-    font-size: 16px !important;
-  }
-}
-html[lang='fa'] .lang-balanced-card *,
-:lang(fa) .lang-balanced-card *,
-html[dir='rtl'] .lang-balanced-card * {
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-
 select {
   background-color: var(--surface);
   color: var(--text);
@@ -289,4 +108,20 @@ select {
 select option {
   background-color: var(--surface);
   color: var(--text);
+}
+
+/* Long descriptions are clamped in cards; the utility is small enough to keep
+   here rather than pulling in a plugin. */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

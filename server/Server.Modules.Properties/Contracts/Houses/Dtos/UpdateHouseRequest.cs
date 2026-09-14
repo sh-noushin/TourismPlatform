@@ -2,6 +2,8 @@ namespace Server.Modules.Properties.Contracts.Houses.Dtos;
 
 using Server.Modules.Properties.Domain.Houses;
 
+// English text sits at the end with defaults on purpose: it is optional, and a
+// caller that has no translation should not have to name it.
 public sealed record UpdateHouseRequest(
     string Name,
     string? Description,
@@ -11,4 +13,6 @@ public sealed record UpdateHouseRequest(
     string HouseTypeName,
     AddressRequest Address,
     IReadOnlyCollection<HouseCommitPhotoItem>? Photos,
-    IReadOnlyCollection<Guid>? DeletedPhotoIds);
+    IReadOnlyCollection<Guid>? DeletedPhotoIds,
+    string? NameEn = null,
+    string? DescriptionEn = null);

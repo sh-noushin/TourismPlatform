@@ -6,8 +6,8 @@ import { fetchHouseTypes, CategoryDto } from "@/lib/api/categories";
 import { getJson } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/api/endpoints";
 import { houseSortValues, parseHouseFilters, toHouseQuery, HouseFilters as HouseFiltersShape } from "@/lib/filters/houses";
-import { cookies } from "next/headers";
 import { i18n } from "@/lib/i18n";
+import { resolveLocale } from "@/lib/locale";
 import type { SortOption } from "@/components/shared/SortDropdown.client";
 
 type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
@@ -53,8 +53,7 @@ const sortHouses = (houses: HouseSummaryDto[], sort: HouseFiltersShape["sort"]) 
 export default async function HousesPage({ searchParams }: HousesPageProps) {
   const resolvedSearchParams = (await Promise.resolve(searchParams)) ?? {};
   const filters = parseHouseFilters(resolvedSearchParams);
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const locale = await resolveLocale();
   const translations = i18n(locale);
   const sortOptions: SortOption[] = houseSortValues.map((value) => ({
     value,
@@ -94,7 +93,7 @@ export default async function HousesPage({ searchParams }: HousesPageProps) {
           />
         </div>
 
-        <div className="rounded-[32px] border border-white/10 bg-slate-900/60 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.7)] backdrop-blur">
+        <div className="">
           <HouseResults
             houses={paged}
             page={currentPage}

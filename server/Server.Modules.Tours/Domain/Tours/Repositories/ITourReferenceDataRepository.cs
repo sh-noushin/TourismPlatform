@@ -11,7 +11,7 @@ public interface ITourReferenceDataRepository
         CancellationToken cancellationToken = default);
     Task<TourCategory?> GetTourCategoryByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<TourCategory?> GetTourCategoryByNameAsync(string name, CancellationToken cancellationToken = default);
-    Task<TourCategory> CreateTourCategoryAsync(string name, CancellationToken cancellationToken = default);
-    Task<TourCategory?> UpdateTourCategoryAsync(Guid id, string name, CancellationToken cancellationToken = default);
+    Task<TourCategory> CreateTourCategoryAsync(string name, string? nameEn, CancellationToken cancellationToken = default);
+    Task<TourCategory?> UpdateTourCategoryAsync(Guid id, string name, string? nameEn, CancellationToken cancellationToken = default);
     Task<bool> DeleteTourCategoryAsync(Guid id, CancellationToken cancellationToken = default);
 }

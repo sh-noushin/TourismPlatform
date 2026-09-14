@@ -7,4 +7,6 @@ public sealed record PublicSectionDto(
     string Id,
     [property: JsonConverter(typeof(PublicSectionTypeJsonConverter))] Domain.PublicSectionType SectionType,
     string Header,
-    string Content);
+    string Content,
+    string? HeaderEn = null,
+    string? ContentEn = null);

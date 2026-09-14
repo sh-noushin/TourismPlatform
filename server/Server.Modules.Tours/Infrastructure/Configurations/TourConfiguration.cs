@@ -22,6 +22,12 @@ public sealed class TourConfiguration : IEntityTypeConfiguration<Tour>
         builder.Property(x => x.Description)
             .HasMaxLength(4000);
 
+        builder.Property(x => x.NameEn)
+            .HasMaxLength(256);
+
+        builder.Property(x => x.DescriptionEn)
+            .HasMaxLength(4000);
+
         builder.Property(x => x.Price)
             .IsRequired()
             .HasPrecision(18, 2)

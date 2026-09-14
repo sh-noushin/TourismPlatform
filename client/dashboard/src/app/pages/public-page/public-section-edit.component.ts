@@ -37,6 +37,9 @@ export class PublicSectionEditComponent {
   readonly sectionType = signal<SectionType>(SECTION_TYPE_VALUES[0]);
   readonly header = signal('');
   readonly content = signal('');
+  /** Optional English copy; the public site falls back to the Persian. */
+  readonly headerEn = signal('');
+  readonly contentEn = signal('');
 
   constructor(
     private readonly client: Client,
@@ -83,7 +86,9 @@ export class PublicSectionEditComponent {
       const payload = {
         sectionType: this.sectionType(),
         header: this.header().trim(),
-        content: this.content().trim()
+        content: this.content().trim(),
+        headerEn: this.headerEn().trim() || undefined,
+        contentEn: this.contentEn().trim() || undefined
       };
 
       if (this.mode === 'create') {
@@ -110,6 +115,8 @@ export class PublicSectionEditComponent {
     this.sectionType.set(existing.sectionType);
     this.header.set(existing.header ?? '');
     this.content.set(existing.content ?? '');
+    this.headerEn.set(existing.headerEn ?? '');
+    this.contentEn.set(existing.contentEn ?? '');
   }
 
   sectionTypeOptionLabel(type: SectionType) {

@@ -54,6 +54,9 @@ public sealed class TourService : ITourService
                 t.Name,
                 t.Description,
                 t.TourCategory.Name,
+                t.NameEn,
+                t.DescriptionEn,
+                t.TourCategory.NameEn,
                 t.Price,
                 t.Currency,
                 t.CreatedAtUtc.Year,
@@ -78,6 +81,9 @@ public sealed class TourService : ITourService
                 t.Name,
                 t.Description,
                 t.TourCategory.Name,
+                t.NameEn,
+                t.DescriptionEn,
+                t.TourCategory.NameEn,
                 t.Price,
                 t.Currency,
                 t.CreatedAtUtc.Year,
@@ -105,6 +111,9 @@ public sealed class TourService : ITourService
             tour.Name,
             tour.Description,
             tour.TourCategory.Name,
+            tour.NameEn,
+            tour.DescriptionEn,
+            tour.TourCategory.NameEn,
             tour.Price,
             tour.Currency,
             tour.CountryCode,
@@ -125,6 +134,8 @@ public sealed class TourService : ITourService
             Id = Guid.NewGuid(),
             Name = request.Name.Trim(),
             Description = request.Description,
+            NameEn = Translation(request.NameEn),
+            DescriptionEn = Translation(request.DescriptionEn),
             TourCategoryId = category.Id,
             Price = request.Price,
             Currency = request.Currency.Trim(),
@@ -156,6 +167,8 @@ public sealed class TourService : ITourService
 
         tour.Name = request.Name.Trim();
         tour.Description = request.Description;
+        tour.NameEn = Translation(request.NameEn);
+        tour.DescriptionEn = Translation(request.DescriptionEn);
         tour.TourCategoryId = category.Id;
         tour.Price = request.Price;
         tour.Currency = request.Currency.Trim();
@@ -417,4 +430,12 @@ public sealed class TourService : ITourService
 
         await _tourScheduleRepository.SaveChangesAsync(cancellationToken);
     }
+
+    /// <summary>
+    /// Blank and whitespace both mean "no translation", and both must store
+    /// null -- an empty string would read as a translation that exists and is
+    /// empty, and the display fallback would stop firing.
+    /// </summary>
+    private static string? Translation(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

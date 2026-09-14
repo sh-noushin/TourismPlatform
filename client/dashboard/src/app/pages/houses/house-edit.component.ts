@@ -36,6 +36,9 @@ type CleanupStageUploadsRequest = {
 type HouseForm = {
   name: string;
   description: string;
+  /** Optional English text; the public site falls back to the Persian. */
+  nameEn: string;
+  descriptionEn: string;
   houseTypeName: string;
   line1: string;
   line2?: string;
@@ -150,6 +153,8 @@ export class HouseEditComponent implements OnDestroy {
         this.form.set({
           name: '',
           description: '',
+          nameEn: '',
+          descriptionEn: '',
           houseTypeName: '',
           line1: '',
           line2: '',
@@ -193,6 +198,8 @@ export class HouseEditComponent implements OnDestroy {
       this.form.set({
         name: res?.name ?? '',
         description: res?.description ?? '',
+        nameEn: res?.nameEn ?? '',
+        descriptionEn: res?.descriptionEn ?? '',
         houseTypeName: res?.houseTypeName ?? '',
         line1: address?.line1 ?? res?.line1 ?? '',
         line2: address?.line2 ?? res?.line2 ?? '',
@@ -251,6 +258,10 @@ export class HouseEditComponent implements OnDestroy {
       const payload: any = {
         name: form.name,
         description: form.description || undefined,
+        // Empty means "not translated": send undefined so the server stores
+        // null and the site keeps falling back to the Persian.
+        nameEn: form.nameEn.trim() || undefined,
+        descriptionEn: form.descriptionEn.trim() || undefined,
         listingType: form.listingType,
         price: form.price,
         currency: form.currency,

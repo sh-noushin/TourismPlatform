@@ -13,6 +13,8 @@ import {
 export interface HouseTypeDto {
   id: string;
   name: string;
+  /** English name; null when it has not been translated. */
+  nameEn?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -79,12 +81,16 @@ export class HouseTypesService {
     return firstValueFrom(this.http.get<HouseTypeDto>(`${this.apiBaseUrl}/api/house-types/${id}`));
   }
 
-  async create(name: string) {
-    return firstValueFrom(this.http.post<HouseTypeDto>(`${this.apiBaseUrl}/api/house-types`, { name }));
+  async create(name: string, nameEn?: string | null) {
+    return firstValueFrom(
+      this.http.post<HouseTypeDto>(`${this.apiBaseUrl}/api/house-types`, { name, nameEn: nameEn || null })
+    );
   }
 
-  async update(id: string, name: string) {
-    return firstValueFrom(this.http.put<void>(`${this.apiBaseUrl}/api/house-types/${id}`, { name }));
+  async update(id: string, name: string, nameEn?: string | null) {
+    return firstValueFrom(
+      this.http.put<void>(`${this.apiBaseUrl}/api/house-types/${id}`, { name, nameEn: nameEn || null })
+    );
   }
 
   async delete(id: string) {

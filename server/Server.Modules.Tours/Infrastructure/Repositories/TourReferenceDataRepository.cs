@@ -77,7 +77,7 @@ public sealed class TourReferenceDataRepository : ITourReferenceDataRepository
             .FirstOrDefaultAsync(x => x.Name == normalized, cancellationToken);
     }
 
-    public async Task<TourCategory> CreateTourCategoryAsync(string name, CancellationToken cancellationToken = default)
+    public async Task<TourCategory> CreateTourCategoryAsync(string name, string? nameEn, CancellationToken cancellationToken = default)
     {
         var normalized = Normalize(name);
         var existing = await GetTourCategoryByNameAsync(normalized, cancellationToken);
@@ -86,13 +86,13 @@ public sealed class TourReferenceDataRepository : ITourReferenceDataRepository
             throw new InvalidOperationException($"Tour category '{normalized}' already exists.");
         }
 
-        var created = new TourCategory { Id = Guid.NewGuid(), Name = normalized };
+        var created = new TourCategory { Id = Guid.NewGuid(), Name = normalized, NameEn = Translation(nameEn) };
         _dbContext.Add(created);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return created;
     }
 
-    public async Task<TourCategory?> UpdateTourCategoryAsync(Guid id, string name, CancellationToken cancellationToken = default)
+    public async Task<TourCategory?> UpdateTourCategoryAsync(Guid id, string name, string? nameEn, CancellationToken cancellationToken = default)
     {
         var normalized = Normalize(name);
 
@@ -110,6 +110,7 @@ public sealed class TourReferenceDataRepository : ITourReferenceDataRepository
         }
 
         category.Name = normalized;
+        category.NameEn = Translation(nameEn);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return category;
     }
@@ -128,4 +129,8 @@ public sealed class TourReferenceDataRepository : ITourReferenceDataRepository
     }
 
     private static string Normalize(string value) => value.Trim();
+
+    /// <summary>Blank means "not translated"; store null so display falls back.</summary>
+    private static string? Translation(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

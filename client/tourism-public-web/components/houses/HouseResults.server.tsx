@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { EmptyState, Pagination } from "@/components/ui";
 import { SortDropdown } from "@/components/shared/SortDropdown.client";
 import type { SortOption } from "@/components/shared/SortDropdown.client";
@@ -6,6 +5,7 @@ import { resolveSortValue } from "@/components/shared/SortDropdown.utils";
 import { HouseCard } from "./HouseCard";
 import { houseSortValues, type HouseSort } from "@/lib/filters/houses";
 import { i18n } from "@/lib/i18n";
+import { resolveLocale } from "@/lib/locale";
 import type { components } from "@/lib/openapi/types";
 
 type HouseSummaryDto = components["schemas"]["HouseSummaryDto"];
@@ -19,8 +19,7 @@ type HouseResultsProps = {
 };
 
 export async function HouseResults({ houses, page, pageSize, totalCount, currentQuery }: HouseResultsProps) {
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const locale = await resolveLocale();
   const t = i18n(locale);
 
   const defaultSort = (houseSortValues[0] ?? ("nameAsc" as HouseSort)) as HouseSort;
@@ -70,7 +69,7 @@ export async function HouseResults({ houses, page, pageSize, totalCount, current
       {houses.length === 0 ? (
         <EmptyState title={t.results.housesEmptyTitle} description={t.results.housesEmptyDescription} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {houses.map((house) => (
             <HouseCard key={house.houseId} house={house} locale={locale} />
           ))}

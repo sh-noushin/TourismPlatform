@@ -4336,6 +4336,8 @@ export interface ICreateExchangeOrderRequest {
 export class CreateHouseRequest implements ICreateHouseRequest {
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
     listingType!: number;
     price!: number;
     currency!: string;
@@ -4365,6 +4367,8 @@ export class CreateHouseRequest implements ICreateHouseRequest {
             }
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
             this.listingType = _data["listingType"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -4393,6 +4397,8 @@ export class CreateHouseRequest implements ICreateHouseRequest {
         }
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
         data["listingType"] = this.listingType;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -4418,6 +4424,8 @@ export interface ICreateHouseRequest {
     photos: HouseCommitPhotoItem[] | undefined;
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
 }
 
 export class CreateHouseTypeRequest implements ICreateHouseTypeRequest {
@@ -4529,6 +4537,8 @@ export class CreatePublicSectionRequest implements ICreatePublicSectionRequest {
     sectionType!: SectionType;
     header!: string;
     content!: string;
+    headerEn!: string | undefined;
+    contentEn!: string | undefined;
 
     [key: string]: any;
 
@@ -4554,6 +4564,8 @@ export class CreatePublicSectionRequest implements ICreatePublicSectionRequest {
             this.sectionType = sectionTypeFromValue(_data["sectionType"]);
             this.header = _data["header"];
             this.content = _data["content"];
+            this.headerEn = _data["headerEn"];
+            this.contentEn = _data["contentEn"];
         }
     }
 
@@ -4574,6 +4586,8 @@ export class CreatePublicSectionRequest implements ICreatePublicSectionRequest {
         data["sectionType"] = sectionTypeToValue(this.sectionType);
         data["header"] = this.header;
         data["content"] = this.content;
+        data["headerEn"] = this.headerEn;
+        data["contentEn"] = this.contentEn;
         return data;
     }
 }
@@ -4585,6 +4599,8 @@ export interface ICreatePublicSectionRequest {
     content?: string;
 
     [key: string]: any;
+    headerEn?: string | undefined;
+    contentEn?: string | undefined;
 }
 
 export class CreateTourCategoryRequest implements ICreateTourCategoryRequest {
@@ -4638,6 +4654,8 @@ export interface ICreateTourCategoryRequest {
 export class CreateTourRequest implements ICreateTourRequest {
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
     tourCategoryName!: string;
     price!: number;
     currency!: string;
@@ -4664,6 +4682,8 @@ export class CreateTourRequest implements ICreateTourRequest {
             }
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
             this.tourCategoryName = _data["tourCategoryName"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -4696,6 +4716,8 @@ export class CreateTourRequest implements ICreateTourRequest {
         }
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
         data["tourCategoryName"] = this.tourCategoryName;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -4725,6 +4747,8 @@ export interface ICreateTourRequest {
     schedules?: CreateTourScheduleRequest[] | undefined;
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
 }
 
 export class CreateTourScheduleRequest implements ICreateTourScheduleRequest {
@@ -4959,6 +4983,9 @@ export class HouseDetailDto implements IHouseDetailDto {
     houseId!: string;
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
+    houseTypeNameEn!: string | undefined;
     listingType!: number;
     price!: number;
     currency!: string;
@@ -4994,6 +5021,9 @@ export class HouseDetailDto implements IHouseDetailDto {
             this.houseId = _data["houseId"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.houseTypeNameEn = _data["houseTypeNameEn"];
             this.listingType = _data["listingType"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -5028,6 +5058,9 @@ export class HouseDetailDto implements IHouseDetailDto {
         data["houseId"] = this.houseId;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
+        data["houseTypeNameEn"] = this.houseTypeNameEn;
         data["listingType"] = this.listingType;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -5064,6 +5097,9 @@ export interface IHouseDetailDto {
     photos: HousePhotoDto[];
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
+    houseTypeNameEn?: string | undefined;
 }
 
 export class HousePhotoDto implements IHousePhotoDto {
@@ -5130,6 +5166,9 @@ export class HouseSummaryDto implements IHouseSummaryDto {
     houseId!: string;
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
+    houseTypeNameEn!: string | undefined;
     listingType!: number;
     price!: number;
     currency!: string;
@@ -5161,6 +5200,9 @@ export class HouseSummaryDto implements IHouseSummaryDto {
             this.houseId = _data["houseId"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.houseTypeNameEn = _data["houseTypeNameEn"];
             this.listingType = _data["listingType"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -5191,6 +5233,9 @@ export class HouseSummaryDto implements IHouseSummaryDto {
         data["houseId"] = this.houseId;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
+        data["houseTypeNameEn"] = this.houseTypeNameEn;
         data["listingType"] = this.listingType;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -5219,6 +5264,9 @@ export interface IHouseSummaryDto {
     photos: HousePhotoDto[];
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
+    houseTypeNameEn?: string | undefined;
 }
 
 export class HouseTypeDto implements IHouseTypeDto {
@@ -5874,6 +5922,8 @@ export class PublicSectionDto implements IPublicSectionDto {
     sectionType!: SectionType;
     header!: string;
     content!: string;
+    headerEn!: string | undefined;
+    contentEn!: string | undefined;
 
     [key: string]: any;
 
@@ -5900,6 +5950,8 @@ export class PublicSectionDto implements IPublicSectionDto {
             this.sectionType = sectionTypeFromValue(_data["sectionType"]);
             this.header = _data["header"];
             this.content = _data["content"];
+            this.headerEn = _data["headerEn"];
+            this.contentEn = _data["contentEn"];
         }
     }
 
@@ -5920,6 +5972,8 @@ export class PublicSectionDto implements IPublicSectionDto {
         data["sectionType"] = sectionTypeToValue(this.sectionType);
         data["header"] = this.header;
         data["content"] = this.content;
+        data["headerEn"] = this.headerEn;
+        data["contentEn"] = this.contentEn;
         return data;
     }
 }
@@ -5931,6 +5985,8 @@ export interface IPublicSectionDto {
     content: string;
 
     [key: string]: any;
+    headerEn?: string | undefined;
+    contentEn?: string | undefined;
 }
 
 export const SECTION_TYPE_VALUES = ['Tours', 'Houses', 'Infos'] as const;
@@ -6275,6 +6331,9 @@ export class TourDetailDto implements ITourDetailDto {
     tourId!: string;
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
+    tourCategoryNameEn!: string | undefined;
     tourCategoryName!: string;
     price!: number;
     currency!: string;
@@ -6306,6 +6365,9 @@ export class TourDetailDto implements ITourDetailDto {
             this.tourId = _data["tourId"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.tourCategoryNameEn = _data["tourCategoryNameEn"];
             this.tourCategoryName = _data["tourCategoryName"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -6339,6 +6401,9 @@ export class TourDetailDto implements ITourDetailDto {
         data["tourId"] = this.tourId;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
+        data["tourCategoryNameEn"] = this.tourCategoryNameEn;
         data["tourCategoryName"] = this.tourCategoryName;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -6369,6 +6434,9 @@ export interface ITourDetailDto {
     photos: TourPhotoDto[];
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
+    tourCategoryNameEn?: string | undefined;
 }
 
 export class TourPhotoDto implements ITourPhotoDto {
@@ -6555,6 +6623,9 @@ export class TourSummaryDto implements ITourSummaryDto {
     tourId!: string;
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
+    tourCategoryNameEn!: string | undefined;
     tourCategoryName!: string;
     price!: number;
     currency!: string;
@@ -6584,6 +6655,9 @@ export class TourSummaryDto implements ITourSummaryDto {
             this.tourId = _data["tourId"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.tourCategoryNameEn = _data["tourCategoryNameEn"];
             this.tourCategoryName = _data["tourCategoryName"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -6612,6 +6686,9 @@ export class TourSummaryDto implements ITourSummaryDto {
         data["tourId"] = this.tourId;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
+        data["tourCategoryNameEn"] = this.tourCategoryNameEn;
         data["tourCategoryName"] = this.tourCategoryName;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -6636,6 +6713,9 @@ export interface ITourSummaryDto {
     photos: TourPhotoDto[];
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
+    tourCategoryNameEn?: string | undefined;
 }
 
 export class UpdateExchangeOrderStatusRequest implements IUpdateExchangeOrderStatusRequest {
@@ -6689,6 +6769,8 @@ export interface IUpdateExchangeOrderStatusRequest {
 export class UpdateHouseRequest implements IUpdateHouseRequest {
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
     listingType!: number;
     price!: number;
     currency!: string;
@@ -6719,6 +6801,8 @@ export class UpdateHouseRequest implements IUpdateHouseRequest {
             }
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
             this.listingType = _data["listingType"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -6752,6 +6836,8 @@ export class UpdateHouseRequest implements IUpdateHouseRequest {
         }
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
         data["listingType"] = this.listingType;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -6783,6 +6869,8 @@ export interface IUpdateHouseRequest {
     deletedPhotoIds: string[] | undefined;
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
 }
 
 export class UpdateHouseTypeRequest implements IUpdateHouseTypeRequest {
@@ -6936,6 +7024,8 @@ export interface IUpdateTourCategoryRequest {
 export class UpdateTourRequest implements IUpdateTourRequest {
     name!: string;
     description!: string | undefined;
+    nameEn!: string | undefined;
+    descriptionEn!: string | undefined;
     tourCategoryName!: string;
     price!: number;
     currency!: string;
@@ -6963,6 +7053,8 @@ export class UpdateTourRequest implements IUpdateTourRequest {
             }
             this.name = _data["name"];
             this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.descriptionEn = _data["descriptionEn"];
             this.tourCategoryName = _data["tourCategoryName"];
             this.price = _data["price"];
             this.currency = _data["currency"];
@@ -7000,6 +7092,8 @@ export class UpdateTourRequest implements IUpdateTourRequest {
         }
         data["name"] = this.name;
         data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["descriptionEn"] = this.descriptionEn;
         data["tourCategoryName"] = this.tourCategoryName;
         data["price"] = this.price;
         data["currency"] = this.currency;
@@ -7035,6 +7129,8 @@ export interface IUpdateTourRequest {
     deletedScheduleIds?: string[] | undefined;
 
     [key: string]: any;
+    nameEn?: string | undefined;
+    descriptionEn?: string | undefined;
 }
 
 export class UpdateTourScheduleRequest implements IUpdateTourScheduleRequest {
@@ -7297,6 +7393,8 @@ export class UpsertPublicSectionRequest implements IUpsertPublicSectionRequest {
     sectionType!: SectionType;
     header!: string;
     content!: string;
+    headerEn!: string | undefined;
+    contentEn!: string | undefined;
 
     [key: string]: any;
 
@@ -7321,6 +7419,8 @@ export class UpsertPublicSectionRequest implements IUpsertPublicSectionRequest {
             this.sectionType = sectionTypeFromValue(_data["sectionType"]);
             this.header = _data["header"];
             this.content = _data["content"];
+            this.headerEn = _data["headerEn"];
+            this.contentEn = _data["contentEn"];
         }
     }
 
@@ -7340,6 +7440,8 @@ export class UpsertPublicSectionRequest implements IUpsertPublicSectionRequest {
         data["sectionType"] = sectionTypeToValue(this.sectionType);
         data["header"] = this.header;
         data["content"] = this.content;
+        data["headerEn"] = this.headerEn;
+        data["contentEn"] = this.contentEn;
         return data;
     }
 }
@@ -7350,6 +7452,8 @@ export interface IUpsertPublicSectionRequest {
     content?: string;
 
     [key: string]: any;
+    headerEn?: string | undefined;
+    contentEn?: string | undefined;
 }
 
 export class Body implements IBody {

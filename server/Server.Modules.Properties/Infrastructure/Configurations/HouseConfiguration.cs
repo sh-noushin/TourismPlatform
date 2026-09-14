@@ -19,6 +19,12 @@ public sealed class HouseConfiguration : IEntityTypeConfiguration<House>
             .IsRequired()
             .HasMaxLength(256);
 
+        builder.Property(x => x.NameEn)
+            .HasMaxLength(256);
+
+        builder.Property(x => x.DescriptionEn)
+            .HasMaxLength(4000);
+
         builder.Property(x => x.Description)
             .HasMaxLength(4000);
 

@@ -23,6 +23,18 @@
             required
           />
         </label>
+
+        <label>
+          <span class="label-text">{{ 'CATEGORY_DIALOG.NAME_EN' | translate }}</span>
+          <input
+            type="text"
+            name="nameEn"
+            autocomplete="off"
+            dir="ltr"
+            [value]="nameEn()"
+            (input)="nameEn.set($any($event.target).value)"
+          />
+        </label>
       </div>
 
       <footer class="dialog-foot">
