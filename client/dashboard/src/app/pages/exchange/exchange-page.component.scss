@@ -702,3 +702,18 @@
     height: 180px;
   }
 }
+
+/* The refresh control and its "last checked" stamp travel together, so the
+   stamp cannot drift into the filter row on a narrow screen. */
+.refresh {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.refresh__checked {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

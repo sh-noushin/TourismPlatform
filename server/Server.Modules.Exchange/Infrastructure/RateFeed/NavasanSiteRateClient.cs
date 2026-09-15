@@ -83,9 +83,23 @@ public sealed class NavasanSiteRateClient : IRateFeedClient
                 return Array.Empty<FeedRate>();
             }
 
-            var wanted = options.SiteCurrencies.Count > 0
-                ? options.SiteCurrencies
-                : new List<string> { "USD", "EUR", "AED", "GBP", "TRY" };
+            // Distinct, because .NET's configuration binder APPENDS to a list
+            // that already has values rather than replacing it. NavasanOptions
+            // initialises SiteCurrencies with five codes, and appsettings.json
+            // supplies the same five, so the bound list arrives holding each
+            // code twice. That produced two identical snapshots per currency in
+            // one batch, which the unique index rejected -- taking the whole
+            // batch down with it, so no rate was ever imported again.
+            var wanted = options.SiteCurrencies
+                .Select(code => code.Trim().ToUpperInvariant())
+                .Where(code => code.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (wanted.Count == 0)
+            {
+                wanted = new List<string> { "USD", "EUR", "AED", "GBP", "TRY" };
+            }
 
             var results = new List<FeedRate>(wanted.Count);
 

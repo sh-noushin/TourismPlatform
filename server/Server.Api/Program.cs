@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Extensions.FileProviders;
 using Server.Api.Extensions;
+using Server.Api.Infrastructure.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,15 @@ if (string.IsNullOrWhiteSpace(builder.Environment.EnvironmentName) &&
     builder.Environment.EnvironmentName = Environments.Development;
 }
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    // Stamp UTC on every DateTime leaving the API. Without it a bare
+    // "2026-09-15T17:40:06" is read as local time by every browser, and the
+    // exchange table showed navasan's UTC clock face as though it were the
+    // reader's own.
+    options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+    options.JsonSerializerOptions.Converters.Add(new UtcNullableDateTimeConverter());
+});
 
 builder.Services.AddApiCors();
 builder.Services.AddOpenApiDocumentation();

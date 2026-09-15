@@ -67,11 +67,21 @@ public sealed class RateFeedImporter : IRateFeedImporter
 
         var written = 0;
 
+        // A pair can only be written once per run. Duplicates inside one batch
+        // do not merely skip a row -- SQL Server rejects the whole batch, so a
+        // single repeated currency stops every other rate from importing too.
+        var staged = new HashSet<(Guid Base, DateTime At)>();
+
         foreach (var quote in quotes)
         {
             if (!currencies.TryGetValue(quote.CurrencyCode, out var baseCurrency))
             {
                 _logger.LogWarning("Feed returned unknown currency {Code}; skipping.", quote.CurrencyCode);
+                continue;
+            }
+
+            if (!staged.Add((baseCurrency.Id, quote.CapturedAtUtc)))
+            {
                 continue;
             }
 

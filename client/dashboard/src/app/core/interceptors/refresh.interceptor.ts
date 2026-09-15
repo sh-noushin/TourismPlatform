@@ -26,6 +26,11 @@ export class RefreshInterceptor implements HttpInterceptor {
     // If this request opted out of refresh handling, forward directly
     if (req.headers.get('x-skip-refresh')) return next.handle(req);
 
+    // The auth endpoints are how a refresh is performed, so a 401 from one of
+    // them must never start another refresh: that is a loop, and it is what
+    // swallowed the original error instead of sending the user back to login.
+    if (/\/api\/auth\//i.test(req.url)) return next.handle(req);
+
     // If this request has already been retried, don't attempt refresh again
     if (req.headers.get('x-retried') === '1') return next.handle(req);
 
@@ -50,20 +55,18 @@ export class RefreshInterceptor implements HttpInterceptor {
           return from(this.refreshing).pipe(
             switchMap((ok) => {
               if (!ok) {
-                // refresh failed -> force logout and navigate to login
-                try {
-                  this.auth.logout().catch(() => {});
-                } catch {}
+                // Refresh failed: the session is genuinely over. Clear it
+                // locally -- no request, nothing left to authenticate with --
+                // send the user to login, and rethrow so the caller's promise
+                // rejects and its spinner stops.
+                this.auth.clearSession();
                 this.router.navigate(['/login']);
                 return throwError(() => err);
               }
               // refreshed successfully; obtain latest token and retry once
               const token = this.auth.accessToken();
               if (!token) {
-                // no token available despite refresh -> logout
-                try {
-                  this.auth.logout().catch(() => {});
-                } catch {}
+                this.auth.clearSession();
                 this.router.navigate(['/login']);
                 return throwError(() => err);
               }

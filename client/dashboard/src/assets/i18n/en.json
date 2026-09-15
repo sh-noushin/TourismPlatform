@@ -292,7 +292,7 @@
     "NO_HISTORY": "No history captured for this pair yet.",
     "LAST_24H": "last 24 hours",
     "WINDOW_RANGE": "Window range",
-    "CAPTURED": "Captured",
+    "CAPTURED": "Published",
     "RANGE_24h": "24h",
     "RANGE_7d": "7d",
     "RANGE_30d": "30d",
@@ -304,7 +304,7 @@
     "COL_RATE": "Rate",
     "COL_CHANGE": "24h",
     "COL_TREND": "Trend",
-    "COL_CAPTURED": "Captured",
+    "COL_CAPTURED": "Published",
     "EMPTY_TITLE": "No rates to show",
     "EMPTY_BODY": "No currency pair matches the current search and filter. Clear them to see everything captured.",
     "LOAD_FAILED": "Could not load exchange rates.",
@@ -329,7 +329,8 @@
     "SYNCING": "Syncing…",
     "SYNC_FAILED": "Could not reach the rate feed.",
     "FEED_NOT_CONFIGURED": "Live rates are not switched on yet: the API has no NAVASAN_API_KEY. Add one to .env and restart the API.",
-    "SYNC_NO_CHANGES": "The feed had no new rates since the last sync."
+    "SYNC_NO_CHANGES": "The feed had no new rates since the last sync.",
+    "LAST_CHECKED": "Last checked"
   },
   "CATEGORIES": {
     "NEW_CATEGORY": "New category",
@@ -396,5 +397,13 @@
     "SGD": "Singapore Dollar",
     "TRY": "Turkish Lira",
     "USD": "US Dollar"
+  },
+  "ERRORS": {
+    "SESSION_EXPIRED": "Your session has expired. Please sign in again.",
+    "FORBIDDEN": "You do not have permission to do that.",
+    "NOT_FOUND": "That item could not be found.",
+    "SERVER": "Server error. Please try again shortly.",
+    "NETWORK": "Could not reach the server.",
+    "GENERIC": "Something went wrong."
   }
 }

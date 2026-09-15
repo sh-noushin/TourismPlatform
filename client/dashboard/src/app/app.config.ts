@@ -29,7 +29,7 @@ const dashboardApiBase = rawDashboardApiBase.replace(/\/+$/, ''); // avoid doubl
 
 // Bump when translation files change. The JSON filenames are stable, so this is
 // what forces a cached copy to be replaced.
-const TRANSLATIONS_VERSION = '10';
+const TRANSLATIONS_VERSION = '12';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -52,11 +52,18 @@ export const appConfig: ApplicationConfig = {
       prefix: './assets/i18n/',
       suffix: `.json?v=${TRANSLATIONS_VERSION}`
     }),
-    // HTTP interceptors: correlation id -> auth header -> refresh/retry -> error normalization
+    // Order matters, and it is the reverse of how it reads: a response travels
+    // back through the interceptors bottom-up, so the LAST one registered sees
+    // the error first. ErrorInterceptor used to sit last and normalised every
+    // HttpErrorResponse into a plain object before RefreshInterceptor saw it --
+    // so `err instanceof HttpErrorResponse` was false there, no refresh was
+    // ever attempted, and an expired token surfaced as a raw 401 toast.
+    // Refresh must be the innermost: it gets first sight of the 401, retries,
+    // and only a genuine failure reaches the error normaliser above it.
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationIdInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: RefreshInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: RefreshInterceptor, multi: true },
     { provide: RouteReuseStrategy, useClass: TabRouteReuseStrategy },
     {
       provide: API_BASE_URL,

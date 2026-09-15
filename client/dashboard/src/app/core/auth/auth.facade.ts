@@ -85,6 +85,18 @@ export class AuthFacade {
       await this.authService.logout(refresh ?? undefined);
     } catch {}
 
+    this.clearSession();
+  }
+
+  /**
+   * Drops the session without talking to the server.
+   *
+   * The interceptor needs this: once a refresh has failed there is nothing to
+   * log out with, and calling logout() there fired another request that 401'd,
+   * which re-entered the interceptor and started the cycle again -- the reason
+   * a stale tab sat on "syncing..." forever instead of returning to login.
+   */
+  clearSession() {
     TokenStore.clear();
     this.accessToken.set(null);
     this.refreshToken.set(null);

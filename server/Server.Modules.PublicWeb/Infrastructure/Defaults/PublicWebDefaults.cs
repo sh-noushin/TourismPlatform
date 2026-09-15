@@ -17,11 +17,11 @@ internal static class PublicWebDefaults
         },
         new PublicSection("houses", PublicSectionType.Houses)
         {
-            HeaderEn = "Homes for every getaway",
+            HeaderEn = "Property for sale and rent",
             ContentEn =
-                "Comfortable, handpicked homes -- from cosy city apartments to quiet retreats in the countryside. Choose a stay that fits your trip.",
-            Header = "خانه‌هایی برای هر سفر",
-            Content = "خانه‌های راحت و دستچین‌شده — از آپارتمان‌های دنج شهری تا پناهگاه‌های آرام در طبیعت. اقامتی متناسب با سفر خود انتخاب کنید که احساس خانه را بدهد."
+                "Apartments, villas, offices and shops in Tehran and beyond — current prices, full details and viewings on request. Find the right property to buy or to rent.",
+            Header = "املاک برای خرید و اجاره",
+            Content = "آپارتمان، ویلا، دفتر اداری و مغازه در تهران و شهرهای دیگر — با قیمت روز، مشخصات کامل و امکان بازدید. ملک مناسب خود را برای خرید یا اجاره پیدا کنید."
         },
         new PublicSection("infos", PublicSectionType.Infos)
         {

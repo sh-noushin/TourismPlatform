@@ -177,10 +177,18 @@
           <!-- One button: it pulls navasan.net, then re-reads what was stored.
                A refresh that only re-queried the database looked identical but
                never brought new prices, which is not what anyone expects. -->
-          <button type="button" class="btn btn--primary" (click)="refresh()" [disabled]="loading() || syncing()">
-            <span class="btn__icon" aria-hidden="true">⟳</span>
-            {{ (syncing() ? 'EXCHANGE_PAGE.SYNCING' : 'EXCHANGE_PAGE.REFRESH') | translate }}
-          </button>
+          <div class="refresh">
+            <button type="button" class="btn btn--primary" (click)="refresh()" [disabled]="loading() || syncing()">
+              <span class="btn__icon" aria-hidden="true">⟳</span>
+              {{ (syncing() ? 'EXCHANGE_PAGE.SYNCING' : 'EXCHANGE_PAGE.REFRESH') | translate }}
+            </button>
+
+            @if (lastChecked()) {
+              <span class="refresh__checked">
+                {{ 'EXCHANGE_PAGE.LAST_CHECKED' | translate }} {{ lastCheckedLabel() }}
+              </span>
+            }
+          </div>
         </div>
       </div>
 

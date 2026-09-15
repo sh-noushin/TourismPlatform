@@ -53,6 +53,15 @@ export class ExchangePageComponent {
   /** Informational, not a failure: setup state or "nothing changed". */
   readonly notice = signal<string | null>(null);
 
+  /**
+   * When this page last asked navasan.net, as opposed to when navasan last
+   * published. The table's "زمان ثبت" column is the publish time -- the feed
+   * updates roughly every ten minutes, so pressing Refresh in between leaves
+   * every row's time unchanged and the button looks broken. This is the line
+   * that proves the fetch happened.
+   */
+  readonly lastChecked = signal<Date | null>(null);
+
   readonly range = signal<RangeKey>('7d');
   readonly filter = signal('');
   readonly move = signal<MoveFilter>('all');
@@ -159,12 +168,23 @@ export class ExchangePageComponent {
 
       await this.load();
       await this.loadYearly();
+      this.lastChecked.set(new Date());
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : null;
       this.error.set(message ?? this.translate.instant('EXCHANGE_PAGE.SYNC_FAILED'));
     } finally {
       this.syncing.set(false);
     }
+  }
+
+  /** "۲۱:۳۶" -- the clock only; the date is on every row already. */
+  lastCheckedLabel(): string {
+    const at = this.lastChecked();
+    if (!at) return '';
+    return new Intl.DateTimeFormat(this.locale(), {
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(at);
   }
 
   // ------------------------------------------------------------- derived ----
