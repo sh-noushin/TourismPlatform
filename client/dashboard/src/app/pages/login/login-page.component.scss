@@ -3,10 +3,9 @@
 /* =============================================================================
    Login
 
-   Two halves: photography on one side, a plain white form on the other. The
-   previous page floated a grey card on a blue gradient with a placeholder
-   avatar -- a stock template that said nothing about what the product is.
-   A travel console should open on somewhere worth travelling to.
+   Photo panel + floating white card, centred on a pale page. The card is inset
+   from the top and bottom so the panel reads as a separate plane behind it --
+   without that offset the two just look like a split screen.
    ========================================================================== */
 
 :host {
@@ -14,29 +13,41 @@
   min-height: 100vh;
 }
 
-.login {
+.login-stage {
+  position: relative;
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  place-items: center;
   min-height: 100vh;
-  background: var(--color-surface);
+  padding: 40px 24px;
+  background: var(--color-canvas);
+}
+
+.login {
+  position: relative;
+  display: flex;
+  width: min(1040px, 100%);
+  min-height: 600px;
 }
 
 /* ------------------------------------------------------------------ art --- */
+/* Full height of the composition: it is the plane the card sits on. */
 .login__art {
   position: relative;
+  flex: 0 0 46%;
   overflow: hidden;
-  display: flex;
+  border-radius: var(--radius-lg);
   isolation: isolate;
 }
 
-/* A photograph of a real destination, not an illustration. Slowly drifting so
-   the page feels alive without anything moving under the reader's eye. */
 .login__art-image {
   position: absolute;
   inset: 0;
-  background-image: url('/assets/images/isfahan.jpg');
+  /* Manarola, Cinque Terre. The town sits left of centre in the frame, so the
+     crop is pulled that way -- centred, a tall panel would show mostly open
+     sea. positano.jpg, alhambra.jpg and ronda.jpg are beside it. */
+  background-image: url('/assets/images/manarola.jpg');
   background-size: cover;
-  background-position: center;
+  background-position: 32% center;
   transform: scale(1.06);
   animation: login-drift 28s ease-in-out infinite alternate;
 }
@@ -50,106 +61,53 @@
   .login__art-image { animation: none; }
 }
 
-/* Two stops rather than a flat wash: the copy sits at the bottom, and a single
-   even scrim would grey out the sky as well. */
+/* A light navy wash only -- enough to tie the panel to the console's rail
+   colour and to keep the card's shadow legible against a bright sky. With no
+   text over the photograph there is nothing to darken it for. */
 .login__art-scrim {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgb(12 20 33 / 55%) 0%, rgb(12 20 33 / 25%) 35%, rgb(12 20 33 / 88%) 100%);
+  background: linear-gradient(180deg, rgb(16 26 46 / 18%) 0%, rgb(16 26 46 / 30%) 100%);
 }
 
-.login__art-body {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 44px;
-  width: 100%;
-  color: #fff;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand__mark {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  background: var(--color-primary);
-  font-weight: var(--weight-bold);
-  letter-spacing: 0.02em;
-}
-
-.brand__name {
-  font-size: var(--text-md);
-  font-weight: var(--weight-semibold);
-}
-
-.welcome {
-  max-width: 30ch;
-}
-
-.welcome__kicker {
-  margin: 0 0 10px;
-  font-size: var(--text-sm);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgb(255 255 255 / 72%);
-}
-
-.welcome__title {
-  margin: 0;
-  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
-  line-height: var(--leading-tight);
-  font-weight: var(--weight-bold);
-}
-
-.welcome__body {
-  margin: 14px 0 0;
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-  color: rgb(255 255 255 / 82%);
-}
-
-.credit {
-  margin: 0;
-  font-size: var(--text-xs);
-  color: rgb(255 255 255 / 55%);
-}
-
-/* ----------------------------------------------------------------- form --- */
+/* ----------------------------------------------------------------- card --- */
+/* Pulled back over the panel and inset vertically -- the overlap is what makes
+   it read as floating rather than as the other half of a split. */
 .login__panel {
   position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
   display: grid;
   place-items: center;
-  padding: 48px 40px;
+  margin-block: 36px;
+  margin-inline-start: -48px;
+  padding: 48px 56px;
   background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 30px 60px -28px rgb(16 26 46 / 45%);
 }
 
 .login-form {
-  width: min(380px, 100%);
+  width: min(340px, 100%);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
+}
+
+.login-form__head {
+  text-align: center;
+  margin-bottom: 8px;
 }
 
 .login-form__head h2 {
   margin: 0;
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: var(--weight-bold);
   color: var(--color-heading);
 }
 
 .login-form__head p {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
@@ -162,12 +120,9 @@
 
 .field__label {
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--color-text);
+  color: var(--color-text-muted);
 }
 
-/* The icon sits inside the border rather than in its own grey block: two
-   adjoining boxes read as two controls. */
 .field__control {
   display: flex;
   align-items: center;
@@ -199,7 +154,7 @@
   border: 0;
   outline: none;
   background: transparent;
-  padding: 12px 0;
+  padding: 11px 0;
   font: inherit;
   font-size: var(--text-base);
   color: var(--color-text);
@@ -212,10 +167,11 @@
 .row {
   display: flex;
   justify-content: flex-end;
+  margin-top: -6px;
 }
 
 .forgot {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--color-primary);
   text-decoration: none;
 }
@@ -224,30 +180,37 @@
   text-decoration: underline;
 }
 
+/* Navy, as in the reference: the button is the darkest thing on a white card,
+   which is what makes it the obvious next step. */
 .submit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 4px;
-  padding: 13px 20px;
+  margin-top: 10px;
+  padding: 14px 20px;
   border: 0;
   border-radius: var(--radius-md);
-  background: var(--color-primary);
+  background: var(--palette-rail-top);
   color: #fff;
   font: inherit;
-  font-size: var(--text-base);
+  font-size: var(--text-md);
   font-weight: var(--weight-semibold);
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition: background-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 .submit:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+  background: #16202e;
 }
 
-/* Disabled is grey on purpose -- the old button was grey *always*, which made
-   a ready form look unusable. */
+.submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* Grey only when there is nothing to submit -- the old button was grey always,
+   which made a filled-in form look broken. */
 .submit:disabled {
   background: var(--color-border);
   color: var(--color-text-subtle);
@@ -276,26 +239,30 @@
   font-size: var(--text-sm);
 }
 
+.login-form__foot {
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
+}
+
 /* ---------------------------------------------------------- narrow view --- */
-/* Below 900px the photo becomes a banner: a half-width image next to a form
-   squeezed to 200px serves neither. */
 @media (max-width: 900px) {
   .login {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    min-height: 0;
   }
 
   .login__art {
-    min-height: 220px;
+    flex: none;
+    min-height: 200px;
   }
 
-  .login__art-body {
-    padding: 24px;
-    gap: 16px;
-  }
-
-  .welcome__body,
-  .credit {
-    display: none;
+  /* The overlap only works side by side; stacked, it would clip the heading. */
+  .login__panel {
+    margin-inline-start: 0;
+    margin-block: -28px 0;
+    padding: 32px 24px;
   }
 }
 
@@ -443,4 +410,13 @@
 :host-context([dir='rtl']) .lang-menu::before {
   inset-inline-start: 18px;
   inset-inline-end: auto;
+}
+
+/* The switch belongs to the page, not to the card: inside the card it landed
+   on top of the heading at narrow widths. */
+.login-stage > .lang-selector {
+  position: absolute;
+  inset-block-start: 24px;
+  inset-inline-end: 28px;
+  inset-inline-start: auto;
 }

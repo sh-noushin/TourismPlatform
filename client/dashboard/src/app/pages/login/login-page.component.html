@@ -1,91 +1,79 @@
-<section class="login" (click)="langMenuOpen.set(false)">
-  <!-- ------------------------------------------------------------- artwork -->
-  <!-- The photo half carries the brand; the form half stays plain white so the
-       two inputs are the only thing competing for attention. -->
-  <aside class="login__art">
-    <div class="login__art-image" aria-hidden="true"></div>
-    <div class="login__art-scrim" aria-hidden="true"></div>
-
-    <div class="login__art-body">
-      <div class="brand">
-        <span class="brand__mark" aria-hidden="true">TP</span>
-        <span class="brand__name">{{ 'APP.TITLE' | translate }}</span>
-      </div>
-
-      <div class="welcome">
-        <p class="welcome__kicker">{{ 'LOGIN_PAGE.WELCOME_KICKER' | translate }}</p>
-        <h1 class="welcome__title">{{ 'LOGIN_PAGE.WELCOME_TITLE' | translate }}</h1>
-        <p class="welcome__body">{{ 'LOGIN_PAGE.WELCOME_BODY' | translate }}</p>
-      </div>
-
-      <p class="credit">{{ 'LOGIN_PAGE.PHOTO_CREDIT' | translate }}</p>
-    </div>
-  </aside>
-
-  <!-- ---------------------------------------------------------------- form -->
-  <div class="login__panel">
+<section class="login-stage" (click)="langMenuOpen.set(false)">
     <div
-      class="lang-selector"
-      [class.open]="langMenuOpen()"
-      [class.lang-selector--rtl]="langKey() === 'fa'"
-    >
-      <button type="button" class="lang-trigger" (click)="toggleLangMenu($event)">
-        <span class="flag">
-          @if (langKey() === 'fa') {
+    class="lang-selector"
+    [class.open]="langMenuOpen()"
+    [class.lang-selector--rtl]="langKey() === 'fa'"
+  >
+    <button type="button" class="lang-trigger" (click)="toggleLangMenu($event)">
+      <span class="flag">
+        @if (langKey() === 'fa') {
+          <svg width="22" height="15" viewBox="0 0 24 16" aria-hidden="true">
+            <rect width="24" height="5" fill="#239f40"></rect>
+            <rect y="5" width="24" height="6" fill="#fff"></rect>
+            <rect y="11" width="24" height="5" fill="#da0000"></rect>
+          </svg>
+        }
+        @if (langKey() === 'en') {
+          <svg width="22" height="15" viewBox="0 0 60 30" aria-hidden="true">
+            <clipPath id="login_t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+            <path d="M0,0 v30 h60 v-30 z" fill="#00247d"/>
+            <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+            <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#login_t)" stroke="#cf142b" stroke-width="4"/>
+            <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+            <path d="M30,0 v30 M0,15 h60" stroke="#cf142b" stroke-width="6"/>
+          </svg>
+        }
+      </span>
+
+      <span class="lang-label">
+        {{ langKey() === 'fa' ? ('LANG.FARSI' | translate) : ('LANG.ENGLISH' | translate) }}
+      </span>
+
+      <span class="chev" aria-hidden="true"></span>
+    </button>
+
+    @if (langMenuOpen()) {
+      <div class="lang-menu" (click)="$event.stopPropagation()">
+        <button type="button" class="lang-item" (click)="setLang('fa')" [class.selected]="langKey() === 'fa'">
+          <span class="lang-item__flag">
             <svg width="22" height="15" viewBox="0 0 24 16" aria-hidden="true">
               <rect width="24" height="5" fill="#239f40"></rect>
               <rect y="5" width="24" height="6" fill="#fff"></rect>
               <rect y="11" width="24" height="5" fill="#da0000"></rect>
             </svg>
-          }
-          @if (langKey() === 'en') {
+          </span>
+          <span class="lang-item__label">{{ 'LANG.FARSI' | translate }}</span>
+        </button>
+
+        <button type="button" class="lang-item" (click)="setLang('en')" [class.selected]="langKey() === 'en'">
+          <span class="lang-item__flag">
             <svg width="22" height="15" viewBox="0 0 60 30" aria-hidden="true">
-              <clipPath id="login_t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+              <clipPath id="login_t2"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
               <path d="M0,0 v30 h60 v-30 z" fill="#00247d"/>
               <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-              <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#login_t)" stroke="#cf142b" stroke-width="4"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#login_t2)" stroke="#cf142b" stroke-width="4"/>
               <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
               <path d="M30,0 v30 M0,15 h60" stroke="#cf142b" stroke-width="6"/>
             </svg>
-          }
-        </span>
+          </span>
+          <span class="lang-item__label">{{ 'LANG.ENGLISH' | translate }}</span>
+        </button>
+      </div>
+    }
+  </div>
+  <div class="login">
+  <!-- ------------------------------------------------------------- artwork -->
+  <!-- Photograph only. Every word the page has to say is on the card: text
+       over an image competes with the image and is the first thing to become
+       unreadable when the photo is swapped. -->
+  <aside class="login__art">
+    <div class="login__art-image" aria-hidden="true"></div>
+    <div class="login__art-scrim" aria-hidden="true"></div>
 
-        <span class="lang-label">
-          {{ langKey() === 'fa' ? ('LANG.FARSI' | translate) : ('LANG.ENGLISH' | translate) }}
-        </span>
+  </aside>
 
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-
-      @if (langMenuOpen()) {
-        <div class="lang-menu" (click)="$event.stopPropagation()">
-          <button type="button" class="lang-item" (click)="setLang('fa')" [class.selected]="langKey() === 'fa'">
-            <span class="lang-item__flag">
-              <svg width="22" height="15" viewBox="0 0 24 16" aria-hidden="true">
-                <rect width="24" height="5" fill="#239f40"></rect>
-                <rect y="5" width="24" height="6" fill="#fff"></rect>
-                <rect y="11" width="24" height="5" fill="#da0000"></rect>
-              </svg>
-            </span>
-            <span class="lang-item__label">{{ 'LANG.FARSI' | translate }}</span>
-          </button>
-
-          <button type="button" class="lang-item" (click)="setLang('en')" [class.selected]="langKey() === 'en'">
-            <span class="lang-item__flag">
-              <svg width="22" height="15" viewBox="0 0 60 30" aria-hidden="true">
-                <clipPath id="login_t2"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
-                <path d="M0,0 v30 h60 v-30 z" fill="#00247d"/>
-                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-                <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#login_t2)" stroke="#cf142b" stroke-width="4"/>
-                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
-                <path d="M30,0 v30 M0,15 h60" stroke="#cf142b" stroke-width="6"/>
-              </svg>
-            </span>
-            <span class="lang-item__label">{{ 'LANG.ENGLISH' | translate }}</span>
-          </button>
-        </div>
-      }
-    </div>
+  <!-- ---------------------------------------------------------------- form -->
+  <div class="login__panel">
 
     <form class="login-form" (submit)="onSubmit($event)">
       <header class="login-form__head">
@@ -151,6 +139,9 @@
       @if (error()) {
         <p class="error">{{ error() }}</p>
       }
+
+      <p class="login-form__foot">{{ 'LOGIN_PAGE.CONTACT_ADMIN' | translate }}</p>
     </form>
+  </div>
   </div>
 </section>
