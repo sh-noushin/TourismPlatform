@@ -35,7 +35,15 @@
     "SUBMIT": "Log in",
     "ERROR_INVALID": "Please provide a valid email and password (min 6 chars).",
     "ERROR_LOGIN_FAILED": "Login failed",
-    "ERROR_CONTACT_SUPPORT": "Please contact support to reset your password."
+    "ERROR_CONTACT_SUPPORT": "Please contact support to reset your password.",
+    "TITLE": "Sign in",
+    "SUBTITLE": "Manage tours, properties and today’s exchange rates.",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "WELCOME_KICKER": "Tourism Platform",
+    "WELCOME_TITLE": "Where the journeys are built",
+    "WELCOME_BODY": "Tours, stays and live currency rates — in one console.",
+    "PHOTO_CREDIT": "Naqsh-e Jahan Square, Isfahan"
   },
   "TABS": {
     "NEW_HOUSE": "New house",

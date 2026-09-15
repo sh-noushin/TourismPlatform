@@ -29,7 +29,7 @@ const dashboardApiBase = rawDashboardApiBase.replace(/\/+$/, ''); // avoid doubl
 
 // Bump when translation files change. The JSON filenames are stable, so this is
 // what forces a cached copy to be replaced.
-const TRANSLATIONS_VERSION = '12';
+const TRANSLATIONS_VERSION = '13';
 
 export const appConfig: ApplicationConfig = {
   providers: [

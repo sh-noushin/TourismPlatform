@@ -1,127 +1,304 @@
+@use '../../styles/index' as *;
+
+/* =============================================================================
+   Login
+
+   Two halves: photography on one side, a plain white form on the other. The
+   previous page floated a grey card on a blue gradient with a placeholder
+   avatar -- a stock template that said nothing about what the product is.
+   A travel console should open on somewhere worth travelling to.
+   ========================================================================== */
+
 :host {
   display: block;
-}
-
-.login-shell {
   min-height: 100vh;
+}
+
+.login {
   display: grid;
-  place-items: center;
-  padding: 32px;
-  background: linear-gradient(135deg, #3b7bdc 0%, #2f80ed 45%, #19c39c 100%);
-  position: relative;
+  grid-template-columns: 1.1fr 1fr;
+  min-height: 100vh;
+  background: var(--color-surface);
 }
 
-.login-card {
-  width: min(420px, 92vw);
-  background: #ffffff;
-  border-radius: 2px;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
-  padding: 72px 34px 28px;
+/* ------------------------------------------------------------------ art --- */
+.login__art {
   position: relative;
+  overflow: hidden;
+  display: flex;
+  isolation: isolate;
 }
 
-.avatar {
+/* A photograph of a real destination, not an illustration. Slowly drifting so
+   the page feels alive without anything moving under the reader's eye. */
+.login__art-image {
   position: absolute;
-  top: -58px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 116px;
-  height: 116px;
-  border-radius: 999px;
-  background: #ededed;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  inset: 0;
+  background-image: url('/assets/images/isfahan.jpg');
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.06);
+  animation: login-drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes login-drift {
+  from { transform: scale(1.06) translate3d(0, 0, 0); }
+  to   { transform: scale(1.14) translate3d(0, -1.5%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login__art-image { animation: none; }
+}
+
+/* Two stops rather than a flat wash: the copy sits at the bottom, and a single
+   even scrim would grey out the sky as well. */
+.login__art-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(12 20 33 / 55%) 0%, rgb(12 20 33 / 25%) 35%, rgb(12 20 33 / 88%) 100%);
+}
+
+.login__art-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 44px;
+  width: 100%;
+  color: #fff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand__mark {
   display: grid;
   place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.02em;
 }
 
-.avatar__svg {
-  width: 56px;
-  height: 56px;
-  color: rgba(0, 0, 0, 0.35);
-  transform: translateY(-2px);
+.brand__name {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
 }
 
-.avatar__svg circle,
-.avatar__svg path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.welcome {
+  max-width: 30ch;
+}
+
+.welcome__kicker {
+  margin: 0 0 10px;
+  font-size: var(--text-sm);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 72%);
+}
+
+.welcome__title {
+  margin: 0;
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-bold);
+}
+
+.welcome__body {
+  margin: 14px 0 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: rgb(255 255 255 / 82%);
+}
+
+.credit {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: rgb(255 255 255 / 55%);
+}
+
+/* ----------------------------------------------------------------- form --- */
+.login__panel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 48px 40px;
+  background: var(--color-surface);
 }
 
 .login-form {
-  display: grid;
-  gap: 14px;
+  width: min(380px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-form__head h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-heading);
+}
+
+.login-form__head p {
+  margin: 6px 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
 .field {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  align-items: center;
-  background: #dcdcdc;
-  border-radius: 2px;
-  overflow: hidden;
-  height: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.icon {
+.field__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+/* The icon sits inside the border rather than in its own grey block: two
+   adjoining boxes read as two controls. */
+.field__control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  transition: border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.field__control:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--tint-primary-soft);
+}
+
+.field__icon {
   display: grid;
   place-items: center;
-  height: 44px;
-  background: #cfcfcf;
+  color: var(--color-text-subtle);
+  fill: currentColor;
+  flex: none;
 }
 
-.icon svg {
-  fill: #4d4d4d;
-}
-
-.field input {
+.field__control input {
+  flex: 1 1 auto;
+  min-width: 0;
   border: 0;
   outline: none;
-  height: 44px;
-  padding: 0 14px;
   background: transparent;
-  font-size: 14px;
+  padding: 12px 0;
+  font: inherit;
+  font-size: var(--text-base);
+  color: var(--color-text);
 }
 
-.field input::placeholder {
-  color: rgba(0, 0, 0, 0.45);
+.field__control input::placeholder {
+  color: var(--color-text-subtle);
 }
 
 .row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 6px 0 2px;
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.55);
+  justify-content: flex-end;
 }
 
 .forgot {
-  color: rgba(0, 0, 0, 0.55);
+  font-size: var(--text-sm);
+  color: var(--color-primary);
   text-decoration: none;
-  font-style: italic;
 }
 
 .forgot:hover {
   text-decoration: underline;
 }
 
-.login-btn {
-  margin-top: 6px;
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 13px 20px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+/* Disabled is grey on purpose -- the old button was grey *always*, which made
+   a ready form look unusable. */
+.submit:disabled {
+  background: var(--color-border);
+  color: var(--color-text-subtle);
+  cursor: not-allowed;
+}
+
+.submit__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(255 255 255 / 45%);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: login-spin 0.7s linear infinite;
+}
+
+@keyframes login-spin {
+  to { transform: rotate(360deg); }
 }
 
 .error {
-  margin: 10px 0 0;
+  margin: 0;
   padding: 10px 12px;
-  border-radius: 2px;
-  background: rgba(220, 38, 38, 0.12);
-  color: #b91c1c;
-  font-size: 13px;
+  border-radius: var(--radius-md);
+  background: var(--color-danger-subtle);
+  color: var(--color-danger-text);
+  font-size: var(--text-sm);
 }
 
-/* Language selector */
+/* ---------------------------------------------------------- narrow view --- */
+/* Below 900px the photo becomes a banner: a half-width image next to a form
+   squeezed to 200px serves neither. */
+@media (max-width: 900px) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  .login__art {
+    min-height: 220px;
+  }
+
+  .login__art-body {
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .welcome__body,
+  .credit {
+    display: none;
+  }
+}
+
 .lang-selector {
   position: absolute;
   inset-block-start: 16px;
